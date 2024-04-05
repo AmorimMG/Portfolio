@@ -4,7 +4,7 @@ const layoutConfig = reactive({
     ripple: true,
     darkTheme: true,
     inputStyle: 'outlined',
-    menuMode: 'static',
+    menuMode: 'overlay',
     theme: 'lara-dark-purple',
     scale: 14,
     activeMenuItem: null

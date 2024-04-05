@@ -133,12 +133,12 @@ const router = createRouter({
                 },
                 {
                     path: '/pages/cv',
-                    name: 'empty',
+                    name: 'cv',
                     component: () => import('@/views/pages/Curriculum.vue')
                 },
                 {
                     path: '/pages/arcade',
-                    name: 'empty',
+                    name: 'arcade',
                     component: () => import('@/views/pages/Arcade.vue')
                 },
                 {

@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=lores-12&display=swap');
+
 :root {
-  font-family: "Inter var", sans-serif;
+  font-family: "lores-12", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
-  --font-family: "Inter var", sans-serif;
+  --font-family: "lores-12", sans-serif;
   --font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   --surface-a: #433864;
   --surface-b: #111827;
@@ -10,7 +12,7 @@
   --surface-d: #424b57;
   --surface-e: #433864;
   --surface-f: #433864;
-  --text-color: rgba(255, 255, 255, 0.87);
+  --text-color: #8572b2;
   --text-color-secondary: rgba(255, 255, 255, 0.6);
   --primary-color: #a78bfa;
   --primary-color-text: #030712;
@@ -38,11 +40,11 @@
   --content-padding: 1.25rem;
   --inline-spacing: 0.5rem;
   --border-radius: 6px;
-  --surface-ground: #111827;
+  --surface-ground: #0f0026;
   --surface-section: #111827;
   --surface-card: rgba(155, 89, 182, 0.15);
   --surface-overlay: #433864;
-  --surface-border: rgba(255, 255, 255, 0.1);
+  --surface-border: #4d25b0;
   --surface-hover: rgba(255, 255, 255, 0.03);
   --focus-ring: 0 0 0 0.2rem rgba(167, 139, 250, 0.2);
   --maskbg: rgba(0, 0, 0, 0.4);
@@ -52,20 +54,20 @@
 }
 
 @font-face {
-  font-family: "Inter var";
+  font-family: "lores-12";
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
   font-named-instance: "Regular";
-  src: url("./fonts/Inter-roman.var.woff2?v=3.19") format("woff2");
+  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
 }
 @font-face {
-  font-family: "Inter var";
+  font-family: "lores-12";
   font-weight: 100 900;
   font-display: swap;
   font-style: italic;
   font-named-instance: "Italic";
-  src: url("./fonts/Inter-italic.var.woff2?v=3.19") format("woff2");
+  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
 }
 :root {
   --blue-50:#f5f9ff;
@@ -10841,5 +10843,76 @@
   .p-stepper .p-stepper-header.p-highlight .p-stepper-action .p-stepper-number {
     background: #a78bfa;
     color: #030712;
+  }
+
+  .glitch {
+    animation-name: glitch-anim;
+      animation-duration: 4s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+  }
+  
+  .glitch--1 {
+    animation-delay: 16s;
+  }
+  
+  .glitch--2 {
+    animation-delay: 12s;
+  }
+  
+  @keyframes glitch-anim {
+    0% { 
+      transform: translate3d(-5px,0,0) scale3d(-1,-1,1);
+      -webkit-clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%);
+      clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%);
+    }
+    2% {
+      -webkit-clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
+      clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
+    }
+    4% {
+      -webkit-clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
+      clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
+    }
+    5% {
+      -webkit-clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%);
+      clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%);
+    }
+    6% {
+      -webkit-clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%);
+      clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%);
+    }
+    7% {
+      -webkit-clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%);
+      clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%);
+    }
+    8% {
+      -webkit-clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%);
+      clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%);
+    }
+    9% {
+      -webkit-clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+      clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+    }
+    9.9% {
+      transform: translate3d(-5px,0,0) scale3d(-1,-1,1);
+    }
+    10%, 100% {
+      transform: translate3d(0,0,0) scale3d(1,1,1);
+      -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+  }
+  
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #00FF00;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 }

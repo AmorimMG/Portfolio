@@ -1,7 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed } from 'vue';
-import AppConfig from '@/layout/AppConfig.vue';
 
 const { layoutConfig } = useLayout();
 
@@ -406,10 +405,9 @@ const logoUrl = computed(() => {
             </div>
         </div>
     </div>
-    <AppConfig simple />
 </template>
 
-<!-- <style scoped>
+<style scoped>
 #hero {
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #eeefaf 0%, #c3e3fa 100%);
     height: 700px;
@@ -454,4 +452,4 @@ const logoUrl = computed(() => {
         max-width: 100%;
     }
 }
-</style> -->
+</style>

@@ -1,5 +1,5 @@
 import cookies from "js-cookie";
-import { M3AI_RESTAPI } from "../service/api";
+import { RESTAPI } from "../service/api";
 
 const SESSION_COOKIE = "user";
 const LANGUAGE_COOKIE = "Language";
@@ -13,7 +13,7 @@ export function setUserCookie(user, time) {
     cookies.set(SESSION_COOKIE, JSON.stringify(user), time);
 
     if(!getLanguageCookie()){
-        setLanguageCookie('pt');
+        setLanguageCookie('en');
     }
 }
 
@@ -42,7 +42,7 @@ const sessionModule = {
     actions: {
         login({ user }) {
             return new Promise((resolve, reject) => {   
-                M3AI_RESTAPI.Login(user)
+                RESTAPI.Login(user)
                     .then(response => {
                         if (response.status == 200 ||response.status == 204) {
                             if (user.rememberme) {

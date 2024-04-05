@@ -3,5 +3,20 @@
     "pt": "Início",
     "en": "First page",
     "es": "Comienzo"
+  },
+  "gblHi": {
+    "pt": "Oi, sou Amorim!",
+    "en": "Hi, I'm Amorim!",
+    "es": "¡Hola, soy Amorim!"
+  },
+  "gblAboutMe": {
+    "pt": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na FIAP.",
+    "en": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at FIAP.",
+    "es": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en FIAP."
+  },
+  "gblInterests": {
+    "pt": "Tenho interesse na cultura geek, teclados e gatinhos!",
+    "en": "I'm interested in geek culture, keyboards and meowies!",
+    "es": "¡Me interesa la cultura geek, los teclados y los gatitos!"
   }
 }

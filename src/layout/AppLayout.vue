@@ -1,9 +1,9 @@
 <script setup>
 import { computed, watch, ref } from 'vue';
-import AppTopbar from './AppTopbar.vue';
+/* import AppTopbar from './AppTopbar.vue'; */
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
-import AppConfig from './AppConfig.vue';
+/* import AppConfig from './AppConfig.vue'; */
 import { useLayout } from '@/layout/composables/layout';
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
@@ -58,7 +58,7 @@ const isOutsideClicked = (event) => {
 
 <template>
     <div class="layout-wrapper" :class="containerClass">
-        <app-topbar></app-topbar>
+        <!-- <app-topbar></app-topbar> -->
         <div class="layout-sidebar">
             <app-sidebar></app-sidebar>
         </div>
@@ -68,10 +68,14 @@ const isOutsideClicked = (event) => {
             </div>
             <app-footer></app-footer>
         </div>
-        <app-config></app-config>
         <div class="layout-mask"></div>
     </div>
     <Toast />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.layout-main-container {
+    padding: 50px 100px 25px 100px;
+    padding-left: 100px !important;
+}
+</style>

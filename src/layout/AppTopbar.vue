@@ -80,7 +80,6 @@ watch(dropdownValue, (newValue, oldValue) => {
     console.log(newValue, oldValue)
     if (newValue !== oldValue) {
         setLanguageCookie(newValue.value);
-        /* window.location.reload(true) */
     }
 });
 </script>
@@ -91,9 +90,9 @@ watch(dropdownValue, (newValue, oldValue) => {
             <i class="pi pi-bars"></i>
         </button>
 
-        <router-link to="/" class="layout-topbar-logo center">
+<!--         <router-link to="/" class="layout-topbar-logo center">
             <img alt="Logo" :src="'/images/m3ai.22.svg'" />
-        </router-link>
+        </router-link> -->
         
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
@@ -147,7 +146,7 @@ watch(dropdownValue, (newValue, oldValue) => {
 .dropdown{
     outline: none;
     border: none;
-    width: 64px;
+    width: 80px;
     height: 25px;
 }
 </style>

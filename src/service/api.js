@@ -7,9 +7,9 @@ const instance = axios.create({
     baseURL: baseURL
 });
 
-const M3AI_RESTAPI = {
+const RESTAPI = {
     ...Endpoints(instance)
 };
 
-export { M3AI_RESTAPI, baseURL }; // Export baseURL
+export { RESTAPI, baseURL };
 export default instance;
