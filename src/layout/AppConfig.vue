@@ -31,6 +31,8 @@ const { setScale, layoutConfig } = useLayout();
 const onConfigButtonClick = () => {
     visible.value = !visible.value;
 };
+
+
 const onChangeTheme = (theme, mode) => {
     $primevue.changeTheme(layoutConfig.theme.value, theme, 'theme-css', () => {
         layoutConfig.theme.value = theme;
@@ -57,12 +59,14 @@ const onMenuModeChange = (value) => {
 const onRippleChange = (value) => {
     layoutConfig.ripple.value = value;
 };
+
 const onDarkModeChange = (value) => {
     const newThemeName = value ? layoutConfig.theme.value.replace('light', 'dark') : layoutConfig.theme.value.replace('dark', 'light');
 
     layoutConfig.darkTheme.value = value;
     onChangeTheme(newThemeName, value);
 };
+
 const changeTheme = (theme, color) => {
     let newTheme, dark;
 
@@ -113,14 +117,15 @@ const onFocusRingColorChange = (value) => {
         else root.style.setProperty('--p-focus-ring-color', 'var(--surface-900)');
     }
 };
+
+
+defineExpose({
+    onConfigButtonClick,
+    onDarkModeChange
+});
 </script>
 
 <template>
-    <button class="p-btn p-link layout-topbar-button" type="button" @click="onConfigButtonClick()">
-        <i class="pi pi-cog"></i>
-        <span>Settings</span>
-    </button>
-
     <Sidebar v-model:visible="visible" position="right" class="layout-config-sidebar w-26rem" pt:closeButton="ml-auto">
         <div class="p-2">
             <section class="pb-4 flex align-items-center justify-content-between border-bottom-1 surface-border">
