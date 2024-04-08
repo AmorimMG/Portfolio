@@ -86,9 +86,9 @@ watch(dropdownValue, (newValue, oldValue) => {
 
 <template>
     <div class="layout-topbar">
-        <button class="p-link layout-menu-button layout-topbar-button " @click="onMenuToggle()">
+<!--         <button class="p-link layout-menu-button layout-topbar-button " @click="onMenuToggle()">
             <i class="pi pi-bars"></i>
-        </button>
+        </button> -->
 
 <!--         <router-link to="/" class="layout-topbar-logo center">
             <img alt="Logo" :src="'/images/m3ai.22.svg'" />
@@ -131,6 +131,13 @@ watch(dropdownValue, (newValue, oldValue) => {
 </div></template>
 
 <style lang="scss" scoped>
+.layout-topbar{
+    height: 30px;
+    width: 50%;
+    left: 25%;
+    rigth: 50%;
+}
+
 .layout-topbar-menu{
     height: 25px;
     align-items: center;
