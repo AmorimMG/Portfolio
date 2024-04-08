@@ -1,8 +1,9 @@
-import cookies from "js-cookie";
-import { RESTAPI } from "../service/api";
+import cookies from 'js-cookie';
+import { RESTAPI } from '../service/api';
 
-const SESSION_COOKIE = "user";
-const LANGUAGE_COOKIE = "Language";
+const SESSION_COOKIE = 'user';
+const LANGUAGE_COOKIE = 'Language';
+const DARKTHEME_COOKIE = 'DarkTheme';
 
 export function getUserCookie() {
     let cookie = cookies.get(SESSION_COOKIE);
@@ -12,7 +13,7 @@ export function getUserCookie() {
 export function setUserCookie(user, time) {
     cookies.set(SESSION_COOKIE, JSON.stringify(user), time);
 
-    if(!getLanguageCookie()){
+    if (!getLanguageCookie()) {
         setLanguageCookie('en');
     }
 }
@@ -30,24 +31,34 @@ export function getLanguageCookie() {
     return cookie ? JSON.parse(cookie) : undefined;
 }
 
+export function setDarkThemeCookie(darktheme) {
+    console.log(darktheme);
+    cookies.set(DARKTHEME_COOKIE, JSON.stringify(darktheme));
+}
+
+export function getDarkThemeCookie() {
+    let cookie = cookies.get(DARKTHEME_COOKIE);
+    return cookie ? JSON.parse(cookie) : 'true';
+}
+
 const sessionModule = {
     state: () => ({
-        user: getUserCookie(),
+        user: getUserCookie()
     }),
     mutations: {
         setUser(state, user) {
             state.user = user;
-        },
+        }
     },
     actions: {
         login({ user }) {
-            return new Promise((resolve, reject) => {   
+            return new Promise((resolve, reject) => {
                 RESTAPI.Login(user)
-                    .then(response => {
-                        if (response.status == 200 ||response.status == 204) {
+                    .then((response) => {
+                        if (response.status == 200 || response.status == 204) {
                             if (user.rememberme) {
                                 setUserCookie(response.data, 365);
-                            }else{
+                            } else {
                                 setUserCookie(response.data);
                             }
                             resolve(response.data);
@@ -59,10 +70,10 @@ const sessionModule = {
             });
         },
         logout() {
-                removeUserCookie();
+            removeUserCookie();
             return true;
-        },
-    },
+        }
+    }
 };
 
 export default sessionModule;

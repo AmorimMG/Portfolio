@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { usePrimeVue } from 'primevue/config';
 import { useLayout } from '@/layout/composables/layout';
+import { getDarkThemeCookie } from '../service/session';
 
 defineProps({
     simple: {
@@ -61,6 +62,7 @@ const onRippleChange = (value) => {
 };
 
 const onDarkModeChange = (value) => {
+    console.log(value)
     const newThemeName = value ? layoutConfig.theme.value.replace('light', 'dark') : layoutConfig.theme.value.replace('dark', 'light');
 
     layoutConfig.darkTheme.value = value;
@@ -118,10 +120,13 @@ const onFocusRingColorChange = (value) => {
     }
 };
 
-
 defineExpose({
     onConfigButtonClick,
     onDarkModeChange
+});
+
+onMounted(() => {
+    onDarkModeChange(getDarkThemeCookie());
 });
 </script>
 
@@ -137,13 +142,13 @@ defineExpose({
                     <Button icon="pi pi-plus" @click="incrementScale" text rounded :disabled="layoutConfig.scale.value === scales[scales.length - 1]" />
                 </div>
             </section>
-
+<!-- 
             <section class="py-4 flex align-items-center justify-content-between border-bottom-1 surface-border">
                 <span :class="['text-xl font-semibold']">Dark Mode</span>
                 <InputSwitch :modelValue="layoutConfig.darkTheme.value" @update:modelValue="onDarkModeChange" />
-            </section>
+            </section> -->
 
-            <template v-if="!simple">
+<!--             <template v-if="!simple">
                 <section class="py-4 flex align-items-center justify-content-between border-bottom-1 surface-border">
                     <span class="text-xl font-semibold">Menu Type</span>
                     <SelectButton :modelValue="layoutConfig.menuMode.value" @update:modelValue="onMenuModeChange" :options="menuModes" optionLabel="label" optionValue="value" :allowEmpty="false" />
@@ -153,12 +158,12 @@ defineExpose({
                     <span class="text-xl font-semibold">Input Variant</span>
                     <SelectButton :modelValue="inputStyle" @update:modelValue="onInputStyleChange" :options="inputStyles" optionLabel="label" optionValue="value" :allowEmpty="false" />
                 </section>
-            </template>
-
+            </template> -->
+<!-- 
             <section class="py-4 flex align-items-center justify-content-between border-bottom-1 surface-border">
                 <span class="text-xl font-semibold">Ripple Effect</span>
                 <InputSwitch :modelValue="layoutConfig.ripple.value" @update:modelValue="onRippleChange" />
-            </section>
+            </section> -->
 
             <section class="py-4 border-bottom-1 surface-border">
                 <div class="text-xl font-semibold mb-3">Themes</div>
@@ -371,7 +376,7 @@ defineExpose({
                     </button>
                 </div>
             </section>
-
+<!-- 
             <section class="py-4 border-bottom-1 surface-border">
                 <div class="flex align-items-center gap-2 mb-3">
                     <img src="https://primefaces.org/cdn/primevue/images/themes/md-light-indigo.svg" alt="Material Design" class="border-circle" style="width: 1.5rem" />
@@ -405,7 +410,7 @@ defineExpose({
                     <div class="w-3"></div>
                     <div class="w-3"></div>
                 </div>
-            </section>
+            </section> -->
         </div>
     </Sidebar>
 </template>

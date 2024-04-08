@@ -72,11 +72,11 @@ export default {
             sphere.rotation.z = timer * 0.0002;
             controls.update();
             effect.render(scene, camera);
-        },
-    },
+        }
+    }
 };
 </script>
 
 <template>
-<div id="asciiEffect" style="width: 250px; height: 250px;"></div>
+    <div id="asciiEffect" style="width: 250px; height: 250px"></div>
 </template>

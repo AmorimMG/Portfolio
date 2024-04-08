@@ -1,46 +1,44 @@
 <script>
-import { defineComponent } from 'vue';
-import VueCalendarHeatmap from 'vue-calendar-heatmap';
 import axios from 'axios';
 
-export default defineComponent({
-  name: 'HeatMap',
-  props: {
-    className: String
-  },
-  data() {
-    return {
-      rawData: [],
-      startDate: new Date().toISOString().slice(0, 10),
-      endDate: new Date().toISOString().slice(0, 10),
-      data: [
-        { date: '2024-03-01', count: 5 },
-        { date: '2024-03-10', count: 10 },
-        { date: '2024-03-15', count: 15 },
-        // Add more data as needed
-      ],
-    };
-  },
-  computed: {
-    heatmapData() {
-      return this.rawData.map(dataPoint => ({
-        date: new Date(dataPoint.date * 1000).toISOString().slice(0, 10),
-        value: dataPoint.amount
-      }));
-    }
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      try {
-        const response = await axios.post('https://graphql.anilist.co', {
-          query: `
-            query($id:Int,$name:String){
-              User(id:$id,name:$name){
+export default {
+    data() {
+        return {
+            year: null,
+            startingMonth: null,
+            months: null,
+            colors: ['#f4edfd', '#d8baf5', '#b48af2', '#7e4ef1', '#4b2c8c'],
+            data: {}
+        };
+    },
+    async created() {
+        await this.fetchData();
+        const currentDate = new Date();
+        const startingMonth = new Date(Object.keys(this.data)[0]).getMonth();
+
+        const months = [];
+        for (let i = 0; i < 8; i++) {
+            const monthIndex = (startingMonth + i) % 12;
+            months.push(this.getMonthName(monthIndex));
+        }
+
+        this.year = currentDate.getFullYear();
+        this.startingMonth = startingMonth;
+        this.months = months;
+    },
+    methods: {
+        getMonthName(monthIndex) {
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return monthNames[monthIndex];
+        },
+        async fetchData() {
+            try {
+                const response = await axios.post('https://graphql.anilist.co', {
+                    query: `
+            query($name:String){
+              User(name:$name){
                 stats{
-                  activityHistory{
+                  activityHistory {
                     date
                     amount
                     level
@@ -49,39 +47,132 @@ export default defineComponent({
               }
             }
           `,
-          variables: {
-            name: 'RecNove',
-          },
-        });
+                    variables: {
+                        name: 'RecNove'
+                    }
+                });
 
-        if (response.data && response.data.data && response.data.data.User) {
-          this.rawData = response.data.data.User.stats.activityHistory;
+                const activityHistory = response.data.data.User.stats.activityHistory;
+                this.data = this.processData(activityHistory);
+
+                console.log(activityHistory);
+                console.log(this.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        },
+        processData(activityHistory) {
+            const activityData = {};
+
+            activityHistory.forEach((entry) => {
+                const timestamp = entry.date;
+                const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
+                const formattedDate = date.toISOString().split('T')[0]; // Get date string in 'YYYY-MM-DD' format
+
+                // Update activityData with the activity amount for the formatted date
+                activityData[formattedDate] = entry.amount;
+            });
+
+            activityData;
+            return activityData;
+        },
+        weeksInMonth(year, monthIndex) {
+            const firstDay = new Date(year, monthIndex, 1).getDay();
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            return Math.ceil((firstDay + daysInMonth) / 7);
+        },
+        daysInWeek(year, monthIndex, week) {
+            const start = (week - 1) * 7 + 1;
+            const end = Math.min(start + 6, this.daysInMonth(year, monthIndex));
+            return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+        },
+        daysInMonth(year, monthIndex) {
+            return new Date(year, monthIndex + 1, 0).getDate();
+        },
+        getColor(monthIndex, day) {
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonthIndex = currentDate.getMonth();
+            const lastSixMonths = (monthIndex - this.startingMonth + 6) % 12;
+            const monthToCheck = (currentMonthIndex - lastSixMonths + 12) % 12;
+            const date = new Date(currentYear, monthToCheck, day).toISOString().split('T')[0];
+            const value = this.data[date] || 0;
+
+            if (value >= 10) return this.colors[4];
+            if (value >= 7) return this.colors[3];
+            if (value >= 5) return this.colors[2];
+            if (value >= 1) return this.colors[1];
+            return this.colors[0];
         }
-      } catch (error) {
-        console.error('Error fetching raw data:', error);
-      }
-    },
-    getColor(value) {
-      return value > 5 ? '#4CAF50' : '#F44336';
     }
-  },
-  components: {
-    VueCalendarHeatmap
-  }
-});
+};
 </script>
-
 <template>
-  <div>
-    <vue-calendar-heatmap :data="data" :color-range="['#eeeeee', '#008000']" :month-format="'YYYY-MM'" />
-    <div :class="[
-      'group min-h-[21rem] bg-violet-700/20 p-3 hover:cursor-pointer hover:brightness-75',
-      'mb-4 flex flex-col backdrop-blur sm:col-span-6 sm:h-[26rem] md:mb-0 md:h-[22rem] text-center',
-    ]">
-      <span class="block font-mono text-xl font-bold text-pink-200 line-through md:text-glow-violet-500">ANILIST</span>
-      <a href="https://anilist.co/user/RecNove/" target="_blank" rel="noopener noreferrer" class="lights relative h-48 w-full rounded-md bg-violet-700/20 backdrop-blur hover:cursor-pointer hover:brightness-75 sm:h-full">
-        <VueCalendarHeatmap :data="heatmapData" :color="getColor" :startDate="startDate" :endDate="endDate" />
-      </a>
+    <div>
+        <div class="calendar-heatmap">
+            <div class="legend">
+                <div v-for="color in colors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+            </div>
+            <div class="calendar">
+                <div v-for="(month, index) in months" :key="index" class="month">
+                    <div class="month-header">{{ month }}</div>
+                    <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
+                        <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
+                            {{ day }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
+
+<style scoped>
+.calendar-heatmap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.legend-item {
+    width: 15px;
+    height: 15px;
+}
+
+.calendar {
+    display: flex;
+}
+
+.month {
+    margin: 0 5px;
+}
+
+.month-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+
+.week {
+    display: flex;
+}
+
+.day {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+    font-size: 10px;
+    cursor: pointer;
+}
+</style>
