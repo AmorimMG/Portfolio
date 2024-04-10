@@ -1,17 +1,20 @@
 <script setup>
-import AppTopbar from '../layout/AppTopbar.vue';
 import { ref, onMounted, watchEffect, watch, onUnmounted } from 'vue';
 import Button from 'primevue/button';
 import OverlayPanel from 'primevue/overlaypanel';
+import { useToast } from 'primevue/usetoast';
+import InputText from 'primevue/inputtext';
+import FloatLabel from 'primevue/floatlabel';
+import Textarea from 'primevue/textarea';
 import DashboardTimeline from '../components/HeatMap.vue';
 import ThreeJSComponent from '../components/ThreeJS.vue';
+import Chart from '../components/Chart.vue';
 import Terminal from '../components/Terminal.vue';
 import Stack from '../components/Stack.vue';
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
-import AppConfig from '../layout/AppConfig.vue';
 import { RESTAPI } from '../service/api.js';
-import { useToast } from 'primevue/usetoast';
+import AppConfig from '../layout/AppConfig.vue';
 
 const toast = useToast();
 
@@ -22,11 +25,13 @@ const overlayPanel = ref();
 const currentTime = ref();
 const appConfigRef = ref();
 const lastFMData = ref(null);
+const iframe = ref(null);
 
 const isDay = ref(false);
 const overlayActive = ref(true);
 const online = ref(false);
 const lastFMVisible = ref(false);
+const emailVisible = ref(false);
 const cvVisible = ref(false);
 const isStarted = ref(false);
 const isHoveredGithub = ref(false);
@@ -37,6 +42,10 @@ const isHoveredSteam = ref(false);
 const showImage = ref(false);
 const isGlitchActive = ref(false);
 const isGlitchPageActive = ref(false);
+
+const name = ref('');
+const email = ref('');
+const message = ref('');
 
 const isSmallScreen = ref(false);
 const isMediumScreen = ref(false);
@@ -69,6 +78,46 @@ function updateTranslations(language) {
     applyGlitchEffect();
 }
 
+//Section to download the iframe content
+function downloadIframeContent(iframeId) {
+    // Get the iframe element
+    var iframe = document.getElementById(iframeId);
+
+    // Check if iframe is found
+    if (!iframe) {
+        console.error('Iframe not found');
+        return;
+    }
+
+    // Get the document associated with the iframe
+    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+    // Check if the document was found
+    if (!iframeDoc) {
+        console.error('Cannot access iframe document');
+        return;
+    }
+
+    // Create a Blob with the iframe's document content
+    var blob = new Blob([iframeDoc.documentElement.outerHTML], { type: 'text/html' });
+
+    // Create a link element
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'iframe_content.html';
+
+    // Append the link to the body (required for Firefox)
+    document.body.appendChild(a);
+
+    // Start the download
+    a.click();
+
+    // Clean up
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
+
 const updateScreenSize = () => {
     isSmallScreen.value = window.innerWidth <= 991;
     isMediumScreen.value = window.innerWidth >= 992 && window.innerWidth < 1960;
@@ -85,9 +134,14 @@ const openLastFM = () => {
     lastFMVisible.value = true;
 };
 
+const openEmail = () => {
+    emailVisible.value = true;
+};
+
 const closePopup = () => {
     cvVisible.value = false;
     lastFMVisible.value = false;
+    emailVisible.value = false;
 };
 
 const toggle = (event) => {
@@ -196,6 +250,35 @@ const applyGlitchPageEffect = () => {
     }, 2000);
 };
 
+const sendEmail = () => {
+    console.log('subit funcionou');
+    fetch('http://localhost:3000/send-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name.value,
+            email: email.value,
+            message: message.value
+        })
+    })
+        .then((response) => {
+            if (response.ok) {
+                alert('Email sent successfully');
+                name.value = '';
+                email.value = '';
+                message.value = '';
+            } else {
+                alert('Failed to send email');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Failed to send email');
+        });
+};
+
 onMounted(() => {
     updateScreenSize();
 
@@ -240,8 +323,7 @@ watch(dropdownValue, (newValue, oldValue) => {
     </div>
     <transition name="fade">
         <div :class="{ glitch: isGlitchPageActive }" v-show="isStarted" class="grid">
-        <AppTopbar />
-            <div class="col-12 lg:col-12 xl:col-6 grid-item-full">
+            <div class="col-12 lg:col-12 xl:col-6 header">
                 <div class="card mb-0" style="user-select: text" @mouseenter="showImage = true" @mouseleave="showImage = false">
                     <div class="mb-3" style="text-align: start; position: relative">
                         <h3 :class="{ glitch: isGlitchActive }" class="center">{{ translations.gblHi }}</h3>
@@ -258,149 +340,166 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 grid-item-half">
-                <div class="card row flex" style="padding: 0">
-                    <div class="col-6">
-                        <div class="row space-between" style="height: 100%">
-                            <div class="card little-card mb-0 center">
-                                <Dropdown :showClear="false" v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
-                                    <template #value="slotProps">
-                                        <div v-if="slotProps.value" class="flex align-items-center">
-                                            <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 40px" />
-                                        </div>
-                                        <span v-else>
-                                            {{ slotProps.placeholder }}
-                                        </span>
-                                    </template>
-                                    <template #dropdownicon>
-                                        <i class="pi pi-chevron-down"></i>
-                                    </template>
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
-                                            <div>{{ slotProps.option.name }}</div>
-                                        </div>
-                                    </template>
-                                </Dropdown>
-                            </div>
-                            <div class="card little-card mb-0 center" style="cursor: pointer">
-                                <button @click="appConfigRef.onDarkModeChange(toggleOverlay(!overlayActive))" style="background: none; border: none" :class="{ rotate: overlayActive, 'rotate-reverse': !overlayActive }">
-                                    <img id="image" src="/src/assets/images/bulb.png" width="50%" style="cursor: pointer" />
-                                </button>
-                            </div>
+            <div class="col-6 lg:col-6 xl:col-3 opcoes">
+                <!-- <h6 class="lights">Opções</h6> -->
+                <div class="cluster" style="margin: 0 !important">
+                    <div class="little-card center">
+                        <Dropdown :showClear="false" v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex align-items-center">
+                                    <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 40px" />
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                            <template #dropdownicon>
+                                <i class="pi pi-chevron-down"></i>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex align-items-center">
+                                    <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" />
+                                    <div>{{ slotProps.option.name }}</div>
+                                </div>
+                            </template>
+                        </Dropdown>
+                    </div>
+                    <div class="little-card center">
+                        <div class="center" style="cursor: pointer">
+                            <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onDarkModeChange(toggleOverlay(!overlayActive))" :class="{ rotate: overlayActive, 'rotate-reverse': !overlayActive }">
+                                <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
+                            </button>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="row space-between" style="height: 100%">
-                            <div class="card little-card mb-0 center" style="height: 100px">
-                                <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()" style="">
-                                    <i class="pi pi-cog" style="font-size: 25px"></i>
-                                </button>
-                                <app-config ref="appConfigRef"></app-config>
-                            </div>
-                            <div class="card little-card mb-0 center" style="height: 100px; background-size: cover" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }">
-                                <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ currentTime }}</h6>
-                                <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h6>
-                            </div>
+                    <div class="little-card center">
+                        <div class="center">
+                            <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()" style="">
+                                <i class="pi pi-cog" style="font-size: 25px"></i>
+                            </button>
+                            <app-config ref="appConfigRef"></app-config>
+                        </div>
+                    </div>
+                    <div class="little-card center" style="background-size: cover" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }">
+                        <div class="center">
+                            <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ currentTime }}</h6>
+                            <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h6>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 grid-item-3">
-                <div class="card row flex" style="height: 250px; padding: 0">
-                    <div class="col-6">
-                        <div class="row space-between" style="height: 100%">
-                            <div class="card little-card mb-0 center" style="height: 100px; background-color: #0274b3">
-                                <a class="relative" href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer" @mouseenter="isHoveredLinkedin = true" @mouseleave="isHoveredLinkedin = false">
-                                    <div class="little-card mb-0 center">
-                                        <img src="/src/assets/images/linkedin.jpeg" width="40px" height="40px" :class="{ lights: isHoveredLinkedin }" />
-                                    </div>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="2"
-                                        stroke="currentColor"
-                                        aria-hidden="true"
-                                        class="absolute stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
-                                    >
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                            <div class="card little-card mb-0 center" style="height: 100px; background-color: #9730a3">
-                                <a class="relative" href="https://www.instagram.com/amorim.gg_/" target="_blank" rel="noopener noreferrer">
-                                    <div class="mb-0 center" style="background-color: #9730a3" @mouseenter="isHoveredInstagram = true" @mouseleave="isHoveredInstagram = false">
-                                        <img src="/src/assets/images/instagram.png" width="40px" height="40px" :class="{ lights: isHoveredInstagram }" />
-                                    </div>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="2"
-                                        stroke="currentColor"
-                                        aria-hidden="true"
-                                        class="absolute stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
-                                    >
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="row space-between" style="height: 100%">
-                            <div
-                                class="card little-card mb-0 center"
-                                @mouseenter="isHoveredSteam = true"
-                                @mouseleave="isHoveredSteam = false"
-                                :class="{ hover: isHoveredSteam }"
-                                style="background-size: cover; height: 100px"
-                                :style="{ backgroundImage: 'url(/src/assets/images/steamlogo.jpg)' }"
+            <div class="col-6 lg:col-6 xl:col-3 links">
+                <!-- <h6 class="lights">Links</h6> -->
+                <div class="cluster" style="margin: 0 !important">
+                    <div class="little-card center" style="background-color: #9730a3">
+                        <a
+                            style="background-image: url('/src/assets/images/instagram.png'); background-size: cover; width: 50%; height: 50%"
+                            class="relative"
+                            href="https://www.instagram.com/amorim.gg_/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @mouseenter="isHoveredInstagram = true"
+                            @mouseleave="isHoveredInstagram = false"
+                            :class="{ lights: isHoveredInstagram }"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
                             >
-                                <a class="relative" :href="steamData?.profileurl" target="_blank" rel="noopener noreferrer">
-                                    <img v-if="!isHoveredSteam" :src="steamData?.avatarfull" width="40px" height="40px" />
-                                    <img v-if="isHoveredSteam" class="lights" src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1892420/6a93ba5ed4cda296ae84002f871148f43727abdc.gif" width="40px" height="40px" />
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="2"
-                                        stroke="currentColor"
-                                        aria-hidden="true"
-                                        class="absolute stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
-                                    >
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                            <div class="card little-card mb-0 center" style="height: 100px; background-color: #f9cf87">
-                                <a class="relative" href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer">
-                                    <div class="little-card mb-0 center" @mouseenter="isHoveredGithub = true" @mouseleave="isHoveredGithub = false">
-                                        <img src="/src/assets/images/github.png" width="40px" height="40px" :class="{ lights: isHoveredGithub }" />
-                                    </div>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="2"
-                                        stroke="currentColor"
-                                        aria-hidden="true"
-                                        class="absolute stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
-                                    >
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="little-card center" style="background-color: #0274b3">
+                        <a
+                            style="background-image: url('/src/assets/images/linkedin.jpeg'); background-size: cover; width: 50%; height: 50%"
+                            class="relative"
+                            href="https://www.linkedin.com/in/gabrielamorim0/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @mouseenter="isHoveredLinkedin = true"
+                            @mouseleave="isHoveredLinkedin = false"
+                            :class="{ lights: isHoveredLinkedin }"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div
+                        class="little-card center"
+                        @mouseenter="isHoveredSteam = true"
+                        @mouseleave="isHoveredSteam = false"
+                        :class="{ hover: isHoveredSteam }"
+                        style="background-size: cover"
+                        :style="{ backgroundImage: 'url(/src/assets/images/steamlogo.jpg)' }"
+                    >
+                        <a
+                            style="background-image: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1892420/6a93ba5ed4cda296ae84002f871148f43727abdc.gif'); background-size: cover; width: 50%; height: 50%"
+                            class="relative"
+                            :href="steamData?.profileurl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @mouseenter="isHoveredSteam = true"
+                            @mouseleave="isHoveredSteam = false"
+                            :class="{ lights: isHoveredSteam, backgroundImage: steamData?.avatarfull }"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="little-card center" style="background-color: #f9cf87">
+                        <a
+                            style="background-image: url('/src/assets/images/github.png'); background-size: cover; width: 50%; height: 50%"
+                            class="relative"
+                            href="https://github.com/AmorimMG"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            @mouseenter="isHoveredGithub = true"
+                            @mouseleave="isHoveredGithub = false"
+                            :class="{ lights: isHoveredGithub }"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                                class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 grid-item-half">
+            <div class="col-8 lg:col-8 xl:col-3 spotify">
                 <div v-if="spotifyData" class="card" style="background-color: #1db954">
                     <h5 class="lights spotify-title">{{ translations.gblSpotify }}...</h5>
                     <div class="spotify">
@@ -420,56 +519,50 @@ watch(dropdownValue, (newValue, oldValue) => {
                     <h6 :class="{ glitch: isGlitchActive }" class="lights">OFFLINE</h6>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
-                <a href="mailto:gabriel@amorim.pro" class="relative">
-                    <div class="card mb-0 center" style="background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
-                        <img src="/src/assets/images/Mail.png" width="80%" :class="{ lights: isHoveredMail }" />
-                    </div>
-                </a>
-            </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
+            <div class="col-4 lg:col-4 xl:col-3 online">
                 <div class="card mb-0 center" :style="{ backgroundColor: online ? '#35AC8C' : '#FF5733' }">
                     {{ discordData?.discord_status }}
                     <h2 :class="{ glitch: isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
                     <h2 :class="{ glitch: isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
-                <div class="card mb-0 center" style="padding: 0">
-                    <Button @click="openLastFM()" style="width: 100%; height: 100%; justify-content: center">
-                        <h2 :class="{ glitch: isGlitchActive }">Last.FM Statics</h2>
+            <div class="col-4 lg:col-4 xl:col-3 email">
+                <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
+                    <Button @click="openEmail()" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
+                        <img src="/src/assets/images/Mail.png" width="100%" :class="{ lights: isHoveredMail }" />
                     </Button>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
+            <div class="col-4 lg:col-4 xl:col-3 localizacao">
                 <div class="card mb-0 center" style="background-size: cover; opacity: 0.5" :style="{ backgroundImage: 'url(/src/assets/images/offline.webp)' }">
                     <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1">Tracking Offline <span class="red-dot"></span></h3>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-3">
-                <div class="card mb-0 center" style="background-size: cover" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }">
-                    <h2 :class="{ glitch: isGlitchActive }" class="greenLights">{{ currentTime }}</h2>
-                    <h5 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h5>
-                </div>
-            </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
-                <div class="card mb-0 flex justify-content-center align-items-center" style="height: 234px">
-                    <ThreeJSComponent />
-                </div>
-            </div>
-            <div class="col-12 lg:col-12 xl:col-3 space-between">
+            <div class="col-4 lg:col-4 xl:col-3 space-between">
                 <div class="card mb-0 center" style="padding: 0">
                     <Button @click="openCV()" style="width: 100%; height: 100%; justify-content: center">
                         <h2 :class="{ glitch: isGlitchActive }">CV</h2>
                     </Button>
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-6 space-between grid-item-full">
-                <div class="mb-0 center">
+            <div class="col-4 lg:col-4 xl:col-3 space-between">
+                <div class="card mb-0 center" style="padding: 0">
+                    <Button @click="openLastFM()" style="width: 100%; height: 100%; justify-content: center">
+                        <h2 :class="{ glitch: isGlitchActive }">Last.FM Statics</h2>
+                    </Button>
+                </div>
+            </div>
+            <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
+                <div class="card mb-0 flex justify-content-center align-items-center">
+                    <ThreeJSComponent />
+                </div>
+            </div>
+            <div class="col-12 lg:col-12 xl:col-6">
+                <div class="mb-0 center" style="width: 100%; height: 100%">
                     <Terminal :class="{ 'custom-terminal': overlayActive, 'custom-terminal-white': !overlayActive }" />
                 </div>
             </div>
-            <div class="col-12 lg:col-12 xl:col-6 grid-item-full glitch glitch--1">
+            <div class="col-12 lg:col-12 xl:col-6">
                 <Stack />
             </div>
             <div id="Anilist" class="col-12 lg:col-12 xl:col-12">
@@ -502,7 +595,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                         <span class="font-medium text-900 block mb-2">Team Members</span>
                         <ul class="list-none p-0 m-0 flex flex-column gap-3">
                             <li v-for="member in members" :key="member.name" class="flex align-items-center gap-2">
-                                <img :src="`https://primefaces.org/cdn/primevue/images/avatar/${member.image}`" style="width: 32px" />
+                                <img :src="`https://primefaces.org/cdn/primevue/images/avatar/${member.image}`" />
                                 <div>
                                     <span class="font-medium">{{ member.name }}</span>
                                     <div class="text-sm text-color-secondary">{{ member.email }}</div>
@@ -521,26 +614,59 @@ watch(dropdownValue, (newValue, oldValue) => {
                     <div class="inline-flex align-items-center justify-content-center gap-2">
                         {{ translations.gblCV }}
                     </div>
+                    <Button @click="downloadIframeContent('iframe')">Download PDF</Button>
                 </template>
                 <div class="popup-content" style="height: 100%">
-                    <iframe class="iframe" src="https://www.amorim.pro/cv" scrolling="auto"></iframe>
+                    <iframe id="iframe" class="iframe" :ref="iframe" src="https://www.amorim.pro/cv" scrolling="auto"></iframe>
                 </div>
             </Dialog>
             <Dialog v-model="lastFMVisible" @update:visible="closePopup()" :maximized="true" :visible="lastFMVisible" :modal="true" class="p-dialog-maximized">
                 <template #header>
-                    <div class="inline-flex align-items-center justify-content-center gap-2">LastFM</div>
-                </template>
-                <div class="popup-content" style="height: 100%">
+                    <div class="inline-flex align-items-center justify-content-center gap-2">
+                    
                     <h2>Your Weekly Track Chart</h2>
-                    <ul>
-                        <li v-for="track in lastFmData" :key="track.url">
-                            <span>{{ track.name }}</span> by <span>{{ track.artist['#text'] }}</span>
-                        </li>
-                    </ul>
+                    </div>
+                </template>
+                <div class="popup-content" style="height: 100%;height: 100% !important; 
+        overflow-y: auto !important;
+        overflow-x: hidden !important;">
+                    <Chart />
+                </div>
+            </Dialog>
+            <Dialog v-model="emailVisible" @update:visible="closePopup()" :maximized="true" :visible="emailVisible" :modal="true">
+                <template #header>
+                    <div class="inline-flex align-items-center justify-content-center gap-2">Contact Form</div>
+                </template>
+                <div class="popup-content" style="width: 100%">
+                    <form @submit.prevent="sendEmail">
+                        <div class="p-fluid">
+                            <div class="p-field col">
+                                <FloatLabel>
+                                    <InputText id="name" v-model="name" required />
+                                    <label for="name">Name</label>
+                                </FloatLabel>
+                            </div>
+                            <div class="p-field col">
+                                <FloatLabel>
+                                    <InputText id="email" type="email" v-model="email" required />
+                                    <label for="email">Email</label>
+                                </FloatLabel>
+                            </div>
+                            <div class="p-field col">
+                                <FloatLabel>
+                                    <Textarea id="message" v-model="message" rows="5" required />
+                                    <label for="message">Message</label>
+                                </FloatLabel>
+                            </div>
+                            <div class="p-field col">
+                                <Button type="submit" label="Submit" />
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </Dialog>
         </div>
     </transition>
 </template>
 
-<style src="./styles.css"></style>
+<style src="./styles.scss"></style>

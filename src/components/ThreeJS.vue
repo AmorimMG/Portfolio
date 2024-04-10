@@ -27,7 +27,7 @@ export default {
             pointLight2.position.set(-500, -500, -500);
             scene.add(pointLight2);
 
-            sphere = new THREE.Mesh(new THREE.SphereGeometry(250, 32, 32), new THREE.MeshPhongMaterial({ flatShading: true }));
+            sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 32), new THREE.MeshPhongMaterial({ flatShading: true }));
             scene.add(sphere);
 
             plane = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshBasicMaterial({ color: 0xe0e0e0 }));
@@ -36,10 +36,10 @@ export default {
             scene.add(plane);
 
             renderer = new THREE.WebGLRenderer();
-            renderer.setSize(250, 250);
+            renderer.setSize(200, 200);
 
             effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
-            effect.setSize(250, 250);
+            effect.setSize(200, 200);
             effect.domElement.style.color = 'green';
             effect.domElement.style.backgroundColor = 'transparent'; // Set background color to transparent
 
@@ -55,8 +55,8 @@ export default {
             const { camera, renderer, effect } = this;
             camera.aspect = 1;
             camera.updateProjectionMatrix();
-            renderer.setSize(250, 250);
-            effect.setSize(250, 250);
+            renderer.setSize(200, 200);
+            effect.setSize(200, 200);
         },
         animate(start, sphere, controls, effect, scene, camera) {
             const animate = () => {
@@ -78,5 +78,5 @@ export default {
 </script>
 
 <template>
-    <div id="asciiEffect" style="width: 250px; height: 250px"></div>
+    <div id="asciiEffect" style="width: 200px; height: 200px"></div>
 </template>

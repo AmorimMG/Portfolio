@@ -1,7 +1,7 @@
 <template>
     <div class="card mb-0 flex justify-content-center flex-column">
         <h2>MY STACK</h2>
-        <div class="m-4 mb-0 grid w-full grid-cols-7 flex-wrap justify-center gap-2 self-center sm:m-4 sm:mb-14 sm:grid-cols-7 sm:gap-2 md:grid-cols-10 md:gap-4" style="margin-top: 50px !important">
+        <div class="gap-2">
             <span class="lights">
                 <svg
                     stroke="currentColor"
