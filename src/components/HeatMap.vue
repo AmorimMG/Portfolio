@@ -17,7 +17,7 @@ export default {
         const startingMonth = new Date(Object.keys(this.data)[0]).getMonth();
 
         const months = [];
-        for (let i = 0; i < 8; i++) {
+        for (let i = 1; i < 7; i++) {
             const monthIndex = (startingMonth + i) % 12;
             months.push(this.getMonthName(monthIndex));
         }

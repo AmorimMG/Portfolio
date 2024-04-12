@@ -12,6 +12,7 @@ import MapboxMap from '../components/Mapbox.vue';
 import Chart from '../components/Chart.vue';
 import Terminal from '../components/Terminal.vue';
 import Stack from '../components/Stack.vue';
+import Spotify from '../components/Spotify.vue';
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
 import { RESTAPI } from '../service/api.js';
@@ -241,19 +242,14 @@ const applyGlitchPageEffect = () => {
     }, 2000);
 };
 
-const sendEmail = () => {
-    fetch('http://localhost:3000/mail/send-email', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({
-            name: name.value,
-            email: email.value,
-            message: message.value
-        })
-    })
+const sendEmail = async () => {
+    const body = {
+        name: name.value,
+        email: email.value,
+        message: message.value
+    };
+
+    RESTAPI.EnviarEmail(body)
         .then((response) => {
             if (response.ok) {
                 toast.add('Email sent successfully');
@@ -277,8 +273,8 @@ onMounted(() => {
     updateScreenSize();
     getCurrentTime();
     getDiscordInfo();
-    getLastFMInfo('RecNove', 'ce4badf0f27b6af0b7ae3f2283787ade');
-    getSteamInfo('76561198066083877', '7BC25873BDBEF9483F59FBE5E2D5C710');
+    getLastFMInfo('RecNove');
+    getSteamInfo();
 
     setInterval(getDiscordInfo, 150000);
     setInterval(getCurrentTime, 1000);
@@ -385,7 +381,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <div class="cluster" style="margin: 0 !important">
                     <div class="little-card center" style="background-color: #9730a3">
                         <a
-                            style="background-image: url('/src/assets/images/instagram.png'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover; width: 50%; height: 50%"
                             class="relative"
                             href="https://www.instagram.com/amorim.gg_/"
                             target="_blank"
@@ -410,7 +406,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                     <div class="little-card center" style="background-color: #0274b3">
                         <a
-                            style="background-image: url('/src/assets/images/linkedin.jpeg'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/linkedin.svg'); background-size: cover; width: 50%; height: 50%"
                             class="relative"
                             href="https://www.linkedin.com/in/gabrielamorim0/"
                             target="_blank"
@@ -467,7 +463,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                     <div class="little-card center" style="background-color: #f9cf87">
                         <a
-                            style="background-image: url('/src/assets/images/github.png'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/github.svg'); background-size: cover; width: 50%; height: 50%"
                             class="relative"
                             href="https://github.com/AmorimMG"
                             target="_blank"
@@ -493,7 +489,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 </div>
             </div>
             <div class="col-8 lg:col-8 xl:col-3 spotify">
-                <div v-if="spotifyData" class="card" style="background-color: #1db954">
+                <!--                 <div v-if="spotifyData" class="card" style="background-color: #1db954">
                     <div class="spotify">
                         <h5 class="lights spotify-title">{{ translations.gblSpotify }}...</h5>
                         <div class="spotify-texts">
@@ -512,7 +508,8 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <div v-else class="card mb-0 center" style="background-color: #ff5733">
                     <h2 :class="{ glitch: isGlitchActive }" class="lights">SPOTIFY</h2>
                     <h6 :class="{ glitch: isGlitchActive }" class="lights">OFFLINE</h6>
-                </div>
+                </div> -->
+                <Spotify />
             </div>
             <div class="col-4 lg:col-4 xl:col-3 online">
                 <div class="card mb-0 center" :style="{ backgroundColor: online ? '#35AC8C' : '#FF5733' }">
@@ -524,14 +521,14 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div class="col-4 lg:col-4 xl:col-3 email">
                 <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
                     <Button @click="openEmail()" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                        <img src="/src/assets/images/Mail.png" width="100%" :class="{ lights: isHoveredMail }" />
+                        <img src="/src/assets/images/Mail.svg" width="50%" :class="{ lights: isHoveredMail }" />
                     </Button>
                 </div>
             </div>
             <div class="col-4 lg:col-4 xl:col-3 localizacao">
                 <div class="card mb-0 center" style="padding: 0; opacity: 0.5">
                     <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1; position: absolute">Tracking Offline <span class="red-dot"></span></h3>
-                     <MapboxMap style="width: 100%¨; height: 100%"/>
+                    <MapboxMap />
                 </div>
             </div>
             <div class="col-4 lg:col-4 xl:col-3 space-between">
@@ -662,5 +659,4 @@ watch(dropdownValue, (newValue, oldValue) => {
     </transition>
 </template>
 
-<style src="./styles.scss">
-</style>
+<style src="./styles.scss"></style>
