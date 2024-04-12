@@ -133,12 +133,13 @@
 .custom-terminal {
     background-color: #000;
     width: 100%;
-    height: 100%;
+    height: 200px;
 }
 
 .custom-terminal-white {
     background-color: #fff;
     width: 100%;
+    height: 200px;
 }
 
 .custom-terminal .p-terminal-content {
@@ -148,11 +149,6 @@
 .custom-terminal .p-terminal-welcome-msg,
 .custom-terminal .p-terminal-prompt {
     color: green;
-}
-
-.custom-terminal-white {
-    background-color: #fff;
-    width: 100%;
 }
 
 .custom-terminal-white .p-terminal-content {
@@ -223,6 +219,16 @@
     width: 100%;
 }
 
+
+.mapboxgl-control-container{
+    display: none;
+}
+
+.mapboxgl-canvas{
+    width: 100%;
+    height: 100%;
+
+}
 @media screen and (min-width: 1960px) {
     .layout-main-container {
         padding: 50px 200px 10px 200px !important;

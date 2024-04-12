@@ -8,6 +8,7 @@ import FloatLabel from 'primevue/floatlabel';
 import Textarea from 'primevue/textarea';
 import DashboardTimeline from '../components/HeatMap.vue';
 import ThreeJSComponent from '../components/ThreeJS.vue';
+import MapboxMap from '../components/Mapbox.vue';
 import Chart from '../components/Chart.vue';
 import Terminal from '../components/Terminal.vue';
 import Stack from '../components/Stack.vue';
@@ -78,42 +79,32 @@ function updateTranslations(language) {
     applyGlitchEffect();
 }
 
-//Section to download the iframe content
 function downloadIframeContent(iframeId) {
-    // Get the iframe element
     var iframe = document.getElementById(iframeId);
 
-    // Check if iframe is found
     if (!iframe) {
         console.error('Iframe not found');
         return;
     }
 
-    // Get the document associated with the iframe
     var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-    // Check if the document was found
     if (!iframeDoc) {
         console.error('Cannot access iframe document');
         return;
     }
 
-    // Create a Blob with the iframe's document content
     var blob = new Blob([iframeDoc.documentElement.outerHTML], { type: 'text/html' });
 
-    // Create a link element
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
     a.download = 'iframe_content.html';
 
-    // Append the link to the body (required for Firefox)
     document.body.appendChild(a);
 
-    // Start the download
     a.click();
 
-    // Clean up
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 }
@@ -251,11 +242,11 @@ const applyGlitchPageEffect = () => {
 };
 
 const sendEmail = () => {
-    console.log('subit funcionou');
-    fetch('http://localhost:3000/send-email', {
+    fetch('http://localhost:3000/mail/send-email', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
             name: name.value,
@@ -265,29 +256,31 @@ const sendEmail = () => {
     })
         .then((response) => {
             if (response.ok) {
-                alert('Email sent successfully');
+                toast.add('Email sent successfully');
                 name.value = '';
                 email.value = '';
                 message.value = '';
             } else {
-                alert('Failed to send email');
+                toast.add('Failed to send email');
             }
         })
         .catch((error) => {
-            console.error('Error:', error);
-            alert('Failed to send email');
+            toast.add({
+                severity: 'error',
+                summary: error,
+                life: 3000
+            });
         });
 };
 
 onMounted(() => {
     updateScreenSize();
-
     getCurrentTime();
     getDiscordInfo();
-
     getLastFMInfo('RecNove', 'ce4badf0f27b6af0b7ae3f2283787ade');
     getSteamInfo('76561198066083877', '7BC25873BDBEF9483F59FBE5E2D5C710');
 
+    setInterval(getDiscordInfo, 150000);
     setInterval(getCurrentTime, 1000);
     setTimeout(() => {
         isStarted.value = true;
@@ -501,9 +494,8 @@ watch(dropdownValue, (newValue, oldValue) => {
             </div>
             <div class="col-8 lg:col-8 xl:col-3 spotify">
                 <div v-if="spotifyData" class="card" style="background-color: #1db954">
-                    <h5 class="lights spotify-title">{{ translations.gblSpotify }}...</h5>
                     <div class="spotify">
-                        <img :src="spotifyData?.album_art_url" class="spotify-img" />
+                        <h5 class="lights spotify-title">{{ translations.gblSpotify }}...</h5>
                         <div class="spotify-texts">
                             <p :class="{ glitch: isGlitchActive }" style="color: white; text-overflow: ellipsis">
                                 {{ spotifyData?.song }}
@@ -511,6 +503,9 @@ watch(dropdownValue, (newValue, oldValue) => {
                             <p :class="{ glitch: isGlitchActive }" style="color: white; text-overflow: ellipsis">
                                 {{ spotifyData?.album }}
                             </p>
+                        </div>
+                        <div class="img">
+                            <img :src="spotifyData?.album_art_url" class="spotify-img" />
                         </div>
                     </div>
                 </div>
@@ -534,8 +529,9 @@ watch(dropdownValue, (newValue, oldValue) => {
                 </div>
             </div>
             <div class="col-4 lg:col-4 xl:col-3 localizacao">
-                <div class="card mb-0 center" style="background-size: cover; opacity: 0.5" :style="{ backgroundImage: 'url(/src/assets/images/offline.webp)' }">
-                    <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1">Tracking Offline <span class="red-dot"></span></h3>
+                <div class="card mb-0 center" style="padding: 0; opacity: 0.5">
+                    <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1; position: absolute">Tracking Offline <span class="red-dot"></span></h3>
+                     <MapboxMap style="width: 100%¨; height: 100%"/>
                 </div>
             </div>
             <div class="col-4 lg:col-4 xl:col-3 space-between">
@@ -623,13 +619,10 @@ watch(dropdownValue, (newValue, oldValue) => {
             <Dialog v-model="lastFMVisible" @update:visible="closePopup()" :maximized="true" :visible="lastFMVisible" :modal="true" class="p-dialog-maximized">
                 <template #header>
                     <div class="inline-flex align-items-center justify-content-center gap-2">
-                    
-                    <h2>Your Weekly Track Chart</h2>
+                        <h2>Your Weekly Track Chart</h2>
                     </div>
                 </template>
-                <div class="popup-content" style="height: 100%;height: 100% !important; 
-        overflow-y: auto !important;
-        overflow-x: hidden !important;">
+                <div class="popup-content" style="height: 100%; height: 100% !important; overflow-y: auto !important; overflow-x: hidden !important">
                     <Chart />
                 </div>
             </Dialog>
@@ -669,4 +662,5 @@ watch(dropdownValue, (newValue, oldValue) => {
     </transition>
 </template>
 
-<style src="./styles.scss"></style>
+<style src="./styles.scss">
+</style>
