@@ -5,11 +5,11 @@ export default {
     name: 'MapboxMap',
     data() {
         return {
-            map: null,
+            map: null
         };
     },
     mounted() {
-        mapboxgl.accessToken = 'pk.eyJ1IjoicmVjbm92ZSIsImEiOiJjbHV2a2lscmYwNGVjMmpwYmRqZHNtYTdvIn0.k3GNzaXx-423rxgLjno94A';
+        mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
         this.initializeMap();
     },
     methods: {
@@ -22,9 +22,7 @@ export default {
                 bearing: 0,
                 pitch: 0,
                 antialias: true,
-                hash: true,
-                interactive: false,
-                
+                interactive: false
             });
 
             // Add navigation control (optional)
