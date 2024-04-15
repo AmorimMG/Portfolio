@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Endpoints from './endpoints';
 
-const baseURL = 'http://localhost:3000/';
+const baseURL = 'http://localhost:4000/';
 
 const instance = axios.create({
     baseURL: baseURL

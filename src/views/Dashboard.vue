@@ -8,7 +8,8 @@ import FloatLabel from 'primevue/floatlabel';
 import Textarea from 'primevue/textarea';
 import DashboardTimeline from '../components/HeatMap.vue';
 import ThreeJSComponent from '../components/ThreeJS.vue';
-import MapboxMap from '../components/Mapbox.vue';
+import Background from '../components/Background.vue';
+/* import MapboxMap from '../components/Mapbox.vue'; */
 import Chart from '../components/Chart.vue';
 import Terminal from '../components/Terminal.vue';
 import Stack from '../components/Stack.vue';
@@ -17,6 +18,8 @@ import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
 import { RESTAPI } from '../service/api.js';
 import AppConfig from '../layout/AppConfig.vue';
+
+
 
 const toast = useToast();
 
@@ -312,6 +315,7 @@ watch(dropdownValue, (newValue, oldValue) => {
     </div>
     <transition name="fade">
         <div :class="{ glitch: isGlitchPageActive }" v-show="isStarted" class="grid">
+            <Background />
             <div class="col-12 lg:col-12 xl:col-6 header">
                 <div class="card mb-0" style="user-select: text" @mouseenter="showImage = true" @mouseleave="showImage = false">
                     <div class="mb-3" style="text-align: start; position: relative">
@@ -525,10 +529,10 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </Button>
                 </div>
             </div>
-            <div class="col-4 lg:col-4 xl:col-3 localizacao">
-                <div class="card mb-0 center" style="padding: 0; opacity: 0.5">
-                    <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1; position: absolute">Tracking Offline <span class="red-dot"></span></h3>
+            <div class="col-4 lg:col-4 xl:col-3 localizacao" style="position: relative;">
+                <div class="card mb-0 center" style="padding: 0;">
                     <!-- <MapboxMap /> -->
+                    <h3 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h3>
                 </div>
             </div>
             <div class="col-4 lg:col-4 xl:col-3">

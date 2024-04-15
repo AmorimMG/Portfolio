@@ -1,5 +1,6 @@
 <script>
-import axios from 'axios';
+import { RESTAPI } from '../service/api.js';
+import { useToast } from 'primevue/usetoast';
 
 export default {
     data() {
@@ -8,11 +9,12 @@ export default {
             startingMonth: null,
             months: null,
             colors: ['#f4edfd', '#d8baf5', '#b48af2', '#7e4ef1', '#4b2c8c'],
-            data: {}
+            data: {},
+            toast: useToast()
         };
     },
     async created() {
-        await this.fetchData();
+        await this.getAnilist('RecNove');
         const currentDate = new Date();
         const startingMonth = new Date(Object.keys(this.data)[0]).getMonth();
 
@@ -24,6 +26,7 @@ export default {
 
         this.year = currentDate.getFullYear();
         this.startingMonth = startingMonth;
+        console.log(this.data);
         this.months = months;
     },
     methods: {
@@ -31,45 +34,47 @@ export default {
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             return monthNames[monthIndex];
         },
-        async fetchData() {
+        async getAnilist(AnilistUsername) {
             try {
-                const response = await axios.post('https://graphql.anilist.co', {
-                    query: `
-            query($name:String){
-              User(name:$name){
-                stats{
-                  activityHistory {
-                    date
-                    amount
-                    level
-                  }
-                }
-              }
-            }
-          `,
-                    variables: {
-                        name: 'RecNove'
-                    }
-                });
-
-                const activityHistory = response.data.data.User.stats.activityHistory;
-                this.data = this.processData(activityHistory);
-
-                console.log(activityHistory);
-                console.log(this.data);
+                RESTAPI.ObterAnilist(AnilistUsername)
+                    .then((response) => {
+                        const activityHistory = response.data;
+                        this.data = this.processData(activityHistory);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        this.toast.add({
+                            severity: 'error',
+                            summary: error,
+                            life: 3000
+                        });
+                    });
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.log(error);
+                this.toast.add({
+                    severity: 'error',
+                    summary: error,
+                    life: 3000
+                });
             }
+        },
+        formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         },
         processData(activityHistory) {
             const activityData = {};
 
             activityHistory.forEach((entry) => {
                 const timestamp = entry.date;
-                const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
-                const formattedDate = date.toISOString().split('T')[0]; // Get date string in 'YYYY-MM-DD' format
-
-                // Update activityData with the activity amount for the formatted date
+                if (timestamp === null || timestamp === undefined || isNaN(timestamp)) {
+                    console.error('Invalid timestamp:', timestamp);
+                    return;
+                }
+                const date = new Date(timestamp * 1000);
+                const formattedDate = this.formatDate(date);
                 activityData[formattedDate] = entry.amount;
             });
 
@@ -95,7 +100,9 @@ export default {
             const currentMonthIndex = currentDate.getMonth();
             const lastSixMonths = (monthIndex - this.startingMonth + 6) % 12;
             const monthToCheck = (currentMonthIndex - lastSixMonths + 12) % 12;
-            const date = new Date(currentYear, monthToCheck, day).toISOString().split('T')[0];
+            const date = new Date(currentYear, monthToCheck, day);
+            //Problema no Código que ajuda na formatação da data na Linha abaixo
+            /* const formattedDate = date.toISOString().split('T')[0]; */
             const value = this.data[date] || 0;
 
             if (value >= 10) return this.colors[4];
