@@ -381,7 +381,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <div class="cluster" style="margin: 0 !important">
                     <div class="little-card center" style="background-color: #9730a3">
                         <a
-                            style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover"
                             class="relative"
                             href="https://www.instagram.com/amorim.gg_/"
                             target="_blank"
@@ -406,7 +406,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                     <div class="little-card center" style="background-color: #0274b3">
                         <a
-                            style="background-image: url('/src/assets/images/linkedin.svg'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/linkedin.svg'); background-size: cover"
                             class="relative"
                             href="https://www.linkedin.com/in/gabrielamorim0/"
                             target="_blank"
@@ -438,7 +438,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                         :style="{ backgroundImage: 'url(/src/assets/images/steamlogo.jpg)' }"
                     >
                         <a
-                            style="background-image: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1892420/6a93ba5ed4cda296ae84002f871148f43727abdc.gif'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1892420/6a93ba5ed4cda296ae84002f871148f43727abdc.gif'); background-size: cover"
                             class="relative"
                             :href="steamData?.profileurl"
                             target="_blank"
@@ -463,7 +463,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                     <div class="little-card center" style="background-color: #f9cf87">
                         <a
-                            style="background-image: url('/src/assets/images/github.svg'); background-size: cover; width: 50%; height: 50%"
+                            style="background-image: url('/src/assets/images/github.svg'); background-size: cover"
                             class="relative"
                             href="https://github.com/AmorimMG"
                             target="_blank"
@@ -528,17 +528,17 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div class="col-4 lg:col-4 xl:col-3 localizacao">
                 <div class="card mb-0 center" style="padding: 0; opacity: 0.5">
                     <h3 :class="{ glitch: isGlitchActive }" class="lights" style="opacity: 1; position: absolute">Tracking Offline <span class="red-dot"></span></h3>
-                    <MapboxMap />
+                    <!-- <MapboxMap /> -->
                 </div>
             </div>
-            <div class="col-4 lg:col-4 xl:col-3 space-between">
+            <div class="col-4 lg:col-4 xl:col-3">
                 <div class="card mb-0 center" style="padding: 0">
                     <Button @click="openCV()" style="width: 100%; height: 100%; justify-content: center">
                         <h2 :class="{ glitch: isGlitchActive }">CV</h2>
                     </Button>
                 </div>
             </div>
-            <div class="col-4 lg:col-4 xl:col-3 space-between">
+            <div class="col-4 lg:col-4 xl:col-3">
                 <div class="card mb-0 center" style="padding: 0">
                     <Button @click="openLastFM()" style="width: 100%; height: 100%; justify-content: center">
                         <h2 :class="{ glitch: isGlitchActive }">Last.FM Statics</h2>
