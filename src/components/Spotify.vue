@@ -77,7 +77,7 @@ export default {
 </script>
 
 <template>
-    <div>
+    <div class="container">
         <h2 v-if="currentTrack">Currently Playing:</h2>
         <div v-if="currentTrack">
             <p>{{ currentTrack.name }} by {{ currentTrack.artist }}</p>
@@ -93,3 +93,13 @@ export default {
         </div>
     </div>
 </template>
+
+<style scoped>
+    .container{
+        background-color: #1db954;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        border-radius: 12px;
+    }
+</style>
