@@ -78,5 +78,7 @@ export default {
 </script>
 
 <template>
-    <div id="asciiEffect" style="width: 200px; height: 200px"></div>
+    <div class="card mb-0 flex justify-content-center align-items-center">
+        <div id="asciiEffect" style="width: 200px; height: 200px"></div>
+    </div>
 </template>

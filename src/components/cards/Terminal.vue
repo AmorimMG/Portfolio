@@ -122,5 +122,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+    <div style="width: 100%; height: 100%">
     <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$ " aria-label="PrimeVue Terminal Service" />
+    </div>
 </template>
