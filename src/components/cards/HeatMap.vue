@@ -1,5 +1,5 @@
 <script>
-import { RESTAPI } from '../service/api.js';
+import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
 
 export default {
@@ -115,23 +115,27 @@ export default {
 };
 </script>
 <template>
-    <div>
-        <div class="calendar-heatmap">
-            <div class="legend">
-                <div v-for="color in colors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
-            </div>
-            <div class="calendar">
-                <div v-for="(month, index) in months" :key="index" class="month">
-                    <div class="month-header">{{ month }}</div>
-                    <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
-                        <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
-                            {{ day }}
+    <div class="card mb-0 center">
+        <h2 class="lights">Anilist</h2>
+        <a href="https://anilist.co/user/RecNove/" target="_blank" rel="noopener noreferrer">
+            <div class="calendar-heatmap">
+                <div class="legend">
+                    <div v-for="color in colors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+                </div>
+                <div class="calendar">
+                    <div v-for="(month, index) in months" :key="index" class="month">
+                        <div class="month-header">{{ month }}</div>
+                        <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
+                            <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
+                                {{ day }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
+
 </template>
 
 <style scoped>

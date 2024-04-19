@@ -13,7 +13,7 @@ defineProps({
 
 const $primevue = usePrimeVue();
 
-const scales = ref([12, 13, 14, 15, 16]);
+const scales = ref([8, 9, 10, 11, 12]);
 const visible = ref(false);
 
 const compactMaterial = ref(false);
