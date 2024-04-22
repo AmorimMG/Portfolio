@@ -21,6 +21,8 @@ import Introduction from '../components/cards/Introduction.vue';
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
 
+/* import Mail from '../assets/images/Mail.svg'; */
+
 const overlayPanel = ref();
 const overlayActive = ref(true);
 const lastFMVisible = ref(false);
@@ -82,7 +84,6 @@ const toggleOverlay = () => {
     return overlayActive.value;
 };
 
-
 const applyGlitchEffect = () => {
     isGlitchActive.value = true;
     setTimeout(() => {
@@ -102,6 +103,9 @@ const applyGlitchPageEffect = () => {
 };
 
 onMounted(() => {
+    setTimeout(() => {
+        isStarted.value = true;
+    }, 2000);
 
 });
 
@@ -135,7 +139,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <Introduction :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
             </div>
             <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3">
-                <ClusterOpcoes :dropdownValue="dropdownValue" @dropdownValueChanged="handleDropdownValueChanged" @handletoggleOverlay="toggleOverlay" />
+             <ClusterOpcoes :dropdownValue="dropdownValue" @dropdownValueChanged="handleDropdownValueChanged" @handletoggleOverlay="toggleOverlay" />
             </div>
             <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3">
                 <ClusterLinks />
@@ -149,7 +153,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div id="Mail" class="col-4 lg:col-4 xl:col-3">
                 <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
                     <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                        <img src="/src/assets/images/Mail.svg" width="50%" :class="{ lights: isHoveredMail }" />
+                        <!-- <img :src="Mail" width="50%" :class="{ lights: isHoveredMail }" /> -->
                     </Button>
                 </div>
             </div>
