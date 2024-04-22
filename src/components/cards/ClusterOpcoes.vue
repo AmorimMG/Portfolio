@@ -1,6 +1,6 @@
 <script>
 import AppConfig from '../../layout/AppConfig.vue';
-import ref from 'vue';
+import { ref } from 'vue';
 
 export default {
     name: 'ClusterOpcoes',
