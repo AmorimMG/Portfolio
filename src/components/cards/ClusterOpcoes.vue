@@ -104,7 +104,7 @@ export default {
         <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
             <div class="center">
                 <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ currentTime }}</h6>
-                <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h6>
+<!--                 <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h6> -->
             </div>
         </div>
     </div>
