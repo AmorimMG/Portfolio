@@ -146,7 +146,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div id="Mail" class="col-4 lg:col-4 xl:col-3">
                 <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
                     <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                        <img src="/src/assets/images/Mail.svg" width="50%" :class="{ lights: isHoveredMail }" />
+                        <!-- <img :src="Mail" width="50%" :class="{ lights: isHoveredMail }" /> -->
                     </Button>
                 </div>
             </div>
