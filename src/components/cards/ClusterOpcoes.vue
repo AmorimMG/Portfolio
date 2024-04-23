@@ -1,18 +1,21 @@
 <script>
+import { ref, inject } from 'vue';
 import AppConfig from '../../layout/AppConfig.vue';
-import ref from 'vue';
+import { getLanguageCookie } from '../../service/session';
 
 export default {
     name: 'ClusterOpcoes',
     props: {
-        dropdownValues: Array
+        overlayActive: Boolean,
+        isGlitchActive: Boolean
     },
     methods: {
         toggleOverlay(event) {
             this.$emit('toggleOverlay', event);
         },
-        handleDropdownChange(newValue) {
-            this.$emit('update-dropdown-value', newValue);
+        handleDropdownChange({ value }) {
+            this.$emit('update-dropdown-value', value);
+            this.updateTranslations(value);
         },
         getCurrentTime() {
             const brazilTime = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
@@ -34,24 +37,40 @@ export default {
         }
     },
     data() {
-        const dropdownValue = ref(null); 
+        const { translations, updateTranslations } = inject('translations');
+
+        const dropdownValues = ref([
+            { name: 'Português', code: 'BR', value: 'pt' },
+            { name: 'Español', code: 'ES', value: 'es' },
+            { name: 'English', code: 'US', value: 'en' }
+        ]);
+
+        const defaultLanguage = dropdownValues.value.find((item) => item.value === getLanguageCookie());
+
+        const dropdownValue = ref(defaultLanguage || dropdownValues.value[0]);
+
         const currentTime = ref(null);
         const isDay = ref(false);
+        const appConfigRef = ref(null);
+
+        const selectedDropdownValue = this.dropdownValue;
 
         return {
-            appConfigRef: null,
-            selectedDropdownValue: this.dropdownValue,
+            selectedDropdownValue,
             dropdownValue,
+            dropdownValues,
             isDay,
-            currentTime
+            currentTime,
+            appConfigRef,
+            translations,
+            updateTranslations
         };
     },
     mounted() {
-        this.handleDropdownChange();
         this.appConfigRef = this.$refs.appConfigRef;
 
         this.getCurrentTime();
-
+        console.log(this.message);
         setInterval(this.getCurrentTime, 1000);
         setTimeout(() => {
             this.isStarted = true;
@@ -66,7 +85,7 @@ export default {
 <template>
     <div class="cluster" style="margin: 0 !important">
         <div class="little-card center">
-            <Dropdown @change="handleDropdownChange" :showClear="false" v-model="selectedDropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+            <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.selectedDropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex align-items-center">
                         <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 40px" />
@@ -88,14 +107,14 @@ export default {
         </div>
         <div class="little-card center">
             <div class="center" style="cursor: pointer">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onDarkModeChange(toggleOverlay(!overlayActive))" :class="{ rotate: overlayActive, 'rotate-reverse': !overlayActive }">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay(!this.overlayActive))" :class="{ rotate: this.overlayActive, 'rotate-reverse': !this.overlayActive }">
                     <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
                 </button>
             </div>
         </div>
         <div class="little-card center">
             <div class="center">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()" style="">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay(!this.appConfigRef.overlayActive))">
                     <i class="pi pi-cog" style="font-size: 25px"></i>
                 </button>
                 <app-config ref="appConfigRef"></app-config>
@@ -103,8 +122,8 @@ export default {
         </div>
         <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
             <div class="center">
-                <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ currentTime }}</h6>
-                <h6 :class="{ glitch: isGlitchActive }" class="greenLights">{{ translations.gblBrazil }}</h6>
+                <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
+                <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.translations.gblBrazil }}</h6>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watchEffect, watch } from 'vue';
+import { ref, onMounted, watch, provide } from 'vue';
 import Button from 'primevue/button';
 import OverlayPanel from 'primevue/overlaypanel';
 import InputText from 'primevue/inputtext';
@@ -17,9 +17,12 @@ import EmailModal from '../components/cards/modals/EmailModal.vue';
 import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
 import Introduction from '../components/cards/Introduction.vue';
+import Actitivies from '../components/cards/Activities.vue';
 
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
+
+import discordData from '../service/getDiscord';
 
 const overlayPanel = ref();
 const overlayActive = ref(true);
@@ -31,15 +34,7 @@ const isHoveredMail = ref(false);
 const isGlitchActive = ref(false);
 const isGlitchPageActive = ref(false);
 
-const dropdownValues = ref([
-    { name: 'Português', code: 'BR', value: 'pt' },
-    { name: 'Español', code: 'ES', value: 'es' },
-    { name: 'English', code: 'US', value: 'en' }
-]);
-
-const defaultLanguage = dropdownValues.value.find((item) => item.value === getLanguageCookie());
-
-const dropdownValue = ref(defaultLanguage || dropdownValues.value[0]);
+const dropdownValue = ref();
 
 const translations = ref({
     gblHi: '',
@@ -50,6 +45,8 @@ const translations = ref({
 });
 
 function updateTranslations(language) {
+    console.log(language)
+
     translations.value.gblHi = formatMessage('gblHi', language);
     translations.value.gblAboutMe = formatMessage('gblAboutMe', language);
     translations.value.gblInterests = formatMessage('gblInterests', language);
@@ -57,7 +54,13 @@ function updateTranslations(language) {
     translations.value.gblBrazil = formatMessage('gblBrazil', language);
 
     applyGlitchEffect();
+    translations.value = { ...translations.value };
 }
+
+provide('translations', {
+    translations,
+    updateTranslations
+});
 
 const closePopup = () => {
     cvVisible.value = false;
@@ -67,6 +70,20 @@ const closePopup = () => {
 
 const toggle = (event) => {
     overlayPanel.value.toggle(event);
+};
+
+const applyGlitchEffect = () => {
+    isGlitchActive.value = true;
+    setTimeout(() => {
+        isGlitchActive.value = false;
+    }, 2000);
+};
+
+const applyGlitchPageEffect = () => {
+    isGlitchPageActive.value = true;
+    setTimeout(() => {
+        isGlitchPageActive.value = false;
+    }, 2000);
 };
 
 const toggleOverlay = () => {
@@ -82,37 +99,17 @@ const toggleOverlay = () => {
     return overlayActive.value;
 };
 
-
-const applyGlitchEffect = () => {
-    isGlitchActive.value = true;
-    setTimeout(() => {
-        isGlitchActive.value = false;
-    }, 2000);
-};
-
 const handleDropdownValueChanged = (newValue) => {
     dropdownValue.value = newValue;
-};
-
-const applyGlitchPageEffect = () => {
-    isGlitchPageActive.value = true;
-    setTimeout(() => {
-        isGlitchPageActive.value = false;
-    }, 2000);
+    console.log(dropdownValue.value);
 };
 
 onMounted(() => {
+    updateTranslations(getLanguageCookie());
 
-});
-
-watchEffect(() => {
-    const cookieValue = getLanguageCookie();
-    if (cookieValue) {
-        updateTranslations(cookieValue);
-    } else {
-        setLanguageCookie('en');
-        updateTranslations('en');
-    }
+    setTimeout(() => {
+        isStarted.value = true;
+    }, 2000);
 });
 
 watch(dropdownValue, (newValue, oldValue) => {
@@ -135,7 +132,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <Introduction :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
             </div>
             <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3">
-                <ClusterOpcoes :dropdownValue="dropdownValue" @dropdownValueChanged="handleDropdownValueChanged" @handletoggleOverlay="toggleOverlay" />
+                <ClusterOpcoes :translations="translations.gblBrazil" @update-dropdown-value="handleDropdownValueChanged" @handletoggleOverlay="toggleOverlay" :overlayActive="overlayActive" :isGlitchActive="isGlitchActive"></ClusterOpcoes>
             </div>
             <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3">
                 <ClusterLinks />
@@ -144,7 +141,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <Spotify />
             </div>
             <div id="Discord" class="col-4 lg:col-4 xl:col-3">
-                <Discord />
+                <Discord :isGlitchActive="isGlitchActive" />
             </div>
             <div id="Mail" class="col-4 lg:col-4 xl:col-3">
                 <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
@@ -173,6 +170,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </Button>
                 </div>
             </div>
+                <Actitivies :discordData="discordData()" />
             <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
                 <ThreeJSComponent />
             </div>
@@ -221,9 +219,9 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                 </div>
             </OverlayPanel>
-            <CVModal :visible="cvVisible" :header="translations" @close="closePopup()" />
-            <LastFMModal :visible="lastFMVisible" :header="translations" @close="closePopup()" />
-            <EmailModal :visible="emailVisible" :header="translations" @close="closePopup()" />
+            <CVModal :visible="cvVisible" :header="translations.gblCV" @close="closePopup()" />
+            <LastFMModal :visible="lastFMVisible" :header="translations.gblCV" @close="closePopup()" />
+            <EmailModal :visible="emailVisible" :header="translations.gblCV" @close="closePopup()" />
         </div>
     </transition>
 </template>

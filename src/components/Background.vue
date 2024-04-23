@@ -67,5 +67,6 @@ canvas {
     left: 0;
     z-index: -999999;
     pointer-events: none;
+    opacity: 0.2;
 }
 </style>
