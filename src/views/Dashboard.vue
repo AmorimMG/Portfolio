@@ -45,7 +45,7 @@ const translations = ref({
 });
 
 function updateTranslations(language) {
-    console.log(language)
+    console.log(language);
 
     translations.value.gblHi = formatMessage('gblHi', language);
     translations.value.gblAboutMe = formatMessage('gblAboutMe', language);
@@ -170,7 +170,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </Button>
                 </div>
             </div>
-                <Actitivies :discordData="discordData()" />
+            <Actitivies :discordData="discordData()" />
             <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
                 <ThreeJSComponent />
             </div>

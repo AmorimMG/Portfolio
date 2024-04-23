@@ -4,7 +4,7 @@ const Endpoints = (instance) => ({
     ObterLastFM: (lastFMUsername) => instance.get('lastfm?', { params: { username: lastFMUsername } }),
     EnviarEmail: (body) => instance.post('mail/send-email', body),
     ObterSpotify: () => instance.get('spotify'),
-    ObterAnilist: (AnilistUsername) => instance.get(`anilist/${AnilistUsername}`),
+    ObterAnilist: (AnilistUsername) => instance.get(`anilist/${AnilistUsername}`)
 });
 
 export default Endpoints;
