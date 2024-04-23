@@ -8,6 +8,10 @@ const discordData = ref();
 const online = ref(false);
 const toast = useToast();
 
+const props = defineProps({
+    isGlitchActive: Boolean
+});
+
 const getDiscordInfo = () => {
     RESTAPI.ObterDiscord()
         .then((response) => {
@@ -37,13 +41,12 @@ onMounted(() => {
     getDiscordInfo();
     setInterval(getDiscordInfo, 150000);
 });
-
 </script>
 
 <template>
     <div class="card mb-0 center" :style="{ backgroundColor: online ? '#35AC8C' : '#FF5733' }">
         {{ discordData?.discord_status }}
-        <h2 :class="{ glitch: isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
-        <h2 :class="{ glitch: isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
+        <h2 :class="{ glitch: props.isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
+        <h2 :class="{ glitch: props.isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
     </div>
 </template>
