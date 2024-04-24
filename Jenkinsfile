@@ -22,6 +22,12 @@ pipeline {
             }
         }
 
+        stage("WhoamI"){
+            steps{
+                sh 'whoami'
+            }
+        }
+
         stage("Run Docker"){
             steps{
                 script {
