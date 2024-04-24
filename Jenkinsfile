@@ -31,10 +31,17 @@ pipeline {
             }
         }
 
+        stage('Setup') {
+            steps {
+                sh 'chown root /var/run/docker.sock'
+            }
+        }
+        
         stage("Run Docker"){
             steps{
                 script {
                     docker.image('httpd:2.4-alpine').run('-d -p 80:80')
+                    reuseNode true
                 }
             }
         }
