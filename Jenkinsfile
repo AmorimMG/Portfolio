@@ -34,9 +34,10 @@ pipeline {
         stage('Setup') {
             steps {
                 sh 'chown root /var/run/docker.sock'
+                sh 'chown root /usr/local/bin/docker'
             }
         }
-        
+
         stage("Run Docker"){
             steps{
                 script {
