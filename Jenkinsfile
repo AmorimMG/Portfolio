@@ -25,6 +25,10 @@ pipeline {
         stage("WhoamI"){
             steps{
                 sh 'whoami'
+                sh 'ls'
+                sh 'pwd'
+                sh 'ls -la'
+                sh 'getip'
             }
         }
 
