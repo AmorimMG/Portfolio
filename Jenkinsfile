@@ -70,7 +70,7 @@ pipeline {
         stage('Run Docker Build') {
             steps {
                 script {
-                    sh 'docker run --restart=always --network portfolio -d -p 5000:5173/tcp portfolio_container:1.0'
+                    sh 'docker run --restart=always --network portfolio -d -p 5173:5173/tcp portfolio_container:1.0'
                 }
             }
         }
