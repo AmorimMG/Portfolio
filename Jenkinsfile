@@ -3,12 +3,6 @@ pipeline {
     tools {
         nodejs '18.12.0'
     }
-    agent {
-        docker {
-            image 'node:18.12.0'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
     stages {
         stage('checkout') {
             steps {
