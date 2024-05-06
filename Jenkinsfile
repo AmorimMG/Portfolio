@@ -32,14 +32,6 @@ pipeline {
             }
         }
 
-        stage("Run Docker"){
-            steps{
-                script {
-                    docker.image('httpd:2.4-alpine').run('-d -p 80:80')
-                }
-            }
-        }
-
         stage("Build Image"){
             steps{
                 script {
@@ -47,7 +39,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Push Docker Image') {
             environment {
                 DOCKERHUB_CREDENTIALS = credentials('docker_cred')
