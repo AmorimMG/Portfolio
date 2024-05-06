@@ -34,7 +34,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh 'docker build -t portfolio_container:1.0 -f Dockerfile .'
+                    sh 'sudo docker build -t portfolio_container:1.0 -f Dockerfile .'
                 }
             }
         }
