@@ -3,6 +3,9 @@ pipeline {
     tools {
         nodejs '18.12.0'
     }
+    volumes: [
+        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+    ]
     stages{
         stage("checkout"){
             steps{
@@ -45,7 +48,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {
                         docker.image('portfolio_container:1.0').push('amorimmg/portfolio_container:1.0')
                     }
                 }
