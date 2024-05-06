@@ -34,7 +34,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    docker.build('portfolio_container:1.0', '-f Dockerfile .')
+                    sh 'docker build -t portfolio_container:1.0 -f Dockerfile .'
                 }
             }
         }
