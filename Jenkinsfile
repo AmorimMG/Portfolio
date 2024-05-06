@@ -25,7 +25,6 @@ pipeline {
         stage("WhoamI"){
             steps{
                 sh 'whoami'
-                sh 'cd /usr/local/bin/docker'
                 sh 'ls'
                 sh 'pwd'
                 sh 'ls -la'
