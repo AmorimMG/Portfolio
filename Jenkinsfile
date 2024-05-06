@@ -3,6 +3,12 @@ pipeline {
     tools {
         nodejs '18.12.0'
     }
+
+    environment {
+        REGISTRY = 'amorimmg/portfolio_container'
+        DOCKERHUB_CREDENTIALS = credentials('8bf62d16-8d89-4f75-a133-526a892fab9d')
+    }
+
     stages {
         stage('checkout') {
             steps {
@@ -34,20 +40,20 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh 'docker build -t portfolio_container:1.0 -f Dockerfile .'
+                    docker.build(REGISTRY, '-f Dockerfile .')
                 }
             }
         }
 
-        stage('Push Docker Image') {
-            environment {
-                DOCKERHUB_CREDENTIALS = credentials('docker_cred')
-            }
+        stage('Docker Push Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {
-                        docker.image('portfolio_container:1.0').push('amorimmg/portfolio_container:1.0')
-                    }
+                        def dockerCreds = credentials(DOCKERHUB_CREDENTIALS)
+                        def username = dockerCreds.username
+                        def password = dockerCreds.password
+
+                        sh "docker login -u $username -p $password"
+                        docker.image(REGISTRY).push('1.0')
                 }
             }
         }
@@ -64,7 +70,7 @@ pipeline {
         stage('Run Docker Build') {
             steps {
                 script {
-                    sh 'sudo docker run --restart=always --network mynetwork -d -p 5000:5173/tcp portfolio_container:1.0'
+                    sh 'docker run --restart=always --network portfolio -d -p 5000:5173/tcp portfolio_container:1.0'
                 }
             }
         }
