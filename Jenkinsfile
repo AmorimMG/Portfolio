@@ -1,78 +1,60 @@
 pipeline {
-    agent any
-    tools {
-        nodejs '18.12.0'
-    }
+        agent any
 
-    environment {
-        REGISTRY = 'amorimmg/portfolio_container'
-        DOCKERHUB_CREDENTIALS = credentials('8bf62d16-8d89-4f75-a133-526a892fab9d')
-    }
-
-    stages {
-        stage('checkout') {
-            steps {
-                checkout scm
-            }
+        environment {
+            REGISTRY = 'amorimmg/portfolio'
+            DOCKER_TAG = "1.$BUILD_NUMBER"
         }
 
-        stage('install') {
-            steps {
-                sh 'npm install'
+        stages {
+            stage('Checkout SCM') {
+                steps {
+                    checkout scm
+                }
             }
-        }
 
-        stage('Build') {
-            steps {
-                sh 'npm run build'
+            stage('Docker Stop Previous Build') {
+                steps {
+                    script {
+                        sh "docker ps -a -q --filter ancestor=$REGISTRY | xargs -r docker stop"
+                        sh "docker ps -a -q --filter ancestor=$REGISTRY | xargs -r docker rm"
+
+                        sh "docker images -q $REGISTRY | xargs -r docker rmi -f"
+                    }
+                }
             }
-        }
 
-        stage('WhoamI') {
-            steps {
-                sh 'whoami'
-                sh 'ls'
-                sh 'pwd'
-                sh 'ls -la'
+            stage('Docker Build Image') {
+                steps {
+                    script {
+                        docker.build(REGISTRY, "-f Dockerfile . -t $REGISTRY:$DOCKER_TAG")
+                    }
+                }
             }
-        }
 
-        stage('Build Image') {
-            steps {
-                script {
-                    docker.build(REGISTRY, '-f Dockerfile .')
+            stage('Docker Push Image') {
+                steps {
+                    script {
+                        withCredentials([
+                            usernamePassword(
+                                credentialsId: 'docker_cred',
+                                usernameVariable: 'USERNAME',
+                                passwordVariable: 'PASSWORD'
+                            )
+                        ]) {
+                            sh "docker login -u $USERNAME -p $PASSWORD"
+                            docker.image(REGISTRY).push(DOCKER_TAG)
+                        }
+                    }
+                }
+            }
+
+            stage('Docker Run Build') {
+                steps {
+                    script {
+                        sh "docker run --restart=always -d -p 5000:3000/tcp $REGISTRY:$DOCKER_TAG"
+                    }
                 }
             }
         }
-
-        stage('Docker Push Image') {
-            steps {
-                script {
-                        def dockerCreds = credentials(DOCKERHUB_CREDENTIALS)
-                        def username = dockerCreds.username
-                        def password = dockerCreds.password
-
-                        sh "docker login -u $username -p $password"
-                        docker.image(REGISTRY).push('1.0')
-                }
-            }
-        }
-
-/*         stage('Stop Previous Build') {
-            steps {
-                script {
-                    sh 'docker ps -f name=portfolio_container:1.0 -q | xargs --no-run-if-empty docker container stop'
-                    sh 'docker container ls -a -fname=portfolio_container:1.0 -q | xargs -r docker container rm'
-                }
-            }
-        } */
-
-        stage('Run Docker Build') {
-            steps {
-                script {
-                    sh 'docker run --restart=always --network portfolio -d -p 5173:5173/tcp portfolio_container:1.0'
-                }
-            }
-        }
-    }
 }
