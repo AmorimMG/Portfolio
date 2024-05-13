@@ -4,7 +4,7 @@ import Endpoints from './endpoints';
 var baseURL = '';
 
 if (window.location.hostname === 'amorim.pro') {
-    baseURL = 'http://192.168.0.190:5001/';
+    baseURL = 'https://api.amorim.pro/';
 } else {
     baseURL = 'http://localhost:4000/';
 }
