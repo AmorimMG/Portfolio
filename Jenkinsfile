@@ -52,7 +52,7 @@ pipeline {
             stage('Docker Run Build') {
                 steps {
                     script {
-                        sh "docker run --restart=always --network bridge -d -p 5000:5173/tcp $REGISTRY:$DOCKER_TAG"
+                        sh "docker run --restart=always --network bridge -d -p 5173:5173/tcp $REGISTRY:$DOCKER_TAG"
                     }
                 }
             }
