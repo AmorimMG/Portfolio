@@ -49,11 +49,13 @@ export default {
 
 <template>
     <div class="container">
-        <h2 v-if="currentTrack">Currently Playing:</h2>
-        <div v-if="currentTrack">
-            <h6>{{ currentTrack.name }} by {{ currentTrack.artist }}</h6>
-            <h6>Album: {{ currentTrack.album }}</h6>
-            <img width="100%" height="100%" :src="currentTrack.images[0].url" />
+        <h2 v-if="currentTrack">Spotify</h2>
+        <div class="info" v-if="currentTrack">
+            <div>
+                <h6>{{ currentTrack.name }} by {{ currentTrack.artist }}</h6>
+                <h6>Album: {{ currentTrack.album }}</h6>
+            </div>
+            <img width="50%" height="50%" :src="currentTrack.images[0].url" />
         </div>
         <h2 v-if="!currentTrack">Last Played Track:</h2>
         <div v-if="!currentTrack && lastTrack">
@@ -70,5 +72,13 @@ export default {
     height: 100%;
     padding: 20px;
     border-radius: 12px;
+}
+.info {
+    display: flex;
+    align-items: row;
+}
+
+h6 {
+    font-size: 0.8em;
 }
 </style>

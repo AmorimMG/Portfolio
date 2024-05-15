@@ -7,23 +7,7 @@ export const SidebarItems = [
             {
                 label: formatMessage('gblPortfolio'),
                 icon: 'pi pi-fw pi-user',
-                items: [
-                    {
-                        label: formatMessage('gblCurriculum'),
-                        icon: 'pi pi-fw pi-users',
-                        to: '/pages/cv'
-                    },
-                    {
-                        label: formatMessage('gblArcade'),
-                        icon: 'pi pi-fw pi-users',
-                        to: '/pages/arcade'
-                    },
-                    {
-                        label: formatMessage('gblArcade'),
-                        icon: 'pi pi-fw pi-users',
-                        to: '/landing'
-                    }
-                ]
+                items: []
             }
         ]
     }

@@ -36,4 +36,15 @@ export default {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+p{
+    font-size: 1.2em;
+    text-align: justify;
+    margin: 0;
+}
+
+h3{
+    font-size: 2em;
+    margin: 0;
+}
+</style>

@@ -130,6 +130,10 @@
     transform: rotate(0deg);
 }
 
+.p-terminal{
+    max-height: 200px;
+}
+
 .custom-terminal {
     background-color: #000;
     width: 100%;
@@ -142,22 +146,14 @@
     height: 200px;
 }
 
-.custom-terminal .p-terminal-content {
-    color: white;
-}
-
 .custom-terminal .p-terminal-welcome-msg,
 .custom-terminal .p-terminal-prompt {
-    color: green;
-}
-
-.custom-terminal-white .p-terminal-content {
-    color: black;
+    color: rgb(0, 255, 0);
 }
 
 .custom-terminal-white .p-terminal-welcome-msg,
 .custom-terminal-white .p-terminal-prompt {
-    color: green;
+    color: rgb(0, 255, 0);
 }
 
 .isLink {

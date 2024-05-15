@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-    <Dialog :visible="visible" @update:visible="onHide()" :modal="true">
+    <Dialog :visible="visible" @update:visible="onHide()" :modal="true" style="min-width: 50%">
         <template #header>
             <div class="inline-flex align-items-center justify-content-center gap-2">Contact Form</div>
         </template>

@@ -10,11 +10,13 @@ export default {
         isGlitchActive: Boolean
     },
     methods: {
-        toggleOverlay(event) {
-            this.$emit('toggleOverlay', event);
+        toggleOverlay() {
+            this.$emit('toggleOverlay', this.overlayActive);
+            return this.overlayActive;
         },
         handleDropdownChange({ value }) {
             this.$emit('update-dropdown-value', value);
+
             this.updateTranslations(value);
         },
         getCurrentTime() {
@@ -45,18 +47,17 @@ export default {
             { name: 'English', code: 'US', value: 'en' }
         ]);
 
-        const defaultLanguage = dropdownValues.value.find((item) => item.value === getLanguageCookie());
+        const languageCookie = getLanguageCookie();
 
-        const dropdownValue = ref(defaultLanguage || dropdownValues.value[0]);
+        const defaultLanguage = ref(dropdownValues.value.find((item) => item.value === languageCookie));
+
+        const dropdownValue = ref(defaultLanguage.value || dropdownValues.value[0]);
 
         const currentTime = ref(null);
         const isDay = ref(false);
         const appConfigRef = ref(null);
 
-        const selectedDropdownValue = this.dropdownValue;
-
         return {
-            selectedDropdownValue,
             dropdownValue,
             dropdownValues,
             isDay,
@@ -67,14 +68,17 @@ export default {
         };
     },
     mounted() {
+        console.log(getLanguageCookie());
+
         this.appConfigRef = this.$refs.appConfigRef;
 
         this.getCurrentTime();
-        console.log(this.message);
         setInterval(this.getCurrentTime, 1000);
         setTimeout(() => {
             this.isStarted = true;
         }, 2000);
+
+        this.updateTranslations(getLanguageCookie());
     },
     components: {
         AppConfig
@@ -85,7 +89,7 @@ export default {
 <template>
     <div class="cluster" style="margin: 0 !important">
         <div class="little-card center">
-            <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.selectedDropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+            <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.dropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex align-items-center">
                         <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 40px" />
@@ -107,14 +111,14 @@ export default {
         </div>
         <div class="little-card center">
             <div class="center" style="cursor: pointer">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay(!this.overlayActive))" :class="{ rotate: this.overlayActive, 'rotate-reverse': !this.overlayActive }">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: this.overlayActive, 'rotate-reverse': !this.overlayActive }">
                     <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
                 </button>
             </div>
         </div>
         <div class="little-card center">
             <div class="center">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay(!this.appConfigRef.overlayActive))">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())">
                     <i class="pi pi-cog" style="font-size: 25px"></i>
                 </button>
                 <app-config ref="appConfigRef"></app-config>

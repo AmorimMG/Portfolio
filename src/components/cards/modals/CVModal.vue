@@ -45,7 +45,7 @@ export default {
     <Dialog :visible="visible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
         <template #header>
             <div class="inline-flex align-items-center justify-content-center gap-2">
-                {{ translations.gblCV }}
+                {{ header }}
             </div>
             <Button @click="downloadIframeContent('iframe')">Download PDF</Button>
         </template>
