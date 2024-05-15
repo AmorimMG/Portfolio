@@ -26,6 +26,8 @@ const onConfigButtonClick = () => {
 };
 
 const onChangeTheme = (theme, mode) => {
+    console.log(theme, mode);
+
     $primevue.changeTheme(layoutConfig.theme.value, theme, 'theme-css', () => {
         layoutConfig.theme.value = theme;
         layoutConfig.darkTheme.value = mode;
@@ -47,6 +49,8 @@ const applyScale = () => {
 };
 
 const onDarkModeChange = (value) => {
+    console.log(value);
+
     const newThemeName = value ? layoutConfig.theme.value.replace('light', 'dark') : layoutConfig.theme.value.replace('dark', 'light');
 
     layoutConfig.darkTheme.value = value;

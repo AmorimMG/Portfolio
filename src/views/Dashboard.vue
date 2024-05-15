@@ -24,6 +24,8 @@ import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../ser
 
 import discordData from '../service/getDiscord';
 
+import Mail from '../assets/images/mail.png';
+
 const overlayPanel = ref();
 const overlayActive = ref(true);
 const lastFMVisible = ref(false);
@@ -34,6 +36,8 @@ const isHoveredMail = ref(false);
 const isGlitchActive = ref(false);
 const isGlitchPageActive = ref(false);
 
+const language = ref();
+
 const dropdownValue = ref();
 
 const translations = ref({
@@ -41,17 +45,22 @@ const translations = ref({
     gblAboutMe: '',
     gblInterests: '',
     gblSpotify: '',
-    gblBrazil: ''
+    gblBrazil: '',
+    gblCV: ''
 });
 
-function updateTranslations(language) {
-    console.log(language);
-
-    translations.value.gblHi = formatMessage('gblHi', language);
-    translations.value.gblAboutMe = formatMessage('gblAboutMe', language);
-    translations.value.gblInterests = formatMessage('gblInterests', language);
-    translations.value.gblSpotify = formatMessage('gblSpotify', language);
-    translations.value.gblBrazil = formatMessage('gblBrazil', language);
+function updateTranslations(languages) {
+    if (languages) {
+        language.value = languages;
+    } else {
+        language.value = languages.value;
+    }
+    translations.value.gblHi = formatMessage('gblHi', language.value);
+    translations.value.gblAboutMe = formatMessage('gblAboutMe', language.value);
+    translations.value.gblInterests = formatMessage('gblInterests', language.value);
+    translations.value.gblSpotify = formatMessage('gblSpotify', language.value);
+    translations.value.gblBrazil = formatMessage('gblBrazil', language.value);
+    translations.value.gblCV = formatMessage('gblCV', language.value);
 
     applyGlitchEffect();
     translations.value = { ...translations.value };
@@ -86,22 +95,21 @@ const applyGlitchPageEffect = () => {
     }, 2000);
 };
 
-const toggleOverlay = () => {
+const handleToggleOverlay = (overlayActives) => {
     applyGlitchPageEffect();
-    overlayActive.value = !overlayActive.value;
+
+    overlayActive.value = !overlayActives;
 
     if (overlayActive.value === true) {
         setDarkThemeCookie(overlayActive.value);
     } else {
         setDarkThemeCookie(overlayActive.value);
     }
-
-    return overlayActive.value;
 };
 
 const handleDropdownValueChanged = (newValue) => {
     dropdownValue.value = newValue;
-    console.log(dropdownValue.value);
+    updateTranslations(dropdownValue.value.value);
 };
 
 onMounted(() => {
@@ -115,7 +123,6 @@ onMounted(() => {
 watch(dropdownValue, (newValue, oldValue) => {
     if (newValue !== oldValue) {
         setLanguageCookie(newValue.value);
-        updateTranslations(newValue.value);
     }
 });
 </script>
@@ -128,11 +135,11 @@ watch(dropdownValue, (newValue, oldValue) => {
     <transition name="fade">
         <div :class="{ glitch: isGlitchPageActive }" v-show="isStarted" class="grid">
             <Background />
-            <div class="col-12 lg:col-12 xl:col-6 header">
+            <div class="col-12 lg:col-12 xl:col-6">
                 <Introduction :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
             </div>
             <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3">
-                <ClusterOpcoes :translations="translations.gblBrazil" @update-dropdown-value="handleDropdownValueChanged" @handletoggleOverlay="toggleOverlay" :overlayActive="overlayActive" :isGlitchActive="isGlitchActive"></ClusterOpcoes>
+                <ClusterOpcoes :translations="translations.gblBrazil" @update-dropdown-value="handleDropdownValueChanged" @toggleOverlay="handleToggleOverlay" :overlayActive="overlayActive" :isGlitchActive="isGlitchActive"></ClusterOpcoes>
             </div>
             <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3">
                 <ClusterLinks />
@@ -144,15 +151,15 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <Discord :isGlitchActive="isGlitchActive" />
             </div>
             <div id="Mail" class="col-4 lg:col-4 xl:col-3">
-                <div class="card mb-0 center" style="background-color: #7225d6; padding: 0" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
+                <div class="card mb-0 center" style="padding: 0; background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
                     <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                        <!-- <img :src="Mail" width="50%" :class="{ lights: isHoveredMail }" /> -->
+                        <img :src="Mail" width="50%" :class="{ lights: isHoveredMail }" />
                     </Button>
                 </div>
             </div>
             <div id="Mapbox" class="col-4 lg:col-4 xl:col-3" style="position: relative">
                 <div class="card mb-0 center" style="padding: 0">
-                    <!--   <MapboxMap /> -->
+                    <MapboxMap />
                     <h3 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h3>
                 </div>
             </div>
