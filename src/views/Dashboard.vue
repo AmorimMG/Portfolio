@@ -24,7 +24,7 @@ import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../ser
 
 import discordData from '../service/getDiscord';
 
-import Mail from '../assets/images/mail.png';
+import Mail from '/src/assets/images/mail.png';
 
 const overlayPanel = ref();
 const overlayActive = ref(true);
