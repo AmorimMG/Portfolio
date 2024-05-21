@@ -33,7 +33,7 @@ onMounted(() => {
 <template>
     <div class="cluster" style="margin: 0 !important">
         <div class="little-card center" style="background-color: #9730a3">
-            <a
+            <Button
                 style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover"
                 class="relative"
                 href="https://www.instagram.com/amorim.gg_/"
@@ -42,21 +42,20 @@ onMounted(() => {
                 @mouseenter="isHoveredInstagram = true"
                 @mouseleave="isHoveredInstagram = false"
                 :class="{ lights: isHoveredInstagram }"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                    class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
-                    style="margin-top: 20px !important"
-                >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
-                </svg>
-            </a>
+            />
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            aria-hidden="true"
+            class="stroke-white dark:stroke-gray-900 bottom-0 right-0 m-2 md:mb-5 xl:m-5 rotate-45 mb-2 mr-2 w-8 h-8 lg:w-14 lg:h-14 md:w-10 md:h-10 hover:text-white"
+            style="position: relative;"
+        >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z"></path>
+        </svg>
         </div>
         <div class="little-card center" style="background-color: #0274b3">
             <a
