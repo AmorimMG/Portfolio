@@ -113,7 +113,8 @@ const handleDropdownValueChanged = (newValue) => {
 };
 
 onMounted(() => {
-    updateTranslations(getLanguageCookie());
+    console.log(getLanguageCookie());
+    updateTranslations(getLanguageCookie() ?? 'pt');
 
     setTimeout(() => {
         isStarted.value = true;

@@ -48,14 +48,14 @@ export default {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container card flex flex-column">
         <h2 v-if="currentTrack">Spotify</h2>
         <div class="info" v-if="currentTrack">
             <div>
                 <h6>{{ currentTrack.name }} by {{ currentTrack.artist }}</h6>
                 <h6>Album: {{ currentTrack.album }}</h6>
             </div>
-            <img width="50%" height="50%" :src="currentTrack.images[0].url" />
+            <img width="100%" height="50%" :src="currentTrack.images[0].url" />
         </div>
         <h2 v-if="!currentTrack">Last Played Track:</h2>
         <div v-if="!currentTrack && lastTrack">
