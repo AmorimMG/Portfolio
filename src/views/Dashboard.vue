@@ -48,11 +48,12 @@ const translations = ref({
 });
 
 function updateTranslations(languages) {
-    console.log(languages)
     if (languages) {
         language.value = languages;
-    } else {
+    } else if (languages.value) {
         language.value = languages.value;
+    } else {
+        language.value = 'pt';
     }
     translations.value.gblHi = formatMessage('gblHi', language.value);
     translations.value.gblAboutMe = formatMessage('gblAboutMe', language.value);
@@ -176,8 +177,8 @@ watch(dropdownValue, (newValue, oldValue) => {
                         <h2 :class="{ glitch: isGlitchActive }">Last.FM Statics</h2>
                     </Button>
                 </div>
-            </div>
-           <!--  <Actitivies :discordData="discordData()" /> -->
+            </div> 
+            <!--  <Actitivies :discordData="discordData()" /> -->
             <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
                 <ThreeJSComponent />
             </div>
