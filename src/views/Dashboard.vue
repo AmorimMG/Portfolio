@@ -50,10 +50,10 @@ const translations = ref({
 function updateTranslations(languages) {
     if (languages) {
         language.value = languages;
-    } else if (languages.value) {
+    } else if (languages?.value) {
         language.value = languages.value;
     } else {
-        language.value = 'pt';
+        language.value = 'pt'; // lingua padrão
     }
     translations.value.gblHi = formatMessage('gblHi', language.value);
     translations.value.gblAboutMe = formatMessage('gblAboutMe', language.value);
