@@ -6,7 +6,6 @@ import InputText from 'primevue/inputtext';
 import Background from '../components/Background.vue';
 import DashboardTimeline from '../components/cards/HeatMap.vue';
 import ThreeJSComponent from '../components/cards/ThreeJS.vue';
-/* import MapboxMap from '../components/Mapbox.vue'; */
 import Terminal from '../components/cards/Terminal.vue';
 import Stack from '../components/cards/Stack.vue';
 import Spotify from '../components/cards/Spotify.vue';
@@ -17,16 +16,19 @@ import EmailModal from '../components/cards/modals/EmailModal.vue';
 import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
 import Introduction from '../components/cards/Introduction.vue';
-import Actitivies from '../components/cards/Activities.vue';
+/* import Actitivies from '../components/cards/Activities.vue'; */
+/* import MapboxMap from '../components/Mapbox.vue'; */
 
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
-
-import discordData from '../service/getDiscord';
+/* import discordData from '../service/getDiscord'; */
 
 import Mail from '/src/assets/images/Mail.png';
 
 const overlayPanel = ref();
+const language = ref();
+const dropdownValue = ref();
+
 const overlayActive = ref(true);
 const lastFMVisible = ref(false);
 const emailVisible = ref(false);
@@ -35,10 +37,6 @@ const isStarted = ref(false);
 const isHoveredMail = ref(false);
 const isGlitchActive = ref(false);
 const isGlitchPageActive = ref(false);
-
-const language = ref();
-
-const dropdownValue = ref();
 
 const translations = ref({
     gblHi: '',
@@ -50,6 +48,7 @@ const translations = ref({
 });
 
 function updateTranslations(languages) {
+    console.log(languages)
     if (languages) {
         language.value = languages;
     } else {
@@ -178,7 +177,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </Button>
                 </div>
             </div>
-            <Actitivies :discordData="discordData()" />
+           <!--  <Actitivies :discordData="discordData()" /> -->
             <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
                 <ThreeJSComponent />
             </div>
