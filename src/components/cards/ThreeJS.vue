@@ -36,10 +36,10 @@ export default {
             scene.add(plane);
 
             renderer = new THREE.WebGLRenderer();
-            renderer.setSize(200, 200);
+            renderer.setSize(175, 175);
 
             effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
-            effect.setSize(200, 200);
+            effect.setSize(175, 175);
             effect.domElement.style.color = 'green';
             effect.domElement.style.backgroundColor = 'transparent'; // Set background color to transparent
 
@@ -47,16 +47,7 @@ export default {
 
             controls = new TrackballControls(camera, effect.domElement);
 
-            window.addEventListener('resize', this.onWindowResize);
-
             this.animate(start, sphere, controls, effect, scene, camera);
-        },
-        onWindowResize() {
-            const { camera, renderer, effect } = this;
-            camera.aspect = 1;
-            camera.updateProjectionMatrix();
-            renderer.setSize(200, 200);
-            effect.setSize(200, 200);
         },
         animate(start, sphere, controls, effect, scene, camera) {
             const animate = () => {
@@ -78,7 +69,22 @@ export default {
 </script>
 
 <template>
-    <div class="card mb-0 flex justify-content-center align-items-center">
-        <div id="asciiEffect" style="width: 200px; height: 200px"></div>
+    <div class="asciiCard card mb-0 flex justify-content-center align-items-center">
+        <div id="asciiEffect"></div>
     </div>
 </template>
+
+<style>
+    .asciiCard{
+        margin: 0; 
+        padding: 0;
+    }
+
+    #asciiEffect{
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+</style>
