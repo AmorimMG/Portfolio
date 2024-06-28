@@ -32,8 +32,8 @@ export function getLanguageCookie() {
 }
 
 export function setDarkThemeCookie(darktheme) {
-    console.log(darktheme);
-    cookies.set(DARKTHEME_COOKIE, JSON.stringify(darktheme));
+    console.log(!darktheme);
+    cookies.set(DARKTHEME_COOKIE, JSON.stringify(!darktheme));
 }
 
 export function getDarkThemeCookie() {

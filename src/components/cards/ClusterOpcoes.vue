@@ -1,7 +1,10 @@
 <script>
 import { ref, inject } from 'vue';
+import { useLayout } from '../../layout/composables/layout';
 import AppConfig from '../../layout/AppConfig.vue';
 import { getLanguageCookie } from '../../service/session';
+
+const { layoutConfig } = useLayout();
 
 export default {
     name: 'ClusterOpcoes',
@@ -87,7 +90,7 @@ export default {
 </script>
 
 <template>
-    <div class="cluster" style="margin: 0 !important">
+    <div class="cluster" style="margin: 10px">
         <div class="little-card center">
             <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.dropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                 <template #value="slotProps">
@@ -111,17 +114,17 @@ export default {
         </div>
         <div class="little-card center">
             <div class="center" style="cursor: pointer">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: this.overlayActive, 'rotate-reverse': !this.overlayActive }">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: !this.overlayActive, 'rotate-reverse': this.overlayActive }">
                     <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
                 </button>
             </div>
         </div>
         <div class="little-card center">
             <div class="center">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())">
+                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onConfigButtonClick()">
                     <i class="pi pi-cog" style="font-size: 25px"></i>
                 </button>
-                <app-config ref="appConfigRef"></app-config>
+                <app-config simple ref="appConfigRef"></app-config>
             </div>
         </div>
         <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">

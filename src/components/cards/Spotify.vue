@@ -7,11 +7,16 @@ export default {
         return {
             toast: useToast(),
             currentTrack: null,
-            lastTrack: null
+            lastTrack: null,
+            isLargeScreen: window.innerWidth > 992
         };
     },
-    async mounted() {
-        await this.getSpotifyData();
+    mounted() {
+        this.getSpotifyData();
+        window.addEventListener('resize', this.handleResize);
+    },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.handleResize);
     },
     methods: {
         async getSpotifyData() {
@@ -25,8 +30,6 @@ export default {
                         images: currentTrack.images,
                         url: currentTrack.url
                     };
-
-                    console.log(this.currentTrack);
                 }
 
                 if (response.data.lastTrack) {
@@ -38,41 +41,59 @@ export default {
                         images: lastItem.images,
                         url: lastItem.url
                     };
-
-                    console.log(this.lastTrack);
                 }
             });
+        },
+        handleResize() {
+            this.isLargeScreen = window.innerWidth > 992;
         }
     }
 };
 </script>
 
 <template>
-    <div class="container card flex flex-column">
-        <h2 v-if="currentTrack">Spotify</h2>
-        <div class="info" v-if="currentTrack">
-            <div>
-                <h6>{{ currentTrack.name }} by {{ currentTrack.artist }}</h6>
-                <h6>Album: {{ currentTrack.album }}</h6>
+<div v-if="isLargeScreen" class="card page">
+    <div class="album-info" v-if="currentTrack">
+        <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
+            <div class="overlayy">
+                <h2>{{ currentTrack.name }}</h2>
+                <h3>{{ currentTrack.artist }}</h3>
+                <h4>Album: {{ currentTrack.album }}</h4>
             </div>
-            <img width="100%" height="50%" :src="currentTrack.images[0].url" />
         </div>
-        <h2 v-if="!currentTrack">Last Played Track:</h2>
-        <div v-if="!currentTrack && lastTrack">
-            <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
-            <p>Album: {{ lastTrack.album }}</p>
+    </div>
+    <h2 v-if="!currentTrack">Last Played Track:</h2>
+    <div v-if="!currentTrack && lastTrack">
+        <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
+        <p>Album: {{ lastTrack.album }}</p>
+    </div>
+</div>
+    <div v-else class="card page"> 
+    <div class="album-info" v-if="currentTrack">
+        <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
+            <div class="overlayy">
+                <h2>{{ currentTrack.name }}</h2>
+                <h3>{{ currentTrack.artist }}</h3>
+                <h4>Album: {{ currentTrack.album }}</h4>
+            </div>
         </div>
+    </div>
+    <h2 v-if="!currentTrack">Last Played Track:</h2>
+    <div v-if="!currentTrack && lastTrack">
+        <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
+        <p>Album: {{ lastTrack.album }}</p>
+    </div>
     </div>
 </template>
 
 <style scoped>
-.container {
-    background-color: #1db954;
+.page {
     width: 100%;
-    height: 100%;
-    padding: 20px;
-    border-radius: 12px;
+    height: 100% !important;
+    aspect-ratio: 2 / 1;
+    padding: 0;
 }
+
 .info {
     display: flex;
     align-items: row;
@@ -80,5 +101,47 @@ export default {
 
 h6 {
     font-size: 0.8em;
+}
+
+.album-info {
+    background-color: #1db954;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+}
+
+.album-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.overlayy {
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.overlayy h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.overlayy h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.overlayy h4 {
+    font-size: 16px;
+    margin-bottom: 0;
+    color: white;
 }
 </style>

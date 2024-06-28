@@ -31,7 +31,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="cluster" style="margin: 0 !important">
+    <div class="cluster" style="margin: 10px">
         <div class="little-card center" style="background-color: #9730a3">
             <a
                 style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover"

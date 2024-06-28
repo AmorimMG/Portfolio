@@ -20,7 +20,7 @@ import Introduction from '../components/cards/Introduction.vue';
 /* import MapboxMap from '../components/Mapbox.vue'; */
 
 import { formatMessage } from '../service/localization';
-import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
+import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie, getDarkThemeCookie } from '../service/session';
 /* import discordData from '../service/getDiscord'; */
 
 import Mail from '/src/assets/images/Mail.png';
@@ -29,7 +29,7 @@ const overlayPanel = ref();
 const language = ref();
 const dropdownValue = ref();
 
-const overlayActive = ref(true);
+const overlayActive = ref(null);
 const lastFMVisible = ref(false);
 const emailVisible = ref(false);
 const cvVisible = ref(false);
@@ -145,7 +145,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3">
                 <ClusterLinks />
             </div>
-            <div id="Spotify" class="col-8 lg:col-8 xl:col-3">
+            <div ref="spotifyRef" id="Spotify" class="col-8 lg:col-8 xl:col-3">
                 <Spotify />
             </div>
             <div id="Discord" class="col-4 lg:col-4 xl:col-3">
@@ -161,7 +161,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div id="Mapbox" class="col-4 lg:col-4 xl:col-3" style="position: relative">
                 <div class="card mb-0 center" style="padding: 0">
                     <MapboxMap />
-                    <h3 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h3>
+                    <h5 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h5>
                 </div>
             </div>
             <div id="CV" class="col-4 lg:col-4 xl:col-3">
