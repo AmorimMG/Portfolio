@@ -50,7 +50,7 @@ export default {
             </div>
         </template>
         <div class="popup-content" style="height: 100%; height: 100% !important; overflow-y: auto !important; overflow-x: hidden !important">
-            <Chart />
+            <Chart :lastFMData="lastFMData"/>
         </div>
     </Dialog>
 </template>
