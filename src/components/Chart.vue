@@ -1,6 +1,11 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
+import Chart from 'primevue/chart';
+
+const props = defineProps({
+    lastFMData: Object
+});
 
 const { layoutConfig } = useLayout();
 let documentStyle = getComputedStyle(document.documentElement);
@@ -20,6 +25,96 @@ const polarOptions = ref(null);
 const barOptions = ref(null);
 const radarOptions = ref(null);
 
+const generateColorPalette = (numColors) => {
+    const colors = [];
+    const saturation = '70%';
+    const lightness = '50%';
+
+    for (let i = 0; i < numColors; i++) {
+        const hue = Math.floor((i * 360) / numColors);
+        colors.push(`hsl(${hue}, ${saturation}, ${lightness})`);
+    }
+
+    return colors;
+};
+
+const fetchLastFMData = async () => {
+    try {
+        const data = props.lastFMData;
+        console.log(data)
+
+        const labels = data.map(track => track.name);
+        const dataSet = data.map(track => parseInt(track.playcount));
+        const colors = generateColorPalette(dataSet.length);
+
+        barData.value = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Track Play Counts',
+                    backgroundColor: colors,
+                    borderColor: colors,
+                    data: dataSet
+                }
+            ]
+        };
+
+        pieData.value = {
+            labels: labels,
+            datasets: [
+                {
+                    data: dataSet,
+                    backgroundColor: colors,
+                    hoverBackgroundColor: colors.map(color => color.replace('50%', '40%'))
+                }
+            ]
+        };
+
+        radarData.value = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Play Counts',
+                    borderColor: colors,
+                    pointBackgroundColor: colors,
+                    pointBorderColor: colors,
+                    pointHoverBackgroundColor: textColor,
+                    pointHoverBorderColor: colors,
+                    data: dataSet
+                }
+            ]
+        };
+
+        lineData.value = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Play Counts',
+                    data: dataSet,
+                    fill: false,
+                    backgroundColor: colors,
+                    borderColor: colors,
+                    tension: 0.4
+                }
+            ]
+        };
+
+        polarData.value = {
+            datasets: [
+                {
+                    data: dataSet,
+                    backgroundColor: colors,
+                    label: 'Play Counts'
+                }
+            ],
+            labels: labels
+        };
+
+    } catch (error) {
+        console.error('Error fetching LastFM data:', error);
+    }
+};
+
 const setColorOptions = () => {
     documentStyle = getComputedStyle(document.documentElement);
     textColor = documentStyle.getPropertyValue('--text-color');
@@ -28,23 +123,6 @@ const setColorOptions = () => {
 };
 
 const setChart = () => {
-    barData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--primary-500'),
-                borderColor: documentStyle.getPropertyValue('--primary-500'),
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--primary-200'),
-                borderColor: documentStyle.getPropertyValue('--primary-200'),
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
     barOptions.value = {
         plugins: {
             legend: {
@@ -78,17 +156,6 @@ const setChart = () => {
         }
     };
 
-    pieData.value = {
-        labels: ['A', 'B', 'C'],
-        datasets: [
-            {
-                data: [540, 325, 702],
-                backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--indigo-400'), documentStyle.getPropertyValue('--purple-400'), documentStyle.getPropertyValue('--teal-400')]
-            }
-        ]
-    };
-
     pieOptions.value = {
         plugins: {
             legend: {
@@ -98,28 +165,6 @@ const setChart = () => {
                 }
             }
         }
-    };
-
-    lineData.value = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--primary-500'),
-                borderColor: documentStyle.getPropertyValue('--primary-500'),
-                tension: 0.4
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                backgroundColor: documentStyle.getPropertyValue('--primary-200'),
-                borderColor: documentStyle.getPropertyValue('--primary-200'),
-                tension: 0.4
-            }
-        ]
     };
 
     lineOptions.value = {
@@ -152,17 +197,6 @@ const setChart = () => {
         }
     };
 
-    polarData.value = {
-        datasets: [
-            {
-                data: [11, 16, 7, 3],
-                backgroundColor: [documentStyle.getPropertyValue('--indigo-500'), documentStyle.getPropertyValue('--purple-500'), documentStyle.getPropertyValue('--teal-500'), documentStyle.getPropertyValue('--orange-500')],
-                label: 'My dataset'
-            }
-        ],
-        labels: ['Indigo', 'Purple', 'Teal', 'Orange']
-    };
-
     polarOptions.value = {
         plugins: {
             legend: {
@@ -178,30 +212,6 @@ const setChart = () => {
                 }
             }
         }
-    };
-
-    radarData.value = {
-        labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                borderColor: documentStyle.getPropertyValue('--indigo-400'),
-                pointBackgroundColor: documentStyle.getPropertyValue('--indigo-400'),
-                pointBorderColor: documentStyle.getPropertyValue('--indigo-400'),
-                pointHoverBackgroundColor: textColor,
-                pointHoverBorderColor: documentStyle.getPropertyValue('--indigo-400'),
-                data: [65, 59, 90, 81, 56, 55, 40]
-            },
-            {
-                label: 'My Second dataset',
-                borderColor: documentStyle.getPropertyValue('--purple-400'),
-                pointBackgroundColor: documentStyle.getPropertyValue('--purple-400'),
-                pointBorderColor: documentStyle.getPropertyValue('--purple-400'),
-                pointHoverBackgroundColor: textColor,
-                pointHoverBorderColor: documentStyle.getPropertyValue('--purple-400'),
-                data: [28, 48, 40, 19, 96, 27, 100]
-            }
-        ]
     };
 
     radarOptions.value = {
@@ -230,13 +240,17 @@ watch(
     },
     { immediate: true }
 );
+
+onMounted(() => {
+    fetchLastFMData(); // Fetch data when the component is mounted
+});
 </script>
 
 <template>
     <div class="grid p-fluid">
         <div class="col-12 xl:col-6">
             <div class="card">
-                <h5>Linear Chart</h5>
+                <h5>Listened Music's</h5>
                 <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
             </div>
         </div>

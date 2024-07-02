@@ -56,17 +56,17 @@ export default {
 
 <template>
     <div>
-        <canvas ref="canvas"></canvas>
+        <canvas class="canvasD" ref="canvas"></canvas>
     </div>
 </template>
 
 <style>
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -999999;
-    pointer-events: none;
-    opacity: 0.2;
-}
+    .canvasD {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -999999;
+        pointer-events: none;
+        opacity: 0.2;
+    }
 </style>
