@@ -5,15 +5,25 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
-            path: '/',
             component: AppLayout,
+            path: '/cadastros',
             children: [
                 {
-                    path: '/',
-                    name: 'dashboard',
-                    component: () => import('@/views/Dashboard.vue')
-                }
+                    path: '/cadastros/usuario',
+                    name: 'usuario',
+                    component: () => import('@/views/pages/cadastros/Usuario.vue')
+                },
+                {
+                    path: '/cadastros/linguagem',
+                    name: 'linguagem',
+                    component: () => import('@/views/pages/cadastros/Linguagens.vue')
+                },
             ]
+        },
+        {
+            path: '/',
+            name: 'dashboard',
+            component: () => import('@/views/Dashboard.vue')
         },
         {
             path: '/intro',
@@ -26,7 +36,7 @@ const router = createRouter({
             component: () => import('@/views/pages/NotFound.vue')
         },
         {
-            path: '/auth/login',
+            path: '/login',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
         },
@@ -36,10 +46,10 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Access.vue')
         },
         {
-            path: '/auth/error',
-            name: 'error',
-            component: () => import('@/views/pages/auth/Error.vue')
-        }
+            path: '/:pathMatch(.*)',
+            name: "Página não encontrada",
+            component: () => import("@/views/pages/auth/Error.vue"),
+          },
     ]
 });
 

@@ -124,6 +124,7 @@ export default {
                 </div>
                 <div class="calendar">
                     <div v-for="(month, index) in months" :key="index" class="month">
+                        <p>{{getMonthName(index)}}</p>
                         <div class="month-header">{{ month }}</div>
                         <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
                             <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, watch, ref } from 'vue';
-/* import AppTopbar from './AppTopbar.vue'; */
+import AppTopbar from './AppTopbar.vue';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 /* import AppConfig from './AppConfig.vue'; */
@@ -58,12 +58,9 @@ const isOutsideClicked = (event) => {
 
 <template>
     <div class="layout-wrapper" :class="containerClass">
-        <!-- <app-topbar></app-topbar> -->
+        <app-topbar></app-topbar>
         <div class="layout-sidebar">
-            <button class="p-btn p-link layout-topbar-button" type="button" @click="onConfigButtonClick()">
-                <i class="pi pi-cog" style="font-size: 25px"></i>
-                <app-sidebar></app-sidebar>
-            </button>
+            <app-sidebar></app-sidebar>
         </div>
         <div class="layout-main-container">
             <div class="layout-main">

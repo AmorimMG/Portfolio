@@ -20,7 +20,7 @@ import Introduction from '../components/cards/Introduction.vue';
 /* import MapboxMap from '../components/Mapbox.vue'; */
 
 import { formatMessage } from '../service/localization';
-import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie, getDarkThemeCookie } from '../service/session';
+import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
 /* import discordData from '../service/getDiscord'; */
 
 import Mail from '/src/assets/images/Mail.png';
@@ -129,13 +129,14 @@ watch(dropdownValue, (newValue, oldValue) => {
 </script>
 
 <template>
+    <div class="layout-main-container">
+    <Background />
     <div v-if="!isStarted" class="center" style="intro-div">
         <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
         <div class="black-screen"></div>
     </div>
     <transition name="fade">
         <div :class="{ glitch: isGlitchPageActive }" v-show="isStarted" class="grid">
-            <Background />
             <div class="col-12 lg:col-12 xl:col-6">
                 <Introduction :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
             </div>
@@ -232,6 +233,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             <EmailModal :visible="emailVisible" :header="translations.gblCV" @close="closePopup()" />
         </div>
     </transition>
+</div>
 </template>
 
 <style src="./styles.scss"></style>

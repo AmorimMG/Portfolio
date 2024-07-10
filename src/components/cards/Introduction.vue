@@ -21,7 +21,7 @@ export default {
 <template>
     <div class="card page" style="user-select: text" @mouseenter="showImage = true" @mouseleave="showImage = false">
         <div class="mb-3" style="text-align: start; position: relative">
-            <div class="paddingTeste">
+            <div style="padding: 20px;">
             <h5 :class="{ glitch: isGlitchActive }" class="center">{{ translations.gblHi }}</h5>
             <br />
             <p :class="{ glitch: isGlitchActive }" style="font-size: 15px">
@@ -45,10 +45,6 @@ export default {
     height: 100% !important;
     aspect-ratio: 2 / 1;
     padding: 0;
-}
-.paddingTeste{
-    padding: 20px;
-
 }
 
 p{

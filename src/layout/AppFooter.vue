@@ -11,7 +11,7 @@ const logoUrl = computed(() => {
 
 <template>
     <div class="layout-footer">
-        <span class="font-medium ml-2">Amorim 2024</span>
+        <span class="font-medium ml-2">Gabriel Amorim - 2024</span>
     </div>
 </template>
 <style lang="scss" scoped></style>

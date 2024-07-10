@@ -78,10 +78,14 @@ export default {
             </div>
         </div>
     </div>
-    <h2 v-if="!currentTrack">Last Played Track:</h2>
-    <div v-if="!currentTrack && lastTrack">
-        <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
-        <p>Album: {{ lastTrack.album }}</p>
+    <div class="album-info" v-if="!currentTrack">
+        <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack.images[0].url + ')' }">
+            <div class="overlayy">
+                <h2>{{ lastTrack.name }}</h2>
+                <h3>{{ lastTrack.artist }}</h3>
+                <h4>Album: {{ lastTrack.album }}</h4>
+            </div>
+        </div>
     </div>
     </div>
 </template>
