@@ -1,11 +1,9 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect, watch } from 'vue';
-import { setLanguageCookie, getLanguageCookie } from '../service/session'
+import { setLanguageCookie, getLanguageCookie } from '../service/session';
 import sessionModule from '../service/session.js';
 import { useLayout } from './composables/layout';
 import { useRouter } from 'vue-router';
-import AppConfig from './AppConfig.vue';
-/* import AppUser from './AppUser.vue'; */
 const { onMenuToggle } = useLayout();
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
@@ -14,6 +12,7 @@ const router = useRouter();
 onMounted(() => {
     bindOutsideClickListener();
 });
+
 onBeforeUnmount(() => {
     unbindOutsideClickListener();
 });
@@ -21,7 +20,7 @@ onBeforeUnmount(() => {
 const dropdownValues = ref([
     { name: 'Português', code: 'BR', value: "pt" },
     { name: 'Español', code: 'ES', value: "es" },
-    { name: 'English', code: 'US', value: "en" }
+    { name: 'English', code: 'UK', value: "en" }
 ]);
 const dropdownValue = ref(null);
 
@@ -31,7 +30,7 @@ const onTopBarMenuButton = () => {
 
 const logout = () => {
     sessionModule.actions.logout();
-    router.push({ path: '/auth/login' })
+    router.push({ path: '/login' })
 };
 
 const topbarMenuClasses = computed(() => {
@@ -80,27 +79,26 @@ watch(dropdownValue, (newValue, oldValue) => {
     console.log(newValue, oldValue)
     if (newValue !== oldValue) {
         setLanguageCookie(newValue.value);
+        /* window.location.reload(true) */
     }
 });
 </script>
 
 <template>
     <div class="layout-topbar">
-<!--         <button class="p-link layout-menu-button layout-topbar-button " @click="onMenuToggle()">
+        <router-link to="/" class="layout-topbar-logo center">
+            <img alt="Logo" :src="'/src/assets/images/profilePic.png'" />
+        </router-link>
+        <button class="p-link layout-menu-button layout-topbar-button " @click="onMenuToggle()">
             <i class="pi pi-bars"></i>
-        </button> -->
-
-<!--         <router-link to="/" class="layout-topbar-logo center">
-            <img alt="Logo" :src="'/images/m3ai.22.svg'" />
-        </router-link> -->
-        
+        </button>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
             <i class="pi pi-ellipsis-v"></i>
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <Dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+            <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex align-items-center">
                         <img :alt="slotProps.value.label"
@@ -120,24 +118,16 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                 </template>
             </Dropdown>
-            <app-user></app-user>
-            <app-config></app-config>
 
             <button @click="logout" class="p-btn p-link layout-topbar-button">
                 <i class="pi pi-sign-out"></i>
                 <span>Logout</span>
             </button>
     </div>
-</div></template>
+    </div>
+</template>
 
 <style lang="scss" scoped>
-.layout-topbar{
-    height: 30px;
-    width: 50%;
-    left: 25%;
-    rigth: 50%;
-}
-
 .layout-topbar-menu{
     height: 25px;
     align-items: center;
@@ -156,4 +146,4 @@ watch(dropdownValue, (newValue, oldValue) => {
     width: 80px;
     height: 25px;
 }
-</style>
+</style>    

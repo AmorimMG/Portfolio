@@ -1,10 +1,17 @@
 <script>
+import { watch } from 'vue';
+import { getDarkThemeCookie } from '../service/session';
+
 export default {
+    props: {
+        theme: Boolean,
+    },
     data() {
         return {
             state: {
                 fps: 30,
                 color: '#8600ff',
+                whiteColor: '#ffffff',
                 charset: '0123456789ABCDEF',
                 size: 10
             },
@@ -12,7 +19,10 @@ export default {
             ctx: null,
             w: 0,
             h: 0,
-            p: []
+            p: [],
+            isDarkTheme: false,
+            themeCheckInterval: null,
+            darkProvide: false
         };
     },
     mounted() {
@@ -23,6 +33,17 @@ export default {
         window.addEventListener('resize', this.resize);
 
         this.interval = setInterval(this.draw, 1000 / this.state.fps);
+
+        // Carrega de Acordo com o Cookie
+        this.isDarkTheme = getDarkThemeCookie();
+
+        // Atualia o Valor utilizando Props
+        watch(
+            () => this.theme,
+            (newVal) => {
+                this.isDarkTheme = !newVal;
+            }
+        );
     },
     methods: {
         resize() {
@@ -37,7 +58,11 @@ export default {
         draw() {
             this.ctx.fillStyle = 'rgba(0,0,0,.05)';
             this.ctx.fillRect(0, 0, this.w, this.h);
-            this.ctx.fillStyle = this.state.color;
+            if (this.isDarkTheme === true) {
+                this.ctx.fillStyle = this.state.color;
+            } else {
+                this.ctx.fillStyle = this.state.whiteColor;
+            }
 
             this.ctx.font = this.state.size + 'px sans-serif';
             for (let i = 0; i < this.p.length; i++) {
@@ -49,8 +74,9 @@ export default {
     },
     beforeUnmount() {
         clearInterval(this.interval);
+        clearInterval(this.themeCheckInterval);
         window.removeEventListener('resize', this.resize);
-    }
+    },
 };
 </script>
 
@@ -61,12 +87,12 @@ export default {
 </template>
 
 <style>
-    .canvasD {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -999999;
-        pointer-events: none;
-        opacity: 0.2;
-    }
+.canvasD {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -999999;
+    pointer-events: none;
+    opacity: 0.2;
+}
 </style>
