@@ -44,9 +44,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="card mb-0 center" :style="{ backgroundColor: online ? '#35AC8C' : '#FF5733' }">
+    
+    <div class="col-4 lg:col-4 xl:col-3">
+    <div v-tooltip.top="'Am i online in discord?'" class="card mb-0 center" :style="{padding: 0, backgroundColor: online ? '#35AC8C' : '#FF5733' }">
         {{ discordData?.discord_status }}
-        <h2 :class="{ glitch: props.isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
-        <h2 :class="{ glitch: props.isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
+        <h2 :class="{glitch: props.isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
+        <h2 :class="{glitch: props.isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
     </div>
+</div>
 </template>

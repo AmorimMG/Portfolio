@@ -1,42 +1,13 @@
 <script>
-import mapboxgl from 'mapbox-gl';
 
-export default {
-    name: 'MapboxMap',
-    data() {
-        return {
-            map: null
-        };
-    },
-    mounted() {
-        mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_KEY;
-        this.initializeMap();
-    },
-    methods: {
-        initializeMap() {
-            this.map = new mapboxgl.Map({
-                container: this.$refs.mapContainer,
-                style: 'mapbox://styles/recnove/cluvknswr000901nr6vm27h1q/draft',
-                center: [-44.040207108870035, -19.943651234047532],
-                zoom: 10,
-                bearing: 0,
-                pitch: 0,
-                antialias: true,
-                interactive: false
-            });
-
-            // Add navigation control (optional)
-            /* this.map.addControl(new mapboxgl.NavigationControl()); */
-        }
-    },
-    beforeUnmount() {
-        this.map.remove();
-        this.map = null;
-    }
-};
 </script>
 <template>
-    <div ref="mapContainer" class="map-container"></div>
+    <div v-tooltip.top="'Location'" class="col-4 lg:col-4 xl:col-3">
+    <div class="card mb-0 center">
+     <h5 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h5>
+    </div>
+<!--     <div ref="mapContainer" class="map-container"></div> -->
+</div>
 </template>
 
 <style scoped>

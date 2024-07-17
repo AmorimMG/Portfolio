@@ -43,7 +43,7 @@ export default {
             effect.domElement.style.color = 'green';
             effect.domElement.style.backgroundColor = 'transparent'; // Set background color to transparent
 
-            document.getElementById('asciiEffect').appendChild(effect.domElement);
+            document.getElementById('asciiEffect')?.appendChild(effect.domElement);
 
             controls = new TrackballControls(camera, effect.domElement);
 
@@ -69,9 +69,11 @@ export default {
 </script>
 
 <template>
+    <div class="col-4 lg:col-4 xl:col-3">
     <div class="asciiCard card mb-0 flex justify-content-center align-items-center">
         <div id="asciiEffect"></div>
     </div>
+</div>
 </template>
 
 <style>

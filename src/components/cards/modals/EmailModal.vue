@@ -1,10 +1,10 @@
 <script>
-import { RESTAPI } from '../../../service/api.js';
+import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { RESTAPI } from '../../../service/api.js';
 
 export default {
     props: {
-        visible: Boolean,
         header: String
     },
     data() {
@@ -12,12 +12,15 @@ export default {
             name: '',
             email: '',
             message: '',
-            toast: useToast()
+            toast: useToast(),
+            emailVisible: ref(false),
+            isHoveredMail: ref(false)
         };
     },
     methods: {
         onHide() {
             this.$emit('close');
+            this.emailVisible = false;
         },
         async sendEmail() {
             const body = {
@@ -50,7 +53,13 @@ export default {
 </script>
 
 <template>
-    <Dialog :visible="visible" @update:visible="onHide()" :modal="true" style="min-width: 50%">
+    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="card mb-0 center" style="padding: 0; background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
+        <Button v-tooltip.top="'Send me a Email'" @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
+            <img src="../../../assets/images/Mail.png" width="50%" :class="{ lights: isHoveredMail }" />
+        </Button>
+    </div>
+    <Dialog :visible="emailVisible" @update:visible="onHide()" :modal="true" style="min-width: 50%">
         <template #header>
             <div class="inline-flex align-items-center justify-content-center gap-2">Contact Form</div>
         </template>
@@ -82,4 +91,5 @@ export default {
             </form>
         </div>
     </Dialog>
+</div>
 </template>

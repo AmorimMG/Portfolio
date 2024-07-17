@@ -1,8 +1,8 @@
 .layout-sidebar {
-    position: fixed;
+    position: absolute;
     width: 300px;
     height: calc(100vh - 9rem);
-    z-index: 999;
+    z-index: 9999;
     overflow-y: auto;
     user-select: none;
     top: 7rem;
