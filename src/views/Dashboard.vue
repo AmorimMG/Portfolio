@@ -1,8 +1,8 @@
 <script setup>
+//#region imports
 import { ref, onMounted, watch, provide } from 'vue';
-import Button from 'primevue/button';
-import OverlayPanel from 'primevue/overlaypanel';
-import InputText from 'primevue/inputtext';
+import draggable from 'vuedraggable';
+
 import Background from '../components/Background.vue';
 import DashboardTimeline from '../components/cards/HeatMap.vue';
 import ThreeJSComponent from '../components/cards/ThreeJS.vue';
@@ -13,30 +13,25 @@ import Discord from '../components/cards/Discord.vue';
 import CVModal from '../components/cards/modals/CVModal.vue';
 import LastFMModal from '../components/cards/modals/LastFMModal.vue';
 import EmailModal from '../components/cards/modals/EmailModal.vue';
+import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
 import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
 import Introduction from '../components/cards/Introduction.vue';
+import MapboxMap from '../components/Mapbox.vue';
 /* import Actitivies from '../components/cards/Activities.vue'; */
-/* import MapboxMap from '../components/Mapbox.vue'; */
 
 import { formatMessage } from '../service/localization';
 import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
 /* import discordData from '../service/getDiscord'; */
 
-import Mail from '/src/assets/images/Mail.png';
+//#endregion
 
+//#region variables
 const overlayPanel = ref();
 const language = ref();
 const dropdownValue = ref();
-
-const overlayActive = ref(null);
-const lastFMVisible = ref(false);
-const emailVisible = ref(false);
-const cvVisible = ref(false);
 const isStarted = ref(false);
-const isHoveredMail = ref(false);
 const isGlitchActive = ref(false);
-const isGlitchPageActive = ref(false);
 
 const translations = ref({
     gblHi: '',
@@ -47,6 +42,71 @@ const translations = ref({
     gblCV: ''
 });
 
+const items = ref([
+    {
+        label: 'Translate',
+        icon: 'pi pi-language'
+    },
+    {
+        label: 'Speech',
+        icon: 'pi pi-volume-up',
+        items: [
+            {
+                label: 'Start',
+                icon: 'pi pi-caret-right'
+            },
+            {
+                label: 'Stop',
+                icon: 'pi pi-pause'
+            }
+        ]
+    },
+    {
+        separator: true
+    },
+    {
+        label: 'Print',
+        icon: 'pi pi-print'
+    }
+]);
+
+const componentMap = {
+    Introduction,
+    ClusterLinks,
+    ClusterOpcoes,
+    Spotify,
+    Discord,
+    ThreeJSComponent,
+    MapboxMap,
+    EmailModal,
+    CVModal,
+    LastFMModal,
+    ProjectsModal,
+    Terminal,
+    Stack,
+    DashboardTimeline
+};
+
+const cards = ref([
+    { id: 1, name: 'Introduction' },
+    { id: 2, name: 'ClusterLinks' },
+    { id: 3, name: 'ClusterOpcoes' },
+    { id: 4, name: 'Spotify' },
+    { id: 5, name: 'Discord' },
+    { id: 6, name: 'ThreeJSComponent' },
+    { id: 7, name: 'MapboxMap' },
+    { id: 8, name: 'EmailModal' },
+    { id: 9, name: 'CVModal' },
+    { id: 10, name: 'LastFMModal' },
+    { id: 11, name: 'ProjectsModal' },
+    { id: 12, name: 'Terminal' },
+    { id: 13, name: 'Stack' },
+    { id: 14, name: 'DashboardTimeline' }
+]);
+
+//#endregion
+
+//#region methods
 function updateTranslations(languages) {
     if (languages) {
         language.value = languages;
@@ -71,16 +131,6 @@ provide('translations', {
     updateTranslations
 });
 
-const closePopup = () => {
-    cvVisible.value = false;
-    lastFMVisible.value = false;
-    emailVisible.value = false;
-};
-
-const toggle = (event) => {
-    overlayPanel.value.toggle(event);
-};
-
 const applyGlitchEffect = () => {
     isGlitchActive.value = true;
     setTimeout(() => {
@@ -88,32 +138,7 @@ const applyGlitchEffect = () => {
     }, 2000);
 };
 
-const applyGlitchPageEffect = () => {
-    isGlitchPageActive.value = true;
-    setTimeout(() => {
-        isGlitchPageActive.value = false;
-    }, 2000);
-};
-
-const handleToggleOverlay = (overlayActives) => {
-    applyGlitchPageEffect();
-
-    overlayActive.value = !overlayActives;
-
-    if (overlayActive.value === true) {
-        setDarkThemeCookie(overlayActive.value);
-    } else {
-        setDarkThemeCookie(overlayActive.value);
-    }
-};
-
-const handleDropdownValueChanged = (newValue) => {
-    dropdownValue.value = newValue;
-    updateTranslations(dropdownValue.value.value);
-};
-
 onMounted(() => {
-    console.log(getLanguageCookie());
     updateTranslations(getLanguageCookie() ?? 'pt');
 
     setTimeout(() => {
@@ -126,72 +151,25 @@ watch(dropdownValue, (newValue, oldValue) => {
         setLanguageCookie(newValue.value);
     }
 });
+//#endregion
 </script>
 
 <template>
     <div class="layout-main-container">
     <Background />
+    <ContextMenu global :model="items" />
     <div v-if="!isStarted" class="center" style="intro-div">
         <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
         <div class="black-screen"></div>
     </div>
     <transition name="fade">
-        <div :class="{ glitch: isGlitchPageActive }" v-show="isStarted" class="grid">
-            <div class="col-12 lg:col-12 xl:col-6">
-                <Introduction :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
-            </div>
-            <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3">
-                <ClusterOpcoes :translations="translations.gblBrazil" @update-dropdown-value="handleDropdownValueChanged" @toggleOverlay="handleToggleOverlay" :overlayActive="overlayActive" :isGlitchActive="isGlitchActive"></ClusterOpcoes>
-            </div>
-            <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3">
-                <ClusterLinks />
-            </div>
-            <div ref="spotifyRef" id="Spotify" class="col-8 lg:col-8 xl:col-3">
-                <Spotify />
-            </div>
-            <div id="Discord" class="col-4 lg:col-4 xl:col-3">
-                <Discord :isGlitchActive="isGlitchActive" />
-            </div>
-            <div id="Mail" class="col-4 lg:col-4 xl:col-3">
-                <div class="card mb-0 center" style="padding: 0; background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
-                    <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                        <img :src="Mail" width="50%" :class="{ lights: isHoveredMail }" />
-                    </Button>
-                </div>
-            </div>
-            <div id="Mapbox" class="col-4 lg:col-4 xl:col-3" style="position: relative">
-                <div class="card mb-0 center" style="padding: 0">
-                    <MapboxMap />
-                    <h5 :class="{ glitch: isGlitchActive }" class="lights" style="position: absolute">Tracking Offline <span class="red-dot"></span></h5>
-                </div>
-            </div>
-            <div id="CV" class="col-4 lg:col-4 xl:col-3">
-                <div class="card mb-0 center" style="padding: 0">
-                    <Button @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                        <h2 :class="{ glitch: isGlitchActive }">CV</h2>
-                    </Button>
-                </div>
-            </div>
-            <div id="LastFM" class="col-4 lg:col-4 xl:col-3">
-                <div class="card mb-0 center" style="padding: 0">
-                    <Button @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                        <h2 :class="{ glitch: isGlitchActive }">Last.FM Statics</h2>
-                    </Button>
-                </div>
-            </div> 
+        <div v-show="isStarted" class="grid justify-content-center">
+             <draggable class="grid col-12" v-model="cards" item-key="id" group="cards" animation="200">
+                <template #item="{ element }">
+                        <component :class="{ glitch: isGlitchActive }" :is="componentMap[element.name]" :translations="translations" :isGlitchActive="isGlitchActive" />
+                </template>
+            </draggable> 
             <!--  <Actitivies :discordData="discordData()" /> -->
-            <div id="Threejs" class="col-4 lg:col-4 xl:col-3">
-                <ThreeJSComponent />
-            </div>
-            <div id="Terminal" class="col-12 lg:col-12 xl:col-6">
-                <Terminal :class="{ 'custom-terminal': overlayActive, 'custom-terminal-white': !overlayActive }" />
-            </div>
-            <div id="Stack" class="col-12 lg:col-12 xl:col-6">
-                <Stack />
-            </div>
-            <div id="Anilist" class="col-12 lg:col-12 xl:col-12">
-                <dashboard-timeline />
-            </div>
             <OverlayPanel ref="overlayPanel">
                 <div class="flex flex-column gap-3 w-25rem">
                     <div>
@@ -228,12 +206,10 @@ watch(dropdownValue, (newValue, oldValue) => {
                     </div>
                 </div>
             </OverlayPanel>
-            <CVModal :visible="cvVisible" :header="translations.gblCV" @close="closePopup()" />
-            <LastFMModal :visible="lastFMVisible" :header="translations.gblCV" @close="closePopup()" />
-            <EmailModal :visible="emailVisible" :header="translations.gblCV" @close="closePopup()" />
         </div>
     </transition>
+    <SpeedDial :model="items" :radius="120" type="quarter-circle" direction="up-right" :style="{ position: 'fixed', left: '10px', bottom: '10px' }" />
 </div>
+<ScrollTop />
 </template>
-
 <style src="./styles.scss"></style>

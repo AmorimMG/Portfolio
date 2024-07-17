@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             state: {
-                fps: 30,
+                fps: 15,
                 color: '#8600ff',
                 whiteColor: '#ffffff',
                 charset: '0123456789ABCDEF',

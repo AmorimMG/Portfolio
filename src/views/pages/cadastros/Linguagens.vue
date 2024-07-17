@@ -23,11 +23,8 @@ export default {
             dataUsers: [],
             selectedUser: [],
             gridColumns: computed(() => [
-                { field: 'nome', caption: this.formatMessage('gblNomeCompleto') },
-                { field: 'email', caption: this.formatMessage('gblEmail') },
-                { field: 'login', caption: this.formatMessage('gblLogin') },
-                { field: 'ativo', caption: this.formatMessage('gblAtivo') },
-                { field: 'admin', caption: this.formatMessage('gblAdministrador') }
+                { field: 'nome', caption: 'Nome Linguagem' },
+                { field: 'tipo', caption: 'Tipo Linguagem' }
             ]),
             userCookie: getUserCookie(),
 
@@ -150,7 +147,7 @@ export default {
                     </template>
 
                     <template v-slot:end>
-                        <Button :label="this.formatMessage('gblExportar')" icon="pi pi-upload" class="p-button-help" @click="handleExportCSV()" />
+                        <Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="handleExportCSV()" />
                     </template>
                 </Toolbar>
                 <DataTable

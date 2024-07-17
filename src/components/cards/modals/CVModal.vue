@@ -1,17 +1,20 @@
 <script>
+import { ref } from 'vue';
+
 export default {
     props: {
-        visible: Boolean,
         header: String
     },
     data() {
         return {
-            scale: 1
+            scale: 1,
+            cvVisible: ref(false)
         };
     },
     methods: {
         onHide() {
             this.$emit('close');
+            this.cvVisible = false;
         },
         zoomIn() {
             this.scale += 0.1;
@@ -36,8 +39,15 @@ export default {
 };
 </script>
 
-<template>
-    <Dialog :visible="visible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
+<template>    
+<div class="col-4 lg:col-4 xl:col-3">
+   <div class="card mb-0 center" style="padding: 0">
+        <Button v-tooltip.top="'Curriculum'"
+        @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
+            <h2 :class="{ glitch: isGlitchActive }">CV</h2>
+        </Button>
+    </div>
+    <Dialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
         <template #header>
             <div class="inline-flex align-items-center justify-content-center gap-2">
                 {{ header }}
@@ -53,6 +63,7 @@ export default {
             </div>
         </div>
     </Dialog>
+</div>
 </template>
 
 <style scoped>

@@ -19,6 +19,7 @@ export default {
 </script>
 
 <template>
+   <div class="col-12 lg:col-12 xl:col-6"> 
     <div class="card page" style="user-select: text" @mouseenter="showImage = true" @mouseleave="showImage = false">
         <div class="mb-3" style="text-align: start; position: relative">
             <div style="padding: 20px;">
@@ -36,6 +37,7 @@ export default {
         </div>
     </div>
     </div>
+</div> 
 </template>
 
 <style scoped>
