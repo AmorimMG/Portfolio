@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
+import CardEffect from '../CardEffect.vue';
 
 const spotifyData = ref();
 const discordData = ref();
@@ -44,12 +45,13 @@ onMounted(() => {
 </script>
 
 <template>
-    
     <div class="col-4 lg:col-4 xl:col-3">
-    <div v-tooltip.top="'Am i online in discord?'" class="card mb-0 center" :style="{padding: 0, backgroundColor: online ? '#35AC8C' : '#FF5733' }">
-        {{ discordData?.discord_status }}
-        <h2 :class="{glitch: props.isGlitchActive }" v-if="online"><span class="dot"></span> ONLINE</h2>
-        <h2 :class="{glitch: props.isGlitchActive }" v-else><span class="dot"></span> OFFLINE</h2>
+        <CardEffect>
+            <div v-tooltip.top="'Am i online in discord?'" class="card mb-0 center" :style="{ padding: 0, backgroundColor: online ? '#35AC8C' : '#260D3D' }">
+                {{ discordData?.discord_status }}
+                <h2 :class="{ glitch: props.isGlitchActive }" style="color: white" v-if="online"><span class="dot"></span> ONLINE</h2>
+                <h2 :class="{ glitch: props.isGlitchActive }" style="color: white" v-else><span class="dot"></span> OFFLINE</h2>
+            </div>
+        </CardEffect>
     </div>
-</div>
 </template>

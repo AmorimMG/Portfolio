@@ -1,8 +1,12 @@
 <script>
 import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
+import CardEffect from '../CardEffect.vue';
 
 export default {
+    components: {
+        CardEffect
+    },
     data() {
         return {
             toast: useToast(),
@@ -52,59 +56,60 @@ export default {
 </script>
 
 <template>
-    
     <div v-tooltip.top="'Spotify Music'" class="col-4 lg:col-4 xl:col-3">
-    <div v-if="isLargeScreen" class="card page">
-        <div class="album-info" v-if="currentTrack">
-            <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
-                <div class="overlayy">
-                    <h2>{{ currentTrack.name }}</h2>
-                    <h3>{{ currentTrack.artist }}</h3>
-                    <h4>Album: {{ currentTrack.album }}</h4>
+        <CardEffect>
+            <div v-if="isLargeScreen" class="card page">
+                <div class="album-info" v-if="currentTrack">
+                    <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
+                        <div class="overlayy">
+                            <h2>{{ currentTrack.name }}</h2>
+                            <h3>{{ currentTrack.artist }}</h3>
+                            <h4>Album: {{ currentTrack.album }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <h2 v-if="!currentTrack && lastTrack != null">Last Played Track:</h2>
+                <div v-if="!currentTrack && lastTrack != null">
+                    <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
+                    <p>Album: {{ lastTrack.album }}</p>
+                </div>
+                <div v-if="!currentTrack && !lastTrack" style="height: 100%">
+                    <div class="album-info">
+                        <div class="overlayy">
+                            <h2 class="lights">No track currently playing</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-            <h2 v-if="!currentTrack && lastTrack != null">Last Played Track:</h2>
-            <div v-if="!currentTrack && lastTrack != null">
-                <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
-                <p>Album: {{ lastTrack.album }}</p>
-            </div>
-            <div v-if="!currentTrack && !lastTrack" style="height: 100%;">
-            <div class="album-info">
-                <div class="overlayy">
-                    <h2>No track currently playing</h2>
+            <div v-else class="card page">
+                <div class="album-info" v-if="currentTrack">
+                    <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
+                        <div class="overlayy">
+                            <h2>{{ currentTrack.name }}</h2>
+                            <h3>{{ currentTrack.artist }}</h3>
+                            <h4>Album: {{ currentTrack.album }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="album-info" v-if="!currentTrack && lastTrack">
+                    <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack?.images[0].url + ')' }">
+                        <div class="overlayy">
+                            <h2>{{ lastTrack?.name }}</h2>
+                            <h3>{{ lastTrack?.artist }}</h3>
+                            <h4>Album: {{ lastTrack?.album }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!currentTrack && !lastTrack" style="height: 100%">
+                    <div class="album-info">
+                        <div class="overlayy">
+                            <h2>No track currently playing</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </CardEffect>
     </div>
-    <div v-else class="card page"> 
-        <div class="album-info" v-if="currentTrack">
-            <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
-                <div class="overlayy">
-                    <h2>{{ currentTrack.name }}</h2>
-                    <h3>{{ currentTrack.artist }}</h3>
-                    <h4>Album: {{ currentTrack.album }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="album-info" v-if="!currentTrack && lastTrack">
-            <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack?.images[0].url + ')' }">
-                <div class="overlayy">
-                    <h2>{{ lastTrack?.name }}</h2>
-                    <h3>{{ lastTrack?.artist }}</h3>
-                    <h4>Album: {{ lastTrack?.album }}</h4>
-                </div>
-            </div>
-        </div>
-        <div v-if="!currentTrack && !lastTrack" style="height: 100%;">
-            <div class="album-info">
-                <div class="overlayy">
-                    <h2>No track currently playing</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </template>
 
 <style scoped>

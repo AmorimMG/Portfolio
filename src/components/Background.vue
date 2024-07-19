@@ -4,7 +4,7 @@ import { getDarkThemeCookie } from '../service/session';
 
 export default {
     props: {
-        theme: Boolean,
+        theme: Boolean
     },
     data() {
         return {

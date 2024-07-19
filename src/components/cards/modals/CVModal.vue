@@ -1,9 +1,13 @@
 <script>
 import { ref } from 'vue';
+import CardEffect from '../../CardEffect.vue';
 
 export default {
     props: {
         header: String
+    },
+    components: {
+        CardEffect
     },
     data() {
         return {
@@ -32,42 +36,42 @@ export default {
                 iframe.style.transform = `scale(${this.scale})`;
                 iframe.style.transformOrigin = '0 0';
                 iframe.style.width = `${100 / this.scale}%`;
-                iframe.style.height = `${100 / this.scale}%`
+                iframe.style.height = `${100 / this.scale}%`;
             }
         }
     }
 };
 </script>
 
-<template>    
-<div class="col-4 lg:col-4 xl:col-3">
-   <div class="card mb-0 center" style="padding: 0">
-        <Button v-tooltip.top="'Curriculum'"
-        @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
-            <h2 :class="{ glitch: isGlitchActive }">CV</h2>
-        </Button>
+<template>
+    <div class="col-4 lg:col-4 xl:col-3">
+        <CardEffect>
+            <div class="card mb-0 center" style="padding: 0">
+                <Button v-tooltip.top="'Curriculum'" @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                    <h2 :class="{ glitch: isGlitchActive }" style="color: white">CV</h2>
+                </Button>
+            </div>
+        </CardEffect>
+        <Dialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
+            <template #header>
+                <div class="inline-flex align-items-center justify-content-center gap-2">
+                    {{ header }}
+                </div>
+            </template>
+            <div class="popup-content" style="height: 100%; position: relative">
+                <div class="zoom-controls">
+                    <Button @click="zoomIn">Zoom In</Button>
+                    <Button @click="zoomOut">Zoom Out</Button>
+                </div>
+                <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
+                    <iframe id="iframe" class="iframe" ref="iframe" src="https://www.amorim.pro/cv" scrolling="auto" style="border: none"></iframe>
+                </div>
+            </div>
+        </Dialog>
     </div>
-    <Dialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
-        <template #header>
-            <div class="inline-flex align-items-center justify-content-center gap-2">
-                {{ header }}
-            </div>
-        </template>
-        <div class="popup-content" style="height: 100%; position: relative;">
-            <div class="zoom-controls">
-                <Button @click="zoomIn">Zoom In</Button>
-                <Button @click="zoomOut">Zoom Out</Button>
-            </div>
-            <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden;">
-                <iframe id="iframe" class="iframe" ref="iframe" src="https://www.amorim.pro/cv" scrolling="auto" style="border: none;"></iframe>
-            </div>
-        </div>
-    </Dialog>
-</div>
 </template>
 
 <style scoped>
-
 .zoom-controls {
     position: absolute;
     top: 10px;
@@ -88,5 +92,4 @@ export default {
     border: none;
     transform-origin: 0 0;
 }
-
 </style>

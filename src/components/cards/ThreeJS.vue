@@ -2,10 +2,14 @@
 import * as THREE from 'three';
 import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect.js';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+import CardEffect from '../CardEffect.vue';
 
 export default {
     mounted() {
         this.initThree();
+    },
+    components: {
+        CardEffect
     },
     methods: {
         initThree() {
@@ -70,23 +74,25 @@ export default {
 
 <template>
     <div class="col-4 lg:col-4 xl:col-3">
-    <div class="asciiCard card mb-0 flex justify-content-center align-items-center">
-        <div id="asciiEffect"></div>
+        <CardEffect>
+            <div class="asciiCard card mb-0 flex justify-content-center align-items-center">
+                <div id="asciiEffect"></div>
+            </div>
+        </CardEffect>
     </div>
-</div>
 </template>
 
 <style>
-    .asciiCard{
-        margin: 0; 
-        padding: 0;
-    }
+.asciiCard {
+    margin: 0;
+    padding: 0;
+}
 
-    #asciiEffect{
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-    }
+#asciiEffect {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
 </style>
