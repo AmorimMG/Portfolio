@@ -231,22 +231,27 @@
     display: flex;
     flex-wrap: wrap;
 }
+
 .draggable-item {
     margin: 10px;
     cursor: move;
 }
 
+.components-container{
+    display: flex;
+    flex-direction: row;
+}
+
+
 @media screen and (min-width: 1960px) {
     .layout-main-container {
-        padding: 50px 200px 10px 200px !important;
-        padding-left: 200px !important;
+        padding: 95px 10px 0px 0px !important;
     }
 }
 
 @media (min-width: 992px) {
     .layout-main-container {
-        padding: 50px 200px 10px 200px !important;
-        padding-left: 200px !important;
+        padding: 70px 10px 0px 0px !important;
     }
 
     .stroke-white {
@@ -261,8 +266,7 @@
 
 @media (max-width: 991px) {
     .layout-main-container {
-        padding: 2rem !important;
-        padding-left: 25px !important;
+        padding: 4rem 1rem 0 0rem !important;
         font-size: 5px !important;
     }
 
@@ -273,6 +277,10 @@
     .stroke-white {
         height: 1.5rem;
         margin: 2rem !important;
+    }
+
+    #Introduction{
+        display: none;
     }
 
     .localizacao {

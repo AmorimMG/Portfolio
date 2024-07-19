@@ -3,6 +3,8 @@
 import { ref, onMounted, watch, provide } from 'vue';
 import draggable from 'vuedraggable';
 
+import AppTopbar from '../layout/AppTopbarDashboard.vue';
+
 import Background from '../components/Background.vue';
 import DashboardTimeline from '../components/cards/HeatMap.vue';
 import ThreeJSComponent from '../components/cards/ThreeJS.vue';
@@ -18,11 +20,16 @@ import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
 import Introduction from '../components/cards/Introduction.vue';
 import MapboxMap from '../components/Mapbox.vue';
+import IA from '../components/cards/IA.vue';
+import Weather from '../components/cards/Weather.vue';
+import Blog from '../components/cards/Blog.vue';
+import Photos from '../components/cards/Photos.vue';
+
 /* import Actitivies from '../components/cards/Activities.vue'; */
+/* import discordData from '../service/getDiscord'; */
 
 import { formatMessage } from '../service/localization';
-import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
-/* import discordData from '../service/getDiscord'; */
+import { setLanguageCookie, getLanguageCookie } from '../service/session';
 
 //#endregion
 
@@ -71,9 +78,7 @@ const items = ref([
 ]);
 
 const componentMap = {
-    Introduction,
     ClusterLinks,
-    ClusterOpcoes,
     Spotify,
     Discord,
     ThreeJSComponent,
@@ -82,26 +87,32 @@ const componentMap = {
     CVModal,
     LastFMModal,
     ProjectsModal,
+    IA,
+    Weather,
+    Blog,
+    Photos,
     Terminal,
     Stack,
     DashboardTimeline
 };
 
 const cards = ref([
-    { id: 1, name: 'Introduction' },
-    { id: 2, name: 'ClusterLinks' },
-    { id: 3, name: 'ClusterOpcoes' },
-    { id: 4, name: 'Spotify' },
-    { id: 5, name: 'Discord' },
-    { id: 6, name: 'ThreeJSComponent' },
-    { id: 7, name: 'MapboxMap' },
-    { id: 8, name: 'EmailModal' },
-    { id: 9, name: 'CVModal' },
-    { id: 10, name: 'LastFMModal' },
-    { id: 11, name: 'ProjectsModal' },
-    { id: 12, name: 'Terminal' },
-    { id: 13, name: 'Stack' },
-    { id: 14, name: 'DashboardTimeline' }
+    { id: 1, name: 'ClusterLinks' },
+    { id: 3, name: 'Spotify' },
+    { id: 4, name: 'Discord' },
+    { id: 5, name: 'ThreeJSComponent' },
+    { id: 6, name: 'MapboxMap' },
+    { id: 7, name: 'EmailModal' },
+    { id: 8, name: 'CVModal' },
+    { id: 9, name: 'LastFMModal' },
+    { id: 10, name: 'ProjectsModal' },
+    { id: 11, name: 'IA' },
+    { id: 12, name: 'Weather' },
+    { id: 13, name: 'Blog' },
+    { id: 14, name: 'Photos' },
+    { id: 15, name: 'Terminal' },
+    { id: 16, name: 'Stack' },
+    { id: 17, name: 'DashboardTimeline' }
 ]);
 
 //#endregion
@@ -156,60 +167,67 @@ watch(dropdownValue, (newValue, oldValue) => {
 
 <template>
     <div class="layout-main-container">
-    <Background />
-    <ContextMenu global :model="items" />
-    <div v-if="!isStarted" class="center" style="intro-div">
-        <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
-        <div class="black-screen"></div>
-    </div>
-    <transition name="fade">
-        <div v-show="isStarted" class="grid justify-content-center">
-             <draggable class="grid col-12" v-model="cards" item-key="id" group="cards" animation="200">
-                <template #item="{ element }">
-                        <component :class="{ glitch: isGlitchActive }" :is="componentMap[element.name]" :translations="translations" :isGlitchActive="isGlitchActive" />
-                </template>
-            </draggable> 
-            <!--  <Actitivies :discordData="discordData()" /> -->
-            <OverlayPanel ref="overlayPanel">
-                <div class="flex flex-column gap-3 w-25rem">
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Share this document</span>
-                        <InputGroup>
-                            <InputText value="https://www.fiap.com.br/" readonly class="w-25rem"></InputText>
-                            <InputGroupAddon>
-                                <i class="pi pi-copy"></i>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Invite Member</span>
-                        <InputGroup>
-                            <Chips disabled></Chips>
-                            <Button label="Invite" icon="pi pi-users"></Button>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Team Members</span>
-                        <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                            <li v-for="member in members" :key="member.name" class="flex align-items-center gap-2">
-                                <img :src="`https://primefaces.org/cdn/primevue/images/avatar/${member.image}`" />
-                                <div>
-                                    <span class="font-medium">{{ member.name }}</span>
-                                    <div class="text-sm text-color-secondary">{{ member.email }}</div>
-                                </div>
-                                <div class="flex align-items-center gap-2 text-color-secondary ml-auto text-sm">
-                                    <span>{{ member.role }}</span>
-                                    <i class="pi pi-angle-down"></i>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </OverlayPanel>
+        <!--  <Background /> -->
+        <ContextMenu global :model="items" />
+        <div v-if="!isStarted" class="center" style="intro-div">
+            <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
+            <div class="black-screen"></div>
         </div>
-    </transition>
-    <SpeedDial :model="items" :radius="120" type="quarter-circle" direction="up-right" :style="{ position: 'fixed', left: '10px', bottom: '10px' }" />
-</div>
-<ScrollTop />
+        <transition name="fade">
+            <div v-show="isStarted" class="grid components-container justify-content-center">
+                <app-topbar></app-topbar>
+                <div id="Introduction" class="col-4 lg:col-4 xl:col-4 p-0 py-3">
+                    <p>{{ $t('welcome') }}</p>
+                    <Introduction class="col-2" :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
+                </div>
+                <draggable class="grid col-12 lg:col-8 xl:col-8 p-5 pr-3 py-6" v-model="cards" item-key="id" group="cards" animation="200">
+                    <template #item="{ element }">
+                        <component :class="{ glitch: isGlitchActive }" :is="componentMap[element.name]" :translations="translations" :isGlitchActive="isGlitchActive" />
+                    </template>
+                </draggable>
+                <!--  <Actitivies :discordData="discordData()" /> -->
+            </div>
+        </transition>
+
+        <OverlayPanel ref="overlayPanel">
+            <div class="flex flex-column gap-3 w-25rem">
+                <div>
+                    <span class="font-medium text-900 block mb-2">Share this document</span>
+                    <InputGroup>
+                        <InputText value="https://www.fiap.com.br/" readonly class="w-25rem"></InputText>
+                        <InputGroupAddon>
+                            <i class="pi pi-copy"></i>
+                        </InputGroupAddon>
+                    </InputGroup>
+                </div>
+                <div>
+                    <span class="font-medium text-900 block mb-2">Invite Member</span>
+                    <InputGroup>
+                        <Chips disabled></Chips>
+                        <Button label="Invite" icon="pi pi-users"></Button>
+                    </InputGroup>
+                </div>
+                <div>
+                    <span class="font-medium text-900 block mb-2">Team Members</span>
+                    <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                        <li v-for="member in members" :key="member.name" class="flex align-items-center gap-2">
+                            <img :src="`https://primefaces.org/cdn/primevue/images/avatar/${member.image}`" />
+                            <div>
+                                <span class="font-medium">{{ member.name }}</span>
+                                <div class="text-sm text-color-secondary">{{ member.email }}</div>
+                            </div>
+                            <div class="flex align-items-center gap-2 text-color-secondary ml-auto text-sm">
+                                <span>{{ member.role }}</span>
+                                <i class="pi pi-angle-down"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </OverlayPanel>
+
+        <SpeedDial :model="items" :radius="120" type="quarter-circle" direction="up-right" :style="{ position: 'fixed', left: '10px', bottom: '10px' }" />
+    </div>
+    <ScrollTop />
 </template>
 <style src="./styles.scss"></style>

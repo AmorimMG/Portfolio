@@ -1,9 +1,13 @@
 <script>
 import { ref } from 'vue';
+import CardEffect from '../../CardEffect.vue';
 
 export default {
     props: {
         header: String
+    },
+    components: {
+        CardEffect
     },
     data() {
         return {
@@ -22,35 +26,25 @@ export default {
 
 <template>
     <div class="col-4 lg:col-4 xl:col-3">
-        <div class="card mb-0 center" style="padding: 0">
-            <Button v-tooltip.top="'My Projects'" @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                <h2 :class="{ glitch: isGlitchActive }">Projects</h2>
-            </Button>
-        </div>
+        <CardEffect>
+            <div class="card mb-0 center" style="padding: 0">
+                <Button v-tooltip.top="'My Projects'" @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                    <h2 :class="{ glitch: isGlitchActive }" style="color: white">Projects</h2>
+                </Button>
+            </div>
+        </CardEffect>
         <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
             <template #header>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
             <div class="popup-content">
                 <div class="grid gap-4">
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RPG'" style="background-color: #9730a3">
-
-                    </div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Whatsapp Clone'" style="background-color: #9730a3">
-
-                    </div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Ecommerce'" style="background-color: #9730a3">
-
-                    </div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RAWG'" style="background-color: #9730a3">
-
-                    </div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Netflix'" style="background-color: #9730a3">
-
-                    </div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Snake'" style="background-color: #9730a3">
-
-                    </div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RPG'" style="background-color: #9730a3"></div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Whatsapp Clone'" style="background-color: #9730a3"></div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Ecommerce'" style="background-color: #9730a3"></div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RAWG'" style="background-color: #9730a3"></div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Netflix'" style="background-color: #9730a3"></div>
+                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Snake'" style="background-color: #9730a3"></div>
                 </div>
             </div>
         </Dialog>

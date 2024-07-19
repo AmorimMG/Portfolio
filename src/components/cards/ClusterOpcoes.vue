@@ -97,50 +97,50 @@ export default {
 </script>
 
 <template>
-   <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3 center" > 
-    <div class="cluster" style="margin: 10px">
-        <div class="little-card center">
-            <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.dropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
-                <template #value="slotProps">
-                    <div v-if="slotProps.value" class="flex align-items-center">
-                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()} `" style="width: 38px" />
-                    </div>
-                    <span v-else>
-                        {{ slotProps.placeholder }}
-                    </span>
-                </template>
-                <template #dropdownicon>
-                    <i class="pi pi-chevron-down"></i>
-                </template>
-                <template #option="slotProps">
-                    <div class="flex align-items-center">
-                        <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()} relative`" />
-                        <div>{{ slotProps.option.name }}</div>
-                    </div>
-                </template>
-            </Dropdown>
-        </div>
-        <div class="little-card center">
-            <div class="relative" style="cursor: pointer">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: !this.overlayActive, 'rotate-reverse': this.overlayActive }">
-                    <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
-                </button>
+    <div id="ClusterOpcoes" class="col-6 lg:col-6 xl:col-3 center">
+        <div class="cluster" style="margin: 10px">
+            <div class="little-card center">
+                <Dropdown @change="this.handleDropdownChange" :showClear="false" v-model="this.dropdownValue" :options="this.dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+                    <template #value="slotProps">
+                        <div v-if="slotProps.value" class="flex align-items-center">
+                            <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()} `" style="width: 38px" />
+                        </div>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #dropdownicon>
+                        <i class="pi pi-chevron-down"></i>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="flex align-items-center">
+                            <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()} relative`" />
+                            <div>{{ slotProps.option.name }}</div>
+                        </div>
+                    </template>
+                </Dropdown>
             </div>
-        </div>
-        <div class="little-card center">
-            <div class="relative">
-                <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onConfigButtonClick()">
-                    <i class="pi pi-cog" style="font-size: 25px"></i>
-                </button>
-                <app-config simple ref="appConfigRef"></app-config>
+            <div class="little-card center">
+                <div class="relative" style="cursor: pointer">
+                    <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: !this.overlayActive, 'rotate-reverse': this.overlayActive }">
+                        <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
-            <div class="relative">
-                <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
-                <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.translations.gblBrazil }}</h6>
+            <div class="little-card center">
+                <div class="relative">
+                    <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onConfigButtonClick()">
+                        <i class="pi pi-cog" style="font-size: 25px"></i>
+                    </button>
+                    <app-config simple ref="appConfigRef"></app-config>
+                </div>
+            </div>
+            <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
+                <div class="relative">
+                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
+                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.translations.gblBrazil }}</h6>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </template>

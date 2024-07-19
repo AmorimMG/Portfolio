@@ -1,8 +1,12 @@
 <script>
 import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
+import CardEffect from '../CardEffect.vue';
 
 export default {
+    components: {
+        CardEffect
+    },
     data() {
         return {
             year: null,
@@ -216,36 +220,38 @@ export default {
 
 <template>
     <div id="Anilist" class="col-12 lg:col-12 xl:col-12">
-        <div class="card mb-0 center">
-            <a href="https://anilist.co/user/RecNove/" target="_blank" rel="noopener noreferrer">
-                <div class="calendar-heatmap">
-                    <div class="flex w-full gap-1 justify-content-between">
-                        <div class="legend-container">
-                            <div class="legend">
-                                <div v-for="color in GithubColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+        <CardEffect>
+            <div class="card mb-0 center">
+                <a href="https://anilist.co/user/RecNove/" target="_blank" rel="noopener noreferrer">
+                    <div class="calendar-heatmap">
+                        <div class="flex w-full gap-1 justify-content-between">
+                            <div class="legend-container">
+                                <div class="legend">
+                                    <div v-for="color in GithubColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+                                </div>
+                                <h2 class="lights center">Github</h2>
                             </div>
-                            <h2 class="lights center">Github</h2>
-                        </div>
-                        <div class="legend-container">
-                            <div class="legend">
-                                <div v-for="color in AnilistColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+                            <div class="legend-container">
+                                <div class="legend">
+                                    <div v-for="color in AnilistColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+                                </div>
+                                <h2 class="lights center">Anilist</h2>
                             </div>
-                            <h2 class="lights center">Anilist</h2>
                         </div>
-                    </div>
-                    <div class="calendar">
-                        <div v-for="(month, index) in months" :key="index" class="month">
-                            <p>{{ month }}</p>
-                            <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
-                                <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
-                                    {{ day }}
+                        <div class="calendar">
+                            <div v-for="(month, index) in months" :key="index" class="month">
+                                <p>{{ month }}</p>
+                                <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
+                                    <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
+                                        {{ day }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        </CardEffect>
     </div>
 </template>
 

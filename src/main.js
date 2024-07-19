@@ -107,12 +107,26 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 import AnimateOnScroll from 'primevue/animateonscroll';
 
+import localization from './data/newLocalization.json';
+
+import { createI18n } from 'vue-i18n';
+
+const messages = localization;
+
+const i18n = new createI18n({
+    locale: 'en', // Default locale
+    fallbackLocale: 'en',
+    legacy: false,
+    messages
+});
+
 import '@/assets/styles.scss';
 
 const app = createApp(App);
 
 app.use(router);
 app.use(PrimeVue, { ripple: true });
+app.use(i18n);
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
