@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 import CardEffect from '../CardEffect.vue';
 
 const spotifyData = ref();
@@ -47,10 +48,13 @@ onMounted(() => {
 <template>
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
-            <div v-tooltip.top="'Am i online in discord?'" class="card mb-0 center" :style="{ padding: 0, backgroundColor: online ? '#35AC8C' : '#260D3D' }">
-                {{ discordData?.discord_status }}
-                <h2 :class="{ glitch: props.isGlitchActive }" style="color: white" v-if="online"><span class="dot"></span> ONLINE</h2>
-                <h2 :class="{ glitch: props.isGlitchActive }" style="color: white" v-else><span class="dot"></span> OFFLINE</h2>
+            <div class="card mb-0 center" :style="{ padding: 0 }">
+                <div class="title-container gap-3"><i class="pi pi-discord"></i> Discord</div>
+                <div class="center flex-row gap-2">
+                    <VueNeonLight color="#ff00ff" size="30px" :flash="false" :class="{ glitch: props.isGlitchActive }" style="color: white" v-if="online">ONLINE</VueNeonLight>
+                    <VueNeonLight size="30px" :class="{ glitch: props.isGlitchActive }" style="color: white" v-else>OFFLINE</VueNeonLight>
+                    <span class="dot"></span>
+                </div>
             </div>
         </CardEffect>
     </div>

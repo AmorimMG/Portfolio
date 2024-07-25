@@ -11,16 +11,11 @@ export default {
         return {
             toast: useToast(),
             currentTrack: null,
-            lastTrack: null,
-            isLargeScreen: window.innerWidth > 992
+            lastTrack: null
         };
     },
     mounted() {
         this.getSpotifyData();
-        window.addEventListener('resize', this.handleResize);
-    },
-    beforeUnmount() {
-        window.removeEventListener('resize', this.handleResize);
     },
     methods: {
         async getSpotifyData() {
@@ -47,41 +42,16 @@ export default {
                     };
                 }
             });
-        },
-        handleResize() {
-            this.isLargeScreen = window.innerWidth > 992;
         }
     }
 };
 </script>
 
 <template>
-    <div v-tooltip.top="'Spotify Music'" class="col-4 lg:col-4 xl:col-3">
+    <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
-            <div v-if="isLargeScreen" class="card page">
-                <div class="album-info" v-if="currentTrack">
-                    <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
-                        <div class="overlayy">
-                            <h2>{{ currentTrack.name }}</h2>
-                            <h3>{{ currentTrack.artist }}</h3>
-                            <h4>Album: {{ currentTrack.album }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <h2 v-if="!currentTrack && lastTrack != null">Last Played Track:</h2>
-                <div v-if="!currentTrack && lastTrack != null">
-                    <p>{{ lastTrack.name }} by {{ lastTrack.artist }}</p>
-                    <p>Album: {{ lastTrack.album }}</p>
-                </div>
-                <div v-if="!currentTrack && !lastTrack" style="height: 100%">
-                    <div class="album-info">
-                        <div class="overlayy">
-                            <h2 class="lights">No track currently playing</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="card page">
+            <div class="card page">
+                <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div>
                 <div class="album-info" v-if="currentTrack">
                     <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
                         <div class="overlayy">
@@ -102,7 +72,8 @@ export default {
                 </div>
                 <div v-if="!currentTrack && !lastTrack" style="height: 100%">
                     <div class="album-info">
-                        <div class="overlayy">
+                            <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div>
+                            <div class="overlayy">
                             <h2>No track currently playing</h2>
                         </div>
                     </div>

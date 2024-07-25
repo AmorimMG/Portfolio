@@ -5,19 +5,16 @@ import { useLayout } from './composables/layout';
 import AppConfig from './AppConfig.vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import VueNeonLight from '../components/VueNeonLight/vue-neon-light.vue';
 
 const { onMenuToggle } = useLayout();
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
-const router = useRouter();
 const appConfigRef = ref(null);
-const { t, locale } = useI18n();
-
+const { locale } = useI18n();
 
 onMounted(() => {
     bindOutsideClickListener();
-    // Access the DOM element directly
-    console.log(appConfigRef.value);
 });
 
 onBeforeUnmount(() => {
@@ -29,6 +26,7 @@ const dropdownValues = ref([
     { name: 'Español', code: 'ES', value: 'es' },
     { name: 'English', code: 'UK', value: 'en' }
 ]);
+
 const dropdownValue = ref(null);
 
 const onTopBarMenuButton = () => {
@@ -88,7 +86,7 @@ watch(dropdownValue, (newValue, oldValue) => {
 <template>
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo center flex-row" style="margin-top: 15px">
-            <h1>AMORIM</h1>
+            <VueNeonLight color="#ff00ff" size="50px" :flash="true"> AMORIM </VueNeonLight>
             <!-- <img alt="Logo" :src="'/src/assets/images/profilePic.png'" /> -->
         </router-link>
 
@@ -96,18 +94,18 @@ watch(dropdownValue, (newValue, oldValue) => {
             <i class="pi pi-ellipsis-v"></i>
         </button>
         <div class="layout-topbar-menu w-full flex-row gap-6 center" style="margin-top: 15px">
-            <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle">
+            <Button link @click="onMenuToggle">
                 <h4>Home</h4>
-            </button>
-            <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle">
+            </Button>
+            <Button link @click="onMenuToggle">
                 <h4>Blog</h4>
-            </button>
-            <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle">
+            </Button>
+            <Button link @click="onMenuToggle">
                 <h4>Projects</h4>
-            </button>
-            <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle">
+            </Button>
+            <Button link @click="onMenuToggle">
                 <h4>CV</h4>
-            </button>
+            </Button>
         </div>
         <div class="layout-topbar-menu flex-end" :class="topbarMenuClasses">
             <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
@@ -154,5 +152,14 @@ watch(dropdownValue, (newValue, oldValue) => {
     border: none;
     width: 80px;
     height: 25px;
+}
+
+.layout-topbar {
+    border: 2px solid transparent;
+    box-shadow: 0 0 5px #ff00ff;
+}
+
+h4:hover{
+    color: #ff00ff;
 }
 </style>

@@ -1,7 +1,6 @@
-.intro-div {
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
+body {
+    cursor: url('/cursors/NormalSelect.cur'), auto; /* Default cursor */
+  }
 
 .fade-enter-active,
 .fade-leave-active {
@@ -131,7 +130,6 @@
 }
 
 .p-terminal {
-    max-height: 300px;
     height: 100%;
 }
 
@@ -209,9 +207,9 @@
 .cluster {
     display: grid;
     grid-template: repeat(2, 1fr) / repeat(2, 1fr);
-    gap: 10px;
-    width: 100%;
+
 }
+
 
 .grid-2 {
     display: grid;
@@ -227,9 +225,32 @@
     height: 100%;
 }
 
+.components-container{
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+.title-container {
+    display: flex;
+    width: 200px;
+    justify-content: start;
+    align-items: center;
+}
+
 .draggable {
     display: flex;
     flex-wrap: wrap;
+}
+
+.draggable {
+    padding: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    height: 100vh;
 }
 
 .draggable-item {
@@ -237,11 +258,9 @@
     cursor: move;
 }
 
-.components-container{
-    display: flex;
-    flex-direction: row;
+.layout-main-container{
+    height: 100vh;
 }
-
 
 @media screen and (min-width: 1960px) {
     .layout-main-container {
@@ -251,7 +270,7 @@
 
 @media (min-width: 992px) {
     .layout-main-container {
-        padding: 70px 10px 0px 0px !important;
+        padding: 0px 10px 0px 0px !important;
     }
 
     .stroke-white {

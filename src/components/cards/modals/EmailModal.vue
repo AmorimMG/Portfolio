@@ -60,7 +60,7 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0; background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
-                <Button v-tooltip.top="'Send me a Email'" @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
+                <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
                     <img src="../../../assets/images/Mail.png" width="50%" :class="{ lights: isHoveredMail }" />
                 </Button>
             </div>

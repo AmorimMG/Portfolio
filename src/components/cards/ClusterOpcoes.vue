@@ -24,8 +24,6 @@ export default {
         },
         handleDropdownChange({ value }) {
             this.$emit('update-dropdown-value', value);
-
-            this.updateTranslations(value);
         },
         getCurrentTime() {
             const brazilTime = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
@@ -47,8 +45,6 @@ export default {
         }
     },
     data() {
-        const { translations, updateTranslations } = inject('translations');
-
         const dropdownValues = ref([
             { name: 'Português', code: 'BR', value: 'pt' },
             { name: 'Español', code: 'ES', value: 'es' },
@@ -72,8 +68,6 @@ export default {
             isDay,
             currentTime,
             appConfigRef,
-            translations,
-            updateTranslations,
             overlayActive
         };
     },
@@ -87,8 +81,6 @@ export default {
         setTimeout(() => {
             this.isStarted = true;
         }, 2000);
-
-        this.updateTranslations(getLanguageCookie());
     },
     components: {
         AppConfig
@@ -138,7 +130,7 @@ export default {
             <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
                 <div class="relative">
                     <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
-                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.translations.gblBrazil }}</h6>
+                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ $t('brazil') }}</h6>
                 </div>
             </div>
         </div>
