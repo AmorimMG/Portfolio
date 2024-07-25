@@ -28,13 +28,21 @@ const responsiveOptions = ref([
 <template>
     <div class="col-8 lg:col-9 xl:col-9">
         <CardEffect>
-            <div class="card mb-0 center" style="padding: 0">
-                <Galleria :value="images" :responsiveOptions="responsiveOptions" containerStyle="max-width: 600px" :numVisible="5" :circular="true" :autoPlay="true" :transitionInterval="2000">
+            <div class="mb-0 center" style="padding: 0">
+                <Galleria
+                    :value="images"
+                    :responsiveOptions="responsiveOptions"
+                    :showThumbnails="false"
+                    containerStyle="max-width: 600px"
+                    :numVisible="5"
+                    :circular="true"
+                    :autoPlay="true"
+                    :showIndicators="false"
+                    :changeItemOnIndicatorHover="true"
+                    :transitionInterval="2000"
+                >
                     <template #item="slotProps">
-                        <img width="300px" height="200px" :src="slotProps.item.url" :alt="slotProps.item.id" style="width: 100%; display: block" />
-                    </template>
-                    <template #thumbnail="slotProps">
-                        <img width="50px" height="50px" :src="slotProps.item.url" :alt="slotProps.item.id" style="display: block" />
+                        <img width="200px" height="200px" :src="slotProps.item.url" :alt="slotProps.item.id" style="width: 100%; display: block" />
                     </template>
                 </Galleria>
             </div>

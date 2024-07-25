@@ -33,7 +33,7 @@ onMounted(() => {
 </script>
 <template>
     <div id="ClusterLinks" class="col-6 lg:col-6 xl:col-3 center">
-        <CardEffect>
+        <CardEffect class="center">
             <div class="cluster" style="margin: 10px">
                 <div class="little-card center" style="background-color: #9730a3">
                     <a

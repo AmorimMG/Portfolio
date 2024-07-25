@@ -56,7 +56,7 @@ export default {
                     this.dataUsers = response.data;
                 })
                 .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblErroObterDadosGenerico'), life: 3000 });
+                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
                 });
         },
         getCancelUser() {
@@ -74,11 +74,11 @@ export default {
                 .then(() => {
                     this.getUsers();
                     this.criarDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastCreate'), life: 3000 });
+                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastCreate'), life: 3000 });
                     this.usuario = { admin: false };
                 })
                 .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastCreateError'), life: 3000 });
+                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastCreateError'), life: 3000 });
                 });
         },
         EditaUsuario() {
@@ -86,10 +86,10 @@ export default {
                 .then(() => {
                     this.getUsers();
                     this.editaDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastEdit'), life: 3000 });
+                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastEdit'), life: 3000 });
                 })
                 .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastEditError'), life: 3000 });
+                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastEditError'), life: 3000 });
                 });
         },
         deleteUser() {
@@ -97,10 +97,10 @@ export default {
                 .then(() => {
                     this.dataUsers = this.dataUsers.filter((u) => u.id !== this.product.id);
                     this.deleteDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastDelete'), life: 3000 });
+                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
                 })
                 .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastDeleteError'), life: 3000 });
+                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
                 });
         },
         confirmDeleteAll(edit) {
@@ -109,7 +109,7 @@ export default {
         },
         deleteAll() {
             if (this.selectedUser.length === 0) {
-                this.toast.add({ severity: 'warn', summary: this.formatMessage('gblSummarioToastWarn'), detail: this.formatMessage('gblNenhumaLinhaSelecionada'), life: 3000 });
+                this.toast.add({ severity: 'warn', summary: $t('SummarioToastWarn'), detail: $t('NenhumaLinhaSelecionada'), life: 3000 });
                 return;
             }
 
@@ -117,10 +117,10 @@ export default {
                 RESTAPI.UsuarioExcluir(user.id)
                     .then(() => {
                         this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
-                        this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastDelete'), life: 3000 });
+                        this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
                     })
                     .catch(() => {
-                        this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastDeleteError'), life: 3000 });
+                        this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
                     });
             });
             this.deleteAllDialog = false;
@@ -184,46 +184,46 @@ export default {
                     </Column>
                 </DataTable>
 
-                <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblExcluir')" :modal="true">
+                <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="$t('Excluir')" :modal="true">
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product"
-                            >{{ this.formatMessage('gblExcluir') }} <b>{{ product.login }}</b
+                            >{{ $t('Excluir') }} <b>{{ product.login }}</b
                             >?</span
                         >
                     </div>
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteDialog = false" />
-                        <Button :label="this.formatMessage('gblSim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteDialog = false" />
+                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="deleteAllDialog" :header="this.formatMessage('gblExcluir')" :modal="true" :style="{ width: '450px' }">
+                <Dialog v-model:visible="deleteAllDialog" :header="$t('Excluir')" :modal="true" :style="{ width: '450px' }">
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product"
-                            >{{ this.formatMessage('gblExcluir') }} <b>{{ this.selectedUser.length }} {{ this.formatMessage('gblUsuarios') }}</b
+                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Usuarios') }}</b
                             >?</span
                         >
                     </div>
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteAllDialog = false" />
-                        <Button :label="this.formatMessage('gblSim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteAllDialog = false" />
+                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblCriar')" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="$t('Criar')" :modal="true" class="p-fluid">
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="name" v-model.trim="usuario.nome" required="true" />
-                                <label for="name">{{ this.formatMessage('gblNome') }}</label>
+                                <label for="name">{{ $t('Nome') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="email" v-model="usuario.email" required="true" />
-                                <label for="email">{{ this.formatMessage('gblEmail') }}</label>
+                                <label for="email">{{ $t('Email') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -231,39 +231,39 @@ export default {
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="login" v-model="usuario.login" required="true" />
-                                <label for="login">{{ this.formatMessage('gblLogin') }}</label>
+                                <label for="login">{{ $t('Login') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
                                 <InputText type="password" id="senha" v-model="usuario.senha" required="true" />
-                                <label for="senha">{{ this.formatMessage('gblSenha') }}</label>
+                                <label for="senha">{{ $t('Senha') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="field-checkbox mb-0">
                         <input type="checkbox" id="admin" v-model="usuario.admin" />
-                        <label for="admin">{{ this.formatMessage('gblAdministrador') }}</label>
+                        <label for="admin">{{ $t('Administrador') }}</label>
                     </div>
 
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
-                        <Button :label="this.formatMessage('gblSalvar')" icon="pi pi-check" class="p-button-text" @click="SalvaUsuario" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaUsuario" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblEditar')" :modal="true" class="p-fluid" @update:visible="getCancelUser">
+                <Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="$t('Editar')" :modal="true" class="p-fluid" @update:visible="getCancelUser">
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="name" v-model.trim="userLogin.nome" required="true" />
-                                <label for="name">{{ this.formatMessage('gblNome') }}</label>
+                                <label for="name">{{ $t('Nome') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="email" v-model="userLogin.email" required="true" />
-                                <label for="email">{{ this.formatMessage('gblEmail') }}</label>
+                                <label for="email">{{ $t('Email') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -271,28 +271,28 @@ export default {
                         <div class="field col">
                             <FloatLabel>
                                 <InputText id="login" v-model="userLogin.login" required="true" />
-                                <label for="login">{{ this.formatMessage('gblLogin') }}</label>
+                                <label for="login">{{ $t('Login') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
                                 <InputText type="password" id="senha" v-model="userLogin.senha" required="true" />
-                                <label for="senha">{{ this.formatMessage('gblSenha') }}</label>
+                                <label for="senha">{{ $t('Senha') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="field-checkbox mb-0">
                         <input type="checkbox" id="admin" v-model="userLogin.admin" />
-                        <label for="admin">{{ this.formatMessage('gblAdministrador') }}</label>
+                        <label for="admin">{{ $t('Administrador') }}</label>
                     </div>
                     <div class="field-checkbox mb-0">
                         <input type="checkbox" id="ativo" v-model="userLogin.ativo" />
-                        <label for="ativo">{{ this.formatMessage('gblAtivo') }}</label>
+                        <label for="ativo">{{ $t('Ativo') }}</label>
                     </div>
 
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
-                        <Button :label="this.formatMessage('gblSalvar')" icon="pi pi-check" class="p-button-text" @click="EditaUsuario" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaUsuario" />
                     </template>
                 </Dialog>
             </div>

@@ -23,31 +23,15 @@ import MapboxMap from '../components/Mapbox.vue';
 import IA from '../components/cards/IA.vue';
 import Weather from '../components/cards/Weather.vue';
 import Blog from '../components/cards/Blog.vue';
-import Photos from '../components/cards/Photos.vue';
 
 /* import Actitivies from '../components/cards/Activities.vue'; */
 /* import discordData from '../service/getDiscord'; */
-
-import { formatMessage } from '../service/localization';
-import { setLanguageCookie, getLanguageCookie } from '../service/session';
-
 //#endregion
 
 //#region variables
 const overlayPanel = ref();
-const language = ref();
-const dropdownValue = ref();
 const isStarted = ref(false);
 const isGlitchActive = ref(false);
-
-const translations = ref({
-    gblHi: '',
-    gblAboutMe: '',
-    gblInterests: '',
-    gblSpotify: '',
-    gblBrazil: '',
-    gblCV: ''
-});
 
 const items = ref([
     {
@@ -86,61 +70,36 @@ const componentMap = {
     EmailModal,
     CVModal,
     LastFMModal,
-    ProjectsModal,
     IA,
     Weather,
     Blog,
-    Photos,
+    ProjectsModal,
     Terminal,
     Stack,
     DashboardTimeline
 };
 
 const cards = ref([
-    { id: 1, name: 'ClusterLinks' },
-    { id: 3, name: 'Spotify' },
-    { id: 4, name: 'Discord' },
-    { id: 5, name: 'ThreeJSComponent' },
-    { id: 6, name: 'MapboxMap' },
-    { id: 7, name: 'EmailModal' },
-    { id: 8, name: 'CVModal' },
-    { id: 9, name: 'LastFMModal' },
-    { id: 10, name: 'ProjectsModal' },
-    { id: 11, name: 'IA' },
-    { id: 12, name: 'Weather' },
-    { id: 13, name: 'Blog' },
-    { id: 14, name: 'Photos' },
-    { id: 15, name: 'Terminal' },
-    { id: 16, name: 'Stack' },
-    { id: 17, name: 'DashboardTimeline' }
+    { id: 1, name: 'ClusterLinks', colSpan: 1, rowSpan: 1 },
+    { id: 3, name: 'Spotify', colSpan: 2, rowSpan: 2 },
+    { id: 4, name: 'Discord', colSpan: 1, rowSpan: 1 },
+    { id: 5, name: 'ThreeJSComponent', colSpan: 1, rowSpan: 1 },
+    { id: 6, name: 'MapboxMap', colSpan: 1, rowSpan: 1 },
+    { id: 7, name: 'EmailModal', colSpan: 1, rowSpan: 1 },
+    { id: 8, name: 'CVModal', colSpan: 1, rowSpan: 1 },
+    { id: 9, name: 'LastFMModal', colSpan: 1, rowSpan: 1 },
+    { id: 10, name: 'Weather', colSpan: 1, rowSpan: 1 },
+    { id: 11, name: 'Blog', colSpan: 1, rowSpan: 1 },
+    { id: 12, name: 'ProjectsModal', colSpan: 1, rowSpan: 1 },
+    { id: 13, name: 'IA', colSpan: 2, rowSpan: 2 },
+    { id: 14, name: 'Terminal', colSpan: 1, rowSpan: 2 },
+    { id: 15, name: 'Stack', colSpan: 1, rowSpan: 1 },
+    { id: 16, name: 'DashboardTimeline', colSpan: 4, rowSpan: 1 }
 ]);
 
 //#endregion
 
 //#region methods
-function updateTranslations(languages) {
-    if (languages) {
-        language.value = languages;
-    } else if (languages?.value) {
-        language.value = languages.value;
-    } else {
-        language.value = 'pt'; // lingua padrão
-    }
-    translations.value.gblHi = formatMessage('gblHi', language.value);
-    translations.value.gblAboutMe = formatMessage('gblAboutMe', language.value);
-    translations.value.gblInterests = formatMessage('gblInterests', language.value);
-    translations.value.gblSpotify = formatMessage('gblSpotify', language.value);
-    translations.value.gblBrazil = formatMessage('gblBrazil', language.value);
-    translations.value.gblCV = formatMessage('gblCV', language.value);
-
-    applyGlitchEffect();
-    translations.value = { ...translations.value };
-}
-
-provide('translations', {
-    translations,
-    updateTranslations
-});
 
 const applyGlitchEffect = () => {
     isGlitchActive.value = true;
@@ -150,17 +109,9 @@ const applyGlitchEffect = () => {
 };
 
 onMounted(() => {
-    updateTranslations(getLanguageCookie() ?? 'pt');
-
     setTimeout(() => {
         isStarted.value = true;
     }, 2000);
-});
-
-watch(dropdownValue, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        setLanguageCookie(newValue.value);
-    }
 });
 //#endregion
 </script>
@@ -169,20 +120,28 @@ watch(dropdownValue, (newValue, oldValue) => {
     <div class="layout-main-container">
         <!--  <Background /> -->
         <ContextMenu global :model="items" />
-        <div v-if="!isStarted" class="center" style="intro-div">
+        <div v-if="!isStarted" class="center">
             <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
             <div class="black-screen"></div>
         </div>
         <transition name="fade">
             <div v-show="isStarted" class="grid components-container justify-content-center">
-                <app-topbar></app-topbar>
-                <div id="Introduction" class="col-4 lg:col-4 xl:col-4 p-0 py-3">
-                    <p>{{ $t('welcome') }}</p>
-                    <Introduction class="col-2" :translations="translations" :isGlitchActive="isGlitchActive" @toggle="toggle" />
+                <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
+                <div id="Introduction" class="col-4 lg:col-3 xl:col-3 p-0">
+                    <Introduction class="col-2" :isGlitchActive="isGlitchActive" />
                 </div>
-                <draggable class="grid col-12 lg:col-8 xl:col-8 p-5 pr-3 py-6" v-model="cards" item-key="id" group="cards" animation="200">
+                <draggable class="draggable col-12 lg:col-9 xl:col-9 p-5 pr-3" v-model="cards" item-key="id" group="cards" animation="200">
                     <template #item="{ element }">
-                        <component :class="{ glitch: isGlitchActive }" :is="componentMap[element.name]" :translations="translations" :isGlitchActive="isGlitchActive" />
+                        <component
+                            style="width: 100%"
+                            :class="{ glitch: isGlitchActive }"
+                            :is="componentMap[element.name]"
+                            :isGlitchActive="isGlitchActive"
+                            :style="{
+                                'grid-column': 'span ' + element.colSpan,
+                                'grid-row': 'span ' + element.rowSpan
+                            }"
+                        />
                     </template>
                 </draggable>
                 <!--  <Actitivies :discordData="discordData()" /> -->
@@ -225,8 +184,6 @@ watch(dropdownValue, (newValue, oldValue) => {
                 </div>
             </div>
         </OverlayPanel>
-
-        <SpeedDial :model="items" :radius="120" type="quarter-circle" direction="up-right" :style="{ position: 'fixed', left: '10px', bottom: '10px' }" />
     </div>
     <ScrollTop />
 </template>

@@ -28,7 +28,7 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <Button v-tooltip.top="'My Projects'" @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                <Button @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
                     <h2 :class="{ glitch: isGlitchActive }" style="color: white">Projects</h2>
                 </Button>
             </div>

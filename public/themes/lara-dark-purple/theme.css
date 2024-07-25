@@ -57,7 +57,7 @@
   font-display: swap;
   font-style: normal;
   font-named-instance: "Regular";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 @font-face {
   font-family: "lores-12";
@@ -65,7 +65,7 @@
   font-display: swap;
   font-style: italic;
   font-named-instance: "Italic";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 :root {
   --blue-50:#f5f9ff;
@@ -10711,7 +10711,6 @@
   }
 
   .p-terminal {
-    max-height: 300px;
     overflow: auto;
   }
 
