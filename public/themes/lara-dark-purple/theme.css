@@ -1,8 +1,10 @@
 :root {
-  font-family: "lores-12", sans-serif;
+  font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
-  --font-family: "lores-12", sans-serif;
+  --font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica,
+  Arial, "Lucida Grande", sans-serif;
+  --font-neon: "lores-12", sans-serif;
   --font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   --surface-a: #433864;
   --surface-b: #111827;
@@ -41,6 +43,7 @@
   --surface-ground: #0f0026;
   --surface-section: #111827;
   --surface-card: rgba(155, 89, 182, 0.15);
+  --sidebar-bg: #260d3d;
   --surface-overlay: #433864;
   --surface-border: #4d25b0;
   --surface-hover: rgba(255, 255, 255, 0.03);

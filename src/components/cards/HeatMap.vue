@@ -256,6 +256,10 @@ export default {
 </template>
 
 <style scoped>
+.card {
+    max-height: 300px;
+}
+
 .calendar-heatmap {
     scale: 0.9;
     display: flex;

@@ -14,6 +14,11 @@ const Endpoints = (instance) => ({
     UsuarioExcluir: (data) => instance.delete(`Usuarios/${data}`),
     UsuarioObterTodos: () => instance.get('Usuarios'),
 
+    ProjetoCriar: (data) => instance.post('Projetos/Inserir', data),
+    ProjetoEditar: (data) => instance.put('Projetos/Atualizar', data),
+    ProjetoExcluir: (data) => instance.delete(`Projetos/${data}`),
+    ProjetoObterTodos: () => instance.get('Projetos'),
+
     LinguagemCriar: (data) => instance.post('Linguagem/Inserir', data),
     LinguagemEditar: (data) => instance.put('Linguagem/Atualizar', data),
     LinguagemExcluir: (data) => instance.delete(`Linguagem/Excluir/${data}`),

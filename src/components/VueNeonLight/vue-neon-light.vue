@@ -1,5 +1,4 @@
 <script>
-
 export default {
     name: 'vue-neon-light',
     props: {
@@ -51,10 +50,14 @@ export default {
 
 <style scoped lang="scss">
 @font-face {
-    font-family: 'Beon';
+    font-family: 'lores-12';
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+    font-named-instance: 'Regular';
+
     src: url('../../../public/fonts/beon-webfont.ttf') format('truetype');
 }
-
 body {
     background: #000;
     margin: 0 auto;
@@ -63,7 +66,13 @@ body {
 }
 
 .neon-text {
-    font-family: 'Beon', sans-serif;
+    font-family: 'lores-12';
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+    font-named-instance: 'Regular';
+
+    src: url('../../../public/fonts/beon-webfont.ttf') format('truetype');
 }
 
 .flash {

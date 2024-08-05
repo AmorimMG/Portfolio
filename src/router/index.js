@@ -26,9 +26,14 @@ const router = createRouter({
             component: () => import('@/views/Dashboard.vue')
         },
         {
+            path: '/dock',
+            name: 'dock',
+            component: () => import('@/views/pages/Dock/Dock.vue')
+        },
+        {
             path: '/intro',
             name: 'intro',
-            component: () => import('@/views/Introduction.vue')
+            component: () => import('@/views/Intro.vue')
         },
         {
             path: '/pages/notfound',

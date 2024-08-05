@@ -36,7 +36,7 @@ const layer1 = computed(() => ({
 
 <template>
     <div ref="container" class="page" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
-        <img :style="layer0" src="../assets/images/parallaxbackground.png" alt="" />
+        <img :style="layer0" src="../assets/images/parallaxbackground.png" />
         <AnaglyphText style="bottom: 150px; right: 50px" :text="'Amorim'" />
         <router-link to="/">
             <Button :style="layer1">Enter</Button>
@@ -49,7 +49,7 @@ const layer1 = computed(() => ({
 .page {
     position: relative;
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
     background-size: cover;
     background-position: center;
@@ -57,6 +57,9 @@ const layer1 = computed(() => ({
     justify-content: center;
     align-items: center;
     perspective: 1000px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+
 }
 
 .centered-text {

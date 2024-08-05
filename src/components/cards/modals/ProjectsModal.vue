@@ -1,18 +1,117 @@
 <script>
 import { ref } from 'vue';
+import draggable from 'vuedraggable';
 import CardEffect from '../../CardEffect.vue';
+import Projects from '../../Projects.vue';
+
+import Portfolio from '../../../assets/images/projects/Portfolio.png';
+import PortfolioAPI from '../../../assets/images/projects/PortfolioAPI.png';
+import WhatsappClone from '../../../assets/images/projects/WhatsappClone.png';
+import Ecommerce from '../../../assets/images/projects/Ecommerce.png';
+import Snake from '../../../assets/images/projects/Snake.png';
+import InstagramClone from '../../../assets/images/projects/InstagramClone.png';
+import DinoClone from '../../../assets/images/projects/DinoClone.png';
+import NetflixClone from '../../../assets/images/projects/NetflixClone.png';
+import RAWG from '../../../assets/images/projects/RAWG.png';
+import DiscordAwards from '../../../assets/images/projects/DiscordAwards2.png';
+import RPG from '../../../assets/images/projects/RPG.png';
+import JogoDaVelha from '../../../assets/images/projects/JogoDaVelha.png';
 
 export default {
-    props: {
-        header: String
-    },
     components: {
-        CardEffect
+        CardEffect,
+        Projects,
+        draggable
     },
     data() {
         return {
-            scale: 1,
-            projectsVisible: ref(false)
+            projectsVisible: ref(false),
+            projects: ref([
+                {
+                    id: 1,
+                    img: Portfolio,
+                    title: 'Creative Tim',
+                    subtitle: 'Creative Tim',
+                    description: 'Creative Tim is a design agency specialized in creating beautiful UI/UX design and themes.'
+                },
+                {
+                    id: 2,
+                    img: PortfolioAPI,
+                    title: 'PrimeVue',
+                    subtitle: 'PrimeTek',
+                    description: 'PrimeVue is a popular UI Component Suite for Vue featuring 80+ components.'
+                },
+                {
+                    id: 3,
+                    img: WhatsappClone,
+                    title: 'PrimeFaces',
+                    subtitle: 'PrimeTek',
+                    description: 'PrimeFaces is a popular UI Component Suite for JSF featuring 100+ components.'
+                },
+                {
+                    id: 4,
+                    img: Ecommerce,
+                    title: 'PrimeFlex',
+                    subtitle: 'PrimeTek',
+                    description: 'PrimeFlex is a lightweight responsive CSS utility library.'
+                },
+                {
+                    id: 5,
+                    img: Snake,
+                    title: 'Serenity',
+                    subtitle: 'PrimeTek',
+                    description: 'Serenity is a premium application template.'
+                },
+                {
+                    id: 6,
+                    img: InstagramClone,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 7,
+                    img: DinoClone,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 8,
+                    img: NetflixClone,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 9,
+                    img: RAWG,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 10,
+                    img: DiscordAwards,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 11,
+                    img: RPG,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+                {
+                    id: 12,
+                    img: JogoDaVelha,
+                    title: 'Modern',
+                    subtitle: 'PrimeTek',
+                    description: 'Modern is a premium application template.'
+                },
+            ])
         };
     },
     methods: {
@@ -38,14 +137,11 @@ export default {
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
             <div class="popup-content">
-                <div class="grid gap-4">
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RPG'" style="background-color: #9730a3"></div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Whatsapp Clone'" style="background-color: #9730a3"></div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Ecommerce'" style="background-color: #9730a3"></div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'RAWG'" style="background-color: #9730a3"></div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Netflix'" style="background-color: #9730a3"></div>
-                    <div class="col-3 lg:col-3 xl:col-4 center" v-tooltip.top="'Snake'" style="background-color: #9730a3"></div>
-                </div>
+                <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
+                    <template #item="{ element }">
+                        <Projects class="col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" />
+                    </template>
+                </draggable>
             </div>
         </Dialog>
     </div>
@@ -71,5 +167,14 @@ export default {
     height: 100%;
     border: none;
     transform-origin: 0 0;
+}
+
+.p-dialog-content {
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.grid {
+    padding: 50px;
 }
 </style>
