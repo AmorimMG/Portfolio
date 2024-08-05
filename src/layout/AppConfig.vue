@@ -127,12 +127,11 @@ onMounted(() => {
                     <img src="https://primefaces.org/cdn/primevue/images/themes/lara-light-teal.png" alt="Lara Light Teal" class="border-circle" style="width: 1.5rem" />
                     <span class="font-medium">Temas</span>
                 </div>
-                <div class="flex align-items-center justify-content-between gap-3 mb-3">
-                </div>
+                <div class="flex align-items-center justify-content-between gap-3 mb-3"></div>
                 <div class="flex align-items-center justify-content-center gap-3">
-                   <!--  Muda literalmente o Tema -->
+                    <!--  Muda literalmente o Tema -->
 
-<!--                     <button
+                    <!--                     <button
                         :class="[
                             'bg-transparent border-1 cursor-pointer p-2 w-3 flex align-items-center justify-content-center transition-all transition-duration-200',
                             { 'border-primary': isThemeActive('lara', 'purple'), 'hover:border-500 surface-border': !isThemeActive('lara', 'purple') }
@@ -142,24 +141,47 @@ onMounted(() => {
                     >
                         <span class="block h-1rem w-full" style="border-radius: 30px; background: linear-gradient(180deg, #7758e4 0%, rgba(119, 88, 228, 0.5) 100%)"></span>
                     </button> -->
-                    
-                    <!-- Muda o Tema de Claro para Escuro -->
-                <button :class="[
-                            'bg-transparent border-1 cursor-pointer p-2 w-3 flex align-items-center justify-content-center transition-all transition-duration-200',
-                            { 'border-primary': isThemeActive('lara', 'purple'), 'hover:border-500 surface-border': !isThemeActive('lara', 'purple') }
-                        ]" style="border-radius: 30px" @click="onChangeTheme('lara-dark-purple', 'dark')">
-                    <span class="block h-1rem w-full" style="border-radius: 30px; background: linear-gradient(180deg, #7758e4 0%, rgba(119, 88, 228, 0.5) 100%)"></span>
-                </button>
-                    
 
-                <button                         :class="[
+                    <!-- Muda o Tema de Claro para Escuro -->
+                    <button
+                        :class="[
                             'bg-transparent border-1 cursor-pointer p-2 w-3 flex align-items-center justify-content-center transition-all transition-duration-200',
                             { 'border-primary': isThemeActive('lara', 'purple'), 'hover:border-500 surface-border': !isThemeActive('lara', 'purple') }
                         ]"
-                        style="border-radius: 30px" @click="onChangeTheme('lara-light-purple', 'light')">
+                        style="border-radius: 30px"
+                        @click="onChangeTheme('lara-dark-purple', 'dark')"
+                    >
+                        <span class="block h-1rem w-full" style="border-radius: 30px; background: linear-gradient(180deg, #7758e4 0%, rgba(119, 88, 228, 0.5) 100%)"></span>
+                    </button>
+
+                    <button
+                        :class="[
+                            'bg-transparent border-1 cursor-pointer p-2 w-3 flex align-items-center justify-content-center transition-all transition-duration-200',
+                            { 'border-primary': isThemeActive('lara', 'purple'), 'hover:border-500 surface-border': !isThemeActive('lara', 'purple') }
+                        ]"
+                        style="border-radius: 30px"
+                        @click="onChangeTheme('lara-light-purple', 'light')"
+                    >
                         <span class="block h-1rem w-full" style="border-radius: 30px; background: linear-gradient(rgb(500, 90, 228) 0%, rgba(100, 90, 500, 0.5) 100%)"></span>
-                </button>
-            </div>
+                    </button>
+                </div>
+            </section>
+
+            <section class="py-4 border-bottom-1 surface-border">
+                <div class="flex align-items-center gap-2 mb-3">
+                    <img src="https://primefaces.org/cdn/primevue/images/themes/lara-light-teal.png" alt="Lara Light Teal" class="border-circle" style="width: 1.5rem" />
+                    <span class="font-medium">Estilo</span>
+                </div>
+                <div class="flex align-items-center justify-content-between gap-3 mb-3"></div>
+                <div class="flex align-items-center justify-content-center gap-3" label="Tema1" >
+                    <Button @click="onChangeTheme('lara-dark-purple', 'dark')">
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Tema 1</span>
+                    </Button>
+
+                    <Button @click="onChangeTheme('lara-light-purple', 'light')">
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Tema 2</span>
+                    </Button>
+                </div>
             </section>
         </div>
     </Sidebar>

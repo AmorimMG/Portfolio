@@ -23,7 +23,7 @@ body {
 
 .p-dialog-content {
     padding: 0;
-    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .iframe {
@@ -244,12 +244,11 @@ body {
 }
 
 .draggable {
-    padding: 5px;
+    padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     height: 100vh;
 }
 

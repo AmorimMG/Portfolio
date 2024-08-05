@@ -27,7 +27,7 @@ export default {
                         artist: currentTrack.artist,
                         album: currentTrack.album,
                         images: currentTrack.images,
-                        url: currentTrack.url
+                        url: currentTrack.href
                     };
                 }
 
@@ -51,29 +51,33 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card page">
-                <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div>
+                <!--                 <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div> -->
                 <div class="album-info" v-if="currentTrack">
-                    <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
-                        <div class="overlayy">
-                            <h2>{{ currentTrack.name }}</h2>
-                            <h3>{{ currentTrack.artist }}</h3>
-                            <h4>Album: {{ currentTrack.album }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="album-info" v-if="!currentTrack && lastTrack">
-                    <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack?.images[0].url + ')' }">
-                        <div class="overlayy">
-                            <h2>{{ lastTrack?.name }}</h2>
-                            <h3>{{ lastTrack?.artist }}</h3>
-                            <h4>Album: {{ lastTrack?.album }}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="!currentTrack && !lastTrack" style="height: 100%">
-                    <div class="album-info">
-                            <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div>
+                    <a :href="currentTrack.url" target="_blank" rel="noopener noreferrer">
+                        <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
                             <div class="overlayy">
+                                <h4>{{ currentTrack.name }}</h4>
+                                <h5>{{ currentTrack.artist }}</h5>
+                                <h6>Album: {{ currentTrack.album }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="album-info" v-else-if="!currentTrack && lastTrack">
+                    <a :href="lastTrack.url" target="_blank" rel="noopener noreferrer">
+                        <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack.images[0].url + ')' }">
+                            <div class="overlayy">
+                                <h4>{{ lastTrack.name }}</h4>
+                                <h5>{{ lastTrack.artist }}</h5>
+                                <h6>Album: {{ lastTrack.album }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div v-else style="height: 100%">
+                    <div class="album-info">
+                        <!--                         <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div> -->
+                        <div class="overlayy">
                             <h2>No track currently playing</h2>
                         </div>
                     </div>
@@ -96,15 +100,11 @@ export default {
     align-items: row;
 }
 
-h6 {
-    font-size: 0.8em;
-}
-
 .album-info {
-    background-color: #1db954;
     width: 100%;
     height: 100%;
     padding: 5px;
+    border-radius: 10px;
 }
 
 .album-image {
@@ -124,20 +124,17 @@ h6 {
     flex-direction: column;
 }
 
-.overlayy h2 {
-    font-size: 24px;
-    margin-bottom: 5px;
-    color: white;
-}
-
-.overlayy h3 {
-    font-size: 20px;
-    margin-bottom: 5px;
-    color: white;
-}
-
 .overlayy h4 {
-    font-size: 16px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.overlayy h5 {
+    margin-bottom: 5px;
+    color: white;
+}
+
+.overlayy h6 {
     margin-bottom: 0;
     color: white;
 }

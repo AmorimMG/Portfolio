@@ -19,8 +19,8 @@ const weather = ref([]);
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <h2 :class="{ glitch: isGlitchActive }">{{ weather?.current?.temp_c }} º</h2>
-                <img :src="weather?.current?.condition?.icon" />
+                <h2 :class="{ glitch: isGlitchActive }">{{ weather?.current?.temp_c }} º C</h2>
+                {{ weather?.current?.condition?.text }}
             </div>
         </CardEffect>
     </div>

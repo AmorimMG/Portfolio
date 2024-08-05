@@ -3,9 +3,6 @@ import { ref } from 'vue';
 import CardEffect from '../../CardEffect.vue';
 
 export default {
-    props: {
-        header: String
-    },
     components: {
         CardEffect
     },
@@ -53,25 +50,19 @@ export default {
             </div>
         </CardEffect>
         <Dialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
-            <template #header>
-                <div class="inline-flex align-items-center justify-content-center gap-2">
-                    {{ header }}
-                </div>
-            </template>
-            <div class="popup-content" style="height: 100%; position: relative">
-                <div class="zoom-controls">
-                    <Button @click="zoomIn">Zoom In</Button>
-                    <Button @click="zoomOut">Zoom Out</Button>
-                </div>
-                <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
-                    <iframe id="iframe" class="iframe" ref="iframe" src="https://www.amorim.pro/cv" scrolling="auto" style="border: none"></iframe>
-                </div>
+            <div class="zoom-controls">
+                <Button @click="zoomIn">Zoom In</Button>
+                <Button @click="zoomOut">Zoom Out</Button>
+                <Button v-tooltip.top="'Close'" icon="pi pi-times" severity="danger" @click="onHide()"></Button>
+            </div>
+            <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
+                <iframe id="iframe" class="iframe" ref="iframe" src="https://www.amorim.pro/cv" scrolling="auto" style="border: none"></iframe>
             </div>
         </Dialog>
     </div>
 </template>
 
-<style scoped>
+<style>
 .zoom-controls {
     position: absolute;
     top: 10px;
@@ -91,5 +82,9 @@ export default {
     height: 100%;
     border: none;
     transform-origin: 0 0;
+}
+
+.p-dialog-content {
+    padding: 0;
 }
 </style>
