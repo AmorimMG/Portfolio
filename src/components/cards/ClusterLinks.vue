@@ -37,7 +37,7 @@ onMounted(() => {
             <div class="cluster" style="margin: 10px">
                 <div class="little-card center" style="background-color: #9730a3">
                     <a
-                        style="background-image: url('/src/assets/images/instagram.svg'); background-size: cover"
+                        style="background-image: url('/src/assets/images/cards/instagram.svg'); background-size: cover"
                         class="relative"
                         href="https://www.instagram.com/amorim.gg_/"
                         target="_blank"
@@ -62,7 +62,7 @@ onMounted(() => {
                 </div>
                 <div class="little-card center" style="background-color: #0274b3">
                     <a
-                        style="background-image: url('/src/assets/images/linkedin.svg'); background-size: cover"
+                        style="background-image: url('/src/assets/images/cards/linkedin.svg'); background-size: cover"
                         class="relative"
                         href="https://www.linkedin.com/in/gabrielamorim0/"
                         target="_blank"
@@ -91,7 +91,7 @@ onMounted(() => {
                     @mouseleave="isHoveredSteam = false"
                     :class="{ hover: isHoveredSteam }"
                     style="background-size: cover"
-                    :style="{ backgroundImage: 'url(/src/assets/images/steamlogo.jpg)' }"
+                    :style="{ backgroundImage: 'url(/src/assets/images/cards/steamlogo.jpg)' }"
                 >
                     <a
                         style="background-image: url('https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/1892420/6a93ba5ed4cda296ae84002f871148f43727abdc.gif'); background-size: cover"
@@ -119,7 +119,7 @@ onMounted(() => {
                 </div>
                 <div class="little-card center" style="background-color: #f9cf87">
                     <a
-                        style="background-image: url('/src/assets/images/github.svg'); background-size: cover"
+                        style="background-image: url('/src/assets/images/cards/github.svg'); background-size: cover"
                         class="relative"
                         href="https://github.com/AmorimMG"
                         target="_blank"

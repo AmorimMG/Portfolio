@@ -126,7 +126,7 @@ const sendEmail = async () => {
                     </div>
                     <div class="text-image-container">
                         <div class="center">
-                            <img class="profile-picture" src="/src/assets/images/profilePic.png" alt="Image" />
+                            <img class="profile-picture" src="/src/assets/images/cards/profilePic.png" alt="Image" />
                         </div>
                         <div class="center wrap" style="max-height: 100px">
                             <p :class="{ glitch: isGlitchActive }">

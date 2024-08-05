@@ -36,7 +36,7 @@ const layer1 = computed(() => ({
 
 <template>
     <div ref="container" class="page" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
-        <img :style="layer0" src="../assets/images/parallaxbackground.png" />
+        <img :style="layer0" src="../assets/images/cards/parallaxbackground.png" />
         <AnaglyphText style="bottom: 150px; right: 50px" :text="'Amorim'" />
         <router-link to="/">
             <Button :style="layer1">Enter</Button>

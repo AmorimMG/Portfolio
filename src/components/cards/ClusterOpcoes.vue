@@ -115,7 +115,7 @@ export default {
             <div class="little-card center">
                 <div class="relative" style="cursor: pointer">
                     <button class="p-btn p-link layout-topbar-button" type="button" @click="this.appConfigRef.onDarkModeChange(toggleOverlay())" :class="{ rotate: !this.overlayActive, 'rotate-reverse': this.overlayActive }">
-                        <img id="bulb" src="/src/assets/images/bulb.png" width="25px" style="cursor: pointer" />
+                        <img id="bulb" src="/src/assets/images/cards/bulb.png" width="25px" style="cursor: pointer" />
                     </button>
                 </div>
             </div>
@@ -127,7 +127,7 @@ export default {
                     <app-config simple ref="appConfigRef"></app-config>
                 </div>
             </div>
-            <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/day.jpg)' : 'url(/src/assets/images/night.jpg)' }" style="background-size: cover">
+            <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/cards/day.jpg)' : 'url(/src/assets/images/cards/night.jpg)' }" style="background-size: cover">
                 <div class="relative">
                     <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
                     <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ $t('brazil') }}</h6>
