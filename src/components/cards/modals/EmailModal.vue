@@ -61,7 +61,7 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0; background-color: #7225d6" @mouseenter="isHoveredMail = true" @mouseleave="isHoveredMail = false">
                 <Button @click="emailVisible = true" style="width: 100%; height: 100%; background-color: #7225d6; border: none; justify-content: center">
-                    <img src="../../../assets/images/Mail.png" width="50%" :class="{ lights: isHoveredMail }" />
+                    <img src="../../../assets/images/cards/Mail.png" width="50%" :class="{ lights: isHoveredMail }" />
                 </Button>
             </div>
         </CardEffect>
