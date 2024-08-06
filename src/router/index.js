@@ -17,7 +17,7 @@ const router = createRouter({
                     path: '/cadastros/linguagem',
                     name: 'linguagem',
                     component: () => import('@/views/pages/cadastros/Linguagens.vue')
-                },
+                }
             ]
         },
         {
@@ -34,6 +34,11 @@ const router = createRouter({
             path: '/game',
             name: 'game',
             component: () => import('@/views/pages/GameScene/GameScene.vue')
+        },
+        {
+            path: '/threejs',
+            name: 'threejs',
+            component: () => import('@/views/pages/ThreeJSGame/ThreeJSGame.vue')
         },
         {
             path: '/intro',
@@ -57,9 +62,9 @@ const router = createRouter({
         },
         {
             path: '/:pathMatch(.*)',
-            name: "Página não encontrada",
-            component: () => import("@/views/pages/auth/Error.vue"),
-          },
+            name: 'Página não encontrada',
+            component: () => import('@/views/pages/auth/Error.vue')
+        }
     ]
 });
 

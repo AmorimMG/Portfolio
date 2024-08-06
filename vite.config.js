@@ -18,6 +18,7 @@ export default defineConfig(() => {
                 project: 'javascript-vue'
             })
         ],
+        assetsInclude: ['**/*.fbx'],
         resolve: {
             alias: {
                 '@': fileURLToPath(new URL('./src', import.meta.url))

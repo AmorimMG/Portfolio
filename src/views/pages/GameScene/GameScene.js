@@ -13,6 +13,7 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        this.createScenario();
         this.createCharacter();
         this.createBlockedPaths();
         this.createAnimations();
@@ -28,31 +29,35 @@ class GameScene extends Phaser.Scene {
     }
 
     createCharacter() {
-        this.character = this.physics.add.sprite(100, 100, 'character');
+        this.character = this.physics.add.sprite(448, 500, 'character'); //starting point
         this.character.setDepth(1);
         this.character.setCollideWorldBounds(true);
+    }
+
+    createScenario() {
+        this.add.image(200, 200, tiles);
     }
 
     createBlockedPaths() {
         const blockedPaths = this.physics.add.staticGroup();
 
         /* const blockPath =  */ blockedPaths.create(200, 200, 'tiles').setImmovable(true);
-/*         blockPath.setTint(0xff0000);  */
+        /*         blockPath.setTint(0xff0000);  */
 
         this.physics.add.collider(this.character, blockedPaths);
     }
-/* 
+
     createAnimations() {
         this.anims.create({
             key: 'walk-down',
-            frames: this.anims.generateFrameNumbers('character', { start: 8, end: 8 }),
+            frames: this.anims.generateFrameNumbers('character', { start: 11, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'walk-left',
-            frames: this.anims.generateFrameNumbers('character', { start: 15, end: 15 }),
+            frames: this.anims.generateFrameNumbers('character', { start: 11, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
@@ -66,20 +71,20 @@ class GameScene extends Phaser.Scene {
 
         this.anims.create({
             key: 'walk-up',
-            frames: this.anims.generateFrameNumbers('character', { start: 8, end: 15 }),
+            frames: this.anims.generateFrameNumbers('character', { start: 11, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'idle',
-            frames: [{ key: 'character', frame: 0 }],
+            frames: [{ key: 'character', frame: 11 }],
             frameRate: 10
         });
-    } */
+    }
 
     update() {
-        const speed = 160;
+        const speed = 200;
         this.character.setVelocity(0);
 
         if (this.cursors.left.isDown || this.wasd.left.isDown) {
