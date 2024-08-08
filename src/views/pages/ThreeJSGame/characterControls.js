@@ -2,19 +2,20 @@ import * as THREE from 'three';
 import { A, D, S, W } from './keys';
 
 export class CharacterControls {
-    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction) {
+    constructor(model, mixer, animationsMap, orbitControl, firstPersonControl, camera, currentAction) {
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.currentAction = currentAction;
         this.orbitControl = orbitControl;
+        this.firstPersonControl = firstPersonControl;
         this.camera = camera;
 
         this.toggleRun = true;
         this.firstPersonView = false;
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
-        this.rotateQuarternion = new THREE.Quaternion();
+        this.rotateQuaternion = new THREE.Quaternion();
         this.cameraTarget = new THREE.Vector3();
 
         this.fadeDuration = 0.2;
@@ -34,26 +35,15 @@ export class CharacterControls {
     }
 
     toggleFirstPersonView() {
-        this.firstPersonView = !this.firstPersonView;
+/*         this.firstPersonView = !this.firstPersonView;
         if (this.firstPersonView) {
-            // Move camera to first-person view inside the character
-            // Adjust position relative to the character’s viewpoint
-            this.camera.position.copy(this.model.position).add(new THREE.Vector3(1, 0, 0)); // Example height
-            this.camera.lookAt(this.model.position); // Look at the character
-            
-            // Optionally: Adjust camera to simulate being inside the character’s head
-            this.camera.position.add(new THREE.Vector3(1, 0, 0)); // Adjust as needed
-    
-            // Disable OrbitControls
+            this.firstPersonControl.enabled = true;
             this.orbitControl.enabled = false;
         } else {
-            // Move camera to third-person view
-            this.camera.position.set(0, 5, 10); // Example third-person position
-            this.camera.lookAt(this.model.position);
-    
-            // Enable OrbitControls
+            this.firstPersonControl.enabled = false;
             this.orbitControl.enabled = true;
-        }
+            document.exitPointerLock();
+        } */
     }
 
     update(delta, keysPressed) {
@@ -87,8 +77,8 @@ export class CharacterControls {
 
             const directionOffset = this.directionOffset(keysPressed);
 
-            this.rotateQuarternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset);
-            this.model.quaternion.rotateTowards(this.rotateQuarternion, 0.2);
+            this.rotateQuaternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset);
+            this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.2);
 
             this.camera.getWorldDirection(this.walkDirection);
             this.walkDirection.y = 0;
@@ -106,7 +96,7 @@ export class CharacterControls {
     }
 
     handleMouseMove(movementX, movementY) {
-        this.updateCameraTarget(movementX, movementY);
+        /* this.updateCameraTarget(movementX, movementY); */
     }
 
     updateCameraTarget(moveX, moveZ) {

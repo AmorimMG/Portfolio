@@ -5,7 +5,8 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+        "cypress": "npx cypress open"
     },
     "dependencies": {
         "@sentry/vite-plugin": "^2.21.1",
@@ -31,6 +32,7 @@
         "@vitejs/plugin-vue": "^4.1.0",
         "@vue/eslint-config-prettier": "^7.0.0",
         "autoprefixer": "^10.4.19",
+        "cypress": "^13.13.2",
         "dotenv": "^16.4.5",
         "eslint": "^8.22.0",
         "eslint-plugin-vue": "^9.3.0",

@@ -41,6 +41,11 @@ const router = createRouter({
             component: () => import('@/views/pages/ThreeJSGame/ThreeJSGame.vue')
         },
         {
+            path: '/pointerlock',
+            name: 'pointerlock',
+            component: () => import('@/views/pages/ThreeJSGame/Pointerlock.vue')
+        },
+        {
             path: '/intro',
             name: 'intro',
             component: () => import('@/views/Intro.vue')

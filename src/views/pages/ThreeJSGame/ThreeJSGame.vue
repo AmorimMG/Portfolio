@@ -3,6 +3,7 @@ import { KeyDisplay } from './keys';
 import { CharacterControls } from './characterControls';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // SCENE
@@ -14,6 +15,7 @@ const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerH
 camera.position.y = 5;
 camera.position.z = 5;
 camera.position.x = 0;
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 // RENDERER
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -29,6 +31,16 @@ orbitControls.maxDistance = 15;
 orbitControls.enablePan = false;
 orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
 orbitControls.update();
+
+// FIRST PERSON CONTROLS
+const firstPersonControls = new FirstPersonControls(camera, renderer.domElement);
+firstPersonControls.enabled = false;
+firstPersonControls.movementSpeed = 20;
+firstPersonControls.lookSpeed = 5;
+firstPersonControls.noFly = true;
+
+firstPersonControls.lookVertical = true;
+firstPersonControls.constrainVertical = true;
 
 // LIGHTS
 light();
@@ -54,7 +66,7 @@ new GLTFLoader().load('/src/assets/images/threejs/models/Soldier.glb', function 
             animationsMap.set(a.name, mixer.clipAction(a));
         });
 
-    characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
+    characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, firstPersonControls, camera, 'Idle');
 });
 
 // CONTROL KEYS
@@ -67,13 +79,23 @@ document.addEventListener(
         if (event.shiftKey && characterControls) {
             characterControls.switchRunToggle();
         } else if (event.key.toUpperCase() === 'R' && characterControls) {
-            characterControls.toggleFirstPersonView();
+            /* characterControls.toggleFirstPersonView(); */
+            toggleCharacter();
         } else {
+            /* scene.add(characterControls.model); */
             keysPressed[event.key.toLowerCase()] = true;
         }
     },
     false
 );
+
+function toggleCharacter() {
+    if (characterControls.model) {
+        scene.remove(characterControls.model);
+    } else {
+        scene.add(characterControls.model);
+    }
+}
 
 document.addEventListener(
     'keyup',
@@ -85,10 +107,6 @@ document.addEventListener(
 );
 
 // POINTER LOCK
-function requestPointerLock() {
-    renderer.domElement.requestPointerLock();
-}
-
 function handlePointerLockChange() {
     if (document.pointerLockElement === renderer.domElement) {
         document.addEventListener('mousemove', onMouseMove);
@@ -98,13 +116,12 @@ function handlePointerLockChange() {
 }
 
 function onMouseMove(event) {
-    if (characterControls) {
-        characterControls.handleMouseMove(event.movementX, event.movementY);
+    if (characterControls && characterControls.firstPersonView) {
+        firstPersonControls.update(event.movementX, event.movementY);
     }
 }
 
 document.addEventListener('pointerlockchange', handlePointerLockChange);
-document.addEventListener('click', requestPointerLock);
 
 // ANIMATE
 const clock = new THREE.Clock();
@@ -113,7 +130,11 @@ function animate() {
     if (characterControls) {
         characterControls.update(mixerUpdateDelta, keysPressed);
     }
-    orbitControls.update();
+    if (characterControls && characterControls.firstPersonView) {
+        firstPersonControls.update(clock.getDelta());
+    } else {
+        orbitControls.update();
+    }
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
 }
@@ -184,3 +205,8 @@ function light() {
     // scene.add( new THREE.CameraHelper(dirLight.shadow.camera))
 }
 </script>
+<template>
+    <div>
+        <div id="key-display" style="position: absolute; top: 0; left: 0; z-index: 1000"></div>
+    </div>
+</template>
