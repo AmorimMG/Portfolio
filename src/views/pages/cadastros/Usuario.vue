@@ -25,10 +25,9 @@ export default {
             gridColumns: computed(() => [
                 { field: 'id', caption: 'ID' },
                 { field: 'usuario', caption: 'Usuario' },
-                { field: 'email', caption: 'Email' },
+                { field: 'email', caption: 'Email' }
             ]),
-            userCookie: getUserCookie(),
-
+            userCookie: getUserCookie()
         };
     },
     created() {
@@ -36,7 +35,7 @@ export default {
         console.log(this.userCookie);
     },
     methods: {
-        formatMessage(data){
+        formatMessage(data) {
             return data;
         },
         confirmDelete(edit) {
@@ -128,7 +127,7 @@ export default {
         },
         close() {
             this.display = false;
-        },
+        }
     }
 };
 </script>

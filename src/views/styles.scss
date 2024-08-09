@@ -210,12 +210,6 @@ body {
 
 }
 
-
-.grid-2 {
-    display: grid;
-    grid-template: repeat(auto-fill, 270px) / repeat(auto-fill, 270px);
-}
-
 .mapboxgl-control-container {
     display: none;
 }
@@ -248,7 +242,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     height: 100vh;
 }
 

@@ -111,7 +111,7 @@ import '@/assets/styles.scss';
 
 import * as Sentry from '@sentry/vue';
 
-import localization from './data/newLocalization.json';
+import localization from './data/localization.json';
 import { createI18n } from 'vue-i18n';
 
 const messages = localization;

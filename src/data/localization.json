@@ -1,32 +1,41 @@
 {
-  "gblHi": {
-    "pt": "Oi, sou Amorim!",
-    "en": "Hi, I'm Amorim!",
-    "es": "¡Hola, soy Amorim!"
-  },
-  "gblAboutMe": {
-    "pt": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na ",
-    "en": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
-    "es": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en "
-  },
-  "gblInterests": {
-    "pt": "Tenho interesse na cultura geek, teclados e gatinhos!",
-    "en": "I'm interested in geek culture, keyboards and meowies!",
-    "es": "¡Me interesa la cultura geek, los teclados y los gatitos!"
-  },
-  "gblSpotify": {
-    "pt": "ESCUTANDO NO SPOTIFY",
-    "en": "LISTENING TO SPOTIFY",
-    "es": "ESCUCHANDO SPOTIFY"
-  },
-  "gblBrazil": {
-    "pt": "no Brasil",
-    "en": "in Brazil",
-    "es": "en Brasil"
-  },
-  "gblCV": {
-    "pt": "Currículo",
-    "en": "Curriculum",
-    "es": "Curriculum"
-  }
+    "en": {
+        "Hi": "Hi, I'm Amorim!",
+        "AboutMe": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
+        "Interests": "I'm interested in geek culture, keyboards and meowies!",
+        "Spotify": "LISTENING TO SPOTIFY",
+        "Brazil": "in Brazil",
+
+        "welcome": "Welcome",
+        "home": "Home",
+        "blog": "Blog",
+        "projects": "Projects",
+        "cv": "Curriculum"
+    },
+    "es": {
+        "Hi": "¡Hola, soy Amorim!",
+        "AboutMe": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en ",
+        "Interests": "¡Me interesa la cultura geek, los teclados y los gatitos!",
+        "Spotify": "ESCUCHANDO SPOTIFY",
+        "Brazil": "en Brasil",
+
+        "welcome": "Bienvenido",
+        "home": "Inicio",
+        "blog": "Blog",
+        "projects": "Proyectos",
+        "cv": "Curriculum"
+    },
+    "pt": {
+        "Hi": "Oi, sou Amorim!",
+        "AboutMe": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na ",
+        "Interests": "Tenho interesse na cultura geek, teclados e gatinhos!",
+        "Spotify": "ESCUTANDO NO SPOTIFY",
+        "Brazil": "no Brasil",
+
+        "welcome": "Bem vindo",
+        "home": "Início",
+        "blog": "Blog",
+        "projects": "Projetos",
+        "cv": "Currículo"
+    }
 }

@@ -1,5 +1,3 @@
-import Background from '../components/Background.vue';
-import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
 import DashboardTimeline from '../components/cards/HeatMap.vue';
 import ThreeJSComponent from '../components/cards/ThreeJS.vue';
 import Stack from '../components/cards/Stack.vue';
@@ -15,7 +13,6 @@ import IA from '../components/cards/IA.vue';
 import Weather from '../components/cards/Weather.vue';
 import Blog from '../components/cards/Blog.vue';
 /* import Actitivies from '../components/cards/Activities.vue'; */
-/* import discordData from '../service/getDiscord'; */
 
 import DiscordIcon from '../assets/images/Dock-Icons/discord.svg';
 import LastFMIcon from '../assets/images/Dock-Icons/lastFm.svg';

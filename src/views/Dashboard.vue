@@ -8,7 +8,6 @@ import { componentMap, cards as initialCards } from '../utils/cardsDashboard';
 
 //#region variables
 const cards = ref(initialCards);
-const overlayPanel = ref();
 const isStarted = ref(false);
 const isGlitchActive = ref(false);
 

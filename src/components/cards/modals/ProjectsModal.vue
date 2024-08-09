@@ -110,7 +110,7 @@ export default {
                     title: 'Modern',
                     subtitle: 'PrimeTek',
                     description: 'Modern is a premium application template.'
-                },
+                }
             ])
         };
     },
@@ -139,7 +139,7 @@ export default {
             <div class="popup-content">
                 <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" />
+                        <Projects class="center col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" />
                     </template>
                 </draggable>
             </div>
@@ -169,6 +169,10 @@ export default {
     transform-origin: 0 0;
 }
 
+.popup-content {
+    overflow-x: hidden;
+}
+
 .p-dialog-content {
     padding: 0;
     overflow-x: hidden;
@@ -176,5 +180,11 @@ export default {
 
 .grid {
     padding: 50px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

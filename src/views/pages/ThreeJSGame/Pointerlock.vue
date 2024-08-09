@@ -2,11 +2,12 @@
 import { onMounted, ref } from 'vue';
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const blocker = ref(null);
 const instructions = ref(null);
 const rendererContainer = ref(null);
-
 let camera, scene, renderer, controls;
 const objects = [];
 let raycaster;
@@ -14,7 +15,9 @@ let moveForward = false,
     moveBackward = false,
     moveLeft = false,
     moveRight = false,
-    canJump = false;
+    canJump = false,
+    thirdPerson = false,
+    toggleRun = false;
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -26,12 +29,23 @@ onMounted(() => {
 });
 
 function init() {
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.y = 10;
+    addScene();
+    addCameraControls();
+    generateFloor();
+    createRenderer();
+    loadCharacter();
+    generateObjects();
+}
 
+function addScene() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
+}
+
+function addCameraControls() {
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.y = 10;
 
     const light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 2.5);
     light.position.set(0.5, 1, 0.75);
@@ -59,7 +73,48 @@ function init() {
     document.addEventListener('keyup', onKeyUp);
 
     raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+}
 
+// MODEL WITH ANIMATIONS
+function loadCharacter() {
+    const orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+    orbitControls.minDistance = 5;
+    orbitControls.maxDistance = 15;
+    orbitControls.enablePan = false;
+    orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+    orbitControls.update();
+
+    new GLTFLoader().load('/src/assets/images/threejs/models/Soldier.glb', function (gltf) {
+        const model = gltf.scene;
+        model.traverse(function (object) {
+            if (object.isMesh) object.castShadow = true;
+        });
+
+        scene.add(model);
+
+        const gltfAnimations = gltf.animations;
+        const mixer = new THREE.AnimationMixer(model);
+        const animationsMap = new Map();
+        gltfAnimations
+            .filter((a) => a.name != 'TPose')
+            .forEach((a) => {
+                animationsMap.set(a.name, mixer.clipAction(a));
+            });
+    });
+}
+
+function createRenderer() {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(animate);
+    rendererContainer.value.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', onWindowResize);
+}
+
+function generateFloor() {
     // Create floor
     let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(-Math.PI / 2);
@@ -85,10 +140,12 @@ function init() {
     const floorMaterial = new THREE.MeshBasicMaterial({ vertexColors: true });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     scene.add(floor);
+}
 
+function generateObjects() {
     // Create objects
     const boxGeometry = new THREE.BoxGeometry(20, 20, 20).toNonIndexed();
-    position = boxGeometry.attributes.position;
+    var position = boxGeometry.attributes.position;
     const colorsBox = [];
     for (let i = 0, l = position.count; i < l; i++) {
         color.setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
@@ -105,15 +162,24 @@ function init() {
         scene.add(box);
         objects.push(box);
     }
+}
 
-    // Create renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
-    rendererContainer.value.appendChild(renderer.domElement);
+function updateThirdPerson() {
+    thirdPerson = !thirdPerson;
+    if (thirdPerson) {
+        camera.position.set(0, 10, 20);
+        camera.lookAt(0, 10, 0);
+    } else {
+        camera.position.set(0, 10, 0);
+        camera.lookAt(0, 10, 10);
+    }
+}
 
-    window.addEventListener('resize', onWindowResize);
+function switchRunToggle() {
+    toggleRun = !toggleRun;
+    if (toggleRun) {
+        velocity.z -= 150;
+    }
 }
 
 function onKeyDown(event) {
@@ -137,6 +203,12 @@ function onKeyDown(event) {
         case 'Space':
             if (canJump === true) velocity.y += 350;
             canJump = false;
+            break;
+        case 'ShiftLeft':
+            switchRunToggle();
+            break;
+        case 'KeyR':
+            updateThirdPerson();
             break;
     }
 }
@@ -231,5 +303,6 @@ function animate() {
     text-align: center;
     font-size: 14px;
     cursor: pointer;
+    color: white;
 }
 </style>
