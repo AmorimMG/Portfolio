@@ -23,30 +23,13 @@ const infoStyle = computed(() => ({
     position: isMobile.value ? 'inherit' : 'absolute'
 }));
 
-const layer0 = computed(() => ({
-    ...layerBase,
-    transform: `translateX(${parallax.tilt * 10}px) translateY(${parallax.roll * 10}px) scale(1.33)`
-}));
 
-const layer1 = computed(() => ({
-    ...layerBase,
-    transform: `translateX(${parallax.tilt * 100}px) translateY(${parallax.roll * 100}px) scale(1.33)`
-}));
 
-const layer2 = computed(() => ({
+const layer = computed(() => ({
     ...layerBase,
     transform: `translateX(${parallax.tilt * 150}px) translateY(${parallax.roll * 150}px) scale(1.33)`
 }));
 
-const layer3 = computed(() => ({
-    ...layerBase,
-    transform: `translateX(${parallax.tilt * 200}px) translateY(${parallax.roll * 200}px) scale(1.33)`
-}));
-
-const layer4 = computed(() => ({
-    ...layerBase,
-    transform: `translateX(${parallax.tilt * 500}px) translateY(${parallax.roll * 500}px) scale(1.33)`
-}));
 </script>
 
 <template>
@@ -56,23 +39,23 @@ const layer4 = computed(() => ({
         </div>
         <div class="grid w-full h-full center" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
             <router-link class="col-2 h-full wrapper" to="/">
-                <img class="background-card" :style="layer2" src="../assets/images/cards/parallaxbackground.png" />
+                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
                 <Button>Dashboard</Button>
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/dock">
-                <img class="background-card" :style="layer2" src="../assets/images/cards/parallaxbackground.png" />
+                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
                 <Button>Dock</Button>
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/threejs">
-                <img class="background-card" :style="layer2" src="../assets/images/cards/parallaxbackground.png" />
+                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
                 <Button>3D</Button>
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/game">
-                <img class="background-card" :style="layer2" src="../assets/images/cards/parallaxbackground.png" />
+                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
                 <Button>2D</Button>
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/pointerlock">
-                <img class="background-card" :style="layer2" src="../assets/images/cards/parallaxbackground.png" />
+                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
                 <Button>3thd</Button>
             </router-link>
         </div>
