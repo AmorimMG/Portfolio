@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import AnaglyphText from '../components/Anaglyth.vue';
-import { useParallax, useMediaQuery } from '@vueuse/core';
-import Button from 'primevue/button';
-import YAML from 'js-yaml';
+import { useParallax } from '@vueuse/core';
 
 const container = ref(null);
 const { tilt, roll } = useParallax(container);
-const isMobile = useMediaQuery('(max-width: 700px)');
 
 const parallax = reactive(useParallax(container));
 
@@ -16,47 +13,37 @@ const layerBase = {
     transition: '.3s ease-out all'
 };
 
-const infoStyle = computed(() => ({
-    opacity: 0.4,
-    top: '20px',
-    left: '40px',
-    position: isMobile.value ? 'inherit' : 'absolute'
-}));
-
-
-
 const layer = computed(() => ({
     ...layerBase,
-    transform: `translateX(${parallax.tilt * 150}px) translateY(${parallax.roll * 150}px) scale(1.33)`
+    transform: `translateX(${parallax.tilt * 1000}px) translateY(${parallax.roll * 150}px) scale(1.33)`
 }));
-
 </script>
 
 <template>
     <div ref="container" class="page">
-        <div class="text-wrapper w-full center">
-            <AnaglyphText class="center" style="bottom: 150px; right: 50px" :text="'Amorim'" />
+        <div class="title-wrapper w-full center">
+            <AnaglyphText class="center" :text="'Amorim'" />
         </div>
         <div class="grid w-full h-full center" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
             <router-link class="col-2 h-full wrapper" to="/">
-                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
-                <Button>Dashboard</Button>
+                <div class="text-wrapper"><AnaglyphText :size="30" :text="'Dashboard'" /></div>
+                <img class="background-card" :style="layer" src="../assets/images/intro/dashboard.png" />
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/dock">
-                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
-                <Button>Dock</Button>
+                <div class="text-wrapper"><AnaglyphText :size="30" :text="'Dock'" /></div>
+                <img class="background-card" :style="layer" src="../assets/images/intro/dock.png" />
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/threejs">
-                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
-                <Button>3D</Button>
+                <div class="text-wrapper"><AnaglyphText :size="30" :text="'3thd'" /></div>
+                <img class="background-card" :style="layer" src="../assets/images/intro/3thd.png" />
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/game">
-                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
-                <Button>2D</Button>
+                <div class="text-wrapper"><AnaglyphText :size="30" :text="'2d'" /></div>
+                <img class="background-card" :style="layer" src="../assets/images/intro/2d.png" />
             </router-link>
             <router-link class="col-2 h-full wrapper" to="/pointerlock">
-                <img class="background-card" :style="layer" src="../assets/images/cards/parallaxbackground.png" />
-                <Button>3thd</Button>
+                <div class="text-wrapper"><AnaglyphText :size="30" :text="'1thd'" /></div>
+                <img class="background-card" :style="layer" src="../assets/images/intro/1thd.png" />
             </router-link>
         </div>
     </div>
@@ -83,20 +70,20 @@ const layer = computed(() => ({
     gap: 10px;
 }
 
-.text-wrapper {
+.title-wrapper {
     position: absolute;
-    bottom: 25vw;
     z-index: 1;
+    opacity: 0.5;
 }
 
 .wrapper {
     display: flex;
-    justify-content: center;
-    align-content: center;
     position: relative;
     overflow: hidden;
     background-size: cover;
     background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
 }
 
 .wrapper::before {
@@ -112,6 +99,11 @@ const layer = computed(() => ({
     transition: transform 0.3s ease-out;
 }
 
+.wrapper:hover {
+    transform: scale(1.05);
+    border: 3px solid lightblue;
+}
+
 .center {
     display: flex;
     justify-content: center;
@@ -122,5 +114,17 @@ const layer = computed(() => ({
     overflow: hidden;
     z-index: -1;
     position: relative;
+    height: 100%;
+}
+
+.text-wrapper {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
 }
 </style>

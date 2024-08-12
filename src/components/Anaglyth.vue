@@ -1,21 +1,27 @@
 <script>
 export default {
     props: {
-        text: String
+        text: String,
+        size: {
+            type: Number,
+            default: 80
+        }
     }
 };
 </script>
 
 <template>
-    <div class="anaglyph-text">
-        <span class="anaglyph-left">{{ text }}</span>
-        <span class="anaglyph-right">{{ text }}</span>
+    <div class="anaglyph-text w-full" :style="{ fontSize: size + 'px' }">
+        <span class="anaglyph-left w-full">{{ text }}</span>
+        <span class="anaglyph-right w-full">{{ text }}</span>
     </div>
 </template>
 
 <style scoped>
 .anaglyph-text {
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .anaglyph-left,
@@ -23,17 +29,18 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    font-size: 80px;
     color: white;
 }
 
 .anaglyph-left {
     transform: translateX(-1px);
     filter: drop-shadow(5px 0 0 red);
+    text-align: center;
 }
 
 .anaglyph-right {
     transform: translateX(1px);
     filter: drop-shadow(1px 0 0 cyan);
+    text-align: center;
 }
 </style>
