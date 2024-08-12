@@ -14,6 +14,11 @@ const router = createRouter({
                     component: () => import('@/views/pages/cadastros/Usuario.vue')
                 },
                 {
+                    path: '/cadastros/projetos',
+                    name: 'projetos',
+                    component: () => import('@/views/pages/cadastros/Projetos.vue')
+                },
+                {
                     path: '/cadastros/linguagem',
                     name: 'linguagem',
                     component: () => import('@/views/pages/cadastros/Linguagens.vue')
