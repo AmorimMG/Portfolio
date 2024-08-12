@@ -1,135 +1,166 @@
-<script>
+<script setup>
 import { RESTAPI } from '../../../service/api';
-import { ref, computed } from 'vue';
+import { getDatabase, addDatabase } from '../../../service/firebase';
+import { ref, computed, onMounted } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { exportCSV } from '../../../utils/exportCsv';
 import { getUserCookie } from '../../../service/session';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-export default {
-    data() {
-        return {
-            display: false,
-            deleteDialog: ref(false),
-            deleteAllDialog: ref(false),
-            criarDialog: ref(false),
-            dt: ref(),
-            editaDialog: ref(false),
-            toast: useToast(),
-            product: {},
-            usuario: {
-                admin: false
-            },
-            userLogin: '',
-            dataUsers: [],
-            selectedUser: [],
-            gridColumns: computed(() => [
-                { field: 'id', caption: 'ID' },
-                { field: 'usuario', caption: 'Usuario' },
-                { field: 'email', caption: 'Email' }
-            ]),
-            userCookie: getUserCookie()
-        };
-    },
-    created() {
-        this.getUsers();
-        console.log(this.userCookie);
-    },
-    methods: {
-        formatMessage(data) {
-            return data;
-        },
-        confirmDelete(edit) {
-            this.product = edit;
-            this.deleteDialog = true;
-        },
-        editaUsuario(edit) {
-            this.userLogin = edit;
-            this.editaDialog = true;
-        },
-        openNew() {
-            this.criarDialog = true;
-        },
-        getUsers() {
-            RESTAPI.UsuarioObterTodos()
-                .then((response) => {
-                    this.dataUsers = response.data;
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
-                });
-        },
-        getCancelUser() {
-            this.editaDialog = false;
-            this.getUsers();
-        },
-        handleExportCSV() {
-            exportCSV(this.dataUsers);
-        },
-        editUser(user) {
-            this.userLogin = user.login;
-        },
-        SalvaUsuario() {
-            RESTAPI.UsuarioCriar(this.usuario)
-                .then(() => {
-                    this.getUsers();
-                    this.criarDialog = false;
-                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastCreate'), life: 3000 });
-                    this.usuario = { admin: false };
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastCreateError'), life: 3000 });
-                });
-        },
-        EditaUsuario() {
-            RESTAPI.UsuarioEditar(this.userLogin)
-                .then(() => {
-                    this.getUsers();
-                    this.editaDialog = false;
-                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastEdit'), life: 3000 });
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastEditError'), life: 3000 });
-                });
-        },
-        deleteUser() {
-            RESTAPI.UsuarioExcluir(this.product.id)
-                .then(() => {
-                    this.dataUsers = this.dataUsers.filter((u) => u.id !== this.product.id);
-                    this.deleteDialog = false;
-                    this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
-                });
-        },
-        confirmDeleteAll(edit) {
-            this.accounts = edit;
-            this.deleteAllDialog = true;
-        },
-        deleteAll() {
-            if (this.selectedUser.length === 0) {
-                this.toast.add({ severity: 'warn', summary: $t('SummarioToastWarn'), detail: $t('NenhumaLinhaSelecionada'), life: 3000 });
-                return;
-            }
+const deleteDialog = ref(false);
+const deleteAllDialog = ref(false);
+const criarDialog = ref(false);
+const dt = ref();
+const editaDialog = ref(false);
+const toast = useToast();
+const product = ref({});
+const usuario = ref({ admin: false });
+const userLogin = ref('');
+const dataUsers = ref([]);
+const selectedUser = ref([]);
+const userCookie = ref(getUserCookie());
 
-            this.selectedUser.forEach((user) => {
-                RESTAPI.UsuarioExcluir(user.id)
-                    .then(() => {
-                        this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
-                        this.toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
-                    })
-                    .catch(() => {
-                        this.toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
-                    });
-            });
-            this.deleteAllDialog = false;
-            this.selectedUser = [];
-        },
-        close() {
-            this.display = false;
-        }
+const gridColumns = computed(() => [
+    { field: 'a', caption: 'a' },
+    { field: 'usuario', caption: 'Usuario' },
+    { field: 'name', caption: 'Nome' }
+]);
+
+onMounted(() => {
+    getUsers();
+    console.log(userCookie.value);
+});
+
+function confirmDelete(edit) {
+    product.value = edit;
+    deleteDialog.value = true;
+}
+
+function editaUsuario(edit) {
+    userLogin.value = edit;
+    editaDialog.value = true;
+}
+
+function openNew() {
+    criarDialog.value = true;
+}
+
+function getUsers() {
+    /*     RESTAPI.UsuarioObterTodos()
+        .then((response) => {
+            dataUsers.value = response.data;
+        })
+        .catch(() => {
+            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
+        }); */
+
+    getDatabase('projetos')
+        .then((response) => {
+            console.log(response);
+            dataUsers.value = response;
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+}
+
+function getCancelUser() {
+    editaDialog.value = false;
+    getUsers();
+}
+
+function handleExportCSV() {
+    exportCSV(dataUsers.value);
+}
+
+function editUser(user) {
+    userLogin.value = user.login;
+}
+
+function SalvaUsuario() {
+    /*     RESTAPI.UsuarioCriar(usuario.value)
+        .then(() => {
+            getUsers();
+            criarDialog.value = false;
+            toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastCreate'), life: 3000 });
+            usuario.value = { admin: false };
+        })
+        .catch(() => {
+            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastCreateError'), life: 3000 });
+        }); */
+    /* 
+    createUserWithEmailAndPassword(auth, usuario.value.email, usuario.value.password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            // ..
+        }); */
+
+    addDatabase('projetos', usuario.value)
+        .then((res) => {
+            console.log(usuario.value);
+            console.log(res);
+        })
+        .catch((error) => {
+            console.error('Error adding user: ', error);
+        });
+}
+
+function EditaUsuario() {
+    RESTAPI.UsuarioEditar(userLogin.value)
+        .then(() => {
+            getUsers();
+            editaDialog.value = false;
+            toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastEdit'), life: 3000 });
+        })
+        .catch(() => {
+            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastEditError'), life: 3000 });
+        });
+}
+
+function deleteUser() {
+    RESTAPI.UsuarioExcluir(product.value.id)
+        .then(() => {
+            dataUsers.value = dataUsers.value.filter((u) => u.id !== product.value.id);
+            deleteDialog.value = false;
+            toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
+        })
+        .catch(() => {
+            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
+        });
+}
+
+function confirmDeleteAll(edit) {
+    selectedUser.value = edit;
+    deleteAllDialog.value = true;
+}
+
+function deleteAll() {
+    if (selectedUser.value.length === 0) {
+        toast.add({ severity: 'warn', summary: $t('SummarioToastWarn'), detail: $t('NenhumaLinhaSelecionada'), life: 3000 });
+        return;
     }
-};
+
+    selectedUser.value.forEach((user) => {
+        RESTAPI.UsuarioExcluir(user.id)
+            .then(() => {
+                dataUsers.value = dataUsers.value.filter((u) => u.id !== user.id);
+                toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
+            })
+            .catch(() => {
+                toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
+            });
+    });
+    deleteAllDialog.value = false;
+    selectedUser.value = [];
+}
 </script>
 
 <template>
@@ -157,10 +188,11 @@ export default {
                     dataKey="id"
                     :paginator="true"
                     :rows="10"
-                    :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
                     responsiveLayout="scroll"
+                    scrollable
+                    scrollHeight="600px"
                 >
                     <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -178,7 +210,7 @@ export default {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaUsuario(slotProps.data)" />
-                            <Button :disabled="slotProps.data?.id === this.userCookie?.id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+                            <Button :disabled="slotProps.data?.id === userCookie?.id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
@@ -215,14 +247,8 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="usuario.nome" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="email" v-model="usuario.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
+                                <InputText id="name" v-model.trim="usuario.name" required="true" />
+                                <label for="name">{{ $t('name') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -235,14 +261,10 @@ export default {
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText type="password" id="senha" v-model="usuario.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
+                                <InputText type="password" id="password" v-model="usuario.password" required="true" />
+                                <label for="password">{{ $t('password') }}</label>
                             </FloatLabel>
                         </div>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="usuario.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
                     </div>
 
                     <template #footer>
@@ -255,14 +277,8 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="userLogin.nome" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="email" v-model="userLogin.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
+                                <InputText id="name" v-model.trim="userLogin.name" required="true" />
+                                <label for="name">{{ $t('name') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
@@ -275,14 +291,10 @@ export default {
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText type="password" id="senha" v-model="userLogin.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
+                                <InputText type="password" id="password" v-model="userLogin.password" required="true" />
+                                <label for="password">{{ $t('password') }}</label>
                             </FloatLabel>
                         </div>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="userLogin.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
                     </div>
                     <div class="field-checkbox mb-0">
                         <input type="checkbox" id="ativo" v-model="userLogin.ativo" />
@@ -299,4 +311,8 @@ export default {
     </div>
 </template>
 
-<style></style>
+<style scoped>
+.card {
+    aspect-ratio: unset;
+}
+</style>

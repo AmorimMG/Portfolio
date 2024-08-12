@@ -3,7 +3,6 @@ import { RESTAPI } from '../../../service/api';
 import { ref, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { exportCSV } from '../../../utils/exportCsv';
-import { getUserCookie } from '../../../service/session';
 
 export default {
     data() {
@@ -25,14 +24,12 @@ export default {
             gridColumns: computed(() => [
                 { field: 'nome', caption: 'Nome Linguagem' },
                 { field: 'tipo', caption: 'Tipo Linguagem' }
-            ]),
-            userCookie: getUserCookie(),
+            ])
 
         };
     },
     created() {
         this.getUsers();
-        console.log(this.userCookie);
     },
     methods: {
         formatMessage(data){
@@ -134,7 +131,7 @@ export default {
 
 <template>
     <div class="card">
-        <h5 class="p-card-title">{{ $t('Linguagem') }}</h5>
+        <h5 class="p-card-title">{{ $t('Linguagens') }}</h5>
         <div id="data-grid-demo">
             <div v-if="dataUsers.length < 0">Carregando...</div>
             <div v-else>
@@ -178,7 +175,7 @@ export default {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button v-tooltip="$t('Editar')" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaLinguagem(slotProps.data)" />
-                            <Button :disabled="slotProps.data?.id === this.userCookie?.id" v-tooltip="$t('Excluir')" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+                            <Button v-tooltip="$t('Excluir')" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>

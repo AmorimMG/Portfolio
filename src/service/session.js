@@ -1,6 +1,9 @@
 import cookies from 'js-cookie';
-import { RESTAPI } from '../service/api';
+// eslint-disable-next-line no-unused-vars
+import { firebaseApp } from '../../firebase';
+import { getAuth, signOut, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
+const auth = getAuth();
 const SESSION_COOKIE = 'user';
 const LANGUAGE_COOKIE = 'Language';
 const DARKTHEME_COOKIE = 'DarkTheme';
@@ -41,36 +44,45 @@ export function getDarkThemeCookie() {
 }
 
 const sessionModule = {
-    state: () => ({
-        user: getUserCookie()
-    }),
-    mutations: {
-        setUser(state, user) {
-            state.user = user;
-        }
-    },
     actions: {
         login({ user }) {
             return new Promise((resolve, reject) => {
-                RESTAPI.Login(user)
-                    .then((response) => {
-                        if (response.status == 200 || response.status == 204) {
-                            if (user.rememberme) {
-                                setUserCookie(response.data, 365);
-                            } else {
-                                setUserCookie(response.data);
-                            }
-                            resolve(response.data);
-                        } else {
-                            reject();
-                        }
+                signInWithEmailAndPassword(auth, user.email, user.password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        resolve(user);
                     })
-                    .catch(reject);
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
+        isUserLogged() {
+            return new Promise((resolve, reject) => {
+                onAuthStateChanged(
+                    auth,
+                    (user) => {
+                        if (user) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    },
+                    (error) => {
+                        reject(error);
+                    }
+                );
             });
         },
         logout() {
-            removeUserCookie();
-            return true;
+            signOut(auth)
+                .then(() => {
+                    return true;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return false;
+                });
         }
     }
 };

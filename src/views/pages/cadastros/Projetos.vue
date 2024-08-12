@@ -3,7 +3,6 @@ import { RESTAPI } from '../../../service/api';
 import { ref, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { exportCSV } from '../../../utils/exportCsv';
-import { getUserCookie } from '../../../service/session';
 
 export default {
     data() {
@@ -27,12 +26,10 @@ export default {
                 { field: 'usuario', caption: 'Usuario' },
                 { field: 'email', caption: 'Email' }
             ]),
-            userCookie: getUserCookie()
         };
     },
     created() {
         this.getUsers();
-        console.log(this.userCookie);
     },
     methods: {
         formatMessage(data) {
@@ -134,7 +131,7 @@ export default {
 
 <template>
     <div class="card">
-        <h5 class="p-card-title">Usuarios</h5>
+        <h5 class="p-card-title">Projetos</h5>
         <div id="data-grid-demo">
             <div v-if="dataUsers.length < 0">Carregando...</div>
             <div v-else>
@@ -178,7 +175,7 @@ export default {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaUsuario(slotProps.data)" />
-                            <Button :disabled="slotProps.data?.id === this.userCookie?.id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+                            <Button v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
@@ -201,7 +198,7 @@ export default {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Usuarios') }}</b
+                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Projetos') }}</b
                             >?</span
                         >
                     </div>
