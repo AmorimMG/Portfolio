@@ -10,7 +10,11 @@
         "home": "Home",
         "blog": "Blog",
         "projects": "Projects",
-        "cv": "Curriculum"
+        "cv": "Curriculum",
+
+        "Criar": "Create",
+        "Editar": "Edit",
+        "Excluir": "Delete"
     },
     "es": {
         "Hi": "¡Hola, soy Amorim!",
@@ -23,7 +27,10 @@
         "home": "Inicio",
         "blog": "Blog",
         "projects": "Proyectos",
-        "cv": "Curriculum"
+        "cv": "Curriculum",
+        "Criar": "Crear",
+        "Editar": "Editar",
+        "Excluir": "Eliminar"
     },
     "pt": {
         "Hi": "Oi, sou Amorim!",
@@ -36,6 +43,10 @@
         "home": "Início",
         "blog": "Blog",
         "projects": "Projetos",
-        "cv": "Currículo"
+        "cv": "Currículo",
+        "Criar": "Criar",
+        "Editar": "Editar",
+        "Excluir": "Excluir"
+        
     }
 }

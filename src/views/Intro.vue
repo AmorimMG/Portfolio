@@ -25,7 +25,7 @@ const layer = computed(() => ({
             <AnaglyphText class="center" :text="'Amorim'" />
         </div>
         <div class="grid w-full h-full center" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
-            <router-link class="col-2 h-full wrapper" to="/">
+            <router-link class="col-2 h-full wrapper" to="/dashboard">
                 <div class="text-wrapper"><AnaglyphText :size="30" :text="'Dashboard'" /></div>
                 <img class="background-card" :style="layer" src="../assets/images/intro/dashboard.png" />
             </router-link>

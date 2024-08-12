@@ -1,6 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+import { firebaseApp } from '../firebase';
+import { VueFire, VueFireFirestoreOptionsAPI, VueFireAuth } from 'vuefire';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -125,6 +127,12 @@ const i18n = new createI18n({
 
 const app = createApp(App);
 
+app.use(VueFire, {
+    firebaseApp,
+    modules: [VueFireFirestoreOptionsAPI(), VueFireAuth()]
+});
+/* app.use(firebaseApp); */
+/* app.use(getAnalytics(app)); */
 app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(i18n);

@@ -11,7 +11,12 @@ export const SidebarItems = [
                     {
                         label: 'Usuario',
                         icon: 'pi pi-fw pi-users',
-                        to: '/cadastros/usuario'
+                        to: '/cadastros/usuarios'
+                    },
+                    {
+                        label: 'Projetos',
+                        icon: 'pi pi-fw pi-github',
+                        to: '/cadastros/projetos'
                     },
                     {
                         label: 'Linguagens',

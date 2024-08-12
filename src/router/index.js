@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import sessionModule from '../service/session';
 import AppLayout from '@/layout/AppLayout.vue';
 
 const router = createRouter({
@@ -9,9 +10,9 @@ const router = createRouter({
             path: '/cadastros',
             children: [
                 {
-                    path: '/cadastros/usuario',
-                    name: 'usuario',
-                    component: () => import('@/views/pages/cadastros/Usuario.vue')
+                    path: '/cadastros/usuarios',
+                    name: 'usuarios',
+                    component: () => import('@/views/pages/cadastros/Usuarios.vue')
                 },
                 {
                     path: '/cadastros/projetos',
@@ -26,7 +27,7 @@ const router = createRouter({
             ]
         },
         {
-            path: '/',
+            path: '/dashboard',
             name: 'dashboard',
             component: () => import('@/views/Dashboard.vue')
         },
@@ -51,7 +52,7 @@ const router = createRouter({
             component: () => import('@/views/pages/ThreeJSGame/Pointerlock.vue')
         },
         {
-            path: '/intro',
+            path: '/',
             name: 'intro',
             component: () => import('@/views/Intro.vue')
         },
@@ -76,6 +77,17 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Error.vue')
         }
     ]
+});
+
+router.beforeEach(async (to, from, next) => {
+    if (to.path.includes('/cadastros')) {
+        const isLoggedIn = await sessionModule.actions.isUserLogged();
+        if (!isLoggedIn) {
+            sessionModule.actions.logout();
+            return next('/login');
+        }
+    }
+    next();
 });
 
 export default router;

@@ -79,7 +79,6 @@ watch(dropdownValue, (newValue, oldValue) => {
     console.log(newValue, oldValue)
     if (newValue !== oldValue) {
         setLanguageCookie(newValue.value);
-        /* window.location.reload(true) */
     }
 });
 </script>
