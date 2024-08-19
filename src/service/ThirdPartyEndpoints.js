@@ -32,6 +32,18 @@ export const WeatherService = {
     }
 };
 
+export const ValorantService = {
+    async getValorant() {
+        try {
+            const response = await axios.get('https://api.tracker.gg/api/v2/valorant/standard/profile/riot/Amorim%23nx0?forceCollect=true');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching valorant data:', error);
+            throw error;
+        }
+    }
+};
+
 export const AIService = {
     async sendMessage(messageToSend) {
         try {

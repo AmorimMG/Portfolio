@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 
 const props = defineProps({
-    isGlitchActive: Boolean,
     discordData: Promise
 });
 

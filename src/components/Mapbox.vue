@@ -5,7 +5,7 @@ import CardEffect from './CardEffect.vue';
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center">
-                <h5 :class="{ glitch: isGlitchActive }" class="lights" >Tracking Offline <span class="red-dot"></span></h5>
+                <h5 class="lights">Tracking Offline <span class="red-dot"></span></h5>
             </div>
             <!--     <div ref="mapContainer" class="map-container"></div> -->
         </CardEffect>
@@ -16,5 +16,14 @@ import CardEffect from './CardEffect.vue';
 .map-container {
     flex: 1;
     width: 100%;
+}
+
+.red-dot {
+    height: 10px;
+    width: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
 }
 </style>

@@ -117,8 +117,8 @@ const sendEmail = async () => {
                             <a href="https://discord.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-discord zoom"></i></a>
                             <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
                             <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
-                          <!--   <a href="https://steamcommunity.com/id/RecNove/" target="_blank" rel="noopener noreferrer"><i class="pi pi-steam zoom"></i></a> -->
-                                                       <!--   <a href="https://www.last.fm/user/RecNove" target="_blank" rel="noopener noreferrer"><i class="pi pi-lastfm zoom"></i></a> -->
+                            <!--   <a href="https://steamcommunity.com/id/RecNove/" target="_blank" rel="noopener noreferrer"><i class="pi pi-steam zoom"></i></a> -->
+                            <!--   <a href="https://www.last.fm/user/RecNove" target="_blank" rel="noopener noreferrer"><i class="pi pi-lastfm zoom"></i></a> -->
                         </div>
                     </div>
                     <div class="mt-3 center">
@@ -129,12 +129,12 @@ const sendEmail = async () => {
                             <img class="profile-picture" src="/src/assets/images/cards/profilePic.png" alt="Image" />
                         </div>
                         <div class="center wrap" style="max-height: 100px">
-                            <p :class="{ glitch: isGlitchActive }">
+                            <p>
                                 {{ $t('AboutMe') }}
                                 <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer" style="color: #abcb1a" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">FIAP.</a>
                             </p>
                             <br />
-                            <p :class="{ glitch: isGlitchActive }">
+                            <p>
                                 {{ $t('Interests') }}
                             </p>
                         </div>

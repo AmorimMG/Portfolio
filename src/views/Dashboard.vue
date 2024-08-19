@@ -3,7 +3,7 @@
 import { ref, onMounted } from 'vue';
 import draggable from 'vuedraggable';
 import Introduction from '../components/cards/Introduction.vue';
-import { componentMap, cards as initialCards } from '../utils/cardsDashboard';
+import { componentMap, cards as initialCards } from '../data/cardsDashboard';
 //#endregion
 
 //#region variables
@@ -43,12 +43,12 @@ const items = ref([
 
 //#region methods
 
-const applyGlitchEffect = () => {
+/* const applyGlitchEffect = () => {
     isGlitchActive.value = true;
     setTimeout(() => {
         isGlitchActive.value = false;
     }, 2000);
-};
+}; */
 
 onMounted(() => {
     setTimeout(() => {
@@ -70,15 +70,13 @@ onMounted(() => {
             <div v-show="isStarted" class="grid components-container justify-content-center">
                 <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
                 <div id="Introduction" class="col-4 lg:col-3 xl:col-3 p-0">
-                    <Introduction class="col-2" :isGlitchActive="isGlitchActive" />
+                    <Introduction class="col-2" />
                 </div>
-                <draggable class="draggable col-12 lg:col-9 xl:col-9" v-model="cards" item-key="id" group="cards" animation="200">
+                <draggable :disabled="true" class="draggable col-12 lg:col-9 xl:col-9" v-model="cards" item-key="id" group="cards" animation="200">
                     <template #item="{ element }">
                         <component
                             style="width: 100%"
-                            :class="{ glitch: isGlitchActive }"
                             :is="componentMap[element.name]"
-                            :isGlitchActive="isGlitchActive"
                             :style="{
                                 'grid-column': 'span ' + element.colSpan,
                                 'grid-row': 'span ' + element.rowSpan

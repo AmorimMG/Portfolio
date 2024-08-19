@@ -1,62 +1,103 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { ref, watch } from 'vue';
 import AnaglyphText from '../components/Anaglyth.vue';
-import { useParallax } from '@vueuse/core';
 
-const container = ref(null);
-const { tilt, roll } = useParallax(container);
+import image1 from '../assets/images/intro/1.png';
+import image2 from '../assets/images/intro/2.png';
+import image3 from '../assets/images/intro/3.png';
+import image4 from '../assets/images/intro/4.png';
+import image5 from '../assets/images/intro/5.png';
 
-const parallax = reactive(useParallax(container));
+const images2 = ref([
+    { id: 1, url: image1, title: '1thd', path: '/pointerlock' },
+    { id: 2, url: image2, title: 'image2', path: '/game' },
+    { id: 3, url: image3, title: 'image3', path: '/threejs' },
+    { id: 4, url: image4, title: 'image4', path: '/dashboard' },
+    { id: 5, url: image5, title: 'image5', path: '/dock' }
+]);
 
-const layerBase = {
-    position: 'absolute',
-    transition: '.3s ease-out all'
+const responsiveOptions = ref([
+    {
+        breakpoint: '1300px',
+        numVisible: 4
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 1
+    }
+]);
+
+const currentChannel = ref(images2.value[0]);
+const activeIndex = ref(2);
+const bgEffectClass = ref('');
+const imgEffectClass = ref('');
+
+const applyBgEffect = () => {
+    bgEffectClass.value = 'bg-effect';
+    imgEffectClass.value = 'img-effect';
+    setTimeout(() => {
+        bgEffectClass.value = '';
+        imgEffectClass.value = '';
+    }, 200);
 };
 
-const layer = computed(() => ({
-    ...layerBase,
-    transform: `translateX(${parallax.tilt * 1000}px) translateY(${parallax.roll * 150}px) scale(1.33)`
-}));
+watch(activeIndex, (newIndex, oldIndex) => {
+    currentChannel.value = images2.value[newIndex];
+    applyBgEffect();
+});
+
+const next = () => {
+    activeIndex.value = activeIndex.value === images2.value.length - 1 ? images2.value.length - 1 : activeIndex.value + 1;
+};
+const prev = () => {
+    activeIndex.value = activeIndex.value === 0 ? 0 : activeIndex.value - 1;
+};
 </script>
 
 <template>
-    <div ref="container" class="page">
-        <div class="title-wrapper w-full center">
-            <AnaglyphText class="center" :text="'Amorim'" />
+    <div class="page">
+        <AnaglyphText class="center" text="Portfolios" />
+        <div :class="['center w-full', bgEffectClass]">
+            <img class="tv" src="../assets/images/intro/tv.webp" />
+            <Galleria
+                v-model:activeIndex="activeIndex"
+                class="channels"
+                :value="images2"
+                :responsiveOptions="responsiveOptions"
+                :showThumbnails="false"
+                containerStyle="max-width: 400px"
+                :numVisible="5"
+                :circular="true"
+                :showIndicators="false"
+                :changeItemOnIndicatorHover="true"
+                :transitionInterval="2000"
+            >
+                <template #item="slotProps">
+                    <img :class="['channel', imgEffectClass]" width="400px" height="400px" :src="slotProps.item.url" :alt="slotProps.item.id" />
+                </template>
+            </Galleria>
         </div>
-        <div class="grid w-full h-full center" :style="{ transform: `rotateX(${tilt}deg) rotateY(${roll}deg)` }">
-            <router-link class="col-2 h-full wrapper" to="/dashboard">
-                <div class="text-wrapper"><AnaglyphText :size="30" :text="'Dashboard'" /></div>
-                <img class="background-card" :style="layer" src="../assets/images/intro/dashboard.png" />
-            </router-link>
-            <router-link class="col-2 h-full wrapper" to="/dock">
-                <div class="text-wrapper"><AnaglyphText :size="30" :text="'Dock'" /></div>
-                <img class="background-card" :style="layer" src="../assets/images/intro/dock.png" />
-            </router-link>
-            <router-link class="col-2 h-full wrapper" to="/threejs">
-                <div class="text-wrapper"><AnaglyphText :size="30" :text="'3thd'" /></div>
-                <img class="background-card" :style="layer" src="../assets/images/intro/3thd.png" />
-            </router-link>
-            <router-link class="col-2 h-full wrapper" to="/game">
-                <div class="text-wrapper"><AnaglyphText :size="30" :text="'2d'" /></div>
-                <img class="background-card" :style="layer" src="../assets/images/intro/2d.png" />
-            </router-link>
-            <router-link class="col-2 h-full wrapper" to="/pointerlock">
-                <div class="text-wrapper"><AnaglyphText :size="30" :text="'1thd'" /></div>
-                <img class="background-card" :style="layer" src="../assets/images/intro/1thd.png" />
-            </router-link>
+        <div>
+            <img class="controle" src="../assets/images/intro/controle.png" />
+            <div class="botoes-controle">
+                <div class="grid gap-2">
+                    <Button class="botao-controle" icon="pi pi-arrow-left" @click="prev" />
+                    <Button class="botao-controle" icon="pi pi-arrow-right" @click="next" />
+                </div>
+                <div>
+                    <router-link :to="currentChannel.path" class="layout-topbar-logo center">
+                        <Button class="botao-controle" severity="success" color icon="pi pi-check" />
+                    </router-link>
+                </div>
+            </div>
         </div>
     </div>
 </template>
-
 <style scoped>
 .page {
     position: relative;
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
-    background-size: cover;
-    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,42 +107,9 @@ const layer = computed(() => ({
     padding: 0;
 }
 
-.grid {
-    gap: 10px;
-}
-
 .title-wrapper {
-    position: absolute;
     z-index: 1;
     opacity: 0.5;
-}
-
-.wrapper {
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    background-size: cover;
-    background-repeat: no-repeat;
-    justify-content: center;
-    align-items: center;
-}
-
-.wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.3s ease-out;
-}
-
-.wrapper:hover {
-    transform: scale(1.05);
-    border: 3px solid lightblue;
 }
 
 .center {
@@ -110,21 +118,78 @@ const layer = computed(() => ({
     align-items: center;
 }
 
-.background-card {
-    overflow: hidden;
+.tv {
+    position: absolute;
+    transition: 0.3s ease-out;
+    width: 600px;
     z-index: -1;
-    position: relative;
-    height: 100%;
 }
 
-.text-wrapper {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    top: 30px;
+.controle {
+    position: fixed;
+    right: 0%;
+    bottom: 0%;
+    width: 450px;
+    transition: 0.3s ease-out;
+    transform: rotate(50deg);
+}
+
+.botoes-controle {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    right: 23%;
+    bottom: 30%;
+}
+
+.botao-controle {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
+    cursor: pointer;
+}
+
+.botao-controle:hover {
+    transform: scale(1.1);
+}
+
+.channels {
+    position: absolute !important;
+    transition: 0.3s ease-out;
+}
+
+.channel {
+    z-index: -4;
+    transition: 0.3s ease-out;
+}
+
+.bg-effect {
+    background: repeating-radial-gradient(#000 0 0.0001%, #fff 0 0.0002%) 50% 0/2500px 2500px, repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60%/2500px 2500px;
+    background-blend-mode: difference;
+    animation: b 0.2s infinite alternate;
+    z-index: -3;
+    max-width: 400px;
+    max-height: 400px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.img-effect {
+    display: none;
+}
+
+@keyframes b {
+    100% {
+        background-position: 50% 0, 60% 50%;
+    }
 }
 </style>

@@ -51,7 +51,7 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <h2 :class="{ glitch: isGlitchActive }" style="color: white">Last.FM Statics</h2>
+                    <h2 style="color: white">Last.FM Statics</h2>
                 </Button>
             </div>
         </CardEffect>

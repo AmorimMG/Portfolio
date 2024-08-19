@@ -1,18 +1,22 @@
-import DashboardTimeline from '../components/cards/HeatMap.vue';
-import ThreeJSComponent from '../components/cards/ThreeJS.vue';
-import Terminal from '../components/cards/Terminal.vue';
+// Profissional
 import Stack from '../components/cards/Stack.vue';
-import Spotify from '../components/cards/Spotify.vue';
-import Discord from '../components/cards/Discord.vue';
 import CVModal from '../components/cards/modals/CVModal.vue';
-import LastFMModal from '../components/cards/modals/LastFMModal.vue';
 import EmailModal from '../components/cards/modals/EmailModal.vue';
 import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
-import ClusterLinks from '../components/cards/ClusterLinks.vue';
-import MapboxMap from '../components/Mapbox.vue';
+import Terminal from '../components/cards/Terminal.vue';
+import DashboardTimeline from '../components/cards/HeatMap.vue';
+import ThreeJSComponent from '../components/cards/ThreeJS.vue';
+import Blog from '../components/cards/Blog.vue';
+
+//Casual
+import Spotify from '../components/cards/Spotify.vue';
+import Discord from '../components/cards/Discord.vue';
+import LastFMModal from '../components/cards/modals/LastFMModal.vue';
 import IA from '../components/cards/IA.vue';
 import Weather from '../components/cards/Weather.vue';
-import Blog from '../components/cards/Blog.vue';
+import Valorant from '../components/cards/Valorant.vue';
+import ClusterLinks from '../components/cards/ClusterLinks.vue';
+import MapboxMap from '../components/Mapbox.vue';
 
 export const componentMap = {
     ClusterLinks,
@@ -28,6 +32,7 @@ export const componentMap = {
     Blog,
     ProjectsModal,
     Terminal,
+    Valorant,
     Stack,
     DashboardTimeline
 };
@@ -45,7 +50,8 @@ export const cards = [
     { id: 9, name: 'Blog', colSpan: 1, rowSpan: 1 },
     { id: 10, name: 'ProjectsModal', colSpan: 1, rowSpan: 1 },
     { id: 11, name: 'Terminal', colSpan: 2, rowSpan: 2 },
-    { id: 12, name: 'IA', colSpan: 2, rowSpan: 3 },
-    { id: 13, name: 'Stack', colSpan: 2, rowSpan: 2 },
-    { id: 14, name: 'DashboardTimeline', colSpan: 4, rowSpan: 1 }
+    { id: 12, name: 'Valorant', colSpan: 1, rowSpan: 1 },
+    { id: 13, name: 'IA', colSpan: 2, rowSpan: 3 },
+    { id: 14, name: 'Stack', colSpan: 2, rowSpan: 2 },
+    { id: 15, name: 'DashboardTimeline', colSpan: 4, rowSpan: 1 }
 ];

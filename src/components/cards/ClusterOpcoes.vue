@@ -8,9 +8,6 @@ const { layoutConfig } = useLayout();
 
 export default {
     name: 'ClusterOpcoes',
-    props: {
-        isGlitchActive: Boolean
-    },
     methods: {
         toggleOverlay() {
             if (this.overlayActive.value === true) {
@@ -129,8 +126,8 @@ export default {
             </div>
             <div class="little-card center" :style="{ backgroundImage: !isDay ? 'url(/src/assets/images/cards/day.jpg)' : 'url(/src/assets/images/cards/night.jpg)' }" style="background-size: cover">
                 <div class="relative">
-                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ this.currentTime }}</h6>
-                    <h6 :class="{ glitch: this.isGlitchActive }" class="greenLights">{{ $t('brazil') }}</h6>
+                    <h6 class="greenLights">{{ this.currentTime }}</h6>
+                    <h6 class="greenLights">{{ $t('brazil') }}</h6>
                 </div>
             </div>
         </div>
