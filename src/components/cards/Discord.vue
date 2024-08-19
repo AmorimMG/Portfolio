@@ -10,10 +10,6 @@ const discordData = ref();
 const online = ref(false);
 const toast = useToast();
 
-const props = defineProps({
-    isGlitchActive: Boolean
-});
-
 const getDiscordInfo = () => {
     RESTAPI.ObterDiscord()
         .then((response) => {
@@ -49,13 +45,35 @@ onMounted(() => {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" :style="{ padding: 0 }">
-                <div class="title-container gap-3"><i class="pi pi-discord"></i> Discord</div>
-                <div class="center flex-row gap-2">
-                    <VueNeonLight color="#ff00ff" size="30px" :flash="false" :class="{ glitch: props.isGlitchActive }" style="color: white" v-if="online">ONLINE</VueNeonLight>
-                    <VueNeonLight size="30px" :class="{ glitch: props.isGlitchActive }" style="color: white" v-else>OFFLINE</VueNeonLight>
-                    <span class="dot"></span>
+                <div class="center flex-column gap-2">
+                    <div class="center">
+                        <div class="title-container gap-3"><i class="pi pi-discord"></i> Discord</div>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <VueNeonLight color="#ff00ff" size="30px" :flash="false" style="color: white" v-if="online">ONLINE</VueNeonLight>
+                        <VueNeonLight size="30px" style="color: white" v-else>OFFLINE</VueNeonLight>
+                        <span class="dot"></span>
+                    </div>
                 </div>
             </div>
         </CardEffect>
     </div>
 </template>
+
+<style scoped>
+.title-container {
+    display: flex;
+    width: 150px;
+    align-items: center;
+    justify-content: start;
+}
+
+.dot {
+    height: 20px;
+    width: 20px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+</style>

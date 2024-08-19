@@ -2,13 +2,12 @@ import * as THREE from 'three';
 import { A, D, S, W } from './keys';
 
 export class CharacterControls {
-    constructor(model, mixer, animationsMap, orbitControl, firstPersonControl, camera, currentAction) {
+    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction) {
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.currentAction = currentAction;
         this.orbitControl = orbitControl;
-        this.firstPersonControl = firstPersonControl;
         this.camera = camera;
 
         this.toggleRun = true;

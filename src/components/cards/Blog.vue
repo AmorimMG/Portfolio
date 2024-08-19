@@ -6,7 +6,7 @@ import CardEffect from '../CardEffect.vue';
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <h2 :class="{ glitch: isGlitchActive }">Blog</h2>
+                <h2>Blog</h2>
             </div>
         </CardEffect>
     </div>
