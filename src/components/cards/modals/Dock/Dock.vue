@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../../data/appsDock';
+import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../../../data/appsDock';
 import draggable from 'vuedraggable';
 import DockTopbar from './DockTopBar.vue';
 import DockBottombar from './DockBottomBar.vue';

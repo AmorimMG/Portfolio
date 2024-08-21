@@ -2,11 +2,18 @@
 import { ref, watchEffect, watch, onMounted } from 'vue';
 import Photos from '../cards/Photos.vue';
 import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import CardEffect from '../CardEffect.vue';
 import { useI18n } from 'vue-i18n';
 import AppConfig from '../../layout/AppConfig.vue';
 import { setLanguageCookie, getLanguageCookie } from '../../service/session';
 import { useToast } from 'primevue/usetoast';
 import { RESTAPI } from '../../service/api.js';
+import EmailModal from './modals/EmailModal.vue';
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faSteamSymbol } from '@fortawesome/free-brands-svg-icons/faSteamSymbol';
+import { faLastfm } from '@fortawesome/free-brands-svg-icons/faLastfm';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 
 const { locale } = useI18n();
 const dropdownValues = ref([
@@ -17,11 +24,22 @@ const dropdownValues = ref([
 
 const dropdownValue = ref(null);
 const appConfigRef = ref(null);
-const op = ref();
+const feedback = ref();
 const name = ref('');
 const email = ref('');
 const message = ref('');
 const toast = useToast();
+const modalEmailVisible = ref(false);
+
+const props = defineProps({
+    menuVisible: Boolean
+});
+
+const emit = defineEmits(['update:menuVisible']);
+
+const toggleMenu = () => {
+    emit('update:menuVisible', !props.menuVisible);
+};
 
 onMounted(() => {
     if (getLanguageCookie()) {
@@ -55,7 +73,15 @@ const toggleFiap = (event) => {
 };
 
 const toggleFeedback = (event) => {
-    op.value.toggle(event);
+    feedback.value.toggle(event);
+};
+
+const showEmailModal = () => {
+    modalEmailVisible.value = true;
+};
+
+const closeEmailModal = () => {
+    modalEmailVisible.value = false;
 };
 
 const sendEmail = async () => {
@@ -83,42 +109,57 @@ const sendEmail = async () => {
 </script>
 
 <template>
-    <div class="page">
+    <div class="page" :style="{ display: menuVisible ? 'block' : 'none' }">
         <div>
             <div class="flex flex-column justify-content-between m-3" style="text-align: start; position: relative">
                 <div class="settings">
-                    <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
-                        <i class="pi pi-cog" style="font-size: 20px"></i>
-                    </button>
+                    <div class="flex gap-3">
+                        <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
+                            <i class="pi pi-cog" style="font-size: 20px"></i>
+                        </button>
+                        <router-link style="opacity: 0.5" to="/login" class="layout-topbar-logo center">
+                            <button class="p-btn p-link layout-topbar-button" type="button">
+                                <i class="pi pi-sign-in" style="font-size: 20px"></i>
+                            </button>
+                        </router-link>
+                    </div>
                     <app-config simple ref="appConfigRef"></app-config>
-
-                    <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex align-items-center">
-                                <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 20px" />
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex align-items-center">
-                                <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
-                                <div>{{ slotProps.option.name }}</div>
-                            </div>
-                        </template>
-                    </dropdown>
+                    <div class="flex gap-3">
+                        <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex align-items-center">
+                                    <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 20px" />
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex align-items-center">
+                                    <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                                    <div>{{ slotProps.option.name }}</div>
+                                </div>
+                            </template>
+                        </dropdown>
+                        <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+                            <FontAwesomeIcon style="font-size: 20px" :icon="faBars" />
+                        </button>
+                    </div>
                 </div>
                 <div class="upper">
                     <div class="flex flex-row justify-content-between m-3">
                         <div class="center flex-row gap-2"><i class="pi pi-comment"></i> About Me</div>
                         <div class="flex gap-3">
-                            <a href="https://www.instagram.com/amorim.gg_/" target="_blank" rel="noopener noreferrer"><i class="pi pi-instagram zoom"></i></a>
-                            <a href="https://discord.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-discord zoom"></i></a>
                             <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
                             <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
-                            <!--   <a href="https://steamcommunity.com/id/RecNove/" target="_blank" rel="noopener noreferrer"><i class="pi pi-steam zoom"></i></a> -->
-                            <!--   <a href="https://www.last.fm/user/RecNove" target="_blank" rel="noopener noreferrer"><i class="pi pi-lastfm zoom"></i></a> -->
+                            <a href="https://www.instagram.com/amorim.gg_/" target="_blank" rel="noopener noreferrer"><i class="pi pi-instagram zoom"></i></a>
+                            <a href="https://discord.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-discord zoom"></i></a>
+                            <a href="https://steamcommunity.com/id/RecNove/" target="_blank" rel="noopener noreferrer">
+                                <FontAwesomeIcon class="zoom" :icon="faSteamSymbol" />
+                            </a>
+                            <a href="https://www.last.fm/user/RecNove" target="_blank" rel="noopener noreferrer">
+                                <FontAwesomeIcon class="zoom" :icon="faLastfm" />
+                            </a>
                         </div>
                     </div>
                     <div class="mt-3 center">
@@ -126,7 +167,9 @@ const sendEmail = async () => {
                     </div>
                     <div class="text-image-container">
                         <div class="center">
-                            <img class="profile-picture" src="/src/assets/images/cards/profilePic.png" alt="Image" />
+                            <CardEffect>
+                                <img class="profile-picture" src="/src/assets/images/cards/profilePic.png" alt="Image" />
+                            </CardEffect>
                         </div>
                         <div class="center wrap" style="max-height: 100px">
                             <p>
@@ -146,21 +189,25 @@ const sendEmail = async () => {
                         <div class="center flex-row gap-2"><i class="pi pi-phone"></i> Contact</div>
                     </div>
                     <div class="flex flex-column" style="padding: 20px">
-                        <p>
-                            If you want to chat, feel free to reach out to me on Twitter, or join my Discord server. You can also email me at
-                            <a href="mailto:gabriel@amorim.pro" style="color: #abcb1a" class="underline">gabriel@amorim.pro</a>.
-                        </p>
+                        <p>If you want to chat, feel free to reach out to me on Twitter, or join my Discord server. You can also email me at:</p>
+                        <div class="center mt-5"><Button outlined @click="showEmailModal" style="color: #abcb1a" class="underline">gabriel@amorim.pro</Button></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="center">
-            <Button type="button" icon="pi pi-exclamation-triangle" size="small" label="Feedback" @click="toggleFeedback" />
+        <div class="center mb-3">
+            <Button type="button" icon="pi pi-exclamation-triangle" size="small" style="color: white" label="Feedback" @click="toggleFeedback" />
         </div>
     </div>
-    <OverlayPanel ref="op" appendTo="body">
+    <OverlayPanel
+        style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
+        ref="feedback"
+        appendTo="body"
+    >
         <div style="padding: 1rem">
-            <h3>Feedback Form</h3>
+            <div class="center">
+                <VueNeonLight color="white" size="25px" :flash="false"> Feedback </VueNeonLight>
+            </div>
             <form @submit.prevent="sendEmail">
                 <div class="p-fluid">
                     <div class="p-field col">
@@ -188,6 +235,7 @@ const sendEmail = async () => {
             </form>
         </div>
     </OverlayPanel>
+    <EmailModal :emailVisible="modalEmailVisible" @close="closeEmailModal" />
 </template>
 
 <style scoped>
@@ -198,6 +246,10 @@ p {
 
 h5 {
     margin: 0;
+}
+
+.menu-active {
+    display: none;
 }
 
 .settings {
@@ -244,7 +296,21 @@ h5 {
     width: 120px;
 }
 
-@media (max-width: 400px) {
+#toggleMenuButton {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    #Introduction {
+        width: 95%;
+        position: absolute;
+        right: 0;
+    }
+
+    #toggleMenuButton {
+        display: block;
+    }
+
     .text-image-container {
         flex-direction: column;
         align-items: center;

@@ -4,12 +4,15 @@ import { ref, onMounted } from 'vue';
 import draggable from 'vuedraggable';
 import Introduction from '../components/cards/Introduction.vue';
 import { componentMap, cards as initialCards } from '../data/cardsDashboard';
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 //#endregion
 
 //#region variables
 const cards = ref(initialCards);
 const isStarted = ref(false);
-const isGlitchActive = ref(false);
+const menuVisible = ref(true);
 
 const items = ref([
     {
@@ -39,26 +42,28 @@ const items = ref([
     }
 ]);
 
+const toggleMenu = () => {
+    menuVisible.value = !menuVisible.value;
+};
+
 //#endregion
 
 //#region methods
-
-/* const applyGlitchEffect = () => {
-    isGlitchActive.value = true;
-    setTimeout(() => {
-        isGlitchActive.value = false;
-    }, 2000);
-}; */
 
 onMounted(() => {
     setTimeout(() => {
         isStarted.value = true;
     }, 2000);
 });
+
 //#endregion
 </script>
 
 <template>
+    <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+        <FontAwesomeIcon style="font-size: 20px" :icon="faBars" />
+    </button>
+
     <div class="layout-main-container">
         <!--  <Background /> -->
         <ContextMenu global :model="items" />
@@ -69,9 +74,7 @@ onMounted(() => {
         <transition name="fade">
             <div v-show="isStarted" class="grid components-container justify-content-center">
                 <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
-                <div id="Introduction" class="col-4 lg:col-3 xl:col-3 p-0">
-                    <Introduction class="col-2" />
-                </div>
+
                 <draggable :disabled="true" class="draggable col-12 lg:col-9 xl:col-9" v-model="cards" item-key="id" group="cards" animation="200">
                     <template #item="{ element }">
                         <component
@@ -84,7 +87,9 @@ onMounted(() => {
                         />
                     </template>
                 </draggable>
-                <!--  <Actitivies :discordData="discordData()" /> -->
+                <div id="Introduction" class="col-4 lg:col-3 xl:col-3 p-0">
+                    <Introduction :menuVisible="menuVisible" @update:menuVisible="menuVisible = $event" />
+                </div>
             </div>
         </transition>
     </div>

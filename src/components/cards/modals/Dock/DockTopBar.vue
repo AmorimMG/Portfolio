@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watchEffect, watch, onMounted } from 'vue';
-import AppConfig from '../../../layout/AppConfig.vue';
+import AppConfig from '../../../../layout/AppConfig.vue';
 import { useI18n } from 'vue-i18n';
-import { setLanguageCookie, getLanguageCookie } from '../../../service/session';
+import { setLanguageCookie, getLanguageCookie } from '../../../../service/session';
 
 const { locale } = useI18n();
 const dropdownValues = ref([

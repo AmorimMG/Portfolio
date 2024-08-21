@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { PhotoService } from '../../../service/ThirdPartyEndpoints';
+import { PhotoService } from '../../../../service/ThirdPartyEndpoints';
 import { useToast } from 'primevue/usetoast';
-import Terminal from '../../../components/cards/Terminal.vue';
+import Terminal from '../../Terminal.vue';
 import draggable from 'vuedraggable';
 
 const displayFinder = ref(false);

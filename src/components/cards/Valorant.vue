@@ -16,14 +16,10 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
-        <CardEffect>
-            <div class="card mb-0 center" style="padding: 0">
-                <img :src="valorant?.platformInfo?.avatarUrl" alt="Valorant" />
-                <div class="card-body">
-                    <h2>{{ valorant?.segments?.rank?.tiername }}</h2>
-                </div>
-            </div>
-        </CardEffect>
+    <div>
+        <img :src="valorant?.platformInfo?.avatarUrl" alt="Valorant" />
+        <div class="card-body">
+            <h2>{{ valorant?.segments?.rank?.tiername }}</h2>
+        </div>
     </div>
 </template>

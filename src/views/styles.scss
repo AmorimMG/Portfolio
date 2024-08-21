@@ -45,12 +45,6 @@
     user-select: none;
 }
 
-.p-overlaypanel-content {
-    background-color: #4d25b0 !important;
-    border-color: #abcb1a;
-    border-style: solid;
-}
-
 .lights {
     filter: drop-shadow(0 0 4px purple) drop-shadow(0 0 6px purple) drop-shadow(0 0 10px purple);
 }
@@ -109,6 +103,8 @@
 
 .p-terminal {
     height: 100%;
+    max-height: 250px;
+/*     aspect-ratio: 2 / 1; */
 }
 
 .custom-terminal {
@@ -139,12 +135,6 @@
     overflow-x: hidden;
 }
 
-.cluster {
-    display: grid;
-    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
-
-}
-
 .components-container{
     display: flex;
     flex-direction: row;
@@ -152,7 +142,6 @@
 }
 
 .draggable {
-    
     display: flex;
     flex-wrap: wrap;
     padding: 0;
@@ -170,6 +159,12 @@
 
 .layout-main-container{
     height: 100vh;
+}
+
+#toggleMenuButton {
+    position: absolute;
+    right: 15px;
+    top: 22px;
 }
 
 @media screen and (min-width: 1960px) {
@@ -191,44 +186,51 @@
     .p-terminal {
         height: 100%;
     }
+
+    #toggleMenuButton {
+        display: none;
+    }
+
+    
 }
 
 @media (max-width: 991px) {
+    .draggable {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        overflow-x: hidden;
+        grid-template-columns: repeat(2, minmax(50px, 1fr));
+    }
+
     .layout-main-container {
-        padding: 4rem 1rem 0 0rem !important;
-        font-size: 5px !important;
+        padding: 0 !important;
     }
 
-    .spotify {
-        grid-column: span 2;
-    }
-
-    .stroke-white {
-        height: 1.5rem;
-        margin: 2rem !important;
+    .p-terminal{
+        height: 100%;
+        max-height: 200px;
     }
 
     #Introduction{
-        display: none;
+        width: 95%;
+        position: absolute;
+        right: 0;
     }
 
-    .localizacao {
+    #Stack{
         display: none;
     }
-
+    
     #Anilist {
         display: none;
     }
 
-    #Threejs {
+    #ClusterLinks {
         display: none;
     }
 
-    .gif-container {
-        width: 80%;
+    #AI {
+        display: none;
     }
 
-    .p-terminal {
-        height: 100%;
-    }
 }

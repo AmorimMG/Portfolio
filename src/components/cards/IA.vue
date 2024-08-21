@@ -53,7 +53,7 @@ export default {
 
                 <div class="input-container">
                     <InputText class="w-full" v-model="userInput" placeholder="Type a message" @keyup.enter="sendMessage" />
-                    <Button icon="pi pi-send" @click="sendMessage" />
+                    <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
                 </div>
             </div>
         </CardEffect>

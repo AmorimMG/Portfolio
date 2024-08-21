@@ -9,6 +9,10 @@
         "cypress": "npx cypress open"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.6.0",
+        "@fortawesome/free-brands-svg-icons": "^6.6.0",
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
+        "@fortawesome/vue-fontawesome": "^3.0.8",
         "@sentry/vite-plugin": "^2.21.1",
         "@sentry/vue": "^8.20.0",
         "@vueuse/core": "^10.11.0",

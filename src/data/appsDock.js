@@ -11,7 +11,6 @@ import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import IA from '../components/cards/IA.vue';
 import Weather from '../components/cards/Weather.vue';
-import Blog from '../components/cards/Blog.vue';
 /* import Actitivies from '../components/cards/Activities.vue'; */
 
 import DiscordIcon from '../assets/images/Dock-Icons/discord.svg';
@@ -31,7 +30,6 @@ export const componentMap = {
     LastFMModal,
     IA,
     Weather,
-    Blog,
     ProjectsModal,
     Stack,
     DashboardTimeline
@@ -43,7 +41,6 @@ export const apps = [
     { id: 3, name: 'EmailModal', colSpan: 1, rowSpan: 1, title: 'Email', icon: EmailIcon },
     { id: 4, name: 'CVModal', colSpan: 1, rowSpan: 1, title: 'CV', icon: CVIcon },
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
-    { id: 6, name: 'Blog', colSpan: 1, rowSpan: 1, title: 'Blog', icon: FolderIcon },
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon }
 ];
 
