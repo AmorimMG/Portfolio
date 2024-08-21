@@ -42,35 +42,22 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
-        <CardEffect>
-            <div class="card mb-0 center" :style="{ padding: 0 }">
-                <div class="center flex-column gap-2">
-                    <div class="center">
-                        <div class="title-container gap-3"><i class="pi pi-discord"></i> Discord</div>
-                    </div>
-                    <div class="flex flex-row gap-2">
-                        <VueNeonLight color="#ff00ff" size="30px" :flash="false" style="color: white" v-if="online">ONLINE</VueNeonLight>
-                        <VueNeonLight size="30px" style="color: white" v-else>OFFLINE</VueNeonLight>
-                        <span class="dot"></span>
-                    </div>
-                </div>
-            </div>
-        </CardEffect>
+    <div class="w-full h-full center flex-column gap-3">
+        <div class="center">
+            <div class="gap-2"><i class="pi pi-discord"></i> Discord</div>
+        </div>
+        <div class="flex flex-row gap-2">
+            <VueNeonLight color="#ff00ff" size="15px" :flash="false" style="color: white" v-if="online">ONLINE</VueNeonLight>
+            <VueNeonLight size="15px" style="color: white" v-else>OFFLINE</VueNeonLight>
+            <span class="dot"></span>
+        </div>
     </div>
 </template>
 
 <style scoped>
-.title-container {
-    display: flex;
-    width: 150px;
-    align-items: center;
-    justify-content: start;
-}
-
 .dot {
-    height: 20px;
-    width: 20px;
+    height: 10px;
+    width: 10px;
     background-color: red;
     border-radius: 50%;
     display: inline-block;

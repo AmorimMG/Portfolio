@@ -37,9 +37,8 @@ const commandHandler = (text) => {
             response = 'Commands are: ' + commandLabels.join(', ');
             break;
         case 'clear':
-            clearTerminal();
-            TerminalService.emit('clear');
             response = '';
+            clearTerminal();
             break;
         case 'about':
             response = 'I am a passionate individual with a strong interest in technology.';
@@ -51,13 +50,13 @@ const commandHandler = (text) => {
             response = 'I have worked on numerous projects, ranging from web development to machine learning applications.';
             break;
         case 'education':
-            response = 'I hold a degree in Computer Science from XYZ University.';
+            response = 'I hold a degree in Software Engineering from Fiap University.';
             break;
         case 'experience':
-            response = 'I have several years of experience working as a software developer in various industries.';
+            response = 'I have 4 year of experience working as a software developer.';
             break;
         case 'contact':
-            response = 'You can reach me via email at example@example.com.';
+            response = 'You can reach me via email at gabriel@amorim.pro.';
             break;
         case 'resume':
             response = 'You can download my resume from the following link: [resume_link].';
@@ -84,10 +83,10 @@ const commandHandler = (text) => {
             response = 'I have completed [number_of_projects] projects and have [years_of_experience] years of experience.';
             break;
         case 'connect':
-            response = "Let's connect on LinkedIn: [LinkedIn_link].";
+            response = "Let's connect on LinkedIn: https://www.linkedin.com/in/gabrielamorim0/.";
             break;
         case 'portfolio':
-            response = 'You can view my portfolio at [portfolio_link].';
+            response = 'You can view my portfolio at https://amorim.pro.';
             break;
         case 'feedback':
             response = 'Your feedback is valuable to me. Please feel free to share your thoughts.';

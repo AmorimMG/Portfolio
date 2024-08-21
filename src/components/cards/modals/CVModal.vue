@@ -1,10 +1,12 @@
 <script>
 import { ref } from 'vue';
 import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 export default {
     components: {
-        CardEffect
+        CardEffect,
+        VueNeonLight
     },
     data() {
         return {
@@ -44,8 +46,8 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <Button @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <h2 style="color: white">CV</h2>
+                <Button text @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                    <VueNeonLight size="30px" :flash="false" color="#ff00ff90">CV</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

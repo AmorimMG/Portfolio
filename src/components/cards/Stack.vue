@@ -1,13 +1,14 @@
 <script setup>
 import CardEffect from '../CardEffect.vue';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 </script>
 
 <template>
-    <div id="Stack" class="col-12 lg:col-12 xl:col-6">
+    <div id="Stack" class="col-8 lg:col-8 xl:col-6">
         <CardEffect>
-            <div class="card mb-4 flex justify-content-center flex-column">
-                <h2>MY STACK</h2>
-                <div class="gap-4">
+            <div class="card mb-4 gap-4 center">
+                <VueNeonLight color="white" size="25px" :flash="false"> MY STACK </VueNeonLight>
+                <div class="gap-4 stack-wrapper">
                     <span v-tooltip.bottom="'Vite'" class="lights mr-4 h-full">
                         <svg
                             stroke="currentColor"
@@ -352,11 +353,19 @@ import CardEffect from '../CardEffect.vue';
     </div>
 </template>
 
-<style>
+<style scoped>
 span svg:hover {
     opacity: 1 !important;
     animation: none;
     cursor: pointer;
     transform: scale(2);
+}
+
+.card {
+    aspect-ratio: auto;
+}
+
+.stack-wrapper {
+    display: ruby;
 }
 </style>

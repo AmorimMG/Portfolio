@@ -6,11 +6,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { CharacterControls } from '../ThreeJSGame/characterControls';
-import { KeyDisplay } from '../ThreeJSGame/keys';
+/* import { KeyDisplay } from '../ThreeJSGame/keys'; */
 
-import Portfolio from '../../../assets/images/projects/Portfolio.png';
-import PortfolioAPI from '../../../assets/images/projects/PortfolioAPI.png';
-import WhatsappClone from '../../../assets/images/projects/WhatsappClone.png';
+import Portfolio from '../../../../assets/images/projects/Portfolio.png';
+import PortfolioAPI from '../../../../assets/images/projects/PortfolioAPI.png';
+import WhatsappClone from '../../../../assets/images/projects/WhatsappClone.png';
 
 const blocker = ref(null);
 const instructions = ref(null);
@@ -35,7 +35,7 @@ const instructionsVisible = ref(true);
 const speed = ref(400.0);
 const toggleRun = ref(false);
 const thirdPerson = ref(false);
-const keyDisplayQueue = new KeyDisplay();
+/* const keyDisplayQueue = new KeyDisplay(); */
 let characterModel = null;
 var model = null;
 const canRender = ref(true);
@@ -276,7 +276,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    keyDisplayQueue.updatePosition();
+/*     keyDisplayQueue.updatePosition(); */
 
     window.addEventListener('resize', onWindowResize);
 }
@@ -474,7 +474,7 @@ function ThirdPerson() {
     document.addEventListener(
         'keydown',
         (event) => {
-            keyDisplayQueue.down(event.key === ' ' ? 'SPACE' : event.key);
+            /* keyDisplayQueue.down(event.key === ' ' ? 'SPACE' : event.key); */
             if (event.shiftKey && characterControls) {
                 characterControls.switchRunToggle();
             } else {
@@ -487,7 +487,7 @@ function ThirdPerson() {
     document.addEventListener(
         'keyup',
         (event) => {
-            keyDisplayQueue.up(event.key === ' ' ? 'SPACE' : event.key);
+        /*     keyDisplayQueue.up(event.key === ' ' ? 'SPACE' : event.key); */
             keysPressed[event.key.toLowerCase()] = false;
         },
         false

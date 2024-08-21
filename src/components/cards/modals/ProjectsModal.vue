@@ -4,17 +4,23 @@ import draggable from 'vuedraggable';
 import CardEffect from '../../CardEffect.vue';
 import Projects from '../../Projects.vue';
 import { projetos as projetos } from '../../../data/projetos';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
+
+import ThreeJS from './ThreeJSGame/Pointerlock.vue';
 
 export default {
     components: {
         CardEffect,
         Projects,
-        draggable
+        draggable,
+        VueNeonLight,
+        ThreeJS
     },
     data() {
         return {
             projectsVisible: ref(false),
-            projects: ref(projetos)
+            projects: ref(projetos),
+            immersive: ref(false)
         };
     },
     methods: {
@@ -30,21 +36,25 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <Button @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <h2 style="color: white">Projects</h2>
+                <Button text @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                    <VueNeonLight size="30px" :flash="false" style="color: white">Projects</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>
         <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
             <template #header>
+                <Button  @click="immersive = !immersive">Troca</Button>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
             <div class="popup-content">
-                <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
+                <draggable v-if="!immersive" class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
                         <Projects class="center col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" />
                     </template>
                 </draggable>
+                <div v-else>
+                    <ThreeJS />
+                </div>
             </div>
         </Dialog>
     </div>

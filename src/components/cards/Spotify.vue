@@ -2,10 +2,12 @@
 import { RESTAPI } from '../../service/api.js';
 import { useToast } from 'primevue/usetoast';
 import CardEffect from '../CardEffect.vue';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 
 export default {
     components: {
-        CardEffect
+        CardEffect,
+        VueNeonLight
     },
     data() {
         return {
@@ -56,9 +58,12 @@ export default {
                     <a :href="currentTrack.url" target="_blank" rel="noopener noreferrer">
                         <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
                             <div class="overlayy">
-                                <h4>{{ currentTrack.name }}</h4>
+                                <VueNeonLight size="30px" :flash="false" color="#ff00ff90">{{ currentTrack.name }}</VueNeonLight>
+                                <VueNeonLight size="25px" :flash="false" style="color: white">{{ currentTrack.artist }}</VueNeonLight>
+                                <VueNeonLight size="20px" :flash="false" color="#ff00ff90">{{ currentTrack.album }}</VueNeonLight>
+                                <!--                                 <h4>{{ currentTrack.name }}</h4>
                                 <h5>{{ currentTrack.artist }}</h5>
-                                <h6>Album: {{ currentTrack.album }}</h6>
+                                <h6>Album: {{ currentTrack.album }}</h6> -->
                             </div>
                         </div>
                     </a>
