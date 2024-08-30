@@ -46,7 +46,7 @@ onMounted(() => {
         dropdownValue.value = dropdownValues.value.find((option) => option.value === getLanguageCookie());
         locale.value = getLanguageCookie();
     } else {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'pt');
+        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'en');
         locale.value = dropdownValue.value;
     }
 });
@@ -56,8 +56,8 @@ watchEffect(() => {
     if (cookieValue && dropdownValues.value.some((option) => option.value === cookieValue)) {
         dropdownValue.value = dropdownValues.value.find((option) => option.value === cookieValue);
     } else {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'pt');
-        locale.value = 'pt';
+        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'en');
+        locale.value = 'en';
     }
 });
 
@@ -109,7 +109,7 @@ const sendEmail = async () => {
 </script>
 
 <template>
-    <div class="page" :style="{ display: menuVisible ? 'block' : 'none' }">
+    <div class="page" :style="{ display: menuVisible ? 'flex' : 'none' }">
         <div>
             <div class="flex flex-column justify-content-between m-3" style="text-align: start; position: relative">
                 <div class="settings">
@@ -308,7 +308,7 @@ h5 {
     }
 
     #toggleMenuButton {
-        display: block;
+        display: flex;
     }
 
     .text-image-container {

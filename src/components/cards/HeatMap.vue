@@ -12,7 +12,7 @@ export default {
             year: null,
             startingMonth: null,
             months: null,
-            AnilistColors: ['#f4edfd', '#d8baf5', '#b48af2', '#7e4ef1', '#4b2c8c'],
+/*             AnilistColors: ['#f4edfd', '#d8baf5', '#b48af2', '#7e4ef1', '#4b2c8c'], */
             GithubColors: ['#e0f7e0', '#c0ebc0', '#a3d9a3', '#7bc97b', '#4caf50'],
             data: {},
             toast: useToast()
@@ -21,7 +21,7 @@ export default {
     async created() {
         try {
             await this.getGithub('AmorimMG');
-            await this.getAnilist('RecNove');
+/*             await this.getAnilist('RecNove'); */
 
             const currentDate = new Date();
 
@@ -54,7 +54,7 @@ export default {
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             return monthNames[monthIndex];
         },
-        async getAnilist(AnilistUsername) {
+/*         async getAnilist(AnilistUsername) {
             try {
                 const response = await RESTAPI.ObterAnilist(AnilistUsername);
                 const activityHistory = response.data;
@@ -68,7 +68,7 @@ export default {
                     life: 3000
                 });
             }
-        },
+        }, */
 
         async getGithub(GithubUsername) {
             try {
@@ -164,13 +164,13 @@ export default {
             return this.GithubColors[0];
         },
 
-        getAnilistColor(value) {
+/*         getAnilistColor(value) {
             if (value >= 10) return this.AnilistColors[4];
             if (value >= 7) return this.AnilistColors[3];
             if (value >= 5) return this.AnilistColors[2];
             if (value >= 1) return this.AnilistColors[1];
             return this.AnilistColors[0];
-        },
+        }, */
 
         getColor(monthIndex, day) {
             const currentYear = new Date().getFullYear();

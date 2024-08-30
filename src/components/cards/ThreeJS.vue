@@ -65,6 +65,13 @@ export default {
             sphere.position.y = Math.abs(Math.sin(timer * 0.002)) * 150;
             sphere.rotation.x = timer * 0.0003;
             sphere.rotation.z = timer * 0.0002;
+
+            // Add camera rotation
+            const cameraRotationSpeed = 0.001;
+            camera.position.x = Math.sin(timer * cameraRotationSpeed) * 500;
+            camera.position.z = Math.cos(timer * cameraRotationSpeed) * 500;
+            camera.lookAt(scene.position);
+
             controls.update();
             effect.render(scene, camera);
         }

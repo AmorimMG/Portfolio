@@ -27,34 +27,9 @@ const router = createRouter({
             ]
         },
         {
-            path: '/dashboard',
+            path: '/',
             name: 'dashboard',
             component: () => import('@/views/Dashboard.vue')
-        },
-        {
-            path: '/dock',
-            name: 'dock',
-            component: () => import('@/views/pages/Dock/Dock.vue')
-        },
-        {
-            path: '/game',
-            name: 'game',
-            component: () => import('@/views/pages/GameScene/GameScene.vue')
-        },
-        {
-            path: '/threejs',
-            name: 'threejs',
-            component: () => import('@/views/pages/ThreeJSGame/ThreeJSGame.vue')
-        },
-        {
-            path: '/pointerlock',
-            name: 'pointerlock',
-            component: () => import('@/views/pages/ThreeJSGame/Pointerlock.vue')
-        },
-        {
-            path: '/',
-            name: 'intro',
-            component: () => import('@/views/Intro.vue')
         },
         {
             path: '/pages/notfound',
