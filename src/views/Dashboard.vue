@@ -74,7 +74,6 @@ onMounted(() => {
         <transition name="fade">
             <div v-show="isStarted" class="grid components-container justify-content-center">
                 <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
-
                 <draggable :disabled="true" class="draggable col-12 lg:col-9 xl:col-9" v-model="cards" item-key="id" group="cards" animation="200">
                     <template #item="{ element }">
                         <component

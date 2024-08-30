@@ -53,7 +53,6 @@ export default {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card page">
-                <!--                 <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div> -->
                 <div class="album-info" v-if="currentTrack">
                     <a :href="currentTrack.url" target="_blank" rel="noopener noreferrer">
                         <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
@@ -61,9 +60,6 @@ export default {
                                 <VueNeonLight size="30px" :flash="false" color="#ff00ff90">{{ currentTrack.name }}</VueNeonLight>
                                 <VueNeonLight size="25px" :flash="false" style="color: white">{{ currentTrack.artist }}</VueNeonLight>
                                 <VueNeonLight size="20px" :flash="false" color="#ff00ff90">{{ currentTrack.album }}</VueNeonLight>
-                                <!--                                 <h4>{{ currentTrack.name }}</h4>
-                                <h5>{{ currentTrack.artist }}</h5>
-                                <h6>Album: {{ currentTrack.album }}</h6> -->
                             </div>
                         </div>
                     </a>
@@ -72,19 +68,23 @@ export default {
                     <a :href="lastTrack.url" target="_blank" rel="noopener noreferrer">
                         <div class="album-image" :style="{ backgroundImage: 'url(' + lastTrack.images[0].url + ')' }">
                             <div class="overlayy">
-                                <h4>{{ lastTrack.name }}</h4>
-                                <h5>{{ lastTrack.artist }}</h5>
-                                <h6>Album: {{ lastTrack.album }}</h6>
+                                <VueNeonLight size="30px" :flash="false" color="#ff00ff90">{{ lastTrack.name }}</VueNeonLight>
+                                <VueNeonLight size="25px" :flash="false" style="color: white">{{ lastTrack.artist }}</VueNeonLight>
+                                <VueNeonLight size="20px" :flash="false" color="#ff00ff90">{{ lastTrack.album }}</VueNeonLight>
                             </div>
                         </div>
                     </a>
                 </div>
                 <div v-else style="height: 100%">
                     <div class="album-info">
-                        <!--                         <div class="title-container gap-3"><i class="pi pi-volume-up"></i> Spotify</div> -->
-                        <div class="overlayy">
-                            <h2>No track currently playing</h2>
+                        <div class="album-image" style="background-image: url('https://media.pitchfork.com/photos/6390cc1e12b41513f51f1700/16:9/w_1280,c_limit/Brakence-%20hypochondriac.jpeg')">
+                            <div class="overlayy">
+                                <VueNeonLight size="30px" :flash="false" color="#ff00ff90">venus fly trap</VueNeonLight>
+                                <VueNeonLight size="25px" :flash="false" style="color: white">brakence</VueNeonLight>
+                                <VueNeonLight size="20px" :flash="false" color="#ff00ff90">hypochondriac</VueNeonLight>
+                            </div>
                         </div>
+                        <!-- <VueNeonLight size="30px" :flash="false" color="#ff00ff90">No track currently playing</VueNeonLight> -->
                     </div>
                 </div>
             </div>

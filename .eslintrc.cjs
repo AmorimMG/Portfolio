@@ -10,10 +10,11 @@ module.exports = {
     rules: {
         'vue/multi-word-component-names': 'off',
         'vue/no-reserved-component-names': 'off',
+        'linebreak-style': ['error', 'windows'],
         'vue/component-tags-order': [
             'error',
             {
-                order: ['script', 'template', 'style']
+                order: ['script', 'template', 'style'],
             }
         ]
     }
