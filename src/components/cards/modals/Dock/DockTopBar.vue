@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watchEffect, watch, onMounted } from 'vue';
+import { ref, watchEffect, watch, onMounted, defineEmits, onUnmounted } from 'vue';
+
 import AppConfig from '../../../../layout/AppConfig.vue';
 import { useI18n } from 'vue-i18n';
 import { setLanguageCookie, getLanguageCookie } from '../../../../service/session';
@@ -12,6 +13,21 @@ const dropdownValues = ref([
 ]);
 const dropdownValue = ref(null);
 
+const emit = defineEmits(['hide']);
+
+const onClose = () => {
+    emit('hide');
+};
+
+const currentTime = ref('');
+const timer = ref(null);
+
+const updateTime = () => {
+    const now = new Date();
+    const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
+    currentTime.value = now.toLocaleTimeString(locale.value, options);
+};
+
 onMounted(() => {
     if (getLanguageCookie()) {
         dropdownValue.value = dropdownValues.value.find((option) => option.value === getLanguageCookie());
@@ -20,6 +36,12 @@ onMounted(() => {
         dropdownValue.value = dropdownValues.value.find((option) => option.value === 'pt');
         locale.value = dropdownValue.value;
     }
+    updateTime();
+    timer.value = setInterval(updateTime, 1000);
+});
+
+onUnmounted(() => {
+    clearInterval(timer.value);
 });
 
 watchEffect(() => {
@@ -190,12 +212,15 @@ const menubarItems = ref([
             <i class="pi pi-video px-2" />
             <i class="pi pi-wifi px-2" />
             <i class="pi pi-volume-up px-2" />
-            <span class="px-2">Fri 13:07</span>
+            <span class="px-2">{{ currentTime }}</span>
             <i class="pi pi-search px-2" />
             <i class="pi pi-bars px-2" />
             <app-config simple ref="appConfigRef"></app-config>
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="appConfigRef.onConfigButtonClick()">
                 <i class="pi pi-cog"></i>
+            </button>
+            <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
+                <i class="pi pi-times"></i>
             </button>
         </template>
     </Menubar>

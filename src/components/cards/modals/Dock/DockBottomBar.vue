@@ -92,14 +92,7 @@ const onDockItemClick = (event, item) => {
 </script>
 
 <template>
-    <!--     <draggable class="draggable-dock" v-model="items" item-key="label" group="apps" animation="200">
-        <template #item="{ element }">
-            <a v-tooltip.top="element.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, element)">
-                <img :alt="element.label" :src="element.icon" style="width: 50px" />
-            </a>
-        </template>
-    </draggable> -->
-    <Dock class="mb-4" :model="items">
+    <Dock style="margin-bottom: 6rem" :model="items">
         <template #item="{ item }">
             <a v-tooltip.top="item.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, item)">
                 <img :alt="item.label" :src="item.icon" style="width: 50px" />

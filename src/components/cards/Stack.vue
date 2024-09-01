@@ -55,9 +55,12 @@ const words = ref([
 
 const colorFunction = (word, weight) => {
     if (weight > 15) return '#FF1493'; // DeepPink
-    if (weight > 10) return '#4169E1'; // RoyalBlue
-    if (weight > 5) return '#6A5ACD'; // SlateBlue
-    return '#8A2BE2'; // BlueViolet
+    if (weight > 12) return '#4169E1'; // RoyalBlue
+    if (weight > 9) return '#00CED1';  // DarkTurquoise
+    if (weight > 7) return '#FFA500';  // Orange
+    if (weight > 5) return '#32CD32';  // LimeGreen
+    if (weight > 3) return '#FF69B4';  // HotPink
+    return '#9370DB';                  // MediumPurple
 };
 
 const rotationFunction = () => {
@@ -69,10 +72,10 @@ const rotationFunction = () => {
 
 const getFontSize = (weight) => {
     // Adjust these values as needed
-    if (weight > 15) return '30px';
-    if (weight > 10) return '25px';
-    if (weight > 5) return '20px';
-    return '15px';
+    if (weight > 15) return '25px';
+    if (weight > 10) return '20px';
+    if (weight > 5) return '15px';
+    return '10px';
 };
 
 const onWordClick = (word) => {
@@ -85,7 +88,7 @@ const updateCloudSize = () => {
         if (card) {
             const cardHeight = card.clientHeight;
             const cardWidth = card.clientWidth;
-            const size = Math.min(cardHeight, cardWidth, 500); // Max size of 500px
+            const size = Math.min(cardHeight, cardWidth, 800); // Max size of 800px
             cloudSize.value = size > 0 ? size : 300; // Fallback to 300 if calculation fails
         }
     }
@@ -118,7 +121,7 @@ watch(isVisible, (newValue) => {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card">
-                <div class="stack-wrapper" ref="wrapper" :style="{ width: `${cloudSize}px`, height: `${cloudSize}px` }">
+                <div class="stack-wrapper" ref="wrapper">
                     <vue-word-cloud :words="words" :color="colorFunction" font-family="Roboto" :rotation="rotationFunction" :spacing="1" :font-size-ratio="4">
                         <template #default="{ text, weight, word }">
                             <div :title="weight" style="cursor: pointer" @click="onWordClick(word)">
@@ -141,10 +144,13 @@ watch(isVisible, (newValue) => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 0 ! important;
 }
 
 .stack-wrapper {
     max-width: 100%;
     max-height: 100%;
+    width: 80%;
+    height: 110%;
 }
 </style>
