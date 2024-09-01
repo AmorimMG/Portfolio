@@ -36,16 +36,9 @@ export const componentMap = {
 };
 
 export const apps = [
-    { id: 1, name: 'Discord', colSpan: 1, rowSpan: 1, title: 'Discord', icon: DiscordIcon },
-    { id: 2, name: 'MapboxMap', colSpan: 1, rowSpan: 1, title: 'Mapa', icon: FolderIcon },
-    { id: 3, name: 'EmailModal', colSpan: 1, rowSpan: 1, title: 'Email', icon: EmailIcon },
     { id: 4, name: 'CVModal', colSpan: 1, rowSpan: 1, title: 'CV', icon: CVIcon },
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon }
 ];
 
-export const widgets = [
-    { id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 },
-    { id: 2, name: 'ThreeJSComponent', colSpan: 1, rowSpan: 1 },
-    { id: 3, name: 'Weather', colSpan: 1, rowSpan: 1 }
-];
+export const widgets = [{ id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 }];

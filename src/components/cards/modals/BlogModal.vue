@@ -23,14 +23,7 @@ const onHide = () => {
             </div>
         </CardEffect>
 
-        <Dialog :visible="blogVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
-            <template #header>
-                <div class="inline-flex align-items-center justify-content-center gap-2">Dock</div>
-            </template>
-            <div class="popup-content">
-                <Dock />
-            </div>
-        </Dialog>
+        <Dock :visible="blogVisible" @hide="onHide" />
     </div>
 </template>
 

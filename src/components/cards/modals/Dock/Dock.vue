@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps, defineEmits } from 'vue';
 import { ref } from 'vue';
 import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../../../data/appsDock';
 import draggable from 'vuedraggable';
@@ -7,13 +8,23 @@ import DockBottombar from './DockBottomBar.vue';
 
 const widgets = ref(initialWidgets);
 const apps = ref(initialApps);
+
+const props = defineProps({
+    visible: Boolean
+});
+
+const emit = defineEmits(['hide']);
+
+const onHide = () => {
+    emit('hide');
+};
 </script>
 
 <template>
-    <div>
+    <Dialog :visible="visible" @update:visible="onHide" :showHeader="false" :maximized="true" :modal="true" class="p-dialog-maximized">
         <div class="dock-demo">
             <Toast position="top-center" group="tc" />
-            <DockTopbar />
+            <DockTopbar @hide="onHide" />
             <div class="dock-window dock-advanced">
                 <div class="wrapper flex justify-content-between flex-wrap">
                     <div class="apps">
@@ -54,7 +65,7 @@ const apps = ref(initialApps);
                 <DockBottombar />
             </div>
         </div>
-    </div>
+    </Dialog>
 </template>
 <style scoped>
 .draggableApps {
@@ -68,7 +79,7 @@ const apps = ref(initialApps);
 .draggableWidgets {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
+    gap: 20px;
     grid-template-rows: repeat(3, 1fr);
     grid-auto-flow: column;
 }
@@ -102,8 +113,8 @@ const apps = ref(initialApps);
 }
 
 .app-container:hover {
-    display: absolute;
-    border: 1px solid #007ad9;
+    outline: 1px solid #007ad9;
+    outline-offset: -2px;
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -143,7 +154,7 @@ const apps = ref(initialApps);
     width: 100%;
     height: 100vh;
     position: fixed;
-    background-image: url('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
+    background-image: url('https://coreldrawdesign.com/resources/previews/preview-3d-neon-retro-background-download-from-coreldrawdesign-1630764741.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
