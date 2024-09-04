@@ -35,6 +35,7 @@
         "vuewordcloud": "^19.0.0"
     },
     "devDependencies": {
+        "@biomejs/biome": "1.8.3",
         "@rushstack/eslint-patch": "^1.1.4",
         "@vitejs/plugin-vue": "^4.1.0",
         "@vue/eslint-config-prettier": "^7.0.0",
