@@ -182,6 +182,7 @@ function deleteAll() {
                     </template>
                 </Toolbar>
                 <DataTable
+                    class="table-container"
                     ref="dt"
                     v-model:selection="selectedUser"
                     :value="dataUsers"
@@ -192,7 +193,7 @@ function deleteAll() {
                     :rowsPerPageOptions="[5, 10, 25]"
                     responsiveLayout="scroll"
                     scrollable
-                    scrollHeight="600px"
+                    scrollHeight="50vh"
                 >
                     <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -314,5 +315,10 @@ function deleteAll() {
 <style scoped>
 .card {
     aspect-ratio: unset;
+}
+.table-container {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
 }
 </style>

@@ -33,7 +33,7 @@ function handleSubmit() {
                     detail: 'gblUsuarioLogadoSucesso',
                     life: 3000
                 });
-                router.push('/cadastros/usuarios');
+                router.push('/cadastros/dashboard');
             })
             .catch((error) => {
                 toast.add({

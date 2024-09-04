@@ -1,12 +1,13 @@
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue';
+import { ref, onMounted, nextTick, watch, computed } from 'vue';
 import VueWordCloud from 'vuewordcloud';
 import CardEffect from '../CardEffect.vue';
 import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 
 const wrapper = ref(null);
-const cloudSize = ref(300); // Default size
+const cloudSize = ref(300);
 const isVisible = ref(false);
+const loading = ref(true);
 
 const words = ref([
     ['Vue', 19],
@@ -56,11 +57,11 @@ const words = ref([
 const colorFunction = (word, weight) => {
     if (weight > 15) return '#FF1493'; // DeepPink
     if (weight > 12) return '#4169E1'; // RoyalBlue
-    if (weight > 9) return '#00CED1';  // DarkTurquoise
-    if (weight > 7) return '#FFA500';  // Orange
-    if (weight > 5) return '#32CD32';  // LimeGreen
-    if (weight > 3) return '#FF69B4';  // HotPink
-    return '#9370DB';                  // MediumPurple
+    if (weight > 9) return '#00CED1'; // DarkTurquoise
+    if (weight > 7) return '#FFA500'; // Orange
+    if (weight > 5) return '#32CD32'; // LimeGreen
+    if (weight > 3) return '#FF69B4'; // HotPink
+    return '#9370DB'; // MediumPurple
 };
 
 const rotationFunction = () => {
@@ -72,9 +73,13 @@ const rotationFunction = () => {
 
 const getFontSize = (weight) => {
     // Adjust these values as needed
+    if (weight > 20) return '30px';
     if (weight > 15) return '25px';
+    if (weight > 12) return '22px';
     if (weight > 10) return '20px';
-    if (weight > 5) return '15px';
+    if (weight > 7) return '15px';
+    if (weight > 5) return '10px';
+    if (weight > 3) return '8px';
     return '10px';
 };
 
@@ -88,8 +93,8 @@ const updateCloudSize = () => {
         if (card) {
             const cardHeight = card.clientHeight;
             const cardWidth = card.clientWidth;
-            const size = Math.min(cardHeight, cardWidth, 800); // Max size of 800px
-            cloudSize.value = size > 0 ? size : 300; // Fallback to 300 if calculation fails
+            const size = Math.min(cardHeight, cardWidth, 800);
+            cloudSize.value = size > 0 ? size : 300;
         }
     }
 };
@@ -115,6 +120,14 @@ watch(isVisible, (newValue) => {
         nextTick(updateCloudSize);
     }
 });
+
+const wordCloudStyle = computed(() => ({
+    display: loading.value ? 'none' : 'block'
+}));
+
+const onWordCloudLoaded = () => {
+    loading.value = false;
+};
 </script>
 
 <template>
@@ -122,9 +135,10 @@ watch(isVisible, (newValue) => {
         <CardEffect>
             <div class="card">
                 <div class="stack-wrapper" ref="wrapper">
-                    <vue-word-cloud :words="words" :color="colorFunction" font-family="Roboto" :rotation="rotationFunction" :spacing="1" :font-size-ratio="4">
+                    <ProgressSpinner v-if="loading" />
+                    <vue-word-cloud :style="wordCloudStyle" :words="words" :color="colorFunction" font-family="Roboto" :rotation="rotationFunction" :spacing="1" :font-size-ratio="4" @loaded="onWordCloudLoaded">
                         <template #default="{ text, weight, word }">
-                            <div :title="weight" style="cursor: pointer" @click="onWordClick(word)">
+                            <div :title="text" style="cursor: pointer" @click="onWordClick(word)">
                                 <VueNeonLight :size="getFontSize(weight)" :flash="false" :color="colorFunction(word, weight)">
                                     {{ text }}
                                 </VueNeonLight>
@@ -144,7 +158,7 @@ watch(isVisible, (newValue) => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 0 ! important;
+    padding: 0 !important;
 }
 
 .stack-wrapper {
@@ -152,5 +166,8 @@ watch(isVisible, (newValue) => {
     max-height: 100%;
     width: 80%;
     height: 110%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

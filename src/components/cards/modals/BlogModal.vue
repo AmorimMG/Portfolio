@@ -18,8 +18,6 @@ const onHide = () => {
                 <Button text @click="blogVisible = true" style="width: 100%; height: 100%; justify-content: center">
                     <VueNeonLight size="30px" :flash="false" style="color: white">Blog</VueNeonLight>
                 </Button>
-
-                Read more ->
             </div>
         </CardEffect>
 
