@@ -10,6 +10,11 @@ const router = createRouter({
             path: '/cadastros',
             children: [
                 {
+                    path: '/cadastros/dashboard',
+                    name: 'cadastros-dashboard',
+                    component: () => import('@/views/pages/cadastros/CadastrosDashboard.vue')
+                },
+                {
                     path: '/cadastros/usuarios',
                     name: 'usuarios',
                     component: () => import('@/views/pages/cadastros/Usuarios.vue')

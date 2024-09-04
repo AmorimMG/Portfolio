@@ -13,12 +13,10 @@ const toast = useToast();
 const getDiscordInfo = () => {
     RESTAPI.ObterDiscord()
         .then((response) => {
-            console.log(response);
             discordData.value = response.data;
 
             spotifyData.value = discordData.value.data.spotify;
 
-            console.log(spotifyData.value);
             if (discordData.value.data.discord_status === 'online') {
                 online.value = true;
             } else {

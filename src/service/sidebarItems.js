@@ -3,6 +3,7 @@ import { openModal } from '../components/DynamicModal.vue';
 export const SidebarItems = [
     {
         items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-table', to: '/cadastros/dashboard' },
             { label: 'Home', icon: 'pi pi-fw pi-home', to: '/' },
             {
                 label: 'Cadastros',

@@ -122,11 +122,21 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div id="Terminal" class="col-12 lg:col-12 xl:col-6">
+    <div id="Terminal" class="col-4 lg:col-4 xl:col-4">
         <CardEffect>
-            <div style="width: 100%; height: 100%">
+            <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
                 <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$ " aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
     </div>
 </template>
+
+<style scoped>
+.terminal-card {
+    border: 2px solid var(--surface-border);
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+</style>

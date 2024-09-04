@@ -158,6 +158,9 @@ export default {
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
                     responsiveLayout="scroll"
+                    scrollable
+                    scrollHeight="50vh"
+                    class="table-container"
                 >
                     <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -296,4 +299,13 @@ export default {
     </div>
 </template>
 
-<style></style>
+<style>
+.card {
+    aspect-ratio: unset;
+}
+.table-container {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+</style>

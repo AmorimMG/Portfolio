@@ -23,8 +23,8 @@ export const componentMap = {
     Blog,
     ProjectsModal,
     Terminal,
-    Stack,
-    DashboardTimeline
+    Stack
+/*     DashboardTimeline */
 };
 
 export const cards = [
@@ -36,8 +36,8 @@ export const cards = [
     { id: 6, name: 'Blog', colSpan: 1, rowSpan: 1 },
     { id: 7, name: 'Terminal', colSpan: 2, rowSpan: 1 },
     { id: 8, name: 'IA', colSpan: 1, rowSpan: 1 },
-    { id: 9, name: 'ClusterLinks', colSpan: 1, rowSpan: 1 },
-    { id: 10, name: 'DashboardTimeline', colSpan: 4, rowSpan: 1 }
+    { id: 9, name: 'ClusterLinks', colSpan: 1, rowSpan: 1 }
+/*     { id: 10, name: 'DashboardTimeline', colSpan: 4, rowSpan: 1 } */
 ];
 
 /* { id: 2, name: 'Discord', colSpan: 1, rowSpan: 1 }, */
