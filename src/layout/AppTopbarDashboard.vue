@@ -1,11 +1,17 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watchEffect, watch } from 'vue';
-import { setLanguageCookie, getLanguageCookie } from '../service/session';
-import { useLayout } from './composables/layout';
-import AppConfig from './AppConfig.vue';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import VueNeonLight from '../components/VueNeonLight/vue-neon-light.vue';
+import {
+	computed,
+	onBeforeUnmount,
+	onMounted,
+	ref,
+	watch,
+	watchEffect,
+} from "vue";
+import { useI18n } from "vue-i18n";
+import VueNeonLight from "../components/VueNeonLight/vue-neon-light.vue";
+import { getLanguageCookie, setLanguageCookie } from "../service/session";
+import AppConfig from "./AppConfig.vue";
+import { useLayout } from "./composables/layout";
 
 const { onMenuToggle } = useLayout();
 const outsideClickListener = ref(null);
@@ -14,72 +20,82 @@ const appConfigRef = ref(null);
 const { locale } = useI18n();
 
 onMounted(() => {
-    bindOutsideClickListener();
+	bindOutsideClickListener();
 });
 
 onBeforeUnmount(() => {
-    unbindOutsideClickListener();
+	unbindOutsideClickListener();
 });
 
 const dropdownValues = ref([
-    { name: 'Português', code: 'BR', value: 'pt' },
-    { name: 'Español', code: 'ES', value: 'es' },
-    { name: 'English', code: 'UK', value: 'en' }
+	{ name: "Português", code: "BR", value: "pt" },
+	{ name: "Español", code: "ES", value: "es" },
+	{ name: "English", code: "UK", value: "en" },
 ]);
 
 const dropdownValue = ref(null);
 
 const onTopBarMenuButton = () => {
-    topbarMenuActive.value = !topbarMenuActive.value;
+	topbarMenuActive.value = !topbarMenuActive.value;
 };
 
 const topbarMenuClasses = computed(() => {
-    return {
-        'layout-topbar-menu-mobile-active': topbarMenuActive.value
-    };
+	return {
+		"layout-topbar-menu-mobile-active": topbarMenuActive.value,
+	};
 });
 
 const bindOutsideClickListener = () => {
-    if (!outsideClickListener.value) {
-        outsideClickListener.value = (event) => {
-            if (isOutsideClicked(event)) {
-                topbarMenuActive.value = false;
-            }
-        };
+	if (!outsideClickListener.value) {
+		outsideClickListener.value = (event) => {
+			if (isOutsideClicked(event)) {
+				topbarMenuActive.value = false;
+			}
+		};
 
-        document.addEventListener('click', outsideClickListener.value);
-    }
+		document.addEventListener("click", outsideClickListener.value);
+	}
 };
 
 const unbindOutsideClickListener = () => {
-    if (outsideClickListener.value) {
-        document.removeEventListener('click', outsideClickListener);
-        outsideClickListener.value = null;
-    }
+	if (outsideClickListener.value) {
+		document.removeEventListener("click", outsideClickListener);
+		outsideClickListener.value = null;
+	}
 };
 
 const isOutsideClicked = (event) => {
-    if (!topbarMenuActive.value) return;
-    const sidebarEl = document.querySelector('.layout-topbar-menu');
-    const topbarEl = document.querySelector('.layout-topbar-menu-button');
+	if (!topbarMenuActive.value) return;
+	const sidebarEl = document.querySelector(".layout-topbar-menu");
+	const topbarEl = document.querySelector(".layout-topbar-menu-button");
 
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+	return !(
+		sidebarEl.isSameNode(event.target) ||
+		sidebarEl.contains(event.target) ||
+		topbarEl.isSameNode(event.target) ||
+		topbarEl.contains(event.target)
+	);
 };
 
 watchEffect(() => {
-    const cookieValue = getLanguageCookie();
-    if (cookieValue && dropdownValues.value.some((option) => option.value === cookieValue)) {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === cookieValue);
-    } else {
-        /*  dropdownValue.value = dropdownValues.value.find(option => option.value === "pt"); */
-    }
+	const cookieValue = getLanguageCookie();
+	if (
+		cookieValue &&
+		dropdownValues.value.some((option) => option.value === cookieValue)
+	) {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === cookieValue,
+		);
+	} else {
+		/*  dropdownValue.value = dropdownValues.value.find(option => option.value === "en"); */
+	}
 });
 
 watch(dropdownValue, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        setLanguageCookie(newValue.value);
-        locale.value = newValue.value;
-    }
+	if (newValue !== oldValue) {
+		setLanguageCookie(newValue.value);
+		locale.value = newValue.value;
+	}
 });
 </script>
 
