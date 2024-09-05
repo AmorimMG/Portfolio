@@ -1,19 +1,18 @@
 <script setup>
-import { ref, watchEffect, watch, onMounted } from 'vue';
-import Photos from '../cards/Photos.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
-import CardEffect from '../CardEffect.vue';
+import { useToast } from 'primevue/usetoast';
+import { onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppConfig from '../../layout/AppConfig.vue';
-import { setLanguageCookie, getLanguageCookie } from '../../service/session';
-import { useToast } from 'primevue/usetoast';
 import { RESTAPI } from '../../service/api.js';
+import { getLanguageCookie, setLanguageCookie } from '../../service/session';
+import CardEffect from '../CardEffect.vue';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 import EmailModal from './modals/EmailModal.vue';
 
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSteamSymbol } from '@fortawesome/free-brands-svg-icons/faSteamSymbol';
 import { faLastfm } from '@fortawesome/free-brands-svg-icons/faLastfm';
+import { faSteamSymbol } from '@fortawesome/free-brands-svg-icons/faSteamSymbol';
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const { locale } = useI18n();
 const dropdownValues = ref([
@@ -148,7 +147,7 @@ const sendEmail = async () => {
                 </div>
                 <div class="upper">
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2"><i class="pi pi-comment"></i> About Me</div>
+                        <div class="center flex-row gap-2"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
                         <div class="flex gap-3">
                             <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
                             <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
@@ -184,13 +183,16 @@ const sendEmail = async () => {
                     </div>
                 </div>
                 <div class="bottom">
-                    <!-- <Photos /> -->
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2"><i class="pi pi-phone"></i> Contact</div>
+                        <div class="center flex-row gap-2"><i class="pi pi-phone"></i> {{ $t('contact.title') }}</div>
                     </div>
                     <div class="flex flex-column" style="padding: 20px">
-                        <p>If you want to chat, feel free to reach out to me on Twitter, or join my Discord server. You can also email me at:</p>
-                        <div class="center mt-5"><Button outlined @click="showEmailModal" style="color: #abcb1a" class="underline">gabriel@amorim.pro</Button></div>
+                        <p>{{ $t('contact.message') }}</p>
+                        <div class="center mt-5">
+                            <Button outlined @click="showEmailModal" style="color: #abcb1a" class="underline">
+                                {{ $t('contact.email') }}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,132 +1,131 @@
 <script setup>
-import { ref, onMounted, nextTick, watch, computed } from 'vue';
-import VueWordCloud from 'vuewordcloud';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import VueWordCloud from "vuewordcloud";
+import CardEffect from "../CardEffect.vue";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
 const wrapper = ref(null);
 const cloudSize = ref(300);
 const isVisible = ref(false);
-const loading = ref(true);
+const loading = ref(false);
 
 const words = ref([
-    ['Vue', 19],
-    ['React', 15],
-    ['JavaScript', 12],
-    ['TypeScript', 10],
-    ['HTML', 8],
-    ['CSS', 8],
-    ['Node.js', 7],
-    ['Express', 6],
-    ['MongoDB', 5],
-    ['Git', 4],
-    ['Webpack', 3],
-    ['Docker', 3],
-    ['Python', 9],
-    ['Java', 8],
-    ['C#', 7],
-    ['PHP', 6],
-    ['Ruby', 5],
-    ['Go', 4],
-    ['Rust', 3],
-    ['Swift', 3],
-    ['Kotlin', 3],
-    ['SQL', 6],
-    ['PostgreSQL', 5],
-    ['Redis', 4],
-    ['GraphQL', 5],
-    ['REST API', 7],
-    ['AWS', 6],
-    ['Azure', 5],
-    ['Google Cloud', 4],
-    ['Kubernetes', 4],
-    ['Jenkins', 3],
-    ['GitLab CI', 3],
-    ['Ansible', 3],
-    ['Terraform', 3],
-    ['Sass', 4],
-    ['Less', 3],
-    ['Tailwind CSS', 5],
-    ['Bootstrap', 4],
-    ['Jest', 4],
-    ['Mocha', 3],
-    ['Cypress', 3],
-    ['Selenium', 3]
+	["Vue", 19],
+	["React", 15],
+	["JavaScript", 12],
+	["TypeScript", 10],
+	["HTML", 8],
+	["CSS", 8],
+	["Node.js", 7],
+	["Express", 6],
+	["MongoDB", 5],
+	["Git", 4],
+	["Webpack", 3],
+	["Docker", 3],
+	["Python", 9],
+	["Java", 8],
+	["C#", 7],
+	["PHP", 6],
+	["Ruby", 5],
+	["Go", 4],
+	["Rust", 3],
+	["Swift", 3],
+	["Kotlin", 3],
+	["SQL", 6],
+	["PostgreSQL", 5],
+	["Redis", 4],
+	["GraphQL", 5],
+	["REST API", 7],
+	["AWS", 6],
+	["Azure", 5],
+	["Google Cloud", 4],
+	["Kubernetes", 4],
+	["Jenkins", 3],
+	["GitLab CI", 3],
+	["Ansible", 3],
+	["Terraform", 3],
+	["Sass", 4],
+	["Less", 3],
+	["Tailwind CSS", 5],
+	["Bootstrap", 4],
+	["Jest", 4],
+	["Mocha", 3],
+	["Cypress", 3],
+	["Selenium", 3],
 ]);
 
 const colorFunction = (word, weight) => {
-    if (weight > 15) return '#FF1493'; // DeepPink
-    if (weight > 12) return '#4169E1'; // RoyalBlue
-    if (weight > 9) return '#00CED1'; // DarkTurquoise
-    if (weight > 7) return '#FFA500'; // Orange
-    if (weight > 5) return '#32CD32'; // LimeGreen
-    if (weight > 3) return '#FF69B4'; // HotPink
-    return '#9370DB'; // MediumPurple
+	if (weight > 15) return "#FF1493"; // DeepPink
+	if (weight > 12) return "#4169E1"; // RoyalBlue
+	if (weight > 9) return "#00CED1"; // DarkTurquoise
+	if (weight > 7) return "#FFA500"; // Orange
+	if (weight > 5) return "#32CD32"; // LimeGreen
+	if (weight > 3) return "#FF69B4"; // HotPink
+	return "#9370DB"; // MediumPurple
 };
 
 const rotationFunction = () => {
-    const rand = Math.random();
-    if (rand < 0.3) return 0;
-    if (rand < 0.6) return 90;
-    return 270;
+	const rand = Math.random();
+	if (rand < 0.3) return 0;
+	if (rand < 0.6) return 90;
+	return 270;
 };
 
 const getFontSize = (weight) => {
-    // Adjust these values as needed
-    if (weight > 20) return '30px';
-    if (weight > 15) return '25px';
-    if (weight > 12) return '22px';
-    if (weight > 10) return '20px';
-    if (weight > 7) return '15px';
-    if (weight > 5) return '10px';
-    if (weight > 3) return '8px';
-    return '10px';
+	// Adjust these values as needed
+	if (weight > 15) return "25px";
+	if (weight > 12) return "22px";
+	if (weight > 10) return "20px";
+	if (weight > 7) return "15px";
+	if (weight > 5) return "10px";
+	if (weight > 3) return "8px";
+	return "10px";
 };
 
 const onWordClick = (word) => {
-    console.log('Clicked word:', word);
+	console.log("Clicked word:", word);
 };
 
 const updateCloudSize = () => {
-    if (wrapper.value) {
-        const card = wrapper.value.closest('.card');
-        if (card) {
-            const cardHeight = card.clientHeight;
-            const cardWidth = card.clientWidth;
-            const size = Math.min(cardHeight, cardWidth, 800);
-            cloudSize.value = size > 0 ? size : 300;
-        }
-    }
+	if (wrapper.value) {
+		const card = wrapper.value.closest(".card");
+		if (card) {
+			const cardHeight = card.clientHeight;
+			const cardWidth = card.clientWidth;
+			const size = Math.min(cardHeight, cardWidth, 800);
+			cloudSize.value = size > 0 ? size : 300;
+		}
+	}
 };
 
 const checkVisibility = () => {
-    if (wrapper.value) {
-        const rect = wrapper.value.getBoundingClientRect();
-        isVisible.value = rect.top < window.innerHeight && rect.bottom >= 0;
-    }
+	if (wrapper.value) {
+		const rect = wrapper.value.getBoundingClientRect();
+		isVisible.value = rect.top < window.innerHeight && rect.bottom >= 0;
+	}
 };
 
 onMounted(() => {
-    nextTick(() => {
-        updateCloudSize();
-        checkVisibility();
-        window.addEventListener('resize', updateCloudSize);
-        window.addEventListener('scroll', checkVisibility);
-    });
+	nextTick(() => {
+		updateCloudSize();
+		checkVisibility();
+		window.addEventListener("resize", updateCloudSize);
+		window.addEventListener("scroll", checkVisibility);
+	});
 });
 
 watch(isVisible, (newValue) => {
-    if (newValue) {
-        nextTick(updateCloudSize);
-    }
+	if (newValue) {
+		nextTick(updateCloudSize);
+	}
 });
 
 const wordCloudStyle = computed(() => ({
-    display: loading.value ? 'none' : 'block'
+	display: loading.value ? "none" : "block",
 }));
 
 const onWordCloudLoaded = () => {
-    loading.value = false;
+	loading.value = false;
 };
 </script>
 

@@ -209,7 +209,7 @@ const menubarItems = ref([
 </script>
 
 <template>
-    <Menubar :model="menubarItems">
+    <Menubar style="overflow-y: hidden" :model="menubarItems">
         <template #start>
             <i class="pi pi-apple px-2"></i>
         </template>
@@ -246,5 +246,5 @@ const menubarItems = ref([
         </template>
     </Menubar>
 </template>
-
-<style scoped></style>
+<style scoped>
+</style>
