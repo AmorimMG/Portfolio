@@ -31,7 +31,43 @@ export default {
             pointLight2.position.set(-500, -500, -500);
             scene.add(pointLight2);
 
-            sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 32), new THREE.MeshPhongMaterial({ flatShading: true }));
+            // Neon shader material
+            const neonShader = {
+                uniforms: {
+                    "c": { value: 1.0 },
+                    "p": { value: 1.4 },
+                    glowColor: { value: new THREE.Color(0xff00ff) }, // Pink color
+                    viewVector: { value: new THREE.Vector3(0, 0, 0) }
+                },
+                vertexShader: `
+                    uniform vec3 viewVector;
+                    uniform float c;
+                    uniform float p;
+                    varying float intensity;
+                    void main() {
+                        vec3 vNormal = normalize(normalMatrix * normal);
+                        vec3 vNormel = normalize(viewVector - (modelViewMatrix * vec4(position, 1.0)).xyz);
+                        intensity = pow(c - dot(vNormal, vNormel), p);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 glowColor;
+                    varying float intensity;
+                    void main() {
+                        vec3 glow = glowColor * intensity;
+                        gl_FragColor = vec4(glow, 1.0);
+                    }
+                `,
+                side: THREE.FrontSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            };
+
+            const neonMaterial = new THREE.ShaderMaterial(neonShader);
+
+            // Create sphere with neon effect
+            sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 32), neonMaterial);
             scene.add(sphere);
 
             plane = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshBasicMaterial({ color: 0xe0e0e0 }));
@@ -51,16 +87,17 @@ export default {
 
             controls = new TrackballControls(camera, effect.domElement);
 
-            this.animate(start, sphere, controls, effect, scene, camera);
+            // Update viewVector uniform in the render loop
+            this.animate(start, sphere, controls, effect, scene, camera, neonMaterial);
         },
-        animate(start, sphere, controls, effect, scene, camera) {
+        animate(start, sphere, controls, effect, scene, camera, neonMaterial) {
             const animate = () => {
                 requestAnimationFrame(animate);
-                this.renderScene(start, sphere, controls, effect, scene, camera);
+                this.renderScene(start, sphere, controls, effect, scene, camera, neonMaterial);
             };
             animate();
         },
-        renderScene(start, sphere, controls, effect, scene, camera) {
+        renderScene(start, sphere, controls, effect, scene, camera, neonMaterial) {
             const timer = Date.now() - start;
             sphere.position.y = Math.abs(Math.sin(timer * 0.002)) * 150;
             sphere.rotation.x = timer * 0.0003;
@@ -71,6 +108,9 @@ export default {
             camera.position.x = Math.sin(timer * cameraRotationSpeed) * 500;
             camera.position.z = Math.cos(timer * cameraRotationSpeed) * 500;
             camera.lookAt(scene.position);
+
+            // Update viewVector uniform
+            neonMaterial.uniforms.viewVector.value = camera.position;
 
             controls.update();
             effect.render(scene, camera);
