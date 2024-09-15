@@ -130,7 +130,7 @@ const onWordCloudLoaded = () => {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-4 lg:col-4 xl:col-3 pb-0">
         <CardEffect>
             <div class="card">
                 <div class="stack-wrapper" ref="wrapper">

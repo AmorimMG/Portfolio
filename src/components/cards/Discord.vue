@@ -1,9 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { RESTAPI } from '../../service/api.js';
-import { useToast } from 'primevue/usetoast';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
-import CardEffect from '../CardEffect.vue';
+import { useToast } from "primevue/usetoast";
+import { onMounted, ref } from "vue";
+import { RESTAPI } from "../../service/api.js";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
 const spotifyData = ref();
 const discordData = ref();
@@ -11,31 +10,31 @@ const online = ref(false);
 const toast = useToast();
 
 const getDiscordInfo = () => {
-    RESTAPI.ObterDiscord()
-        .then((response) => {
-            discordData.value = response.data;
+	RESTAPI.ObterDiscord()
+		.then((response) => {
+			discordData.value = response.data;
 
-            spotifyData.value = discordData.value.data.spotify;
+			spotifyData.value = discordData.value.data.spotify;
 
-            if (discordData.value.data.discord_status === 'online') {
-                online.value = true;
-            } else {
-                online.value = false;
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            toast.add({
-                severity: 'error',
-                summary: error,
-                life: 3000
-            });
-        });
+			if (discordData.value.data.discord_status === "online") {
+				online.value = true;
+			} else {
+				online.value = false;
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+			toast.add({
+				severity: "error",
+				summary: error,
+				life: 3000,
+			});
+		});
 };
 
 onMounted(() => {
-    getDiscordInfo();
-    setInterval(getDiscordInfo, 150000);
+	getDiscordInfo();
+	setInterval(getDiscordInfo, 150000);
 });
 </script>
 
@@ -51,7 +50,6 @@ onMounted(() => {
         </div>
     </div>
 </template>
-
 <style scoped>
 .dot {
     height: 10px;

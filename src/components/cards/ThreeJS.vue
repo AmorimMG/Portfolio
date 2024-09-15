@@ -1,145 +1,160 @@
-<script>
-import * as THREE from 'three';
-import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect.js';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import CardEffect from '../CardEffect.vue';
+<script setup>
+import * as THREE from "three";
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import CardEffect from "../CardEffect.vue";
 
-export default {
-    mounted() {
-        this.initThree();
-    },
-    components: {
-        CardEffect
-    },
-    methods: {
-        initThree() {
-            let camera, controls, scene, renderer, effect;
-            let sphere, plane;
-            const start = Date.now();
+const container = ref(null);
+const isLoading = ref(true);
+let scene, camera, renderer, geometry, material, mesh;
 
-            camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
-            camera.position.y = 150;
-            camera.position.z = 500;
+const init = () => {
+	if (!container.value) {
+		console.error("Container not found");
+		return;
+	}
 
-            scene = new THREE.Scene();
+	const width = container.value.clientWidth;
+	const height = container.value.clientHeight;
 
-            const pointLight1 = new THREE.PointLight(0xffffff, 3, 0, 0);
-            pointLight1.position.set(500, 500, 500);
-            scene.add(pointLight1);
+	scene = new THREE.Scene();
+	camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+	renderer = new THREE.WebGLRenderer({
+		antialias: true,
+		alpha: true,
+	});
+	renderer.setSize(width, height);
+	renderer.setClearColor(0x000000, 0);
+	container.value.appendChild(renderer.domElement);
 
-            const pointLight2 = new THREE.PointLight(0xffffff, 1, 0, 0);
-            pointLight2.position.set(-500, -500, -500);
-            scene.add(pointLight2);
+	geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+	material = new THREE.MeshBasicMaterial({
+		color: 0x00ff00,
+		wireframe: true,
+	});
+	mesh = new THREE.Mesh(geometry, material);
+	scene.add(mesh);
 
-            // Neon shader material
-            const neonShader = {
-                uniforms: {
-                    "c": { value: 1.0 },
-                    "p": { value: 1.4 },
-                    glowColor: { value: new THREE.Color(0xff00ff) }, // Pink color
-                    viewVector: { value: new THREE.Vector3(0, 0, 0) }
-                },
-                vertexShader: `
-                    uniform vec3 viewVector;
-                    uniform float c;
-                    uniform float p;
-                    varying float intensity;
-                    void main() {
-                        vec3 vNormal = normalize(normalMatrix * normal);
-                        vec3 vNormel = normalize(viewVector - (modelViewMatrix * vec4(position, 1.0)).xyz);
-                        intensity = pow(c - dot(vNormal, vNormel), p);
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                    }
-                `,
-                fragmentShader: `
-                    uniform vec3 glowColor;
-                    varying float intensity;
-                    void main() {
-                        vec3 glow = glowColor * intensity;
-                        gl_FragColor = vec4(glow, 1.0);
-                    }
-                `,
-                side: THREE.FrontSide,
-                blending: THREE.AdditiveBlending,
-                transparent: true
-            };
+	camera.position.z = 5;
 
-            const neonMaterial = new THREE.ShaderMaterial(neonShader);
+	// Add neon glow effect
+	const glowMaterial = new THREE.ShaderMaterial({
+		uniforms: {
+			c: { type: "f", value: 0.1 },
+			p: { type: "f", value: 1.4 },
+			glowColor: { type: "c", value: new THREE.Color(0x00ff00) },
+		},
+		vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+		fragmentShader: `
+      uniform vec3 glowColor;
+      uniform float c;
+      uniform float p;
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+        gl_FragColor = vec4(glowColor, intensity);
+      }
+    `,
+		side: THREE.FrontSide,
+		blending: THREE.AdditiveBlending,
+		transparent: true,
+	});
 
-            // Create sphere with neon effect
-            sphere = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 32), neonMaterial);
-            scene.add(sphere);
+	const glowMesh = new THREE.Mesh(geometry, glowMaterial);
+	glowMesh.scale.multiplyScalar(1.2);
+	scene.add(glowMesh);
 
-            plane = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshBasicMaterial({ color: 0xe0e0e0 }));
-            plane.position.y = -300; // Adjusted y position to ensure visibility
-            plane.rotation.x = -Math.PI / 2;
-            scene.add(plane);
-
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize(175, 175);
-
-            effect = new AsciiEffect(renderer, ' .:-+*=%@#', { invert: true });
-            effect.setSize(175, 175);
-            effect.domElement.style.color = 'green';
-            effect.domElement.style.backgroundColor = 'transparent'; // Set background color to transparent
-
-            document.getElementById('asciiEffect')?.appendChild(effect.domElement);
-
-            controls = new TrackballControls(camera, effect.domElement);
-
-            // Update viewVector uniform in the render loop
-            this.animate(start, sphere, controls, effect, scene, camera, neonMaterial);
-        },
-        animate(start, sphere, controls, effect, scene, camera, neonMaterial) {
-            const animate = () => {
-                requestAnimationFrame(animate);
-                this.renderScene(start, sphere, controls, effect, scene, camera, neonMaterial);
-            };
-            animate();
-        },
-        renderScene(start, sphere, controls, effect, scene, camera, neonMaterial) {
-            const timer = Date.now() - start;
-            sphere.position.y = Math.abs(Math.sin(timer * 0.002)) * 150;
-            sphere.rotation.x = timer * 0.0003;
-            sphere.rotation.z = timer * 0.0002;
-
-            // Add camera rotation
-            const cameraRotationSpeed = 0.001;
-            camera.position.x = Math.sin(timer * cameraRotationSpeed) * 500;
-            camera.position.z = Math.cos(timer * cameraRotationSpeed) * 500;
-            camera.lookAt(scene.position);
-
-            // Update viewVector uniform
-            neonMaterial.uniforms.viewVector.value = camera.position;
-
-            controls.update();
-            effect.render(scene, camera);
-        }
-    }
+	animate();
+	isLoading.value = false;
 };
+
+const animate = () => {
+	if (!renderer || !scene || !camera || !mesh) return;
+	requestAnimationFrame(animate);
+	// Reduce the rotation speed by decreasing these values
+	mesh.rotation.x += 0.002; // Changed from 0.01
+	mesh.rotation.y += 0.004; // Changed from 0.02
+	renderer.render(scene, camera);
+};
+
+const cleanup = () => {
+	if (renderer) {
+		renderer.dispose();
+		renderer.forceContextLoss();
+	}
+	if (geometry) geometry.dispose();
+	if (material) material.dispose();
+	if (mesh) mesh.geometry.dispose();
+
+	scene = null;
+	camera = null;
+	renderer = null;
+	geometry = null;
+	material = null;
+	mesh = null;
+};
+
+onMounted(() => {
+	const resizeObserver = new ResizeObserver((entries) => {
+		for (const entry of entries) {
+			if (entry.contentBoxSize) {
+				const width = entry.contentBoxSize[0].inlineSize;
+				const height = entry.contentBoxSize[0].blockSize;
+				if (width > 0 && height > 0) {
+					cleanup();
+					init();
+				}
+			}
+		}
+	});
+
+	if (container.value) {
+		resizeObserver.observe(container.value);
+	}
+});
+
+onUnmounted(() => {
+	cleanup();
+});
+
+watch(container, (newValue) => {
+	if (newValue) {
+		init();
+	}
+});
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-4 lg:col-4 xl:col-3 pb-0">
         <CardEffect>
-            <div class="asciiCard card mb-0 flex justify-content-center align-items-center">
-                <div id="asciiEffect"></div>
+            <div class="neonCard card mb-0 flex justify-content-center align-items-center">
+                <div v-if="isLoading" class="loading">Loading...</div>
+                <div ref="container" class="three-container"></div>
             </div>
         </CardEffect>
     </div>
 </template>
 
-<style>
-.asciiCard {
-    margin: 0;
-    padding: 0;
+<style scoped>
+.neonCard {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
-#asciiEffect {
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    display: flex;
-    align-items: center;
+.three-container {
+  width: 100%;
+  height: 100%;
+}
+
+.loading {
+  color: #00ff00;
+  font-size: 1.2em;
 }
 </style>

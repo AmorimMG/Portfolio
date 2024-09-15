@@ -34,3 +34,4 @@ coverage
 .env.sentry-build-plugin
 
 /firebase
+.aider*
