@@ -1,109 +1,135 @@
 <script setup>
-import { useToast } from 'primevue/usetoast';
-import { onMounted, ref, watch, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
-import AppConfig from '../../layout/AppConfig.vue';
-import { RESTAPI } from '../../service/api.js';
-import { getLanguageCookie, setLanguageCookie } from '../../service/session';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
-import EmailModal from './modals/EmailModal.vue';
+import { useToast } from "primevue/usetoast";
+import { onMounted, ref, watch, watchEffect } from "vue";
+import { useI18n } from "vue-i18n";
+import AppConfig from "../../layout/AppConfig.vue";
+import { RESTAPI } from "../../service/api.js";
+import { getLanguageCookie, setLanguageCookie } from "../../service/session";
+import CardEffect from "../CardEffect.vue";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import EmailModal from "./modals/EmailModal.vue";
 
-import { faLastfm } from '@fortawesome/free-brands-svg-icons/faLastfm';
-import { faSteamSymbol } from '@fortawesome/free-brands-svg-icons/faSteamSymbol';
-import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faLastfm } from "@fortawesome/free-brands-svg-icons/faLastfm";
+import { faSteamSymbol } from "@fortawesome/free-brands-svg-icons/faSteamSymbol";
+import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const { locale } = useI18n();
 const dropdownValues = ref([
-    { name: 'Português', code: 'BR', value: 'pt' },
-    { name: 'Español', code: 'ES', value: 'es' },
-    { name: 'English', code: 'UK', value: 'en' }
+	{ name: "Português", code: "BR", value: "pt" },
+	{ name: "Español", code: "ES", value: "es" },
+	{ name: "English", code: "UK", value: "en" },
 ]);
 
 const dropdownValue = ref(null);
 const appConfigRef = ref(null);
 const feedback = ref();
-const name = ref('');
-const email = ref('');
-const message = ref('');
+const name = ref("");
+const email = ref("");
+const message = ref("");
 const toast = useToast();
 const modalEmailVisible = ref(false);
 
 const props = defineProps({
-    menuVisible: Boolean
+	menuVisible: Boolean,
 });
 
-const emit = defineEmits(['update:menuVisible']);
+const emit = defineEmits(["update:menuVisible"]);
 
 const toggleMenu = () => {
-    emit('update:menuVisible', !props.menuVisible);
+	emit("update:menuVisible", !props.menuVisible);
 };
 
 onMounted(() => {
-    if (getLanguageCookie()) {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === getLanguageCookie());
-        locale.value = getLanguageCookie();
-    } else {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'en');
-        locale.value = dropdownValue.value;
-    }
+	if (getLanguageCookie()) {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === getLanguageCookie(),
+		);
+		locale.value = getLanguageCookie();
+	} else {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === "en",
+		);
+		locale.value = dropdownValue.value;
+	}
 });
 
 watchEffect(() => {
-    const cookieValue = getLanguageCookie();
-    if (cookieValue && dropdownValues.value.some((option) => option.value === cookieValue)) {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === cookieValue);
-    } else {
-        dropdownValue.value = dropdownValues.value.find((option) => option.value === 'en');
-        locale.value = 'en';
-    }
+	const cookieValue = getLanguageCookie();
+	if (
+		cookieValue &&
+		dropdownValues.value.some((option) => option.value === cookieValue)
+	) {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === cookieValue,
+		);
+	} else {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === "en",
+		);
+		locale.value = "en";
+	}
 });
 
 watch(dropdownValue, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        setLanguageCookie(newValue.value);
-        locale.value = newValue.value;
-    }
+	if (newValue !== oldValue) {
+		setLanguageCookie(newValue.value);
+		locale.value = newValue.value;
+	}
 });
 
 const toggleFiap = (event) => {
-    this.$emit('toggle', event);
+	this.$emit("toggle", event);
 };
 
 const toggleFeedback = (event) => {
-    feedback.value.toggle(event);
+	feedback.value.toggle(event);
 };
 
 const showEmailModal = () => {
-    modalEmailVisible.value = true;
+	modalEmailVisible.value = true;
 };
 
 const closeEmailModal = () => {
-    modalEmailVisible.value = false;
+	modalEmailVisible.value = false;
 };
 
 const sendEmail = async () => {
-    const body = {
-        name: name.value,
-        email: email.value,
-        message: message.value
-    };
+	const body = {
+		name: name.value,
+		email: email.value,
+		message: message.value,
+	};
 
-    RESTAPI.EnviarEmail(body)
-        .then((response) => {
-            if (response.ok) {
-                toast.add({ severity: 'success', summary: 'Success', detail: 'Email sent successfully', life: 3000 });
-                name.value = '';
-                email.value = '';
-                message.value = '';
-            } else {
-                toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to send email', life: 3000 });
-            }
-        })
-        .catch((error) => {
-            toast.add({ severity: 'error', summary: 'Error', detail: error.message, life: 3000 });
-        });
+	RESTAPI.EnviarEmail(body)
+		.then((response) => {
+			if (response.ok) {
+				toast.add({
+					severity: "success",
+					summary: "Success",
+					detail: "Email sent successfully",
+					life: 3000,
+				});
+				name.value = "";
+				email.value = "";
+				message.value = "";
+			} else {
+				toast.add({
+					severity: "error",
+					summary: "Error",
+					detail: "Failed to send email",
+					life: 3000,
+				});
+			}
+		})
+		.catch((error) => {
+			toast.add({
+				severity: "error",
+				summary: "Error",
+				detail: error.message,
+				life: 3000,
+			});
+		});
 };
 </script>
 
@@ -113,10 +139,13 @@ const sendEmail = async () => {
             <div class="flex flex-column justify-content-between m-3" style="text-align: start; position: relative">
                 <div class="settings">
                     <div class="flex gap-3">
+<!--                         <button class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+                            <i class="pi pi-bars" style="font-size: 20px"></i>
+                        </button> -->
                         <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
                             <i class="pi pi-cog" style="font-size: 20px"></i>
                         </button>
-                        <router-link style="opacity: 0.5" to="/login" class="layout-topbar-logo center">
+                        <router-link style="opacity: 1" to="/login" class="layout-topbar-logo center">
                             <button class="p-btn p-link layout-topbar-button" type="button">
                                 <i class="pi pi-sign-in" style="font-size: 20px"></i>
                             </button>
@@ -147,7 +176,7 @@ const sendEmail = async () => {
                 </div>
                 <div class="upper">
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
+                        <div class="center flex-row gap-2" style="color: #48FE48"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
                         <div class="flex gap-3">
                             <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
                             <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
@@ -173,7 +202,7 @@ const sendEmail = async () => {
                         <div class="center wrap" style="max-height: 100px">
                             <p>
                                 {{ $t('AboutMe') }}
-                                <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer" style="color: #abcb1a" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">FIAP.</a>
+                                <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer" style="color: #48FE48" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">FIAP.</a>
                             </p>
                             <br />
                             <p>
@@ -184,13 +213,13 @@ const sendEmail = async () => {
                 </div>
                 <div class="bottom">
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2"><i class="pi pi-phone"></i> {{ $t('contact.title') }}</div>
+                        <div class="center flex-row gap-2" style="color: #48FE48"><i class="pi pi-phone"></i> {{ $t('Contact.title') }}</div>
                     </div>
                     <div class="flex flex-column" style="padding: 20px">
-                        <p>{{ $t('contact.message') }}</p>
+                        <p>{{ $t('Contact.message') }}</p>
                         <div class="center mt-5">
-                            <Button outlined @click="showEmailModal" style="color: #abcb1a" class="underline">
-                                {{ $t('contact.email') }}
+                            <Button outlined @click="showEmailModal" style="color: #48FE48" class="underline">
+                                {{ $t('Contact.email') }}
                             </Button>
                         </div>
                     </div>
@@ -198,11 +227,11 @@ const sendEmail = async () => {
             </div>
         </div>
         <div class="center mb-3">
-            <Button type="button" icon="pi pi-exclamation-triangle" size="small" style="color: white" label="Feedback" @click="toggleFeedback" />
+            <Button type="button" icon="pi pi-exclamation-triangle" size="small" class="neon-button" label="Feedback" @click="toggleFeedback" />
         </div>
     </div>
     <OverlayPanel
-        style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
+        style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
         ref="feedback"
         appendTo="body"
     >
@@ -271,14 +300,16 @@ h5 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: var(--sidebar-bg);
     width: 100%;
     height: 100vh !important;
     aspect-ratio: 2 / 1;
     padding: 0;
     max-height: none;
     border: 2px solid transparent;
-    box-shadow: 0 0 5px #ff00ff;
+    background-color: var(--sidebar-bg);
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .text-image-container {
@@ -326,5 +357,44 @@ h5 {
     .profile-picture {
         margin-bottom: 20px;
     }
+}
+
+.neon-button {
+  color: #fff;
+  background-color: transparent;
+  border: 2px solid #ff00ff;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
+}
+
+.neon-button:hover {
+  background-color: rgba(255, 0, 255, 0.1);
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+.neon-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-color: rgba(255, 0, 255, 0.1);
+  transform: rotate(45deg);
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover::before {
+  left: -100%;
+  top: -100%;
 }
 </style>

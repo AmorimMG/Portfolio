@@ -1,73 +1,200 @@
 {
-    "en": {
-        "Hi": "Hi, I'm Amorim!",
-        "AboutMeButton": "About me",
-        "AboutMe": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
-        "Interests": "I'm interested in geek culture, keyboards and meowies!",
-        "Spotify": "LISTENING TO SPOTIFY",
-        "Brazil": "in Brazil",
+	"en": {
+		"Hi": "Hi, I'm Amorim!",
+		"AboutMeButton": "About me",
+		"AboutMe": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
+		"Interests": "I'm interested in geek culture, keyboards and meowies!",
+		"Spotify": "LISTENING TO SPOTIFY",
+		"Brazil": "in Brazil",
 
-        "welcome": "Welcome",
-        "home": "Home",
-        "blog": "Blog",
-        "projects": "Projects",
-        "cv": "Curriculum",
+		"home": "Home",
+		"blog": "Blog",
+		"projects": "Projects",
+		"cv": "CV",
 
-        "Criar": "Create",
-        "Editar": "Edit",
-        "Excluir": "Delete",
+		"Criar": "Create",
+		"Editar": "Edit",
+		"Excluir": "Delete",
 
-        "contact": {
-            "title": "Contact",
-            "message": "If you want to chat, feel free to reach out to me on Twitter, or join my Discord server. You can also email me at:",
-            "email": "gabriel@amorim.pro"
-          }
-    },
-    "es": {
-        "Hi": "¡Hola, soy Amorim!",
-        "AboutMeButton": "Sobre mí",
-        "AboutMe": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en ",
-        "Interests": "¡Me interesa la cultura geek, los teclados y los gatitos!",
-        "Spotify": "ESCUCHANDO SPOTIFY",
-        "Brazil": "en Brasil",
+		"Login": {
+			"Welcome": "Welcome",
+			"SingIn": "Sign in to continue"
+		},
 
-        "welcome": "Bienvenido",
-        "home": "Inicio",
-        "blog": "Blog",
-        "projects": "Proyectos",
-        "cv": "Curriculum",
-        "Criar": "Crear",
-        "Editar": "Editar",
-        "Excluir": "Eliminar",
-        
-            "contact": {
-              "title": "Contacto",
-              "message": "Si quieres charlar, no dudes en contactarme en Twitter o unirte a mi servidor de Discord. También puedes enviarme un correo electrónico a:",
-              "email": "gabriel@amorim.pro"
-            }
-          
-    },
-    "pt": {
-        "Hi": "Oi, sou Amorim!",
-        "AboutMeButton": "Sobre mim",
-        "AboutMe": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na ",
-        "Interests": "Tenho interesse na cultura geek, teclados e gatinhos!",
-        "Spotify": "ESCUTANDO NO SPOTIFY",
-        "Brazil": "no Brasil",
+		"Contact": {
+			"title": "Contact",
+			"message": "If you want to chat, feel free to reach out to me on Twitter, or join my Discord server. You can also email me at:",
+			"email": "gabriel@amorim.pro"
+		},
 
-        "welcome": "Bem vindo",
-        "home": "Início",
-        "blog": "Blog",
-        "projects": "Projetos",
-        "cv": "Currículo",
-        "Criar": "Criar",
-        "Editar": "Editar",
-        "Excluir": "Excluir",
-        
-            "contact": {
-              "title": "Contato",
-              "message": "Se você quiser conversar, sinta-se à vontade para entrar em contato comigo no Twitter ou entrar no meu servidor do Discord. Você também pode me enviar um e-mail para:",
-              "email": "gabriel@amorim.pro"
-            }
-    }
+		"IA": {
+			"WelcomeIA": "Welcome! How can I assist you today?",
+			"TypeMessage": "Type a message"
+		},
+
+		"Feedback": {
+			"Name": "Name",
+			"Email": "Email",
+			"Message": "Message",
+			"Submit": "Submit"
+		},
+
+		"Terminal": {
+			"WelcomeMessage": "Welcome to Amorim. Type 'help' for commands",
+			"Prompt": "portfolio@amorim:~$ ",
+			"Help": "Commands are: help, clear, about, skills, projects, education, experience, contact, resume, social, interests, achievements, blog, recommendations, FAQ, stats, connect, portfolio, feedback, hire, funfact",
+			"Clear": "",
+			"About": "I am a passionate individual with a strong interest in technology.",
+			"Skills": "I have proficiency in several programming languages, including JavaScript, Python, and Java.",
+			"Projects": "I have worked on numerous projects, ranging from web development to machine learning applications.",
+			"Education": "I hold a degree in Software Engineering from Fiap University.",
+			"Experience": "I have 4 year of experience working as a software developer.",
+			"Contact": "You can reach me via email at gabriel@amorim.pro.",
+			"Resume": "You can download my resume from the following link: [resume_link].",
+			"Social": "You can connect with me on LinkedIn, Twitter, and GitHub.",
+			"Interests": "Apart from technology, I enjoy traveling, photography, and playing musical instruments.",
+			"Achievements": "I have received several awards for my contributions to projects and initiatives.",
+			"Blog": "You can read my latest blog posts on [blog_link].",
+			"Recommendations": "Here are some testimonials from my colleagues: [testimonial_1], [testimonial_2].",
+			"FAQ": "Here are some frequently asked questions along with their answers: [FAQs].",
+			"Stats": "I have completed [number_of_projects] projects and have [years_of_experience] years of experience.",
+			"Connect": "Let's connect on LinkedIn: https://www.linkedin.com/in/gabrielamorim0/.",
+			"Portfolio": "You can view my portfolio at https://amorim.pro.",
+			"Feedback": "Your feedback is valuable to me. Please feel free to share your thoughts.",
+			"Hire": "I am available for freelance opportunities. Let's discuss how I can help with your project.",
+			"Funfact": "Did you know that I once climbed Mount Everest? (Just kidding!)",
+			"UnknownCommand": "Unknown command: "
+		}
+	},
+	"es": {
+		"Hi": "¡Hola, soy Amorim!",
+		"AboutMeButton": "Sobre mí",
+		"AboutMe": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en ",
+		"Interests": "¡Me interesa la cultura geek, los teclados y los gatitos!",
+		"Spotify": "ESCUCHANDO SPOTIFY",
+		"Brazil": "en Brasil",
+
+		"home": "Inicio",
+		"blog": "Blog",
+		"projects": "Proyectos",
+		"cv": "Curriculum",
+		"Criar": "Crear",
+		"Editar": "Editar",
+		"Excluir": "Eliminar",
+
+		"Login": {
+			"Welcome": "Bienvenido",
+			"SingIn": "Iniciar sesión para continuar"
+		},
+
+		"contact": {
+			"title": "Contacto",
+			"message": "Si quieres charlar, no dudes en contactarme en Twitter o unirte a mi servidor de Discord. También puedes enviarme un correo electrónico a:",
+			"email": "gabriel@amorim.pro"
+		},
+
+		"IA": {
+			"WelcomeIA": "¡Bienvenido! ¿Qué te puede ayudar hoy?",
+			"TypeMessage": "Escribe un mensaje"
+		},
+
+		"Feedback": {
+			"Name": "Nombre",
+			"Email": "Correo electrónico",
+			"Message": "Mensaje",
+			"Submit": "Enviar"
+		},
+
+		"Terminal": {
+			"WelcomeMessage": "Bienvenido a Amorim. Escribe 'help' para ver los comandos",
+			"Prompt": "portfolio@amorim:~$ ",
+			"Help": "Los comandos son: help, clear, about, skills, projects, education, experience, contact, resume, social, interests, achievements, blog, recommendations, FAQ, stats, connect, portfolio, feedback, hire, funfact",
+			"Clear": "",
+			"About": "Soy una persona apasionada con un gran interés en la tecnología.",
+			"Skills": "Tengo experiencia en varios lenguajes de programación, incluyendo JavaScript, Python y Java.",
+			"Projects": "He trabajado en numerosos proyectos, desde desarrollo web hasta aplicaciones de aprendizaje automático.",
+			"Education": "Tengo un título en Ingeniería de Software de la Universidad Fiap.",
+			"Experience": "Tengo 4 años de experiencia trabajando como desarrollador de software.",
+			"Contact": "Puedes contactarme por correo electrónico a gabriel@amorim.pro.",
+			"Resume": "Puedes descargar mi currículum desde el siguiente enlace: [resume_link].",
+			"Social": "Puedes conectar conmigo en LinkedIn, Twitter y GitHub.",
+			"Interests": "Además de la tecnología, disfruto viajar, la fotografía y tocar instrumentos musicales.",
+			"Achievements": "He recibido varios premios por mis contribuciones a proyectos e iniciativas.",
+			"Blog": "Puedes leer mis últimas publicaciones en el blog en [blog_link].",
+			"Recommendations": "Aquí hay algunos testimonios de mis colegas: [testimonial_1], [testimonial_2].",
+			"FAQ": "Aquí están algunas preguntas frecuentes junto con sus respuestas: [FAQs].",
+			"Stats": "He completado [number_of_projects] proyectos y tengo [years_of_experience] años de experiencia.",
+			"Connect": "Conectemos en LinkedIn: https://www.linkedin.com/in/gabrielamorim0/.",
+			"Portfolio": "Puedes ver mi portafolio en https://amorim.pro.",
+			"Feedback": "Tu opinión es valiosa para mí. Por favor, siéntete libre de compartir tus pensamientos.",
+			"Hire": "Estoy disponible para oportunidades freelance. Hablemos sobre cómo puedo ayudarte con tu proyecto.",
+			"Funfact": "¿Sabías que una vez escalé el Monte Everest? (¡Es una broma!)",
+			"UnknownCommand": "Comando desconocido: "
+		}
+	},
+	"pt": {
+		"Hi": "Oi, sou Amorim!",
+		"AboutMeButton": "Sobre mim",
+		"AboutMe": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na ",
+		"Interests": "Tenho interesse na cultura geek, teclados e gatinhos!",
+		"Spotify": "ESCUTANDO NO SPOTIFY",
+		"Brazil": "no Brasil",
+
+		"home": "Início",
+		"blog": "Blog",
+		"projects": "Projetos",
+		"cv": "Currículo",
+		"Criar": "Criar",
+		"Editar": "Editar",
+		"Excluir": "Excluir",
+
+		"Login": {
+			"Welcome": "Bem vindo",
+			"SingIn": "Entrar para continuar"
+		},
+		"contact": {
+			"title": "Contato",
+			"message": "Se você quiser conversar, sinta-se à vontade para entrar em contato comigo no Twitter ou entrar no meu servidor do Discord. Você também pode me enviar um e-mail para:",
+			"email": "gabriel@amorim.pro"
+		},
+
+		"IA": {
+			"WelcomeIA": "Bem vindo! Como posso ajuda-lo(a) hoje?",
+			"TypeMessage": "Escreva uma mensagem"
+		},
+
+		"Feedback": {
+			"Name": "Nome",
+			"Email": "Email",
+			"Message": "Mensagem",
+			"Submit": "Enviar"
+		},
+
+		"Terminal": {
+			"WelcomeMessage": "Bem-vindo ao Amorim. Digite 'help' para comandos",
+			"Prompt": "portfolio@amorim:~$ ",
+			"Help": "Os comandos são: help, clear, about, skills, projects, education, experience, contact, resume, social, interests, achievements, blog, recommendations, FAQ, stats, connect, portfolio, feedback, hire, funfact",
+			"Clear": "",
+			"About": "Sou uma pessoa apaixonada com grande interesse em tecnologia.",
+			"Skills": "Tenho proficiência em várias linguagens de programação, incluindo JavaScript, Python e Java.",
+			"Projects": "Trabalhei em vários projetos, desde desenvolvimento web até aplicações de aprendizado de máquina.",
+			"Education": "Tenho um diploma em Engenharia de Software pela Universidade Fiap.",
+			"Experience": "Tenho 4 anos de experiência trabalhando como desenvolvedor de software.",
+			"Contact": "Você pode me contatar por e-mail em gabriel@amorim.pro.",
+			"Resume": "Você pode baixar meu currículo através do seguinte link: [resume_link].",
+			"Social": "Você pode me conectar no LinkedIn, Twitter e GitHub.",
+			"Interests": "Além da tecnologia, gosto de viajar, fotografia e tocar instrumentos musicais.",
+			"Achievements": "Recebi vários prêmios por minhas contribuições a projetos e iniciativas.",
+			"Blog": "Você pode ler minhas últimas postagens no blog em [blog_link].",
+			"Recommendations": "Aqui estão alguns depoimentos de meus colegas: [testimonial_1], [testimonial_2].",
+			"FAQ": "Aqui estão algumas perguntas frequentes junto com suas respostas: [FAQs].",
+			"Stats": "Completei [number_of_projects] projetos e tenho [years_of_experience] anos de experiência.",
+			"Connect": "Vamos nos conectar no LinkedIn: https://www.linkedin.com/in/gabrielamorim0/.",
+			"Portfolio": "Você pode visualizar meu portfólio em https://amorim.pro.",
+			"Feedback": "Seu feedback é valioso para mim. Por favor, sinta-se à vontade para compartilhar seus pensamentos.",
+			"Hire": "Estou disponível para oportunidades freelance. Vamos discutir como posso ajudar com seu projeto.",
+			"Funfact": "Você sabia que uma vez escalei o Monte Everest? (Só brincando!)",
+			"UnknownCommand": "Comando desconhecido: "
+		}
+	}
 }

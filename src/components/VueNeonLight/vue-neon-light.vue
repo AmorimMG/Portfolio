@@ -1,42 +1,44 @@
 <script>
+// Mudar Futuramente o nome do componente para ValidaFonte, verifica o tema e muda a fonte para o tema.
+
 export default {
-    name: 'vue-neon-light',
-    props: {
-        color: {
-            type: String,
-            default: '#fff'
-        },
-        size: {
-            type: String,
-            default: '72px'
-        },
-        flash: {
-            type: Boolean,
-            default: false
-        },
-        effect: {
-            type: String,
-            default: 'Neon'
-        }
-    },
-    computed: {
-        effectComponent() {
-            return `Vue${this.effect.substring(0, 1).toUpperCase() + this.effect.substring(1)}`;
-        },
-        neonStyle() {
-            return {
-                fontSize: this.size,
-                color: this.color,
-                textShadow: `0 0 5px ${this.color}, 
+	name: "vue-neon-light",
+	props: {
+		color: {
+			type: String,
+			default: "#fff",
+		},
+		size: {
+			type: String,
+			default: "72px",
+		},
+		flash: {
+			type: Boolean,
+			default: false,
+		},
+		effect: {
+			type: String,
+			default: "Neon",
+		},
+	},
+	computed: {
+		effectComponent() {
+			return `Vue${this.effect.substring(0, 1).toUpperCase() + this.effect.substring(1)}`;
+		},
+		neonStyle() {
+			return {
+				fontSize: this.size,
+				color: this.color,
+				textShadow: `0 0 5px ${this.color}, 
                              0 0 10px ${this.color}, 
                              0 0 15px ${this.color}, 
                              0 0 20px ${this.color}, 
                              0 0 25px ${this.color}, 
                              0 0 30px ${this.color}, 
-                             0 0 35px ${this.color}`
-            };
-        }
-    }
+                             0 0 35px ${this.color}`,
+			};
+		},
+	},
 };
 </script>
 
@@ -70,13 +72,12 @@ body {
     font-weight: 100 900;
     font-display: swap;
     font-style: normal;
-    font-named-instance: 'Regular';
 
     src: url('../../../public/fonts/beon-webfont.ttf') format('truetype');
 }
 
 .flash {
-    animation: flash 1.5s infinite;
+    animation: flash 2.5s infinite;
 }
 
 @keyframes flash {

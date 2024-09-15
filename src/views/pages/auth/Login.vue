@@ -1,49 +1,51 @@
 <script setup>
-import { ref } from 'vue';
-import sessionModule from '../../../service/session.js';
-import { useToast } from 'primevue/usetoast';
-import { useRouter } from 'vue-router';
+import { useToast } from "primevue/usetoast";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import sessionModule from "../../../service/session.js";
 
 const checked = ref(false);
 const router = useRouter();
 const toast = useToast();
 
 function validateUser(user) {
-    return (user?.login?.trim()?.length ?? 0) > 0 && (user?.password?.trim()?.length ?? 0) > 0;
+	return (
+		(user?.login?.trim()?.length ?? 0) > 0 &&
+		(user?.password?.trim()?.length ?? 0) > 0
+	);
 }
 
 const form = ref({
-    login: '',
-    password: ''
+	login: "",
+	password: "",
 });
-
 function handleSubmit() {
-    var user = {
-        email: form.value.login,
-        password: form.value.password
-    };
-    if (validateUser(form.value)) {
-        sessionModule.actions
-            ?.login({ user })
-            .then((res) => {
-                console.log(res);
-                toast.add({
-                    severity: 'success',
-                    summary: 'gblSummarioToastSucesso',
-                    detail: 'gblUsuarioLogadoSucesso',
-                    life: 3000
-                });
-                router.push('/cadastros/dashboard');
-            })
-            .catch((error) => {
-                toast.add({
-                    severity: 'error',
-                    summary: 'Erro',
-                    detail: error,
-                    life: 3000
-                });
-            });
-    }
+	const user = {
+		email: form.value.login,
+		password: form.value.password,
+	};
+	if (validateUser(form.value)) {
+		sessionModule.actions
+			?.login({ user })
+			.then((res) => {
+				console.log(res);
+				toast.add({
+					severity: "success",
+					summary: "gblSummarioToastSucesso",
+					detail: "gblUsuarioLogadoSucesso",
+					life: 3000,
+				});
+				router.push("/cadastros/dashboard");
+			})
+			.catch((error) => {
+				toast.add({
+					severity: "error",
+					summary: "Erro",
+					detail: error,
+					life: 3000,
+				});
+			});
+	}
 }
 sessionModule.actions.logout();
 </script>
@@ -57,8 +59,8 @@ sessionModule.actions.logout();
                     <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius: 53px">
                         <div class="text-center mb-5">
                             <img src="/src/assets/images/cards/profilePic.png" alt="Image" height="100" />
-                            <div class="text-900 text-3xl font-medium mb-3">Welcome!</div>
-                            <span class="text-600 font-medium">Sign in to continue</span>
+                            <div class="text-900 text-3xl font-medium mb-3">{{$t('Login.Welcome')}}</div>
+                            <span class="text-600 font-medium">{{$t('Login.SingIn')}}</span>
                         </div>
 
                         <div>

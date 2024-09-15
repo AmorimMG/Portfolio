@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { usePrimeVue } from 'primevue/config';
-import { useLayout } from '@/layout/composables/layout';
-import { getDarkThemeCookie } from '../service/session';
+import { useLayout } from "@/layout/composables/layout";
+import { usePrimeVue } from "primevue/config";
+import { onMounted, ref } from "vue";
+import { getDarkThemeCookie } from "../service/session";
 
 defineProps({
-    simple: {
-        type: Boolean,
-        default: false
-    }
+	simple: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const $primevue = usePrimeVue();
@@ -22,91 +22,96 @@ const primaryFocusRing = ref(true);
 const { setScale, layoutConfig } = useLayout();
 
 const onConfigButtonClick = () => {
-    visible.value = !visible.value;
+	visible.value = !visible.value;
 };
 
 const onChangeTheme = (theme, mode) => {
-    console.log(theme, mode);
+	console.log(theme, mode);
 
-    $primevue.changeTheme(layoutConfig.theme.value, theme, 'theme-css', () => {
-        layoutConfig.theme.value = theme;
-        layoutConfig.darkTheme.value = mode;
-    });
+	$primevue.changeTheme(layoutConfig.theme.value, theme, "theme-css", () => {
+		layoutConfig.theme.value = theme;
+		layoutConfig.darkTheme.value = mode;
+	});
 };
 
 const decrementScale = () => {
-    setScale(layoutConfig.scale.value - 1);
-    applyScale();
+	setScale(layoutConfig.scale.value - 1);
+	applyScale();
 };
 
 const incrementScale = () => {
-    setScale(layoutConfig.scale.value + 1);
-    applyScale();
+	setScale(layoutConfig.scale.value + 1);
+	applyScale();
 };
 
 const applyScale = () => {
-    document.documentElement.style.fontSize = layoutConfig.scale.value + 'px';
+	document.documentElement.style.fontSize = layoutConfig.scale.value + "px";
 };
 
 const onDarkModeChange = (value) => {
-    console.log(value);
+	console.log(value);
 
-    const newThemeName = value ? layoutConfig.theme.value.replace('light', 'dark') : layoutConfig.theme.value.replace('dark', 'light');
+	const newThemeName = value
+		? layoutConfig.theme.value.replace("light", "dark")
+		: layoutConfig.theme.value.replace("dark", "light");
 
-    layoutConfig.darkTheme.value = value;
-    onChangeTheme(newThemeName, value);
+	layoutConfig.darkTheme.value = value;
+	onChangeTheme(newThemeName, value);
 };
 
 const changeTheme = (theme, color) => {
-    let newTheme, dark;
+	let newTheme, dark;
 
-    newTheme = theme + '-' + (layoutConfig.darkTheme.value ? 'dark' : 'light');
+	newTheme = theme + "-" + (layoutConfig.darkTheme.value ? "dark" : "light");
 
-    if (color) {
-        newTheme += '-' + color;
-    }
+	if (color) {
+		newTheme += "-" + color;
+	}
 
-    if (newTheme.startsWith('md-') && compactMaterial.value) {
-        newTheme = newTheme.replace('md-', 'mdc-');
-    }
+	if (newTheme.startsWith("md-") && compactMaterial.value) {
+		newTheme = newTheme.replace("md-", "mdc-");
+	}
 
-    dark = layoutConfig.darkTheme.value;
+	dark = layoutConfig.darkTheme.value;
 
-    onChangeTheme(newTheme, dark);
+	onChangeTheme(newTheme, dark);
 };
 const isThemeActive = (themeFamily, color) => {
-    let themeName;
-    let themePrefix = themeFamily === 'md' && compactMaterial.value ? 'mdc' : themeFamily;
+	let themeName;
+	const themePrefix =
+		themeFamily === "md" && compactMaterial.value ? "mdc" : themeFamily;
 
-    themeName = themePrefix + (layoutConfig.darkTheme.value ? '-dark' : '-light');
+	themeName = themePrefix + (layoutConfig.darkTheme.value ? "-dark" : "-light");
 
-    if (color) {
-        themeName += '-' + color;
-    }
+	if (color) {
+		themeName += "-" + color;
+	}
 
-    return layoutConfig.theme.value === themeName;
+	return layoutConfig.theme.value === themeName;
 };
 
 const onFocusRingColorChange = (value) => {
-    primaryFocusRing.value = value;
-    let root = document.documentElement;
+	primaryFocusRing.value = value;
+	const root = document.documentElement;
 
-    if (value) {
-        if (layoutConfig.darkTheme.value) root.style.setProperty('--p-focus-ring-color', 'var(--primary-500)');
-        else root.style.setProperty('--p-focus-ring-color', 'var(--primary-500)');
-    } else {
-        if (layoutConfig.darkTheme.value) root.style.setProperty('--p-focus-ring-color', 'var(--surface-500)');
-        else root.style.setProperty('--p-focus-ring-color', 'var(--surface-900)');
-    }
+	if (value) {
+		if (layoutConfig.darkTheme.value)
+			root.style.setProperty("--p-focus-ring-color", "var(--primary-500)");
+		else root.style.setProperty("--p-focus-ring-color", "var(--primary-500)");
+	} else {
+		if (layoutConfig.darkTheme.value)
+			root.style.setProperty("--p-focus-ring-color", "var(--surface-500)");
+		else root.style.setProperty("--p-focus-ring-color", "var(--surface-900)");
+	}
 };
 
 defineExpose({
-    onConfigButtonClick,
-    onDarkModeChange
+	onConfigButtonClick,
+	onDarkModeChange,
 });
 
 onMounted(() => {
-    onDarkModeChange(getDarkThemeCookie());
+	onDarkModeChange(getDarkThemeCookie());
 });
 </script>
 
@@ -175,11 +180,19 @@ onMounted(() => {
                 <div class="flex align-items-center justify-content-between gap-3 mb-3"></div>
                 <div class="flex align-items-center justify-content-center gap-3" label="Tema1" >
                     <Button @click="onChangeTheme('lara-dark-purple', 'dark')">
-                        <span class="block h-1rem w-full" style="border-radius: 30px">Tema 1</span>
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Glasmorphism</span>
+                    </Button>
+
+                    <Button @click="onChangeTheme('lara-dark-purple', 'dark')">
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Neon</span>
+                    </Button>
+
+                    <Button @click="onChangeTheme('lara-dark-purple', 'dark')">
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Hackerpunk</span>
                     </Button>
 
                     <Button @click="onChangeTheme('lara-light-purple', 'light')">
-                        <span class="block h-1rem w-full" style="border-radius: 30px">Tema 2</span>
+                        <span class="block h-1rem w-full" style="border-radius: 30px">Cyberpunk</span>
                     </Button>
                 </div>
             </section>

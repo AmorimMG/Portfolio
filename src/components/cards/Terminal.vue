@@ -1,142 +1,152 @@
 <script setup>
-import { onBeforeUnmount, onMounted } from 'vue';
-import TerminalService from 'primevue/terminalservice';
-import CardEffect from '../CardEffect.vue';
+import TerminalService from "primevue/terminalservice";
+import { computed, onBeforeUnmount, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+import CardEffect from "../CardEffect.vue";
+
+const { t } = useI18n();
 
 const commandHandler = (text) => {
-    let response;
-    let argsIndex = text.indexOf(' ');
-    let command = argsIndex !== -1 ? text.substring(0, argsIndex) : text;
+	let response;
+	const lowerCaseText = text.toLowerCase();
+	const argsIndex = lowerCaseText.indexOf(" ");
+	const command =
+		argsIndex !== -1 ? lowerCaseText.substring(0, argsIndex) : lowerCaseText;
 
-    const commandLabels = [
-        'help',
-        'clear',
-        'about',
-        'skills',
-        'projects',
-        'education',
-        'experience',
-        'contact',
-        'resume',
-        'social',
-        'interests',
-        'achievements',
-        'blog',
-        'recommendations',
-        'FAQ',
-        'stats',
-        'connect',
-        'portfolio',
-        'feedback',
-        'hire',
-        'funfact'
-    ];
+	const commandLabels = [
+		"help",
+		"clear",
+		"about",
+		"skills",
+		"projects",
+		"education",
+		"experience",
+		"contact",
+		"resume",
+		"social",
+		"interests",
+		"achievements",
+		"blog",
+		"recommendations",
+		"FAQ",
+		"stats",
+		"connect",
+		"portfolio",
+		"feedback",
+		"hire",
+		"funfact",
+	];
 
-    switch (command) {
-        case 'help':
-            response = 'Commands are: ' + commandLabels.join(', ');
-            break;
-        case 'clear':
-            response = '';
-            clearTerminal();
-            break;
-        case 'about':
-            response = 'I am a passionate individual with a strong interest in technology.';
-            break;
-        case 'skills':
-            response = 'I have proficiency in several programming languages, including JavaScript, Python, and Java.';
-            break;
-        case 'projects':
-            response = 'I have worked on numerous projects, ranging from web development to machine learning applications.';
-            break;
-        case 'education':
-            response = 'I hold a degree in Software Engineering from Fiap University.';
-            break;
-        case 'experience':
-            response = 'I have 4 year of experience working as a software developer.';
-            break;
-        case 'contact':
-            response = 'You can reach me via email at gabriel@amorim.pro.';
-            break;
-        case 'resume':
-            response = 'You can download my resume from the following link: [resume_link].';
-            break;
-        case 'social':
-            response = 'You can connect with me on LinkedIn, Twitter, and GitHub.';
-            break;
-        case 'interests':
-            response = 'Apart from technology, I enjoy traveling, photography, and playing musical instruments.';
-            break;
-        case 'achievements':
-            response = 'I have received several awards for my contributions to projects and initiatives.';
-            break;
-        case 'blog':
-            response = 'You can read my latest blog posts on [blog_link].';
-            break;
-        case 'recommendations':
-            response = 'Here are some testimonials from my colleagues: [testimonial_1], [testimonial_2].';
-            break;
-        case 'FAQ':
-            response = 'Here are some frequently asked questions along with their answers: [FAQs].';
-            break;
-        case 'stats':
-            response = 'I have completed [number_of_projects] projects and have [years_of_experience] years of experience.';
-            break;
-        case 'connect':
-            response = "Let's connect on LinkedIn: https://www.linkedin.com/in/gabrielamorim0/.";
-            break;
-        case 'portfolio':
-            response = 'You can view my portfolio at https://amorim.pro.';
-            break;
-        case 'feedback':
-            response = 'Your feedback is valuable to me. Please feel free to share your thoughts.';
-            break;
-        case 'hire':
-            response = "I am available for freelance opportunities. Let's discuss how I can help with your project.";
-            break;
-        case 'funfact':
-            response = 'Did you know that I once climbed Mount Everest? (Just kidding!)';
-            break;
-        default:
-            response = 'Unknown command: ' + command;
-    }
+	switch (command) {
+		case "help":
+			response = `Commands are: ${commandLabels.join(", ")}`;
+			break;
+		case "clear":
+			response = "";
+			clearTerminal();
+			setTimeout(() => {
+				clearTerminal();
+			}, 1);
+			return;
+		case "about":
+			response = computed(() => t("Terminal.About"));
+			break;
+		case "skills":
+			response = computed(() => t("Terminal.Skills"));
+			break;
+		case "projects":
+			response = computed(() => t("Terminal.Projects"));
+			break;
+		case "education":
+			response = computed(() => t("Terminal.Education"));
+			break;
+		case "experience":
+			response = computed(() => t("Terminal.Experience"));
+			break;
+		case "contact":
+			response = computed(() => t("Terminal.Contact"));
+			break;
+		case "resume":
+			response = computed(() => t("Terminal.Resume"));
+			break;
+		case "social":
+			response = computed(() => t("Terminal.Social"));
+			break;
+		case "interests":
+			response = computed(() => t("Terminal.Interests"));
+			break;
+		case "achievements":
+			response = computed(() => t("Terminal.Achievements"));
+			break;
+		case "blog":
+			response = computed(() => t("Terminal.Blog"));
+			break;
+		case "recommendations":
+			response = computed(() => t("Terminal.Recommendations"));
+			break;
+		case "FAQ":
+			response = computed(() => t("Terminal.FAQ"));
+			break;
+		case "stats":
+			response = computed(() => t("Terminal.Stats"));
+			break;
+		case "connect":
+			response = computed(() => t("Terminal.Connect"));
+			break;
+		case "portfolio":
+			response = computed(() => t("Terminal.Portfolio"));
+			break;
+		case "feedback":
+			response = computed(() => t("Terminal.Feedback"));
+			break;
+		case "hire":
+			response = computed(() => t("Terminal.Hire"));
+			break;
+		case "funfact":
+			response = computed(() => t("Terminal.Funfact"));
+			break;
+		default:
+			response = `Unknown command: ${command}`;
+	}
 
-    TerminalService.emit('response', response);
+	TerminalService.emit("response", response);
 };
 
 const clearTerminal = () => {
-    const terminalContent = document.querySelector('.p-terminal-content');
-    const commandSections = terminalContent.querySelectorAll('[data-pc-section="commands"]');
-    commandSections.forEach((section) => {
-        section.remove();
-    });
+	const terminalContent = document.querySelector(".p-terminal-content");
+	const commandSections = terminalContent.querySelectorAll(
+		'[data-pc-section="commands"]',
+	);
+	for (const section of commandSections) {
+		section.remove();
+	}
 };
 
 onMounted(() => {
-    TerminalService.on('command', commandHandler);
+	TerminalService.on("command", commandHandler);
 });
 
 onBeforeUnmount(() => {
-    TerminalService.off('command', commandHandler);
+	TerminalService.off("command", commandHandler);
 });
 </script>
 
 <template>
-    <div id="Terminal" class="col-4 lg:col-4 xl:col-4">
+    <div id="Terminal" class="col-4 lg:col-4 xl:col-4 pb-0">
         <CardEffect>
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
-                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$ " aria-label="PrimeVue Terminal Service" />
+                <Terminal  :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$ " aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
     </div>
 </template>
 
 <style scoped>
+
 .terminal-card {
-    border: 2px solid var(--surface-border);
-    box-shadow: var(--card-shadow);
+    background: var(--surface-card);
     border-radius: 12px;
-    max-height: 250px;
     overflow-y: auto;
+    height: 100%;
 }
 </style>

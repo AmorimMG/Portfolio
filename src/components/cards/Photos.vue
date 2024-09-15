@@ -1,34 +1,34 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { PhotoService } from '../../service/ThirdPartyEndpoints';
-import CardEffect from '../CardEffect.vue';
+import { onMounted, ref } from "vue";
+import { PhotoService } from "../../service/ThirdPartyEndpoints";
+import CardEffect from "../CardEffect.vue";
 
 onMounted(async () => {
-    try {
-        const data = await PhotoService.getImages();
-        images.value = data;
-    } catch (error) {
-        console.error('Failed to fetch images:', error);
-    }
+	try {
+		const data = await PhotoService.getImages();
+		images.value = data;
+	} catch (error) {
+		console.error("Failed to fetch images:", error);
+	}
 });
 
 const images = ref([]);
 const responsiveOptions = ref([
-    {
-        breakpoint: '1300px',
-        numVisible: 4
-    },
-    {
-        breakpoint: '575px',
-        numVisible: 1
-    }
+	{
+		breakpoint: "1300px",
+		numVisible: 4,
+	},
+	{
+		breakpoint: "575px",
+		numVisible: 1,
+	},
 ]);
 </script>
 
 <template>
     <div class="col-8 lg:col-9 xl:col-9">
         <CardEffect>
-            <div class="mb-0 center" style="padding: 0">
+            <div class="card center w-full" style="padding: 0">
                 <Galleria
                     :value="images"
                     :responsiveOptions="responsiveOptions"

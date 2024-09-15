@@ -13,5 +13,13 @@
 		"formatter": {
 			"enabled": true
 		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true
+		},
+		"linter": {
+			"enabled": true
+		}
 	}
 }

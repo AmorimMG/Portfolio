@@ -1,43 +1,43 @@
 <script>
-import { ref } from 'vue';
-import draggable from 'vuedraggable';
-import CardEffect from '../../CardEffect.vue';
-import Projects from '../../Projects.vue';
-import { projetos as projetos } from '../../../data/projetos';
-import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
+import { ref } from "vue";
+import draggable from "vuedraggable";
+import { projetos } from "../../../data/projetos";
+import CardEffect from "../../CardEffect.vue";
+import Projects from "../../Projects.vue";
+import VueNeonLight from "../../VueNeonLight/vue-neon-light.vue";
 
-import ThreeJS from './ThreeJSGame/Pointerlock.vue';
+import ThreeJS from "./ThreeJSGame/Pointerlock.vue";
 
 export default {
-    components: {
-        CardEffect,
-        Projects,
-        draggable,
-        VueNeonLight,
-        ThreeJS
-    },
-    data() {
-        return {
-            projectsVisible: ref(false),
-            projects: ref(projetos),
-            immersive: ref(false)
-        };
-    },
-    methods: {
-        onHide() {
-            this.$emit('close');
-            this.projectsVisible = false;
-        }
-    }
+	components: {
+		CardEffect,
+		Projects,
+		draggable,
+		VueNeonLight,
+		ThreeJS,
+	},
+	data() {
+		return {
+			projectsVisible: ref(false),
+			projects: ref(projetos),
+			immersive: ref(false),
+		};
+	},
+	methods: {
+		onHide() {
+			this.$emit("close");
+			this.projectsVisible = false;
+		},
+	},
 };
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-4 lg:col-4 xl:col-3 pb-0">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight size="30px" :flash="false" style="color: white">Projects</VueNeonLight>
+                    <VueNeonLight size="30px" :flash="false" style="color: white">{{$t('projects')}}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

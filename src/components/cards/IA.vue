@@ -1,42 +1,42 @@
-<script>
-import { ref } from 'vue';
-import CardEffect from '../CardEffect.vue';
-import { AIService } from '../../service/ThirdPartyEndpoints';
+<script setup>
+import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { AIService } from "../../service/ThirdPartyEndpoints";
+import CardEffect from "../CardEffect.vue";
 
-export default {
-    components: {
-        CardEffect
-    },
-    setup() {
-        const userInput = ref('');
-        const messages = ref([{ role: 'ai', content: 'Welcome! How can I assist you today?' }]);
-        const loading = ref(false);
+const { t } = useI18n();
+const userInput = ref("");
+const content = computed(() => t("IA.WelcomeIA"));
+const typeMessage = computed(() => t("IA.TypeMessage"));
+const messages = ref([{ role: "ai", content: content }]);
+const loading = ref(false);
 
-        const sendMessage = async () => {
-            if (!userInput.value.trim()) return;
+const sendMessage = async () => {
+	if (!userInput.value.trim()) return;
 
-            messages.value.push({ role: 'user', content: userInput.value });
-            const messageToSend = userInput.value;
-            userInput.value = '';
-            loading.value = true;
+	messages.value.push({ role: "user", content: userInput.value });
+	const messageToSend = userInput.value;
+	userInput.value = "";
+	loading.value = true;
 
-            try {
-                const aiResponse = await AIService.sendMessage(messageToSend);
-                messages.value.push({ role: 'ai', content: aiResponse });
-            } catch (error) {
-                let errorMessage = error.message;
-                if (error.response && error.response.status === 429) {
-                    errorMessage = 'You have exceeded the number of daily requests, please try again later!';
-                }
-                messages.value.push({ role: 'ai', content: errorMessage, isError: true });
-                console.error('Error fetching AI response:', error);
-            } finally {
-                loading.value = false;
-            }
-        };
-
-        return { userInput, messages, loading, sendMessage };
-    }
+	try {
+		const aiResponse = await AIService.sendMessage(messageToSend);
+		messages.value.push({ role: "ai", content: aiResponse });
+	} catch (error) {
+		let errorMessage = error.message;
+		if (error.response && error.response.status === 429) {
+			errorMessage =
+				"You have exceeded the number of daily requests, please try again later!";
+		}
+		messages.value.push({
+			role: "ai",
+			content: errorMessage,
+			isError: true,
+		});
+		console.error("Error fetching AI response:", error);
+	} finally {
+		loading.value = false;
+	}
 };
 </script>
 
@@ -52,7 +52,7 @@ export default {
                 <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
 
                 <div class="input-container">
-                    <InputText class="w-full" v-model="userInput" placeholder="Type a message" @keyup.enter="sendMessage" />
+                    <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
                     <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
                 </div>
             </div>
