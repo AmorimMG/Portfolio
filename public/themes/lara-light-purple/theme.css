@@ -1,4 +1,9 @@
 :root {
+    --surface-ground: #8a5cf668; /* Very light, almost white, blue background for a fresh look */
+    --surface-card: #ffffff; /* Crisp white for card backgrounds to ensure clarity */
+    --sidebar-bg: #e2e9f0; /* Soft, muted blue for the sidebar, offering a calm feel */
+
+
   font-family: "lores-12", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
@@ -38,10 +43,7 @@
   --content-padding:1.25rem;
   --inline-spacing:0.5rem;
   --border-radius:6px;
-  --surface-ground:#f9fafb;
   --surface-section:#ffffff;
-  --surface-card:#FCFCFD;
-  --sidebar-bg: #eeeeee;
   --surface-overlay:#ffffff;
   --surface-border:#dfe7ef;
   --surface-hover:#f6f9fc;
