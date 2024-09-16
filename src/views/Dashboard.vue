@@ -1,12 +1,12 @@
 <script setup>
+import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 //#region imports
 import { onMounted, ref } from "vue";
 import draggable from "vuedraggable";
+import Background from "../components/Background.vue";
 import Introduction from "../components/cards/Introduction.vue";
 import { componentMap, cards as initialCards } from "../data/cardsDashboard";
-
-import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 //#endregion
 
 //#region variables
@@ -65,7 +65,7 @@ onMounted(() => {
     </button>
 
     <div class="layout-main-container">
-        <!-- <Background /> -->
+        <Background />
         <ContextMenu global :model="items" />
         <div v-if="!isStarted" class="center">
             <img class="gif-container" src="/src/assets/images/cards/glitchIntroduction.gif" />
