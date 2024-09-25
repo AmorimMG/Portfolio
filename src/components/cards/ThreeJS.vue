@@ -5,7 +5,12 @@ import CardEffect from "../CardEffect.vue";
 
 const container = ref(null);
 const isLoading = ref(true);
-let scene, camera, renderer, geometry, material, mesh;
+let scene;
+let camera;
+let renderer;
+let geometry;
+let material;
+let mesh;
 
 const init = () => {
 	if (!container.value) {

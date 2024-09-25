@@ -140,14 +140,14 @@ const sendEmail = async () => {
                 <div class="settings">
                     <div class="flex gap-3">
 <!--                         <button class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
-                            <i class="pi pi-bars" style="font-size: 20px"></i>
+                            <i class="pi pi-bars"></i>
                         </button> -->
                         <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
-                            <i class="pi pi-cog" style="font-size: 20px"></i>
+                            <i class="pi pi-cog"></i>
                         </button>
                         <router-link style="opacity: 1" to="/login" class="layout-topbar-logo center">
                             <button class="p-btn p-link layout-topbar-button" type="button">
-                                <i class="pi pi-sign-in" style="font-size: 20px"></i>
+                                <i class="pi pi-sign-in"></i>
                             </button>
                         </router-link>
                     </div>
@@ -227,7 +227,7 @@ const sendEmail = async () => {
             </div>
         </div>
         <div class="center mb-3">
-            <Button type="button" icon="pi pi-exclamation-triangle" size="small" class="neon-button" label="Feedback" @click="toggleFeedback" />
+            <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback" @click="toggleFeedback" />
         </div>
     </div>
     <OverlayPanel
@@ -365,7 +365,6 @@ h5 {
   border: 2px solid #ff00ff;
   border-radius: 5px;
   padding: 10px 20px;
-  font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
   cursor: pointer;

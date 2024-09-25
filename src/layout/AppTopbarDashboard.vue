@@ -142,7 +142,7 @@ watch(dropdownValue, (newValue, oldValue) => {
             </dropdown>
 
             <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
-                <i class="pi pi-cog" style="font-size: 25px"></i>
+                <i class="pi pi-cog"></i>
             </button>
             <app-config simple ref="appConfigRef"></app-config>
         </div>

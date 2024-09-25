@@ -1,11 +1,10 @@
 <script setup>
-import { RESTAPI } from '../../../service/api';
-import { getDatabase, addDatabase } from '../../../service/firebase';
-import { ref, computed, onMounted } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import { exportCSV } from '../../../utils/exportCsv';
-import { getUserCookie } from '../../../service/session';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useToast } from "primevue/usetoast";
+import { computed, onMounted, ref } from "vue";
+import { RESTAPI } from "../../../service/api";
+import { addDatabase, getDatabase } from "../../../service/firebase";
+import { getUserCookie } from "../../../service/session";
+import { exportCSV } from "../../../utils/exportCsv";
 
 const deleteDialog = ref(false);
 const deleteAllDialog = ref(false);
@@ -15,38 +14,38 @@ const editaDialog = ref(false);
 const toast = useToast();
 const product = ref({});
 const usuario = ref({ admin: false });
-const userLogin = ref('');
+const userLogin = ref("");
 const dataUsers = ref([]);
 const selectedUser = ref([]);
 const userCookie = ref(getUserCookie());
 
 const gridColumns = computed(() => [
-    { field: 'a', caption: 'a' },
-    { field: 'usuario', caption: 'Usuario' },
-    { field: 'name', caption: 'Nome' }
+	{ field: "a", caption: "a" },
+	{ field: "usuario", caption: "Usuario" },
+	{ field: "name", caption: "Nome" },
 ]);
 
 onMounted(() => {
-    getUsers();
-    console.log(userCookie.value);
+	getUsers();
+	console.log(userCookie.value);
 });
 
 function confirmDelete(edit) {
-    product.value = edit;
-    deleteDialog.value = true;
+	product.value = edit;
+	deleteDialog.value = true;
 }
 
 function editaUsuario(edit) {
-    userLogin.value = edit;
-    editaDialog.value = true;
+	userLogin.value = edit;
+	editaDialog.value = true;
 }
 
 function openNew() {
-    criarDialog.value = true;
+	criarDialog.value = true;
 }
 
 function getUsers() {
-    /*     RESTAPI.UsuarioObterTodos()
+	/*     RESTAPI.UsuarioObterTodos()
         .then((response) => {
             dataUsers.value = response.data;
         })
@@ -54,31 +53,31 @@ function getUsers() {
             toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
         }); */
 
-    getDatabase('projetos')
-        .then((response) => {
-            console.log(response);
-            dataUsers.value = response;
-        })
-        .catch((error) => {
-            console.error('Error fetching data:', error);
-        });
+	getDatabase("projetos")
+		.then((response) => {
+			console.log(response);
+			dataUsers.value = response;
+		})
+		.catch((error) => {
+			console.error("Error fetching data:", error);
+		});
 }
 
 function getCancelUser() {
-    editaDialog.value = false;
-    getUsers();
+	editaDialog.value = false;
+	getUsers();
 }
 
 function handleExportCSV() {
-    exportCSV(dataUsers.value);
+	exportCSV(dataUsers.value);
 }
 
 function editUser(user) {
-    userLogin.value = user.login;
+	userLogin.value = user.login;
 }
 
 function SalvaUsuario() {
-    /*     RESTAPI.UsuarioCriar(usuario.value)
+	/*     RESTAPI.UsuarioCriar(usuario.value)
         .then(() => {
             getUsers();
             criarDialog.value = false;
@@ -88,7 +87,7 @@ function SalvaUsuario() {
         .catch(() => {
             toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastCreateError'), life: 3000 });
         }); */
-    /* 
+	/* 
     createUserWithEmailAndPassword(auth, usuario.value.email, usuario.value.password)
         .then((userCredential) => {
             // Signed in
@@ -103,63 +102,100 @@ function SalvaUsuario() {
             // ..
         }); */
 
-    addDatabase('projetos', usuario.value)
-        .then((res) => {
-            console.log(usuario.value);
-            console.log(res);
-        })
-        .catch((error) => {
-            console.error('Error adding user: ', error);
-        });
+	addDatabase("projetos", usuario.value)
+		.then((res) => {
+			console.log(usuario.value);
+			console.log(res);
+		})
+		.catch((error) => {
+			console.error("Error adding user: ", error);
+		});
 }
 
 function EditaUsuario() {
-    RESTAPI.UsuarioEditar(userLogin.value)
-        .then(() => {
-            getUsers();
-            editaDialog.value = false;
-            toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastEdit'), life: 3000 });
-        })
-        .catch(() => {
-            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastEditError'), life: 3000 });
-        });
+	RESTAPI.UsuarioEditar(userLogin.value)
+		.then(() => {
+			getUsers();
+			editaDialog.value = false;
+			toast.add({
+				severity: "success",
+				summary: $t("SummarioToastSucesso"),
+				detail: $t("UsuarioToastEdit"),
+				life: 3000,
+			});
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: $t("SummarioToastError"),
+				detail: $t("UsuarioToastEditError"),
+				life: 3000,
+			});
+		});
 }
 
 function deleteUser() {
-    RESTAPI.UsuarioExcluir(product.value.id)
-        .then(() => {
-            dataUsers.value = dataUsers.value.filter((u) => u.id !== product.value.id);
-            deleteDialog.value = false;
-            toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
-        })
-        .catch(() => {
-            toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
-        });
+	RESTAPI.UsuarioExcluir(product.value.id)
+		.then(() => {
+			dataUsers.value = dataUsers.value.filter(
+				(u) => u.id !== product.value.id,
+			);
+			deleteDialog.value = false;
+			toast.add({
+				severity: "success",
+				summary: $t("SummarioToastSucesso"),
+				detail: $t("UsuarioToastDelete"),
+				life: 3000,
+			});
+		})
+		.catch(() => {
+			toast.add({
+				severity: "error",
+				summary: $t("SummarioToastError"),
+				detail: $t("UsuarioToastDeleteError"),
+				life: 3000,
+			});
+		});
 }
 
 function confirmDeleteAll(edit) {
-    selectedUser.value = edit;
-    deleteAllDialog.value = true;
+	selectedUser.value = edit;
+	deleteAllDialog.value = true;
 }
 
 function deleteAll() {
-    if (selectedUser.value.length === 0) {
-        toast.add({ severity: 'warn', summary: $t('SummarioToastWarn'), detail: $t('NenhumaLinhaSelecionada'), life: 3000 });
-        return;
-    }
+	if (selectedUser.value.length === 0) {
+		toast.add({
+			severity: "warn",
+			summary: $t("SummarioToastWarn"),
+			detail: $t("NenhumaLinhaSelecionada"),
+			life: 3000,
+		});
+		return;
+	}
 
-    selectedUser.value.forEach((user) => {
-        RESTAPI.UsuarioExcluir(user.id)
-            .then(() => {
-                dataUsers.value = dataUsers.value.filter((u) => u.id !== user.id);
-                toast.add({ severity: 'success', summary: $t('SummarioToastSucesso'), detail: $t('UsuarioToastDelete'), life: 3000 });
-            })
-            .catch(() => {
-                toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastDeleteError'), life: 3000 });
-            });
-    });
-    deleteAllDialog.value = false;
-    selectedUser.value = [];
+	selectedUser.value.forEach((user) => {
+		RESTAPI.UsuarioExcluir(user.id)
+			.then(() => {
+				dataUsers.value = dataUsers.value.filter((u) => u.id !== user.id);
+				toast.add({
+					severity: "success",
+					summary: $t("SummarioToastSucesso"),
+					detail: $t("UsuarioToastDelete"),
+					life: 3000,
+				});
+			})
+			.catch(() => {
+				toast.add({
+					severity: "error",
+					summary: $t("SummarioToastError"),
+					detail: $t("UsuarioToastDeleteError"),
+					life: 3000,
+				});
+			});
+	});
+	deleteAllDialog.value = false;
+	selectedUser.value = [];
 }
 </script>
 
@@ -218,7 +254,7 @@ function deleteAll() {
 
                 <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="$t('Excluir')" :modal="true">
                     <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
                             >{{ $t('Excluir') }} <b>{{ product.login }}</b
                             >?</span
@@ -232,7 +268,7 @@ function deleteAll() {
 
                 <Dialog v-model:visible="deleteAllDialog" :header="$t('Excluir')" :modal="true" :style="{ width: '450px' }">
                     <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
                             >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Usuarios') }}</b
                             >?</span
