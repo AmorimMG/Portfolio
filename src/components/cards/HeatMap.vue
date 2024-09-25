@@ -71,15 +71,15 @@ export default {
 		async getGithub(GithubUsername) {
 			try {
 				const response = await RESTAPI.ObterGithub(GithubUsername);
-				const commits = response.data; // Assuming the API returns commits
+				const commits = response.data;
 
-				commits.forEach((commit) => {
+				for (const commit of commits) {
 					const date = new Date(commit.commit.author.date);
 					this.processGithubData({
 						date: date.toISOString().split("T")[0],
 						contributionCount: 1,
 					});
-				});
+				}
 
 				console.log("GitHub raw data:", commits);
 			} catch (error) {
@@ -144,31 +144,9 @@ export default {
 			const date = new Date(currentYear, monthToCheck, day);
 			const formattedDate = this.formatDate(date);
 
-			const githubValue =
-				(this.data.github && this.data.github[formattedDate]) || 0;
-
-			if (githubValue > 0) {
-				// If both GitHub
-				return this.getGithubColor(githubValue);
-			} else if (githubValue > 0) {
-				// Only GitHub data exists
-				return this.getGithubColor(githubValue);
-			} else {
-				// No data available
-				return "#ffffff"; // Default color
-			}
+			const githubValue = this.data.github?.[formattedDate] || 0;
+			return this.getGithubColor(githubValue);
 		},
-	},
-
-	getColor2(monthIndex, day) {
-		const currentYear = new Date().getFullYear();
-		const currentMonthIndex = new Date().getMonth();
-		const lastSixMonths = (monthIndex - this.startingMonth + 6) % 12;
-		const monthToCheck = (currentMonthIndex - lastSixMonths + 12) % 12;
-		const date = new Date(currentYear, monthToCheck, day);
-		const formattedDate = this.formatDate(date);
-
-		const value = this.data[formattedDate] || 0; // Access data using formatted date
 	},
 };
 </script>
@@ -246,7 +224,6 @@ export default {
     text-align: center;
     font-weight: bold;
     margin-bottom: 3px;
-    font-size: 12px;
 }
 
 .week {

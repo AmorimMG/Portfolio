@@ -78,7 +78,6 @@ onMounted(() => {
                 <Introduction :menuVisible="menuVisible" @update:menuVisible="menuVisible = $event" />
             </div>
             <draggable
-                :disabled="true"
                 class="draggable col-12 lg:col-9 xl:col-9"
                 v-model="cards"
                 item-key="id"

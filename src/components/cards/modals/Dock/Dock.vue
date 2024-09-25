@@ -1,22 +1,25 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-import { ref } from 'vue';
-import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../../../data/appsDock';
-import draggable from 'vuedraggable';
-import DockTopbar from './DockTopBar.vue';
-import DockBottombar from './DockBottomBar.vue';
+import { defineEmits, defineProps, ref } from "vue";
+import draggable from "vuedraggable";
+import {
+	componentMap,
+	apps as initialApps,
+	widgets as initialWidgets,
+} from "../../../../data/appsDock";
+import DockBottombar from "./DockBottomBar.vue";
+import DockTopbar from "./DockTopBar.vue";
 
 const widgets = ref(initialWidgets);
 const apps = ref(initialApps);
 
 const props = defineProps({
-    visible: Boolean
+	visible: Boolean,
 });
 
-const emit = defineEmits(['hide']);
+const emit = defineEmits(["hide"]);
 
 const onHide = () => {
-    emit('hide');
+	emit("hide");
 };
 </script>
 
@@ -95,7 +98,6 @@ const onHide = () => {
 }
 
 .app-card * {
-    font-size: 1rem !important;
     display: flex;
     justify-content: center;
     align-items: center;
