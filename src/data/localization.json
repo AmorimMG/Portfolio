@@ -2,7 +2,7 @@
 	"en": {
 		"Hi": "Hi, I'm Amorim!",
 		"AboutMeButton": "About me",
-		"AboutMe": "I'm a 22 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
+		"AboutMe": "I'm a 23 year-old Frontend Developer and student doing a BASc in Software Engineering at ",
 		"Interests": "I'm interested in geek culture, keyboards and meowies!",
 		"Spotify": "LISTENING TO SPOTIFY",
 		"Brazil": "in Brazil",
@@ -69,7 +69,7 @@
 	"es": {
 		"Hi": "¡Hola, soy Amorim!",
 		"AboutMeButton": "Sobre mí",
-		"AboutMe": "Soy un desarrollador Frontend de 22 años y estudiante de Ingeniería de Software en ",
+		"AboutMe": "Soy un desarrollador Frontend de 23 años y estudiante de Ingeniería de Software en ",
 		"Interests": "¡Me interesa la cultura geek, los teclados y los gatitos!",
 		"Spotify": "ESCUCHANDO SPOTIFY",
 		"Brazil": "en Brasil",
@@ -87,7 +87,7 @@
 			"SingIn": "Iniciar sesión para continuar"
 		},
 
-		"contact": {
+		"Contact": {
 			"title": "Contacto",
 			"message": "Si quieres charlar, no dudes en contactarme en Twitter o unirte a mi servidor de Discord. También puedes enviarme un correo electrónico a:",
 			"email": "gabriel@amorim.pro"
@@ -135,7 +135,7 @@
 	"pt": {
 		"Hi": "Oi, sou Amorim!",
 		"AboutMeButton": "Sobre mim",
-		"AboutMe": "Sou um desenvolvedor Frontend de 22 anos e estudante de Engenharia de Software na ",
+		"AboutMe": "Sou um desenvolvedor Frontend de 23 anos e estudante de Engenharia de Software na ",
 		"Interests": "Tenho interesse na cultura geek, teclados e gatinhos!",
 		"Spotify": "ESCUTANDO NO SPOTIFY",
 		"Brazil": "no Brasil",
@@ -152,7 +152,7 @@
 			"Welcome": "Bem vindo",
 			"SingIn": "Entrar para continuar"
 		},
-		"contact": {
+		"Contact": {
 			"title": "Contato",
 			"message": "Se você quiser conversar, sinta-se à vontade para entrar em contato comigo no Twitter ou entrar no meu servidor do Discord. Você também pode me enviar um e-mail para:",
 			"email": "gabriel@amorim.pro"
