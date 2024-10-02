@@ -219,7 +219,7 @@ const sendEmail = async () => {
                         <p>{{ $t('Contact.message') }}</p>
                         <div class="center mt-5">
                             <Button outlined @click="showEmailModal" style="color: #48FE48" class="underline">
-                                {{ $t('Contact.email') }}
+                                gabriel@amorim.pro
                             </Button>
                         </div>
                     </div>
