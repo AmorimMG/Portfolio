@@ -176,7 +176,7 @@ const sendEmail = async () => {
                 </div>
                 <div class="upper">
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2" style="color: #48FE48"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
+                        <div class="center flex-row gap-2" style="color: white"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
                         <div class="flex gap-3">
                             <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
                             <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
@@ -196,7 +196,7 @@ const sendEmail = async () => {
                     <div class="text-image-container">
                         <div class="center">
                             <CardEffect>
-                                <img class="profile-picture" src="/src/assets/images/cards/profilePic.png" alt="Image" />
+                                <img class="profile-picture" src="/src/assets/images/cards/eu.jpeg" alt="Image" />
                             </CardEffect>
                         </div>
                         <div class="center wrap" style="max-height: 100px">
@@ -213,7 +213,7 @@ const sendEmail = async () => {
                 </div>
                 <div class="bottom">
                     <div class="flex flex-row justify-content-between m-3">
-                        <div class="center flex-row gap-2" style="color: #48FE48"><i class="pi pi-phone"></i> {{ $t('Contact.title') }}</div>
+                        <div class="center flex-row gap-2" style="color: white"><i class="pi pi-phone"></i> {{ $t('Contact.title') }}</div>
                     </div>
                     <div class="flex flex-column" style="padding: 20px">
                         <p>{{ $t('Contact.message') }}</p>
@@ -324,9 +324,9 @@ h5 {
     border: 2px solid transparent;
     box-shadow: 0 0 5px #ff00ff;
     margin-right: 10px;
-    max-width: 120px;
     height: auto;
-    width: 120px;
+    width: 240px;
+    border-radius: 120px;
 }
 
 #toggleMenuButton {
