@@ -76,13 +76,14 @@ router.beforeEach(async (to, from, next) => {
 		"/crudbasic",
 	];
 
-	// Avoid the loop by checking if the current URL is already proxied
-	if (
-		workerPaths.some((path) => to.path.startsWith(path)) &&
-		!from.path.startsWith(to.path)
-	) {
-		window.location.href = to.fullPath;
-		return;
+	// Check if the current path should be handled by Cloudflare Worker
+	if (workerPaths.some((path) => to.path.startsWith(path))) {
+		// Check if the user is already on the worker-handled path to prevent loops
+		if (from.path !== to.path) {
+			// Redirect once via the worker and prevent loops
+			window.location.href = to.fullPath;
+			return;
+		}
 	}
 
 	// Handle authentication for cadastros paths
