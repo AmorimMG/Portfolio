@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, defineProps, ref } from "vue";
+import { ref } from "vue";
 import draggable from "vuedraggable";
 import {
 	componentMap,
@@ -156,7 +156,7 @@ const onHide = () => {
     width: 100%;
     height: 100vh;
     position: fixed;
-    background-image: url('https://coreldrawdesign.com/resources/previews/preview-3d-neon-retro-background-download-from-coreldrawdesign-1630764741.jpg');
+    background-image: url('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }

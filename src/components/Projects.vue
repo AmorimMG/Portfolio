@@ -1,24 +1,23 @@
 <script setup>
-import CardEffect from './CardEffect.vue';
-import { defineProps } from 'vue';
+import CardEffect from "./CardEffect.vue";
 
 const props = defineProps({
-    img: {
-        type: String,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true
-    },
-    subtitle: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    }
+	img: {
+		type: String,
+		required: true,
+	},
+	title: {
+		type: String,
+		required: true,
+	},
+	subtitle: {
+		type: String,
+		required: true,
+	},
+	description: {
+		type: String,
+		required: true,
+	},
 });
 </script>
 
@@ -35,8 +34,7 @@ const props = defineProps({
             </template>
             <template #footer>
                 <div class="flex gap-4 mt-1">
-                    <Button label="Cancel" severity="secondary" outlined class="w-full" />
-                    <Button label="Save" class="w-full" />
+                    <Button label="Open" outlined class="w-full" />
                 </div>
             </template>
         </Card>

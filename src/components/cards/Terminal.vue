@@ -84,7 +84,7 @@ const commandHandler = (text) => {
 		case "recommendations":
 			response = computed(() => t("Terminal.Recommendations"));
 			break;
-		case "FAQ":
+		case "faq":
 			response = computed(() => t("Terminal.FAQ"));
 			break;
 		case "stats":

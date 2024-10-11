@@ -43,7 +43,7 @@ export default {
         </CardEffect>
         <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
             <template #header>
-                <Button  @click="immersive = !immersive">Troca</Button>
+                <Button  @click="immersive = !immersive"> {{!immersive ? 'Imersão 3D' : 'Voltar' }}</Button>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
             <div class="popup-content">
