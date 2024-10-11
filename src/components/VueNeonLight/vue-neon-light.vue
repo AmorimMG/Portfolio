@@ -58,7 +58,7 @@ export default {
     font-style: normal;
     font-named-instance: 'Regular';
 
-    src: url('../../../public/fonts/beon-webfont.ttf') format('truetype');
+    src: url('/fonts/beon-webfont.ttf') format('truetype');
 }
 body {
     background: #000;
@@ -73,7 +73,7 @@ body {
     font-display: swap;
     font-style: normal;
 
-    src: url('../../../public/fonts/beon-webfont.ttf') format('truetype');
+    src: url('/fonts/beon-webfont.ttf') format('truetype');
 }
 
 .flash {

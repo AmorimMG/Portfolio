@@ -1,12 +1,5 @@
 <script setup>
-import {
-	defineEmits,
-	onMounted,
-	onUnmounted,
-	ref,
-	watch,
-	watchEffect,
-} from "vue";
+import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 
 import { useI18n } from "vue-i18n";
 import AppConfig from "../../../../layout/AppConfig.vue";

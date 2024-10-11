@@ -18,7 +18,10 @@
 
 		"Login": {
 			"Welcome": "Welcome",
-			"SingIn": "Sign in to continue"
+			"SingIn": "Sign in to continue",
+			"User": "User",
+			"Password": "Password",
+			"SignInButton": "Sign in"
 		},
 
 		"Contact": {
@@ -83,7 +86,10 @@
 
 		"Login": {
 			"Welcome": "Bienvenido",
-			"SingIn": "Iniciar sesión para continuar"
+			"SingIn": "Iniciar sesión para continuar",
+			"User": "Usuario",
+			"Password": "Contraseña",
+			"SignInButton": "Iniciar sesión"
 		},
 
 		"Contact": {
@@ -148,7 +154,10 @@
 
 		"Login": {
 			"Welcome": "Bem vindo",
-			"SingIn": "Entrar para continuar"
+			"SingIn": "Entrar para continuar",
+			"User": "Usuário",
+			"Password": "Senha",
+			"SignInButton": "Entrar"
 		},
 		"Contact": {
 			"title": "Contato",
