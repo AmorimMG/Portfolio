@@ -2,6 +2,7 @@
 import { useToast } from "primevue/usetoast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import Background from "../../../components/Background.vue";
 import sessionModule from "../../../service/session.js";
 
 const checked = ref(false);
@@ -52,7 +53,8 @@ sessionModule.actions.logout();
 
 <template>
     <Toast />
-    <div class="wrapper w-full h-full surface-ground flex align-items-center justify-content-center overflow-hidden">
+    <Background />
+    <div class="wrapper w-full h-full flex align-items-center justify-content-center overflow-hidden">
         <div class="flex flex-column align-items-center justify-content-center">
             <form class="form-container" @submit.prevent="handleSubmit">
                 <div style="border-radius: 56px; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">

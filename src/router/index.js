@@ -66,7 +66,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-	// List of paths to be handled by the Cloudflare worker
 	const workerPaths = [
 		"/whatsappclone",
 		"/cv",
@@ -77,9 +76,12 @@ router.beforeEach(async (to, from, next) => {
 		"/crudbasic",
 	];
 
-	// If the path matches any of the worker paths, bypass Vue Router
-	if (workerPaths.some((path) => to.path.startsWith(path))) {
-		window.location.href = to.fullPath; // Redirect to let the worker handle the request
+	// Avoid the loop by checking if the current URL is already proxied
+	if (
+		workerPaths.some((path) => to.path.startsWith(path)) &&
+		!from.path.startsWith(to.path)
+	) {
+		window.location.href = to.fullPath;
 		return;
 	}
 
