@@ -135,7 +135,6 @@ const sendEmail = async () => {
 
 <template>
     <div class="page" :style="{ display: menuVisible ? 'flex' : 'none' }">
-        <div>
             <div class="flex flex-column justify-content-between m-3" style="text-align: start; position: relative">
                 <div class="settings">
                     <div class="flex gap-3">
@@ -170,7 +169,7 @@ const sendEmail = async () => {
                             </template>
                         </dropdown>
                         <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
-                            <FontAwesomeIcon style="font-size: 20px" :icon="faBars" />
+                            <FontAwesomeIcon style="font-size: '$scale'" :icon="faBars" />
                         </button>
                     </div>
                 </div>
@@ -225,10 +224,9 @@ const sendEmail = async () => {
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="center mb-3">
-            <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback" @click="toggleFeedback" />
-        </div>
+            <div class="sticky-button center mb-3">
+                <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback" @click="toggleFeedback" />
+            </div>
     </div>
     <OverlayPanel
         style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
@@ -283,6 +281,11 @@ h5 {
     display: none;
 }
 
+.sticky-button{
+    position: sticky;
+    bottom: 10px;
+}
+
 .settings {
     display: flex;
     justify-content: space-between;
@@ -301,8 +304,7 @@ h5 {
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    height: 100vh !important;
-    aspect-ratio: 2 / 1;
+    height: 100%;
     padding: 0;
     max-height: none;
     border: 2px solid transparent;

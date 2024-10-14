@@ -141,7 +141,15 @@ onBeforeUnmount(() => {
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/assets/layout/_variables.scss';
+.p-terminal{
+    font-size: $scale + 2px !important;
+}
+
+.p-terminal .p-terminal-input {
+    font-size: $scale + 2px !important;
+}
 
 .terminal-card {
     background: var(--surface-card);
