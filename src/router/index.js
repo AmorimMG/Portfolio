@@ -70,6 +70,7 @@ router.beforeEach(async (to, from, next) => {
 		"/whatsappclone",
 		"/cv",
         "/en.html",
+        "/index.html",
 		"/netflixclone",
 		"/rawg",
 		"/instagramclone",
