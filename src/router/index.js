@@ -69,6 +69,7 @@ router.beforeEach(async (to, from, next) => {
 	const workerPaths = [
 		"/whatsappclone",
 		"/cv",
+        "/en.html",
 		"/netflixclone",
 		"/rawg",
 		"/instagramclone",
