@@ -44,8 +44,8 @@ onMounted(() => {
             <div class="gap-2"><i class="pi pi-discord"></i> Discord</div>
         </div>
         <div class="flex flex-row gap-2">
-            <VueNeonLight color="#ff00ff" size="15px" :flash="false" style="color: white" v-if="online">ONLINE</VueNeonLight>
-            <VueNeonLight size="15px" style="color: white" v-else>OFFLINE</VueNeonLight>
+            <VueNeonLight color="#ff00ff" size="$scale" :flash="false" style="color: white" v-if="online">ONLINE</VueNeonLight>
+            <VueNeonLight size="$scale" style="color: white" v-else>OFFLINE</VueNeonLight>
             <span class="dot"></span>
         </div>
     </div>

@@ -20,7 +20,7 @@ const weather = ref([]);
         <div class="center">
             <div class="gap-3"><i class="pi pi-cloud"></i> Weather</div>
         </div>
-        <VueNeonLight color="#ff00ff" size="15px" :flash="false" style="color: white">{{ weather?.current?.temp_c }} º C</VueNeonLight>
-        <VueNeonLight size="15px" style="color: white"> {{ weather?.current?.condition?.text }} </VueNeonLight>
+        <VueNeonLight color="#ff00ff" size="$scale" :flash="false" style="color: white">{{ weather?.current?.temp_c }} º C</VueNeonLight>
+        <VueNeonLight size="$scale" style="color: white"> {{ weather?.current?.condition?.text }} </VueNeonLight>
     </div>
 </template>

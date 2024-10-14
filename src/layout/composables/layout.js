@@ -1,4 +1,4 @@
-import { toRefs, reactive, computed } from 'vue';
+import { computed, reactive, toRefs } from 'vue';
 
 const layoutConfig = reactive({
     ripple: true,
@@ -6,7 +6,7 @@ const layoutConfig = reactive({
     inputStyle: 'outlined',
     menuMode: 'static',
     theme: 'lara-dark-purple',
-    scale: 8,   
+    scale: 11,   
     activeMenuItem: null
 });
 
