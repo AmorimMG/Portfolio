@@ -32,6 +32,6 @@ coverage
 *.sw?
 # Sentry Config File
 .env.sentry-build-plugin
-
+.env
 /firebase
 .aider*
