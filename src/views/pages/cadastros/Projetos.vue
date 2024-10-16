@@ -23,8 +23,11 @@ export default {
 			selectedUser: [],
 			gridColumns: computed(() => [
 				{ field: "id", caption: "ID" },
-				{ field: "usuario", caption: "Usuario" },
-				{ field: "email", caption: "Email" },
+				{ field: "title", caption: "Titulo" },
+				{ field: "subtitle", caption: "Subtitulo" },
+                { field: "description", caption: "Descrição" },
+                { field: "img", caption: "Imagem" },
+                { field: "link", caption: "Link" },
 			]),
 		};
 	},
@@ -39,7 +42,7 @@ export default {
 			this.product = edit;
 			this.deleteDialog = true;
 		},
-		editaUsuario(edit) {
+		editaProjeto(edit) {
 			this.userLogin = edit;
 			this.editaDialog = true;
 		},
@@ -47,7 +50,7 @@ export default {
 			this.criarDialog = true;
 		},
 		getUsers() {
-			RESTAPI.UsuarioObterTodos()
+			RESTAPI.ProjetoObterTodos()
 				.then((response) => {
 					this.dataUsers = response.data;
 				})
@@ -70,15 +73,15 @@ export default {
 		editUser(user) {
 			this.userLogin = user.login;
 		},
-		SalvaUsuario() {
-			RESTAPI.UsuarioCriar(this.usuario)
+		SalvaProjeto() {
+			RESTAPI.ProjetoCriar(this.usuario)
 				.then(() => {
 					this.getUsers();
 					this.criarDialog = false;
 					this.toast.add({
 						severity: "success",
 						summary: $t("SummarioToastSucesso"),
-						detail: $t("UsuarioToastCreate"),
+						detail: $t("ProjetoToastCreate"),
 						life: 3000,
 					});
 					this.usuario = { admin: false };
@@ -87,20 +90,20 @@ export default {
 					this.toast.add({
 						severity: "error",
 						summary: $t("SummarioToastError"),
-						detail: $t("UsuarioToastCreateError"),
+						detail: $t("ProjetoToastCreateError"),
 						life: 3000,
 					});
 				});
 		},
-		EditaUsuario() {
-			RESTAPI.UsuarioEditar(this.userLogin)
+		EditaProjeto() {
+			RESTAPI.ProjetoEditar(this.userLogin)
 				.then(() => {
 					this.getUsers();
 					this.editaDialog = false;
 					this.toast.add({
 						severity: "success",
 						summary: $t("SummarioToastSucesso"),
-						detail: $t("UsuarioToastEdit"),
+						detail: $t("ProjetoToastEdit"),
 						life: 3000,
 					});
 				})
@@ -108,13 +111,13 @@ export default {
 					this.toast.add({
 						severity: "error",
 						summary: $t("SummarioToastError"),
-						detail: $t("UsuarioToastEditError"),
+						detail: $t("ProjetoToastEditError"),
 						life: 3000,
 					});
 				});
 		},
 		deleteUser() {
-			RESTAPI.UsuarioExcluir(this.product.id)
+			RESTAPI.ProjetoExcluir(this.product.id)
 				.then(() => {
 					this.dataUsers = this.dataUsers.filter(
 						(u) => u.id !== this.product.id,
@@ -123,7 +126,7 @@ export default {
 					this.toast.add({
 						severity: "success",
 						summary: $t("SummarioToastSucesso"),
-						detail: $t("UsuarioToastDelete"),
+						detail: $t("ProjetoToastDelete"),
 						life: 3000,
 					});
 				})
@@ -131,7 +134,7 @@ export default {
 					this.toast.add({
 						severity: "error",
 						summary: $t("SummarioToastError"),
-						detail: $t("UsuarioToastDeleteError"),
+						detail: $t("ProjetoToastDeleteError"),
 						life: 3000,
 					});
 				});
@@ -152,13 +155,13 @@ export default {
 			}
 
 			this.selectedUser.forEach((user) => {
-				RESTAPI.UsuarioExcluir(user.id)
+				RESTAPI.ProjetoExcluir(user.id)
 					.then(() => {
 						this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
 						this.toast.add({
 							severity: "success",
 							summary: $t("SummarioToastSucesso"),
-							detail: $t("UsuarioToastDelete"),
+							detail: $t("ProjetoToastDelete"),
 							life: 3000,
 						});
 					})
@@ -166,7 +169,7 @@ export default {
 						this.toast.add({
 							severity: "error",
 							summary: $t("SummarioToastError"),
-							detail: $t("UsuarioToastDeleteError"),
+							detail: $t("ProjetoToastDeleteError"),
 							life: 3000,
 						});
 					});
@@ -229,7 +232,7 @@ export default {
                     </Column>
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaUsuario(slotProps.data)" />
+                            <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaProjeto(slotProps.data)" />
                             <Button v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
@@ -299,7 +302,7 @@ export default {
 
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
-                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaUsuario" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaProjeto" />
                     </template>
                 </Dialog>
 
@@ -343,7 +346,7 @@ export default {
 
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
-                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaUsuario" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaProjeto" />
                     </template>
                 </Dialog>
             </div>
