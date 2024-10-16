@@ -331,9 +331,6 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
 .grid {
     display: flex;
     justify-content: space-between;
-    max-height: 95vh;
-    overflow-y: auto;
-    padding: 100px;
 }
 
 .card-dashboard {
