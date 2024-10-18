@@ -122,7 +122,13 @@ onMounted(() => {
 
 <style src="./styles.scss"></style>
 
-<style>
+<style scoped>
+
+.grid{
+    margin-left: 0;
+    margin-right: 0
+}
+
 .hidden {
     display: none;
 }
