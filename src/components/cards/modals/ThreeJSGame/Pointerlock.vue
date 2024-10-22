@@ -8,9 +8,9 @@ import { onMounted, ref, watch } from "vue";
 import { CharacterControls } from "../ThreeJSGame/characterControls";
 /* import { KeyDisplay } from '../ThreeJSGame/keys'; */
 
-import Portfolio from "../../../../assets/images/projects/Portfolio.png";
-import PortfolioAPI from "../../../../assets/images/projects/PortfolioAPI.png";
-import WhatsappClone from "../../../../assets/images/projects/WhatsappClone.png";
+import Portfolio from "/projects/Portfolio.png";
+import PortfolioAPI from "/projects/PortfolioAPI.png";
+import WhatsappClone from "/projects/WhatsappClone.png";
 
 const blocker = ref(null);
 const instructions = ref(null);

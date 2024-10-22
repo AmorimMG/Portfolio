@@ -3,13 +3,15 @@ Pendencias Projeto
 Dashboard
  - [ ] Last.FM Estatisticas Incompleto  
  - [ ] Melhorar Feedback 
- - [ ] Adicionar Blog 
- - [ ] ThreeJS Girar 
- - [ ] Adicionar mais em Stack 
- - [ ] Adicionar Tradução 
- - [ ] Terminal trocar textos  
- - [ ] Fazer Heatmap funcionar 
- - [ ] Estilização Spotify 
+ - [ ] Adicionar Blog
+ - [ ] trocar/resolver ThreeJS Girar
+ - [ ] Vincular endpoint ao heatmap Github
+ - [ ] Adicionar Dashboard
+ - [ ] Criar Endpoints de editar/excluir para Projetos
+ - [ ] Adicionar Campo de Linguagens em Projetos
+ - [ ] Adicionar Key e Contexto em ChatGPT
+ - [ ] Vincular Endpoints de Linguagens ao Componente de Linguagems
+ - [ ] Melhorar Interação e Responsividade Mobile
 
 Pointerlock 
  - [ ] Adicionar Modelo Astronauta
@@ -19,20 +21,9 @@ Pointerlock
  - [ ] Adicionar Terceira Pessoa
  - [ ] Adicionar Corrida
 
-Intro
- - [ ] Melhorar Design
-
-Dock
+Blog
  - [ ] Melhorar Hover
  - [ ] Mudar alguns apps to widgets
  - [ ] Melhorar Widget de Temperatura
  - [ ] Adicionar mais funções relacionadas a Desktop
- 
-2D
- - [ ] Criar um Mapa
- - [ ] Adicionar fonção de andar
- - [ ] Limitar Espaços
- - [ ] Adicionar Personagem
- - [ ] Limitar Espaços
- - [ ] Adicionar NPC
- - [ ] Limitar Espaços
+ - [ ] Melhorar modal de visualação de markdown

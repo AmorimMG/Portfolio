@@ -2,13 +2,12 @@ import axios from "axios";
 
 const CAT_API_URL = "https://api.thecatapi.com/v1";
 const WEATHER_API_URL = "http://api.weatherapi.com/v1/";
-const AI_API_URL = "https://api.gemini.google.com/v1/completions"; 
-
 const weatherKey = "254d6ff9bc1946cebd8191443241707";
 const cidade = "Belo Horizonte";
-const aiKey = "AIzaSyBRHSxc4TU3LwslUKW0WfXS8_EwKO8hbVw"; // Replace with your actual Gemini API key
+const aiKey = import.meta.env.VUE_APP_AI_KEY;
+const AI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent`; 
 
-const context = "You are a helpful and informative AI assistant."; // Define your desired context
+const context = "You are a helpful and informative AI assistant.";
 
 export const PhotoService = {
 	async getImages() {

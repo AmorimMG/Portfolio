@@ -353,8 +353,6 @@ function deleteAll() {
     aspect-ratio: unset;
 }
 .table-container {
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
+    line-break: anywhere;
 }
 </style>

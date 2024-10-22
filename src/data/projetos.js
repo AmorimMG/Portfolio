@@ -1,15 +1,15 @@
-import Portfolio from '../assets/images/projects/Portfolio.png';
-import PortfolioAPI from '../assets/images/projects/PortfolioAPI.png';
-import WhatsappClone from '../assets/images/projects/WhatsappClone.png';
-import Ecommerce from '../assets/images/projects/Ecommerce.png';
-import Snake from '../assets/images/projects/Snake.png';
-import InstagramClone from '../assets/images/projects/InstagramClone.png';
-import DinoClone from '../assets/images/projects/DinoClone.png';
-import NetflixClone from '../assets/images/projects/NetflixClone.png';
-import RAWG from '../assets/images/projects/RAWG.png';
-import DiscordAwards from '../assets/images/projects/DiscordAwards2.png';
-import RPG from '../assets/images/projects/RPG.png';
-import JogoDaVelha from '../assets/images/projects/JogoDaVelha.png';
+import DinoClone from '/projects/DinoClone.png';
+import DiscordAwards from '/projects/DiscordAwards2.png';
+import Ecommerce from '/projects/Ecommerce.png';
+import InstagramClone from '/projects/InstagramClone.png';
+import JogoDaVelha from '/projects/JogoDaVelha.png';
+import NetflixClone from '/projects/NetflixClone.png';
+import Portfolio from '/projects/Portfolio.png';
+import PortfolioAPI from '/projects/PortfolioAPI.png';
+import RAWG from '/projects/RAWG.png';
+import RPG from '/projects/RPG.png';
+import Snake from '/projects/Snake.png';
+import WhatsappClone from '/projects/WhatsappClone.png';
 
 export const projetos = [
     {

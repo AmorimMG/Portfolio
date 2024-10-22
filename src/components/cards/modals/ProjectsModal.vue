@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import draggable from "vuedraggable";
 import { projetos } from "../../../data/projetos";
+import { RESTAPI } from "../../../service/api";
 import CardEffect from "../../CardEffect.vue";
 import Projects from "../../Projects.vue";
 import VueNeonLight from "../../VueNeonLight/vue-neon-light.vue";
@@ -14,12 +15,12 @@ export default {
 		Projects,
 		draggable,
 		VueNeonLight,
-		ThreeJS,
+		ThreeJS
 	},
 	data() {
 		return {
 			projectsVisible: ref(false),
-			projects: ref(projetos),
+			projects: ref(""),
 			immersive: ref(false),
 		};
 	},
@@ -29,6 +30,13 @@ export default {
 			this.projectsVisible = false;
 		},
 	},
+    created() {
+        RESTAPI.ProjetoObterTodos().then((response) => {
+            this.projects = response.data;
+        }).catch((error) => {
+            this.projects = projetos;
+        });
+    },
 };
 </script>
 
@@ -46,10 +54,10 @@ export default {
                 <Button  @click="immersive = !immersive"> {{!immersive ? 'Imersão 3D' : 'Voltar' }}</Button>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
-            <div class="popup-content">
+            <div class="popup-content" style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px);">
                 <draggable v-if="!immersive" class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="center col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" />
+                        <Projects class="center col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
                     </template>
                 </draggable>
                 <div v-else>

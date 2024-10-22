@@ -18,6 +18,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+    link: {
+        type: String,
+		required: true,
+    }
 });
 </script>
 
@@ -34,7 +38,9 @@ const props = defineProps({
             </template>
             <template #footer>
                 <div class="flex gap-4 mt-1">
+                    <a class="w-full" :href="props.link" target="_blank" rel="noopener noreferrer">
                     <Button label="Open" outlined class="w-full" />
+                    </a>
                 </div>
             </template>
         </Card>

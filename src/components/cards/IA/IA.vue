@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { AIService } from "../../service/ThirdPartyEndpoints";
+import { AIService } from "../../../service/ThirdPartyEndpoints";
 import CardEffect from "../CardEffect.vue";
 
 const { t } = useI18n();

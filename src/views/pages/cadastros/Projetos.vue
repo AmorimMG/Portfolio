@@ -15,10 +15,10 @@ export default {
 			editaDialog: ref(false),
 			toast: useToast(),
 			product: {},
-			usuario: {
+			projeto: {
 				admin: false,
 			},
-			userLogin: "",
+			editProject: "",
 			dataUsers: [],
 			selectedUser: [],
 			gridColumns: computed(() => [
@@ -43,7 +43,7 @@ export default {
 			this.deleteDialog = true;
 		},
 		editaProjeto(edit) {
-			this.userLogin = edit;
+			this.editProject = edit;
 			this.editaDialog = true;
 		},
 		openNew() {
@@ -71,10 +71,10 @@ export default {
 			exportCSV(this.dataUsers);
 		},
 		editUser(user) {
-			this.userLogin = user.login;
+			this.editProject = user.login;
 		},
 		SalvaProjeto() {
-			RESTAPI.ProjetoCriar(this.usuario)
+			RESTAPI.ProjetoCriar(this.projeto)
 				.then(() => {
 					this.getUsers();
 					this.criarDialog = false;
@@ -84,7 +84,7 @@ export default {
 						detail: $t("ProjetoToastCreate"),
 						life: 3000,
 					});
-					this.usuario = { admin: false };
+					this.projeto = { admin: false };
 				})
 				.catch(() => {
 					this.toast.add({
@@ -96,7 +96,7 @@ export default {
 				});
 		},
 		EditaProjeto() {
-			RESTAPI.ProjetoEditar(this.userLogin)
+			RESTAPI.ProjetoEditar(this.editProject)
 				.then(() => {
 					this.getUsers();
 					this.editaDialog = false;
@@ -242,7 +242,7 @@ export default {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ product.login }}</b
+                            >{{ $t('Excluir') }} <b>{{ product.title }}</b
                             >?</span
                         >
                     </div>
@@ -270,34 +270,39 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="usuario.nome" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
+                                <InputText id="titulo" v-model.trim="projeto.title" required="true" />
+                                <label for="titulo">{{ $t('Titulo') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="email" v-model="usuario.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
+                                <InputText id="subtitulo" v-model="projeto.subtitle" required="true" />
+                                <label for="subtitulo">{{ $t('SubTitulo') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="usuario.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputText id="link" v-model="projeto.link" required="true" />
+                                <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText type="password" id="senha" v-model="usuario.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
+                                <InputText id="imagem" v-model="projeto.img" required="true" />
+                                <label for="imagem">{{ $t('imagem') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="usuario.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <InputText id="descricao" v-model="projeto.description" required="true" />
+                                <label for="descricao">{{ $t('Descricao') }}</label>
+                            </FloatLabel>
+                        </div>
+                        
                     </div>
 
                     <template #footer>
@@ -310,38 +315,39 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="userLogin.nome" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
+                                <InputText id="titulo" v-model.trim="editProject.title" required="true" />
+                                <label for="titulo">{{ $t('Titulo') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="email" v-model="userLogin.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
+                                <InputText id="subtitulo" v-model="editProject.subtitle" required="true" />
+                                <label for="subtitulo">{{ $t('SubTitulo') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="userLogin.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputText id="link" v-model="editProject.link" required="true" />
+                                <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText type="password" id="senha" v-model="userLogin.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
+                                <InputText id="imagem" v-model="editProject.img" required="true" />
+                                <label for="imagem">{{ $t('imagem') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="userLogin.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="ativo" v-model="userLogin.ativo" />
-                        <label for="ativo">{{ $t('Ativo') }}</label>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <InputText id="descricao" v-model="editProject.description" required="true" />
+                                <label for="descricao">{{ $t('Descricao') }}</label>
+                            </FloatLabel>
+                        </div>
+                        
                     </div>
 
                     <template #footer>
@@ -354,13 +360,14 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .card {
     aspect-ratio: unset;
 }
 .table-container {
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
+    line-break: anywhere;
+    ::-webkit-scrollbar {
+        height: 8px; /* Adjust this value for the size of the scrollbar */
+    }
 }
 </style>

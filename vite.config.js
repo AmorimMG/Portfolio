@@ -1,8 +1,8 @@
 import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -13,7 +13,7 @@ export default defineConfig(() => {
         plugins: [
             vue(),
             sentryVitePlugin({
-                authToken: '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',
+                authToken: process.env.SENTRY_AUTH_CODE,
                 org: 'amorim-um',
                 project: 'javascript-vue'
             })
