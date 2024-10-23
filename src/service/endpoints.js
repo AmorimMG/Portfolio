@@ -22,7 +22,9 @@ const Endpoints = (instance) => ({
     LinguagemCriar: (data) => instance.post('Linguagem', data),
     LinguagemEditar: (data) => instance.put('Linguagem', data),
     LinguagemExcluir: (data) => instance.delete(`Linguagem/${data}`),
-    LinguagemObterTodos: () => instance.get('Linguagem/ObterTodos')
+    LinguagemObterTodos: () => instance.get('Linguagem/ObterTodos'),
+
+    IA: (data) => instance.post('Chat/send', data)
 });
 
 export default Endpoints;

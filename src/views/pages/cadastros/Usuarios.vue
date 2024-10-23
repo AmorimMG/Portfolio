@@ -2,7 +2,7 @@
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, ref } from "vue";
 import { RESTAPI } from "../../../service/api";
-import { addDatabase, getDatabase } from "../../../service/firebase";
+import { addDatabase } from "../../../service/firebase";
 import { getUserCookie } from "../../../service/session";
 import { exportCSV } from "../../../utils/exportCsv";
 
@@ -20,9 +20,9 @@ const selectedUser = ref([]);
 const userCookie = ref(getUserCookie());
 
 const gridColumns = computed(() => [
-	{ field: "a", caption: "a" },
+	{ field: "_id", caption: "id" },
 	{ field: "usuario", caption: "Usuario" },
-	{ field: "name", caption: "Nome" },
+	{ field: "email", caption: "Email" },
 ]);
 
 onMounted(() => {
@@ -45,22 +45,24 @@ function openNew() {
 }
 
 function getUsers() {
-	/*     RESTAPI.UsuarioObterTodos()
+//Busca do Mongodb
+    RESTAPI.UsuarioObterTodos()
         .then((response) => {
             dataUsers.value = response.data;
         })
         .catch(() => {
             toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
-        }); */
+        }); 
 
-	getDatabase("projetos")
+//Busca do Firebase
+/* 	getDatabase("projetos")
 		.then((response) => {
 			console.log(response);
 			dataUsers.value = response;
 		})
 		.catch((error) => {
 			console.error("Error fetching data:", error);
-		});
+		}); */
 }
 
 function getCancelUser() {
@@ -164,7 +166,7 @@ function confirmDeleteAll(edit) {
 }
 
 function deleteAll() {
-	if (selectedUser.value.length === 0) {
+	if (selectedUser?.value?.length === 0) {
 		toast.add({
 			severity: "warn",
 			summary: $t("SummarioToastWarn"),
@@ -203,13 +205,13 @@ function deleteAll() {
     <div class="card">
         <h5 class="p-card-title">Usuarios</h5>
         <div id="data-grid-demo">
-            <div v-if="dataUsers.length < 0">Carregando...</div>
+            <div v-if="dataUsers?.length < 0">Carregando...</div>
             <div v-else>
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
                             <Button label="Novo" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-                            <Button label="Deletar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteAll" :disabled="selectedUser.length === 0" />
+                            <Button label="Deletar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteAll" :disabled="selectedUser?.length === 0" />
                         </div>
                     </template>
 
@@ -247,7 +249,7 @@ function deleteAll() {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaUsuario(slotProps.data)" />
-                            <Button :disabled="slotProps.data?.id === userCookie?.id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+                            <Button :disabled="slotProps.data?._id === userCookie?._id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
@@ -256,7 +258,7 @@ function deleteAll() {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ product.login }}</b
+                            >{{ $t('Excluir') }} <b>{{ product.usuario }}</b
                             >?</span
                         >
                     </div>
@@ -270,7 +272,7 @@ function deleteAll() {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Usuarios') }}</b
+                            >{{ $t('Excluir') }} <b>{{ this.selectedUser?.length }} {{ $t('Usuarios') }}</b
                             >?</span
                         >
                     </div>
@@ -284,16 +286,16 @@ function deleteAll() {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="usuario.name" required="true" />
-                                <label for="name">{{ $t('name') }}</label>
+                                <InputText id="usuario" v-model.trim="usuario.usuario" required="true" />
+                                <label for="usuario">{{ $t('Usuário') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="usuario.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputText id="email" v-model="usuario.email" required="true" />
+                                <label for="email">{{ $t('Email') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
@@ -314,16 +316,16 @@ function deleteAll() {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="userLogin.name" required="true" />
-                                <label for="name">{{ $t('name') }}</label>
+                                <InputText id="usuario" v-model.trim="userLogin.usuario" required="true" />
+                                <label for="usuario">{{ $t('Usuário') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="userLogin.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputText id="email" v-model="userLogin.login" required="true" />
+                                <label for="email">{{ $t('Email') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">

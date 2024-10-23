@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { AIService } from "../../../service/ThirdPartyEndpoints";
-import CardEffect from "../../CardEffect.vue";
+import { RESTAPI } from "../../service/api";
+import CardEffect from "../CardEffect.vue";
 
 const { t } = useI18n();
 const userInput = ref("");
@@ -10,18 +10,26 @@ const content = computed(() => t("IA.WelcomeIA"));
 const typeMessage = computed(() => t("IA.TypeMessage"));
 const messages = ref([{ role: "ai", content: content }]);
 const loading = ref(false);
+const context = ref("Contexto de Personalidade: Seu Nome é: Gabriel Amorim, Idade: 23, Localização: Belo Horizonte, Brasil, Estilo de Comunicação: Informal e descontraído, Aprecia debates sobre tecnologia e compartilhar experiências, Gírias: \"Massa\", \"show de bola\", \"na moral\", Interesses: Programação web (front-end, back-end e DevOps), desenvolvimento nas principais tecnologias do mercado, música, e tecnologia, Gênero musical favorito: Hyperpop, Outros gêneros: Adoro indie e eletrônica, Crenças: Valorizo a colaboração e a inovação, Opiniões: Acredito que a educação em tecnologia deve ser acessível a todos, Resposta a perguntas: \"Sou apaixonado por programação e meu gênero musical favorito é hyperpop!\", Destaque: Gosto de resolver problemas complexos e ajudar outros desenvolvedores, Metas: Aprender novas linguagens de programação e contribuir para projetos open-source, Desejo: Ser visto como alguém que está sempre disposto a aprender e compartilhar conhecimento, responda a proxima mensagem de acordo com esse contexto.");
+
+// Create a ref for the chat wrapper
+const chatWrapper = ref(null);
 
 const sendMessage = async () => {
 	if (!userInput.value.trim()) return;
 
 	messages.value.push({ role: "user", content: userInput.value });
-	const messageToSend = userInput.value;
+    scrollToBottom();
+	const messageToSend = {
+		prompt: userInput.value,
+		context: context.value,
+	};
 	userInput.value = "";
 	loading.value = true;
 
 	try {
-		const aiResponse = await AIService.sendMessage(messageToSend);
-		messages.value.push({ role: "ai", content: aiResponse });
+		const aiResponse = await RESTAPI.IA(messageToSend);
+		messages.value.push({ role: "ai", content: aiResponse.data });
 	} catch (error) {
 		let errorMessage = error.message;
 		if (error.response && error.response.status === 429) {
@@ -36,15 +44,24 @@ const sendMessage = async () => {
 		console.error("Error fetching AI response:", error);
 	} finally {
 		loading.value = false;
+        scrollToBottom();
 	}
+};
+	
+const scrollToBottom = () => {
+	nextTick(() => {
+		if (chatWrapper.value) {
+			chatWrapper.value.scrollTop = chatWrapper.value.scrollHeight;
+		}
+	});
 };
 </script>
 
 <template>
-    <div class="col-8 lg:col-8 xl:col-6">
+    <div class="col-4 lg:col-4 xl:col-4 pb-0">
         <CardEffect>
             <div class="card chat-container">
-                <div class="chat-wrapper">
+                <div ref="chatWrapper" class="chat-wrapper">
                     <div v-for="(message, index) in messages" :key="index" :class="['message', message.role, { 'error-message': message.isError }]">
                         <p>{{ message.content }}</p>
                     </div>

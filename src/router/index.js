@@ -32,6 +32,24 @@ const router = createRouter({
 				},
 			],
 		},
+        {
+            component: AppLayout,
+			path: "/consultas",
+			children: [
+				{
+					path: "/consultas/consultaSQL",
+					name: "consultas-sql",
+					component: () =>
+						import("@/views/pages/consultas/ConsultaSQL.vue"),
+				},
+                {
+					path: "/consultas/controleRemoto",
+					name: "controle-remoto",
+					component: () =>
+						import("@/views/pages/consultas/ControleRemoto.vue"),
+				},
+            ]
+        },
 		{
 			path: "/",
 			name: "dashboard",

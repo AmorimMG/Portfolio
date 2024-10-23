@@ -27,3 +27,9 @@ Blog
  - [ ] Melhorar Widget de Temperatura
  - [ ] Adicionar mais funções relacionadas a Desktop
  - [ ] Melhorar modal de visualação de markdown
+
+Serviços Homelab
+ - [ ] Endpoint iniciar servidor
+
+Consulta
+ - [] Trocar componente de Consulta utilizando Codemirror para Monaco

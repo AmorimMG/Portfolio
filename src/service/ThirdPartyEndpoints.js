@@ -4,10 +4,6 @@ const CAT_API_URL = "https://api.thecatapi.com/v1";
 const WEATHER_API_URL = "http://api.weatherapi.com/v1/";
 const weatherKey = "254d6ff9bc1946cebd8191443241707";
 const cidade = "Belo Horizonte";
-const aiKey = import.meta.env.VUE_APP_AI_KEY;
-const AI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent`; 
-
-const context = "You are a helpful and informative AI assistant.";
 
 export const PhotoService = {
 	async getImages() {
@@ -44,41 +40,6 @@ export const ValorantService = {
 			return response.data;
 		} catch (error) {
 			console.error("Error fetching valorant data:", error);
-			throw error;
-		}
-	},
-};
-
-export const AIService = {
-	async sendMessage(messageToSend) {
-		try {
-			const response = await axios.post(
-				AI_API_URL,
-				{
-					model: "gemini-1.5-pro-exp-0827",
-					messages: [
-						{
-							role: "system",
-							content: context,
-						},
-						{
-							role: "user",
-							content: messageToSend,
-						},
-					],
-					max_tokens: 512,
-					stream: false,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${aiKey}`,
-					},
-				},
-			);
-			return response.data.choices[0].message.content.trim();
-		} catch (error) {
-			console.error("Error fetching AI response:", error);
 			throw error;
 		}
 	},

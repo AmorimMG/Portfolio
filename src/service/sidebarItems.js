@@ -30,6 +30,22 @@ export const SidebarItems = [
 					},
 				],
 			},
+            {
+                label: "Consultas",
+				icon: "pi pi-fw pi-search",
+				items: [
+					{
+						label: "Consultas SQL",
+						icon: "pi pi-fw pi-users",
+						to: "/consultas/consultaSQL",
+					},
+                    {
+						label: "Controle Remoto",
+						icon: "pi pi-fw pi-users",
+						to: "/consultas/controleRemoto",
+					},
+                ]
+            },
 			{
 				label: "Serviços HomeLab",
 				icon: "pi pi-fw pi-server",
