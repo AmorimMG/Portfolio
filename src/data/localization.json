@@ -31,7 +31,8 @@
 
 		"IA": {
 			"WelcomeIA": "Welcome! How can I assist you today?",
-			"TypeMessage": "Type a message"
+			"TypeMessage": "Type a message",
+            "IATalkWithMe": "IA: Talk With Me :)"
 		},
 
 		"Feedback": {
@@ -99,7 +100,8 @@
 
 		"IA": {
 			"WelcomeIA": "¡Bienvenido! ¿Qué te puede ayudar hoy?",
-			"TypeMessage": "Escribe un mensaje"
+			"TypeMessage": "Escribe un mensaje",
+            "IATalkWithMe": "IA: Hablame :)"
 		},
 
 		"Feedback": {
@@ -166,7 +168,8 @@
 
 		"IA": {
 			"WelcomeIA": "Bem vindo! Como posso ajuda-lo(a) hoje?",
-			"TypeMessage": "Escreva uma mensagem"
+			"TypeMessage": "Escreva uma mensagem",
+            "IATalkWithMe": "IA: Fale comigo :)"
 		},
 
 		"Feedback": {

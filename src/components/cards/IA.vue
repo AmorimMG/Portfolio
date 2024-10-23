@@ -3,6 +3,7 @@ import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RESTAPI } from "../../service/api";
 import CardEffect from "../CardEffect.vue";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
 const { t } = useI18n();
 const userInput = ref("");
@@ -11,8 +12,9 @@ const typeMessage = computed(() => t("IA.TypeMessage"));
 const messages = ref([{ role: "ai", content: content }]);
 const loading = ref(false);
 const context = ref("Contexto de Personalidade: Seu Nome é: Gabriel Amorim, Idade: 23, Localização: Belo Horizonte, Brasil, Estilo de Comunicação: Informal e descontraído, Aprecia debates sobre tecnologia e compartilhar experiências, Gírias: \"Massa\", \"show de bola\", \"na moral\", Interesses: Programação web (front-end, back-end e DevOps), desenvolvimento nas principais tecnologias do mercado, música, e tecnologia, Gênero musical favorito: Hyperpop, Outros gêneros: Adoro indie e eletrônica, Crenças: Valorizo a colaboração e a inovação, Opiniões: Acredito que a educação em tecnologia deve ser acessível a todos, Resposta a perguntas: \"Sou apaixonado por programação e meu gênero musical favorito é hyperpop!\", Destaque: Gosto de resolver problemas complexos e ajudar outros desenvolvedores, Metas: Aprender novas linguagens de programação e contribuir para projetos open-source, Desejo: Ser visto como alguém que está sempre disposto a aprender e compartilhar conhecimento, responda a proxima mensagem de acordo com esse contexto.");
+const showOverlay = ref(true);
+const overlayVisible = ref(true);
 
-// Create a ref for the chat wrapper
 const chatWrapper = ref(null);
 
 const sendMessage = async () => {
@@ -55,23 +57,32 @@ const scrollToBottom = () => {
 		}
 	});
 };
+
+const hideOverlay = () => {
+	overlayVisible.value = false; // Start the fade-out effect
+	setTimeout(() => {
+		showOverlay.value = false; // Hide the overlay from DOM after animation
+	}, 500); // Match the duration of the CSS transition
+};
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-4 pb-0">
+    <div class="col-4 lg:col-4 xl:col-4 pb-0" @click="hideOverlay">
         <CardEffect>
             <div class="card chat-container">
-                <div ref="chatWrapper" class="chat-wrapper">
+                <div v-if="showOverlay" class="overlay" :class="{ 'fade-out': !overlayVisible }">
+                    <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }}</VueNeonLight>
+                </div>
+                    <div ref="chatWrapper" class="chat-wrapper">
                     <div v-for="(message, index) in messages" :key="index" :class="['message', message.role, { 'error-message': message.isError }]">
                         <p>{{ message.content }}</p>
                     </div>
                 </div>
-                <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
-
-                <div class="input-container">
-                    <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
-                    <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
-                </div>
+                    <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
+                    <div class="input-container">
+                        <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
+                        <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
+                    </div>
             </div>
         </CardEffect>
     </div>
@@ -124,5 +135,19 @@ const scrollToBottom = () => {
 
 .loading-skeleton {
     margin-top: 20px;
+}
+
+.overlay {
+    position: absolute;
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+}
+
+.fade-out {
+    opacity: 0;
 }
 </style>
