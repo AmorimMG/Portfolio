@@ -107,7 +107,7 @@ router.beforeEach(async (to, from, next) => {
 	}
 
 	// Handle authentication for cadastros paths
-	if (to.path.includes("/cadastros")) {
+	if (to.path.includes("/cadastros") || to.path.includes("/consultas")) {
 		const isLoggedIn = await sessionModule.actions.isUserLogged();
 		if (!isLoggedIn) {
 			sessionModule.actions.logout();
