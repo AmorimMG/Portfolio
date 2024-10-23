@@ -8,7 +8,7 @@ import EmailModal from "../components/cards/modals/EmailModal.vue";
 import ProjectsModal from "../components/cards/modals/ProjectsModal.vue";
 
 import ClusterLinks from "../components/cards/ClusterLinks.vue";
-import IA from "../components/cards/IA.vue";
+import IA from "../components/cards/IA/IA.vue";
 import Photos from "../components/cards/Photos.vue";
 import Spotify from "../components/cards/Spotify.vue";
 //Casual

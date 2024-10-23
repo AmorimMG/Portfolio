@@ -1,23 +1,21 @@
-import DashboardTimeline from '../components/cards/HeatMap.vue';
-import ThreeJSComponent from '../components/cards/ThreeJS.vue';
-import Stack from '../components/cards/Stack.vue';
-import Spotify from '../components/cards/Spotify.vue';
-import Discord from '../components/cards/Discord.vue';
-import CVModal from '../components/cards/modals/CVModal.vue';
-import LastFMModal from '../components/cards/modals/LastFMModal.vue';
-import EmailModal from '../components/cards/modals/EmailModal.vue';
-import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
 import ClusterLinks from '../components/cards/ClusterLinks.vue';
-import MapboxMap from '../components/Mapbox.vue';
-import IA from '../components/cards/IA.vue';
+import Discord from '../components/cards/Discord.vue';
+import DashboardTimeline from '../components/cards/HeatMap.vue';
+import IA from '../components/cards/IA/IA.vue';
+import CVModal from '../components/cards/modals/CVModal.vue';
+import EmailModal from '../components/cards/modals/EmailModal.vue';
+import LastFMModal from '../components/cards/modals/LastFMModal.vue';
+import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
+import Spotify from '../components/cards/Spotify.vue';
+import Stack from '../components/cards/Stack.vue';
+import ThreeJSComponent from '../components/cards/ThreeJS.vue';
 import Weather from '../components/cards/Weather.vue';
+import MapboxMap from '../components/Mapbox.vue';
 /* import Actitivies from '../components/cards/Activities.vue'; */
 
-import DiscordIcon from '../assets/images/Dock-Icons/discord.svg';
-import LastFMIcon from '../assets/images/Dock-Icons/lastFm.svg';
 import CVIcon from '../assets/images/Dock-Icons/CV.svg';
 import FolderIcon from '../assets/images/Dock-Icons/Folder.svg';
-import EmailIcon from '../assets/images/Dock-Icons/Email.svg';
+import LastFMIcon from '../assets/images/Dock-Icons/lastFm.svg';
 
 export const componentMap = {
     ClusterLinks,
