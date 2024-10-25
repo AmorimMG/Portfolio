@@ -12,8 +12,8 @@ export default {
 			year: null,
 			startingMonth: null,
 			months: null,
-			GithubColors: ["#e0f7e0", "#c0ebc0", "#a3d9a3", "#7bc97b", "#4caf50"],
-			data: {},
+			GithubColors: ["#fff", "#9b7ba1", "#8a5b95", "#743179", "#692785"],
+			data: [],
 			toast: useToast(),
 		};
 	},
@@ -22,24 +22,18 @@ export default {
 			await this.getGithub("AmorimMG");
 
 			const currentDate = new Date();
-
-			// Ensure Object.keys(this.data)[0] is a valid date string
-			const firstDateKey = Object.keys(this.data)[0];
-			const startingMonth = firstDateKey
-				? new Date(firstDateKey).getMonth()
-				: currentDate.getMonth();
+			this.year = currentDate.getFullYear();
+			this.startingMonth = currentDate.getMonth();
 
 			const months = [];
-			for (let i = 1; i < 7; i++) {
-				const monthIndex = (startingMonth + i) % 12;
-				months.push(this.getMonthName(monthIndex));
+			for (let i = 0; i < 6; i++) {
+				const monthIndex = (this.startingMonth - i + 12) % 12;
+				months.unshift(this.getMonthName(monthIndex));
 			}
-
-			this.year = currentDate.getFullYear();
-			this.startingMonth = startingMonth;
-			console.log("Data:", this.data);
-			console.log("Starting month index:", startingMonth);
 			this.months = months;
+			console.log("Data:", this.data);
+			console.log("Starting month index:", this.startingMonth);
+			console.log("Months:", this.months);
 		} catch (error) {
 			console.error("Error in created hook:", error);
 			this.toast.add({
@@ -71,8 +65,7 @@ export default {
 		async getGithub(GithubUsername) {
 			try {
 				const response = await RESTAPI.ObterGithub(GithubUsername);
-				this.data = response.data; // Assign the entire response data directly
-
+				this.data = response.data;
 				console.log("GitHub raw data:", this.data);
 			} catch (error) {
 				console.log(error);
@@ -83,7 +76,6 @@ export default {
 				});
 			}
 		},
-
 
 		formatDate(date) {
 			const year = date.getFullYear();
@@ -118,14 +110,11 @@ export default {
 
 		getColor(monthIndex, day) {
 			const currentYear = new Date().getFullYear();
-			const currentMonthIndex = new Date().getMonth();
-			const lastSixMonths = (monthIndex - this.startingMonth + 6) % 12;
-			const monthToCheck = (currentMonthIndex - lastSixMonths + 12) % 12;
-			const date = new Date(currentYear, monthToCheck, day);
+			const monthToCheck = this.startingMonth - monthIndex;
+			const date = new Date(currentYear, monthToCheck < 0 ? monthToCheck + 12 : monthToCheck, day);
 			const formattedDate = this.formatDate(date);
 
 			let contributionCount = 0;
-			// Iterate through the data to find the contribution count for the specific date
 			for (const item of this.data) {
 				for (const contributionDay of item.contributionDays) {
 					if (contributionDay.date === formattedDate) {
@@ -134,7 +123,6 @@ export default {
 					}
 				}
 			}
-
 			return this.getGithubColor(contributionCount);
 		},
 	},
@@ -221,16 +209,6 @@ export default {
     display: flex;
 }
 
-.day {
-    width: 15px;
-    height: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1px;
-    font-size: 10px;
-    cursor: pointer;
-}
 .day {
     width: 15px;
     height: 15px;
