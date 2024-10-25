@@ -31,9 +31,6 @@ export default {
 				months.unshift(this.getMonthName(monthIndex));
 			}
 			this.months = months;
-			console.log("Data:", this.data);
-			console.log("Starting month index:", this.startingMonth);
-			console.log("Months:", this.months);
 		} catch (error) {
 			console.error("Error in created hook:", error);
 			this.toast.add({
@@ -66,9 +63,7 @@ export default {
 			try {
 				const response = await RESTAPI.ObterGithub(GithubUsername);
 				this.data = response.data;
-				console.log("GitHub raw data:", this.data);
 			} catch (error) {
-				console.log(error);
 				this.toast.add({
 					severity: "error",
 					summary: error.message,

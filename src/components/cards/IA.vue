@@ -59,10 +59,10 @@ const scrollToBottom = () => {
 };
 
 const hideOverlay = () => {
-	overlayVisible.value = false; // Start the fade-out effect
+	overlayVisible.value = false;
 	setTimeout(() => {
-		showOverlay.value = false; // Hide the overlay from DOM after animation
-	}, 500); // Match the duration of the CSS transition
+		showOverlay.value = false;
+	}, 500);
 };
 </script>
 
