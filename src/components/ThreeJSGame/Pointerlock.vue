@@ -5,7 +5,7 @@ import { PointerLockControls } from "three/examples/jsm/controls/PointerLockCont
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { onMounted, ref, watch } from "vue";
 
-import { CharacterControls } from "../ThreeJSGame/characterControls";
+import { CharacterControls } from "./characterControls";
 /* import { KeyDisplay } from '../ThreeJSGame/keys'; */
 
 import Portfolio from "/projects/Portfolio.png";

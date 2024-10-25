@@ -1,9 +1,9 @@
 <script setup>
 import { useToast } from "primevue/usetoast";
-import { onMounted, ref } from "vue";
-import { PhotoService } from "../../../../service/ThirdPartyEndpoints";
-import Terminal from "../../Terminal.vue";
-import FileSystemButtonModal from "./FileSystemButtonModal.vue";
+import { onMounted, ref, watch } from "vue";
+import { PhotoService } from "../../service/ThirdPartyEndpoints";
+import Terminal from "../cards/Terminal.vue";
+import FileSystemModal from "../cards/modals/FileSystemModal.vue";
 
 const FileSystemOpen = ref(false);
 const displayFinder = ref(false);
@@ -121,6 +121,14 @@ const onDockItemClick = (event, item) => {
 
 	event.preventDefault();
 };
+
+watch(FileSystemOpen,(newValue)=>{
+    if(!newValue){
+        emit('close')
+    }
+})
+
+const emit = defineEmits(['close'])
 </script>
 
 <template>
@@ -132,12 +140,10 @@ const onDockItemClick = (event, item) => {
         </template>
 
     </Dock>
-    <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
+    <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" containerStyle="width: 100%;height: 100%; padding: 20px;" :breakpoints="{ '960px': '50vw' }" :style="{ width: '50vw', height: '40vh' }" :maximizable="true">
         <Terminal class="w-full h-full" />
     </Dialog>
-    <Dialog class="dialog-terminal" contentStyle="width: 100%; height:100%" v-model:visible="FileSystemOpen" header="File System" :breakpoints="{ '960px': '50vw' }"  :style="{ width: '90vw', height: '90vw' }" :maximizable="true">
-            <FileSystemButtonModal class="w-full h-full"/>
-    </Dialog>
+        <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>

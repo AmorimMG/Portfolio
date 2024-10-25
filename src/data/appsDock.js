@@ -1,8 +1,9 @@
 import ClusterLinks from '../components/cards/ClusterLinks.vue';
 import Discord from '../components/cards/Discord.vue';
-import DashboardTimeline from '../components/cards/HeatMap.vue';
+import GithubHeatMap from '../components/cards/HeatMap.vue';
 import IA from '../components/cards/IA.vue';
 import CVModal from '../components/cards/modals/CVModal.vue';
+import DashboardModal from '../components/cards/modals/DashboardModal.vue';
 import EmailModal from '../components/cards/modals/EmailModal.vue';
 import LastFMModal from '../components/cards/modals/LastFMModal.vue';
 import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
@@ -13,9 +14,11 @@ import Weather from '../components/cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 /* import Actitivies from '../components/cards/Activities.vue'; */
 
+import AmorimIcon from '../assets/images/cards/profilePic.png';
 import CVIcon from '../assets/images/Dock-Icons/CV.svg';
 import FolderIcon from '../assets/images/Dock-Icons/Folder.svg';
 import LastFMIcon from '../assets/images/Dock-Icons/lastFm.svg';
+
 
 export const componentMap = {
     ClusterLinks,
@@ -30,13 +33,15 @@ export const componentMap = {
     Weather,
     ProjectsModal,
     Stack,
-    DashboardTimeline
+    GithubHeatMap,
+    DashboardModal
 };
 
 export const apps = [
     { id: 4, name: 'CVModal', colSpan: 1, rowSpan: 1, title: 'CV', icon: CVIcon },
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
-    { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon }
+    { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon },
+    { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon }
 ];
 
 export const widgets = [{ id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 }];

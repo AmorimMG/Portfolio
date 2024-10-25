@@ -1,10 +1,10 @@
 <script setup>
-import { KeyDisplay } from './keys';
-import { CharacterControls } from './characterControls';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { CharacterControls } from './characterControls';
+import { KeyDisplay } from './keys';
 
 // SCENE
 const scene = new THREE.Scene();
@@ -42,7 +42,6 @@ firstPersonControls.noFly = true;
 firstPersonControls.lookVertical = true;
 firstPersonControls.constrainVertical = true;
 
-// LIGHTS
 light();
 
 // FLOOR

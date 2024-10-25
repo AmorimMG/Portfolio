@@ -7,7 +7,7 @@ import CardEffect from "../../CardEffect.vue";
 import Projects from "../../Projects.vue";
 import VueNeonLight from "../../VueNeonLight/vue-neon-light.vue";
 
-import ThreeJS from "./ThreeJSGame/Pointerlock.vue";
+import ThreeJS from "../../ThreeJSGame/Pointerlock.vue";
 
 export default {
 	components: {

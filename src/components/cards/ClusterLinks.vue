@@ -1,9 +1,9 @@
 <script setup>
+import CardEffect from '../CardEffect.vue';
 import Discord from '../cards/Discord.vue';
 import LastFMModal from '../cards/modals/LastFMModal.vue';
-import CardEffect from '../CardEffect.vue';
-import Weather from '../cards/Weather.vue';
 import Valorant from '../cards/Valorant.vue';
+import Weather from '../cards/Weather.vue';
 </script>
 <template>
     <div class="col-4 lg:col-4 xl:col-3">

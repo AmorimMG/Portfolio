@@ -97,13 +97,18 @@ const renderedContent = computed(() => {
       </div>
       <div v-if="selectedPost" class="preview-pane w-full">
         <h2 style="color: black">{{ selectedPost.date }}.{{ selectedPost.type }}</h2>
-        <div style="color: black"class="markdown-content" v-html="renderedContent"></div>
+        <div class="markdown-content" v-html="renderedContent"></div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.markdown-content{
+    h1,h2, p{
+        color: black !important;
+    }
+}
 
 li{
     color: black;
@@ -114,6 +119,7 @@ li{
     display: flex;
     gap: 10px;
     color: black !important;
+    background-color: #f0f0f0;
 }
 
 .preview-pane{

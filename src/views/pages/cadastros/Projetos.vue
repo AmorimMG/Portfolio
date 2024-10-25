@@ -22,7 +22,7 @@ export default {
 			dataUsers: [],
 			selectedUser: [],
 			gridColumns: computed(() => [
-				{ field: "id", caption: "ID" },
+				{ field: "languages", caption: "Linguas" },
 				{ field: "title", caption: "Titulo" },
 				{ field: "subtitle", caption: "Subtitulo" },
                 { field: "description", caption: "Descrição" },

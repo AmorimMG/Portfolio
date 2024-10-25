@@ -2,10 +2,12 @@
 import { useToast } from "primevue/usetoast";
 import { RESTAPI } from "../../service/api.js";
 import CardEffect from "../CardEffect.vue";
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 
 export default {
 	components: {
 		CardEffect,
+        VueNeonLight
 	},
 	data() {
 		return {
@@ -134,7 +136,7 @@ export default {
                                 <div class="legend">
                                     <div v-for="color in GithubColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
                                 </div>
-                                <h2 class="lights center">Github</h2>
+                                <VueNeonLight color="white" size="25px" :flash="false"> Github </VueNeonLight>
                             </div>
                         </div>
                         <div class="calendar">

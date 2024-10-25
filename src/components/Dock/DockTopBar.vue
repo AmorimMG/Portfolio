@@ -2,11 +2,11 @@
 import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 
 import { useI18n } from "vue-i18n";
-import AppConfig from "../../../../layout/AppConfig.vue";
+import AppConfig from "../../layout/AppConfig.vue";
 import {
-	getLanguageCookie,
-	setLanguageCookie,
-} from "../../../../service/session";
+    getLanguageCookie,
+    setLanguageCookie,
+} from "../../service/session";
 
 const { locale } = useI18n();
 const dropdownValues = ref([
@@ -207,10 +207,10 @@ const menubarItems = ref([
             <i class="pi pi-apple px-2"></i>
         </template>
         <template #end>
-            <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown">
+            <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex align-items-center">
-                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 20px" />
+                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 15px" />
                     </div>
                     <span v-else>
                         {{ slotProps.placeholder }}
@@ -233,11 +233,15 @@ const menubarItems = ref([
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="appConfigRef.onConfigButtonClick()">
                 <i class="pi pi-cog"></i>
             </button>
+            <router-link style="opacity: 1" to="/login">
+                <button class="p-btn p-link layout-topbar-button px-2" type="button">
+                    <i class="pi pi-sign-in"></i>
+                </button>
+            </router-link>
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
                 <i class="pi pi-times"></i>
             </button>
         </template>
     </Menubar>
 </template>
-<style scoped>
-</style>
+<style lang="scss" scoped></style>

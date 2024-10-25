@@ -123,6 +123,23 @@ onMounted(() => {
 <style src="./styles.scss"></style>
 
 <style scoped>
+.black-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+}
+
+.gif-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
 
 .grid{
     margin-left: 0;
