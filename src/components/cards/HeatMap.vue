@@ -71,17 +71,9 @@ export default {
 		async getGithub(GithubUsername) {
 			try {
 				const response = await RESTAPI.ObterGithub(GithubUsername);
-				const commits = response.data;
+				this.data = response.data; // Assign the entire response data directly
 
-				for (const commit of commits) {
-					const date = new Date(commit.commit.author.date);
-					this.processGithubData({
-						date: date.toISOString().split("T")[0],
-						contributionCount: 1,
-					});
-				}
-
-				console.log("GitHub raw data:", commits);
+				console.log("GitHub raw data:", this.data);
 			} catch (error) {
 				console.log(error);
 				this.toast.add({
@@ -92,18 +84,6 @@ export default {
 			}
 		},
 
-		processGithubData(day) {
-			const date = new Date(day.date);
-			const formattedDate = this.formatDate(date);
-
-			// Ensure this.data is initialized as an object if it's initially null or undefined
-			if (!this.data[formattedDate]) {
-				this.data[formattedDate] = 0; // Initialize to zero if not yet defined
-			}
-
-			this.data[formattedDate] += day.contributionCount; // Accumulate contributions for the date
-			return this.data; // Return updated data object
-		},
 
 		formatDate(date) {
 			const year = date.getFullYear();
@@ -144,8 +124,18 @@ export default {
 			const date = new Date(currentYear, monthToCheck, day);
 			const formattedDate = this.formatDate(date);
 
-			const githubValue = this.data.github?.[formattedDate] || 0;
-			return this.getGithubColor(githubValue);
+			let contributionCount = 0;
+			// Iterate through the data to find the contribution count for the specific date
+			for (const item of this.data) {
+				for (const contributionDay of item.contributionDays) {
+					if (contributionDay.date === formattedDate) {
+						contributionCount = contributionDay.contributionCount;
+						break;
+					}
+				}
+			}
+
+			return this.getGithubColor(contributionCount);
 		},
 	},
 };
@@ -231,6 +221,16 @@ export default {
     display: flex;
 }
 
+.day {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+    font-size: 10px;
+    cursor: pointer;
+}
 .day {
     width: 15px;
     height: 15px;
