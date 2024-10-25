@@ -10,7 +10,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <div class="modal-overlay" @click="closeModal">
+  <div class="modal-wrapper" @click="closeModal">
     <div class="modal-content" @click.stop>
       <div class="modal-header">
         <div class="window-controls">
@@ -34,17 +34,11 @@ const closeModal = () => {
 </template>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.modal-wrapper {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
 .modal-content {

@@ -57,7 +57,7 @@ export default {
             <div class="popup-content" style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px);">
                 <draggable v-if="!immersive" class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="center col-4" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
+                        <Projects class="center col-4" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
                     </template>
                 </draggable>
                 <div v-else>

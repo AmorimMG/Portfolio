@@ -21,7 +21,11 @@ const props = defineProps({
     link: {
         type: String,
 		required: true,
-    }
+    },
+    languages: [{
+        type: String,
+        required: true
+    }]
 });
 </script>
 
@@ -32,7 +36,16 @@ const props = defineProps({
                 <img height="200px" :alt="title" :src="props.img" />
             </template>
             <template #title>{{ props.title }}</template>
-            <template #subtitle>{{ props.subtitle }}</template>
+            <template #subtitle>
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        {{ props.subtitle }}
+                    </div>
+                    <div class="flex gap-3 mt-1">
+                        <Tag class="p-2" v-for="language in languages" :value="language" :key="language" severity="success" ></Tag>
+                    </div>
+                </div>
+            </template>
             <template #content>
                 <p class="m-0">{{ props.description }}</p>
             </template>

@@ -7,8 +7,8 @@
       const container = this.$refs.vncContainer;
   
       // Create RFB object (Remote Frame Buffer protocol)
-      const rfb = new RFB(container, `ws://${process.env.VUE_APP_BACKEND_URL}/vnc`, {
-        credentials: { password: "YOUR_VNC_PASSWORD" }
+      const rfb = new RFB(container, `ws://localhost/vnc`, {
+        credentials: { password: "145638" }
       });
   
       // Optionally handle events

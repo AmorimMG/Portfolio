@@ -28,7 +28,7 @@ const items = ref([
 	},
 	{
 		label: "Folder",
-		icon: "https://weblog.antranigv.am/wp-content/uploads/2023/02/GenericFolderIcon.iconset-icon_512x512@2x.png",
+		icon: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Files_App_icon_iOS.png",
 		command: () => {
 			FileSystemOpen.value = true;
 		},
@@ -58,6 +58,19 @@ const items = ref([
 			});
 		},
 	},
+    {
+		label: "Vscode",
+        icon2: "https://carleton.ca/scs/wp-content/uploads/vscode-1.png",
+		icon: "https://timingapp.com/cdn-cgi/image/format=auto,width=256/img/app-icons/com.microsoft.VSCode/icon_128x128_2x.png",
+		command: () => {
+			toast.add({
+				severity: "warn",
+				summary: "Vscode has stopped working",
+				group: "tc",
+				life: 3000,
+			});
+		},
+    },
 	{
 		label: "Photos",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/photos.svg",
@@ -122,8 +135,8 @@ const onDockItemClick = (event, item) => {
     <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Terminal class="w-full h-full" />
     </Dialog>
-    <Dialog class="dialog-terminal" v-model:visible="FileSystemOpen" header="File System" :breakpoints="{ '960px': '50vw' }"  :style="{ width: '90vw', height: '90vw' }" :maximizable="true">
-        <FileSystemButtonModal class="w-full h-full"/>
+    <Dialog class="dialog-terminal" contentStyle="width: 100%; height:100%" v-model:visible="FileSystemOpen" header="File System" :breakpoints="{ '960px': '50vw' }"  :style="{ width: '90vw', height: '90vw' }" :maximizable="true">
+            <FileSystemButtonModal class="w-full h-full"/>
     </Dialog>
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />

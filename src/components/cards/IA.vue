@@ -73,16 +73,16 @@ const hideOverlay = () => {
                 <div v-if="showOverlay" class="overlay" :class="{ 'fade-out': !overlayVisible }">
                     <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }}</VueNeonLight>
                 </div>
-                    <div ref="chatWrapper" class="chat-wrapper">
+                <div ref="chatWrapper" class="chat-wrapper">
                     <div v-for="(message, index) in messages" :key="index" :class="['message', message.role, { 'error-message': message.isError }]">
                         <p>{{ message.content }}</p>
                     </div>
                 </div>
                     <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
-                    <div class="input-container">
+                <div class="input-container">
                         <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
                         <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
-                    </div>
+                </div>
             </div>
         </CardEffect>
     </div>
