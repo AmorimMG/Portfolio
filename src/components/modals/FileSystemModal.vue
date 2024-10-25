@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineEmits, watch } from "vue";
-import FileSystemModal from "../../FileSystem.vue";
+import FileSystemModal from "../FileSystem.vue";
 
 const props = defineProps({
 	visible: Boolean,

@@ -1,13 +1,13 @@
 <script>
 import { ref } from "vue";
 import draggable from "vuedraggable";
-import { projetos } from "../../../data/projetos";
-import { RESTAPI } from "../../../service/api";
-import CardEffect from "../../CardEffect.vue";
-import Projects from "../../Projects.vue";
-import VueNeonLight from "../../VueNeonLight/vue-neon-light.vue";
+import { projetos } from "../../data/projetos";
+import { RESTAPI } from "../../service/api";
+import CardEffect from "../CardEffect.vue";
+import Projects from "../Projects.vue";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
-import ThreeJS from "../../ThreeJSGame/Pointerlock.vue";
+import ThreeJS from "../ThreeJSGame/Pointerlock.vue";
 
 export default {
 	components: {

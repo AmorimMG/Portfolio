@@ -1,10 +1,10 @@
 <script>
-import { ref } from 'vue';
-import Chart from '../../Chart.vue';
-import { RESTAPI } from '../../../service/api';
 import { useToast } from 'primevue/usetoast';
-import CardEffect from '../../CardEffect.vue';
-import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
+import { ref } from 'vue';
+import { RESTAPI } from '../../service/api';
+import CardEffect from '../CardEffect.vue';
+import Chart from '../Chart.vue';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 
 export default {
     props: {

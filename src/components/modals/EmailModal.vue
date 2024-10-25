@@ -1,7 +1,7 @@
 <script>
-import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import { RESTAPI } from '../../../service/api.js';
+import { ref } from 'vue';
+import { RESTAPI } from '../../service/api.js';
 
 export default {
     props: {

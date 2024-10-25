@@ -2,10 +2,10 @@ import DashboardTimeline from "../components/cards/HeatMap.vue";
 // Profissional
 import Stack from "../components/cards/Stack.vue";
 import Terminal from "../components/cards/Terminal.vue";
-import Blog from "../components/cards/modals/BlogModal.vue";
-import CVModal from "../components/cards/modals/CVModal.vue";
-import EmailModal from "../components/cards/modals/EmailModal.vue";
-import ProjectsModal from "../components/cards/modals/ProjectsModal.vue";
+import Blog from "../components/modals/BlogModal.vue";
+import CVModal from "../components/modals/CVModal.vue";
+import EmailModal from "../components/modals/EmailModal.vue";
+import ProjectsModal from "../components/modals/ProjectsModal.vue";
 
 import ClusterLinks from "../components/cards/ClusterLinks.vue";
 import IA from "../components/cards/IA.vue";

@@ -18,7 +18,7 @@ export default {
         }
     },
     components: {
-        Dashboard: defineAsyncComponent(() => import('../../../views/Dashboard.vue'))
+        Dashboard: defineAsyncComponent(() => import('../../views/Dashboard.vue'))
     }
 };
 </script>

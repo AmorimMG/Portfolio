@@ -1,7 +1,7 @@
 <script>
 import { ref } from "vue";
-import CardEffect from "../../CardEffect.vue";
-import VueNeonLight from "../../VueNeonLight/vue-neon-light.vue";
+import CardEffect from "../CardEffect.vue";
+import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
 export default {
 	components: {
