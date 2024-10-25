@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import AmorimLogo from '../assets/images/cards/profilePic.png';
+import AmorimLogo from '../assets/images/Cards/profilePic.png';
 import Dock from '../components/Dock/Dock.vue';
 
 const isStarted = ref(false);

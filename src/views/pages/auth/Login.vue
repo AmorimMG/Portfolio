@@ -5,8 +5,8 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import Background from "../../../components/Background.vue";
 import sessionModule, {
-	getLanguageCookie,
-	setLanguageCookie,
+    getLanguageCookie,
+    setLanguageCookie,
 } from "../../../service/session.js";
 
 const { locale } = useI18n();
@@ -129,7 +129,7 @@ sessionModule.actions.logout();
                                                 </dropdown>
                         </div>
                         <div class="text-center mb-5">
-                            <img src="/src/assets/images/cards/profilePic.png" alt="Image" height="100" />
+                            <img src="/src/assets/images/Cards/profilePic.png" alt="Image" height="100" />
                             <div class="text-900 text-3xl font-medium mb-3">{{$t('Login.Welcome')}}</div>
                             <span class="text-600 font-medium">{{$t('Login.SingIn')}}</span>
                         </div>

@@ -1,18 +1,18 @@
-import DashboardTimeline from "../components/cards/HeatMap.vue";
+import DashboardTimeline from "../components/Cards/HeatMap.vue";
 // Profissional
-import Stack from "../components/cards/Stack.vue";
-import Terminal from "../components/cards/Terminal.vue";
-import Blog from "../components/modals/BlogModal.vue";
-import CVModal from "../components/modals/CVModal.vue";
-import EmailModal from "../components/modals/EmailModal.vue";
-import ProjectsModal from "../components/modals/ProjectsModal.vue";
+import Stack from "../components/Cards/Stack.vue";
+import Terminal from "../components/Cards/Terminal.vue";
+import Blog from "../components/Modals/BlogModal.vue";
+import CVModal from "../components/Modals/CVModal.vue";
+import EmailModal from "../components/Modals/EmailModal.vue";
+import ProjectsModal from "../components/Modals/ProjectsModal.vue";
 
-import ClusterLinks from "../components/cards/ClusterLinks.vue";
-import IA from "../components/cards/IA.vue";
-import Photos from "../components/cards/Photos.vue";
-import Spotify from "../components/cards/Spotify.vue";
+import ClusterLinks from "../components/Cards/ClusterLinks.vue";
+import IA from "../components/Cards/IA.vue";
+import Photos from "../components/Cards/Photos.vue";
+import Spotify from "../components/Cards/Spotify.vue";
 //Casual
-import ThreeJSComponent from "../components/cards/ThreeJS.vue";
+import ThreeJSComponent from "../components/Cards/ThreeJS.vue";
 
 export const componentMap = {
 	ClusterLinks,

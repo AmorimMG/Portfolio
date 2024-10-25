@@ -2,8 +2,8 @@
 import { useToast } from "primevue/usetoast";
 import { onMounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
-import Terminal from "../cards/Terminal.vue";
-import FileSystemModal from "../modals/FileSystemModal.vue";
+import Terminal from "../Cards/Terminal.vue";
+import FileSystemModal from "../Modals/FileSystemModal.vue";
 
 const FileSystemOpen = ref(false);
 const displayFinder = ref(false);

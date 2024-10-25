@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { onMounted, ref } from "vue";
 import draggable from "vuedraggable";
 import Background from "../components/Background.vue";
-import Introduction from "../components/cards/Introduction.vue";
+import Introduction from "../components/Cards/Introduction.vue";
 import { componentMap, cards as initialCards } from "../data/cardsDashboard";
 //#endregion
 
@@ -68,7 +68,7 @@ onMounted(() => {
         <Background />
         <ContextMenu global :model="items" />
         <div v-if="!isStarted" class="center">
-            <img class="gif-container" src="/src/assets/images/cards/glitchIntroduction.gif" />
+            <img class="gif-container" src="/src/assets/images/Cards/glitchIntroduction.gif" />
             <div class="black-screen"></div>
         </div>
         <div :class="{ 'hidden': !isStarted, 'fade-in': isStarted }" class="grid components-container justify-content-center">

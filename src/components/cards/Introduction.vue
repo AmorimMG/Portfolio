@@ -6,8 +6,8 @@ import AppConfig from "../../layout/AppConfig.vue";
 import { RESTAPI } from "../../service/api.js";
 import { getLanguageCookie, setLanguageCookie } from "../../service/session";
 import CardEffect from "../CardEffect.vue";
+import EmailModal from "../Modals/EmailModal.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
-import EmailModal from "../modals/EmailModal.vue";
 
 import { faLastfm } from "@fortawesome/free-brands-svg-icons/faLastfm";
 import { faSteamSymbol } from "@fortawesome/free-brands-svg-icons/faSteamSymbol";
