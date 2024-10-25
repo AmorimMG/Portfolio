@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import draggable from "vuedraggable";
 import {
-	componentMap,
-	apps as initialApps,
-	widgets as initialWidgets,
+    componentMap,
+    apps as initialApps,
+    widgets as initialWidgets,
 } from "../../../../data/appsDock";
 import DockBottombar from "./DockBottomBar.vue";
 import DockTopbar from "./DockTopBar.vue";
@@ -24,7 +24,7 @@ const onHide = () => {
 </script>
 
 <template>
-    <Dialog :visible="visible" @update:visible="onHide" :showHeader="false" :maximized="true" :modal="true" class="p-dialog-maximized">
+    <Dialog :visible="visible" @update:visible="onHide" :showHeader="false" :maximized="true" :modal="true" class="p-dialog-maximized" contentStyle="overflow-y: hidden;">
         <div class="dock-demo">
             <Toast position="top-center" group="tc" />
             <DockTopbar @hide="onHide" />
