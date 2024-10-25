@@ -6,7 +6,7 @@ const valorant = ref([]);
 const imageAgent = ref([]);
 const imagePeakRating = ref([]);
 
-onMounted(async () => {
+/* onMounted(async () => {
     try {
         const response = await ValorantService.getValorant();
         valorant.value = response.data;
@@ -15,10 +15,11 @@ onMounted(async () => {
     } catch (error) {
         console.error('Failed to fetch valorant data:', error);
     }
-});
+}); */
 </script>
 <template>
-    <div class="gap-2">
+    <Skeleton class="w-full h-full"></Skeleton>
+<!--     <div class="gap-2">
         <div class="center">
             <p>{{ valorant?.platformInfo?.platformUserHandle }}</p>
             <img width="30px" :src="valorant?.platformInfo?.avatarUrl" alt="Valorant" />
@@ -26,8 +27,8 @@ onMounted(async () => {
         <div class="card-body">
             <img width="20px" :src="imageAgent" alt="Valorant" />
             <img width="20px" :src="imagePeakRating" alt="Valorant" />
-        </div>
-    </div>
+        </div> 
+    </div>-->
 </template>
 <style lang="css">
 .card-body {

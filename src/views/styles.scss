@@ -151,6 +151,14 @@
     height: 100%;
     background: none;
     box-shadow: var(--card-shadow);
+    max-height: 250px !important;
+    overflow-y: auto !important;
+    border: none;
+/*
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+*/
 
     &::before {
         content: '';
@@ -171,8 +179,7 @@
 }
 
 .p-terminal-content {
-    overflow-y: auto !important;
-    max-height: 250px !important;
+    // Conteudo do terminal
 }
     
 .p-terminal-prompt {

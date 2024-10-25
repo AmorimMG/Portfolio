@@ -154,7 +154,5 @@ onBeforeUnmount(() => {
 .terminal-card {
     background: var(--surface-card);
     border-radius: 12px;
-    overflow-y: auto;
-    height: 100%;
 }
 </style>
