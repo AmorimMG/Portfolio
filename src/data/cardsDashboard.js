@@ -10,8 +10,8 @@ import ProjectsModal from "../components/Modals/ProjectsModal.vue";
 import ClusterLinks from "../components/Cards/ClusterLinks.vue";
 import IA from "../components/Cards/IA.vue";
 import Photos from "../components/Cards/Photos.vue";
-import Spotify from "../components/Cards/Spotify.vue";
 //Casual
+import Spotify from "../components/Cards/Spotify.vue";
 import ThreeJSComponent from "../components/Cards/ThreeJS.vue";
 
 export const componentMap = {

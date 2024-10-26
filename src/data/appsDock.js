@@ -15,9 +15,9 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 /* import Actitivies from '../components/Cards/Activities.vue'; */
 
 import AmorimIcon from '../assets/images/Cards/profilePic.png';
-import CVIcon from '../assets/images/Dock-Icons/CV.svg';
-import FolderIcon from '../assets/images/Dock-Icons/Folder.svg';
-import LastFMIcon from '../assets/images/Dock-Icons/lastFm.svg';
+import CVIcon from '../assets/images/dock/CV.svg';
+import FolderIcon from '../assets/images/dock/Folder.svg';
+import LastFMIcon from '../assets/images/dock/lastFm.svg';
 
 
 export const componentMap = {
@@ -44,4 +44,10 @@ export const apps = [
     { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon }
 ];
 
-export const widgets = [{ id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 }];
+export const widgets = [
+    { id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 },
+    { id: 12, name: 'GithubHeatMap', colSpan: 1, rowSpan: 1 },
+/*     { id: 8, name: 'IA', colSpan: 1, rowSpan: 1 },  */
+/*     { id: 10, name: 'Weather', colSpan: 1, rowSpan: 1 },  */
+    { id: 11, name: 'Stack', colSpan: 1, rowSpan: 1 }, 
+];

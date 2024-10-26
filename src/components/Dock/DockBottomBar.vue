@@ -140,8 +140,9 @@ const emit = defineEmits(['close'])
         </template>
 
     </Dock>
-    <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" containerStyle="width: 100%;height: 100%; padding: 20px;" :breakpoints="{ '960px': '50vw' }" :style="{ width: '50vw', height: '40vh' }" :maximizable="true">
-        <Terminal class="w-full h-full" />
+    <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" contentStyle="width: 100%; height: 100%; padding: 20px;"
+    :breakpoints="{ '960px': '50vw' }" :style="{ width: '50vw', height: '40vh' }" :maximizable="true">
+            <Terminal class="w-full h-full" />
     </Dialog>
         <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
@@ -165,11 +166,6 @@ const emit = defineEmits(['close'])
 
 .draggable-dock > a:hover {
     transform: scale(1.2);
-}
-.p-terminal .p-component {
-    border: none !important;
-    width: 100% !important;
-    height: 100% !important;
 }
 
 .dialog-terminal {

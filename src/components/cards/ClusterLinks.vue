@@ -4,7 +4,6 @@ import Discord from '../cards/Discord.vue';
 import Valorant from '../cards/Valorant.vue';
 import Weather from '../Cards/Weather.vue';
 import LastFMModal from '../Modals/LastFMModal.vue';
-
 </script>
 <template>
     <div class="col-4 lg:col-4 xl:col-3">

@@ -53,7 +53,7 @@ export const SidebarItems = [
 					{
 						label: "Swagger",
 						icon: "pi pi-fw pi-server",
-						command: () => openModal("https://api.amorim.pro/api/index.html"),
+						command: () => openModal("https://api.amorim.pro/"),
 					},
 					{
 						label: "CasaOS",

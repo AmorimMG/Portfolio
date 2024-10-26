@@ -1,62 +1,73 @@
 <script setup>
-import { ref } from "vue";
-import draggable from "vuedraggable";
-import {
-    componentMap,
-    apps as initialApps,
-    widgets as initialWidgets,
-} from "../../data/appsDock";
-import DockBottombar from "./DockBottomBar.vue";
-import DockTopbar from "./DockTopBar.vue";
+import { ref, watchEffect } from 'vue';
+import draggable from 'vuedraggable';
+import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../data/appsDock';
+import DockBottombar from './DockBottomBar.vue';
+import DockTopbar from './DockTopBar.vue';
+
+const emit = defineEmits(['update:modelValue']);
+
+const props = defineProps({
+    modelValue: {
+        type: String,
+        default: 'https://primefaces.org/cdn/primevue/images/dock/window.jpg',
+    },
+});
 
 const widgets = ref(initialWidgets);
 const apps = ref(initialApps);
+
+const background = ref(props.modelValue);
+
+watchEffect(() => {
+    background.value = props.modelValue;
+})
 </script>
 
 <template>
-        <div class="dock-demo">
-            <Toast position="top-center" group="tc" />
-            <DockTopbar @hide="onHide" />
-            <div class="dock-window dock-advanced">
-                <div class="wrapper flex justify-content-between flex-wrap">
-                    <div class="apps">
-                        <draggable class="draggableApps" v-model="apps" item-key="id" group="apps" animation="200">
-                            <template #item="{ element }">
-                                <div class="app-container">
-                                    <component
-                                        class="app-card"
-                                        :is="componentMap[element.name]"
-                                        :style="{
-                                            'grid-column': 'span ' + element.colSpan,
-                                            'grid-row': 'span ' + element.rowSpan
-                                        }"
-                                    />
-                                    <div class="app-icon-wrapper">
-                                        <img :src="element.icon" style="width: 50px" />
-                                        <div class="app-title">{{ element.title }}</div>
-                                    </div>
-                                </div>
-                            </template>
-                        </draggable>
-                    </div>
-                    <div class="widgets mr-8">
-                        <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
-                            <template #item="{ element }">
+    <div class="dock-demo">
+        <Toast position="top-center" group="tc" />
+        <DockTopbar @hide="onHide" v-model="background" />
+        <div class="dock-window dock-advanced" :style="{ 'background-image': `url(${background})` }">
+            <div class="wrapper flex justify-content-between flex-wrap">
+                <div class="apps">
+                    <draggable class="draggableApps" v-model="apps" item-key="id" group="apps" animation="200">
+                        <template #item="{ element }">
+                            <div class="app-container">
                                 <component
-                                    class="app-widgets"
+                                    class="app-card"
                                     :is="componentMap[element.name]"
                                     :style="{
                                         'grid-column': 'span ' + element.colSpan,
-                                        'grid-row': 'span ' + element.rowSpan
+                                        'grid-row': 'span ' + element.rowSpan,
                                     }"
                                 />
-                            </template>
-                        </draggable>
-                    </div>
+                                <div class="app-icon-wrapper">
+                                    <img :src="element.icon" style="width: 50px" />
+                                    <div class="app-title">{{ element.title }}</div>
+                                </div>
+                            </div>
+                        </template>
+                    </draggable>
                 </div>
-                <DockBottombar />
+                <div class="widgets mr-8">
+                    <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
+                        <template #item="{ element }">
+                            <component
+                                class="app-widgets"
+                                :is="componentMap[element.name]"
+                                :style="{
+                                    'grid-column': 'span ' + element.colSpan,
+                                    'grid-row': 'span ' + element.rowSpan,
+                                }"
+                            />
+                        </template>
+                    </draggable>
+                </div>
             </div>
+            <DockBottombar />
         </div>
+    </div>
 </template>
 <style scoped>
 .draggableApps {
@@ -144,7 +155,6 @@ const apps = ref(initialApps);
     width: 100%;
     height: 100vh;
     position: fixed;
-    background-image: url('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
