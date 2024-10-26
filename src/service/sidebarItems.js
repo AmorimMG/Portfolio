@@ -77,6 +77,12 @@ export const SidebarItems = [
 					},
 				],
 			},
+
+            {
+                label: "Ligar",
+                icon: "pi pi-power-off",
+                command: () => alert("pc ligado"),
+            }
 		],
 	},
 ];

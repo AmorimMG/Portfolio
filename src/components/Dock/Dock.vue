@@ -69,6 +69,7 @@ watchEffect(() => {
         </div>
     </div>
 </template>
+
 <style scoped>
 .draggableApps {
     display: grid;

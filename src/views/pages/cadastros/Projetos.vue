@@ -15,9 +15,7 @@ export default {
 			editaDialog: ref(false),
 			toast: useToast(),
 			product: {},
-			projeto: {
-				admin: false,
-			},
+            projeto: ref({ img: '' }),
 			editProject: "",
 			dataUsers: [],
 			selectedUser: [],
@@ -93,7 +91,10 @@ export default {
 						detail: $t("ProjetoToastCreateError"),
 						life: 3000,
 					});
-				});
+				}).finnaly(() => {
+                    this.projeto = { title: '', subtitle: '', link: '', description: '', img: '' };
+                    this.criarDialog = false;
+                });
 		},
 		EditaProjeto() {
 			RESTAPI.ProjetoEditar(this.editProject)
@@ -117,10 +118,10 @@ export default {
 				});
 		},
 		deleteUser() {
-			RESTAPI.ProjetoExcluir(this.product.id)
+			RESTAPI.ProjetoExcluir(this.product._id)
 				.then(() => {
 					this.dataUsers = this.dataUsers.filter(
-						(u) => u.id !== this.product.id,
+						(u) => u._id !== this.product._id,
 					);
 					this.deleteDialog = false;
 					this.toast.add({
@@ -155,9 +156,9 @@ export default {
 			}
 
 			this.selectedUser.forEach((user) => {
-				RESTAPI.ProjetoExcluir(user.id)
+				RESTAPI.ProjetoExcluir(user._id)
 					.then(() => {
-						this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
+						this.dataUsers = this.dataUsers.filter((u) => u._id !== user._id);
 						this.toast.add({
 							severity: "success",
 							summary: $t("SummarioToastSucesso"),
@@ -177,6 +178,16 @@ export default {
 			this.deleteAllDialog = false;
 			this.selectedUser = [];
 		},
+        onFileSelect(event) {
+                const file = event.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.projeto.img = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+        },
 		close() {
 			this.display = false;
 		},
@@ -206,7 +217,7 @@ export default {
                     ref="dt"
                     v-model:selection="selectedUser"
                     :value="dataUsers"
-                    dataKey="id"
+                    dataKey="_id"
                     :paginator="true"
                     :rows="10"
                     :filters="filters"
@@ -282,16 +293,21 @@ export default {
                         </div>
                     </div>
                     <div class="row flex">
-                        <div class="field col">
+                        <div class="field col-6">
                             <FloatLabel>
                                 <InputText id="link" v-model="projeto.link" required="true" />
                                 <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col">
+                        <div class="field col-6" style="width: -webkit-fill-available;">
                             <FloatLabel>
-                                <InputText id="imagem" v-model="projeto.img" required="true" />
-                                <label for="imagem">{{ $t('imagem') }}</label>
+                                <FileUpload
+                                    mode="basic"
+                                    accept="image/*"
+                                    chooseLabel="Choose Image"
+                                    @select="onFileSelect"
+                                />
+                                <!-- <InputText id="imagem" v-model="projeto.img" readonly required /> -->
                             </FloatLabel>
                         </div>
                     </div>

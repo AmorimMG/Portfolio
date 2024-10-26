@@ -1,6 +1,7 @@
 <script>
 import DynamicModal from './components/DynamicModal.vue';
 import NeonCursor from './components/NeonCursor.vue';
+
 export default {
     components: {
         DynamicModal,
@@ -10,6 +11,7 @@ export default {
 </script>
 
 <template>
+    <Toast />
     <router-view />
     <DynamicModal />
 <!--     <NeonCursor /> -->

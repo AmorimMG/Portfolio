@@ -7,21 +7,17 @@ import CardEffect from "../CardEffect.vue";
 import Projects from "../Projects.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
 
-import ThreeJS from "../ThreeJSGame/Pointerlock.vue";
-
 export default {
 	components: {
 		CardEffect,
 		Projects,
 		draggable,
-		VueNeonLight,
-		ThreeJS
+		VueNeonLight
 	},
 	data() {
 		return {
 			projectsVisible: ref(false),
-			projects: ref(""),
-			immersive: ref(false),
+			projects: ref("")
 		};
 	},
 	methods: {
@@ -49,20 +45,16 @@ export default {
                 </Button>
             </div>
         </CardEffect>
-        <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized" :contentStyle="immersive ? 'overflow-y: hidden' : ''">
+        <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
             <template #header>
-                <Button  @click="immersive = !immersive"> {{!immersive ? 'Imersão 3D' : 'Voltar' }}</Button>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
             <div class="popup-content" style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px);">
-                <draggable v-if="!immersive" class="grid" v-model="projects" item-key="id" group="projects" animation="200">
+                <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
                         <Projects class="center col-4" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
                     </template>
                 </draggable>
-                <div v-else>
-                    <ThreeJS />
-                </div>
             </div>
         </Dialog>
     </div>

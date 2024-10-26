@@ -50,15 +50,15 @@ const router = createRouter({
 				},
             ]
         },
-		{
-			path: "/",
-			name: "dashboard",
-			component: () => import("@/views/Dashboard.vue"),
-		},
         {
-			path: "/a",
+			path: "/",
 			name: "new-dashboard",
 			component: () => import("@/views/NewDashboard.vue"),
+		},
+		{
+			path: "/old",
+			name: "dashboard",
+			component: () => import("@/views/Dashboard.vue"),
 		},
 		{
 			path: "/tv",
