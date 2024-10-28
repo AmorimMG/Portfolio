@@ -8,13 +8,47 @@ export default {
     data() {
         return {
             dashboardData: [],
-            dashboardVisible: false
+            dashboardVisible: false,
         };
     },
     methods: {
         onHide() {
             this.$emit('close');
             this.dashboardVisible = false;
+        },
+        startResize(event, direction) {
+            event.preventDefault();
+
+            const dialogElement = document.querySelector('.dialog-terminal');
+            const { width, height, top, left } = dialogElement.getBoundingClientRect();
+
+            const startX = event.clientX;
+            const startY = event.clientY;
+
+            const resize = (e) => {
+                if (direction.includes('right')) {
+                    dialogElement.style.width = `${width + e.clientX - startX}px`;
+                }
+                if (direction.includes('bottom')) {
+                    dialogElement.style.height = `${height + e.clientY - startY}px`;
+                }
+                if (direction.includes('left')) {
+                    dialogElement.style.width = `${width - (e.clientX - startX)}px`;
+                    dialogElement.style.left = `${left + (e.clientX - startX)}px`;
+                }
+                if (direction.includes('top')) {
+                    dialogElement.style.height = `${height - (e.clientY - startY)}px`;
+                    dialogElement.style.top = `${top + (e.clientY - startY)}px`;
+                }
+            };
+
+            const stopResize = () => {
+                window.removeEventListener("mousemove", resize);
+                window.removeEventListener("mouseup", stopResize);
+            };
+
+            window.addEventListener("mousemove", resize);
+            window.addEventListener("mouseup", stopResize);
         }
     },
     components: {
@@ -24,10 +58,11 @@ export default {
 </script>
 
 <template>
-    <Button text class="w-full h-full" @click="dashboardVisible = true"/>
-    <Dialog class="dialog-terminal" contentStyle="width: 100%; height:100%;" 
+    <Button text class="w-full h-full" @click="dashboardVisible = true" />
+    <Dialog class="dialog-terminal" contentStyle="width: 100%; height: 100%;" 
             :visible="dashboardVisible"  
             @update:visible="dashboardVisible = $event"
+            @hide="onHide"
             :closable="false"
             :breakpoints="{ '960px': '50vw' }"  
             :style="{ width: '90vw', height: '90vh' }"
@@ -41,22 +76,30 @@ export default {
                     <button @click="dashboardVisible = false" class="nav-button refresh"></button>
                 </div>
                 <div class="url-bar">https://amorim.pro/</div>
-                <div class="right-section">
-                </div>
+                <div class="right-section"></div>
             </div>
         </template>
         <Dashboard v-if="dashboardVisible" />
+
+        <!-- Resizable handles -->
+        <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
+        <span class="resize-handle right" @mousedown="startResize($event, 'right')"></span>
+        <span class="resize-handle bottom" @mousedown="startResize($event, 'bottom')"></span>
+        <span class="resize-handle left" @mousedown="startResize($event, 'left')"></span>
+        <span class="resize-handle top-right" @mousedown="startResize($event, 'top right')"></span>
+        <span class="resize-handle top-left" @mousedown="startResize($event, 'top left')"></span>
+        <span class="resize-handle bottom-right" @mousedown="startResize($event, 'bottom right')"></span>
+        <span class="resize-handle bottom-left" @mousedown="startResize($event, 'bottom left')"></span>
     </Dialog>
 </template>
 
 <style scoped>
 .dialog-terminal {
+    position: relative;
     border-radius: 12px;
     overflow: hidden;
-}
-
-.dialog-header {
-    padding: 0;
+    min-width: 200px;
+    min-height: 200px;
 }
 
 .safari-header {
@@ -66,10 +109,12 @@ export default {
     background-color: #f2f2f7;
     border-bottom: 1px solid #dcdcdc;
 }
+
 .header-buttons {
     display: flex;
     gap: 8px;
 }
+
 .nav-button {
     width: 12px;
     height: 12px;
@@ -78,15 +123,11 @@ export default {
     border: none;
     cursor: pointer;
 }
-.back {
-    background-color: #ff5f57;
-}
-.forward {
-    background-color: #febc2e;
-}
-.refresh {
-    background-color: #28c840;
-}
+
+.back { background-color: #ff5f57; }
+.forward { background-color: #febc2e; }
+.refresh { background-color: #28c840; }
+
 .url-bar {
     padding: 6px 12px;
     border-radius: 8px;
@@ -97,6 +138,25 @@ export default {
     font-size: 14px;
     font-weight: 500;
 }
-.right-section {
+
+.right-section {}
+
+/* Resizable handle styling */
+.resize-handle {
+    position: absolute;
+    background-color: #666;
+    z-index: 10;
 }
+
+/* Individual handles */
+.top { top: 0; left: 0; right: 0; height: 5px; cursor: ns-resize; }
+.right { top: 0; right: 0; bottom: 0; width: 5px; cursor: ew-resize; }
+.bottom { left: 0; right: 0; bottom: 0; height: 5px; cursor: ns-resize; }
+.left { top: 0; left: 0; bottom: 0; width: 5px; cursor: ew-resize; }
+
+/* Corner handles */
+.top-right { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
+.top-left { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; }
+.bottom-left { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
 </style>

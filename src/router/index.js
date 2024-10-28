@@ -60,6 +60,11 @@ const router = createRouter({
 			name: "dashboard",
 			component: () => import("@/views/Dashboard.vue"),
 		},
+        {
+			path: "/teste",
+			name: "teste",
+			component: () => import("@/components/Select.vue"),
+		},
 		{
 			path: "/tv",
 			name: "tv",

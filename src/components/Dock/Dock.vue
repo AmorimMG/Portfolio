@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
-import draggable from 'vuedraggable';
-import { componentMap, apps as initialApps, widgets as initialWidgets } from '../../data/appsDock';
+import { widgets as initialWidgets } from '../../data/appsDock';
+import Select from '../Select.vue';
 import DockBottombar from './DockBottomBar.vue';
 import DockTopbar from './DockTopBar.vue';
 
@@ -15,9 +15,40 @@ const props = defineProps({
 });
 
 const widgets = ref(initialWidgets);
-const apps = ref(initialApps);
 
 const background = ref(props.modelValue);
+
+const items = ref([
+    {
+		label: "New Folder",
+		icon: "pi pi-folder",
+	},
+	{
+		label: "Translate",
+		icon: "pi pi-language",
+	},
+	{
+		label: "Speech",
+		icon: "pi pi-volume-up",
+		items: [
+			{
+				label: "Start",
+				icon: "pi pi-caret-right",
+			},
+			{
+				label: "Stop",
+				icon: "pi pi-pause",
+			},
+		],
+	},
+	{
+		separator: true,
+	},
+	{
+		label: "Print",
+		icon: "pi pi-print",
+	},
+]);
 
 watchEffect(() => {
     background.value = props.modelValue;
@@ -26,43 +57,13 @@ watchEffect(() => {
 
 <template>
     <div class="dock-demo">
+        <ContextMenu global :model="items" />
         <Toast position="top-center" group="tc" />
         <DockTopbar @hide="onHide" v-model="background" />
         <div class="dock-window dock-advanced" :style="{ 'background-image': `url(${background})` }">
             <div class="wrapper flex justify-content-between flex-wrap">
                 <div class="apps">
-                    <draggable class="draggableApps" v-model="apps" item-key="id" group="apps" animation="200">
-                        <template #item="{ element }">
-                            <div class="app-container">
-                                <component
-                                    class="app-card"
-                                    :is="componentMap[element.name]"
-                                    :style="{
-                                        'grid-column': 'span ' + element.colSpan,
-                                        'grid-row': 'span ' + element.rowSpan,
-                                    }"
-                                />
-                                <div class="app-icon-wrapper">
-                                    <img :src="element.icon" style="width: 50px" />
-                                    <div class="app-title">{{ element.title }}</div>
-                                </div>
-                            </div>
-                        </template>
-                    </draggable>
-                </div>
-                <div class="widgets mr-8">
-                    <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
-                        <template #item="{ element }">
-                            <component
-                                class="app-widgets"
-                                :is="componentMap[element.name]"
-                                :style="{
-                                    'grid-column': 'span ' + element.colSpan,
-                                    'grid-row': 'span ' + element.rowSpan,
-                                }"
-                            />
-                        </template>
-                    </draggable>
+                    <Select />
                 </div>
             </div>
             <DockBottombar />
@@ -114,17 +115,6 @@ watchEffect(() => {
     margin-top: -80px;
 }
 
-.app-container:hover {
-    outline: 1px solid #007ad9;
-    outline-offset: -2px;
-    background-color: rgba(0, 0, 0, 0.2);
-}
-
-.app-title {
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
 .app-widgets {
     width: 250px;
     height: 150px;
@@ -163,5 +153,10 @@ watchEffect(() => {
 .dock-demo .p-menubar {
     padding: 0;
     border-radius: 0;
+}
+
+.widgets{
+    position: absolute;
+    right: 0;
 }
 </style>

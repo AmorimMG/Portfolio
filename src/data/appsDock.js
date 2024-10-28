@@ -44,7 +44,7 @@ export const apps = [
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'projects', icon: FolderIcon },
     { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon },
-    {id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: "" },
+    {id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: FolderIcon },
 ];
 
 export const widgets = [
