@@ -2,11 +2,13 @@
 import { ref } from "vue";
 import ThreeJS from "../ThreeJSGame/Pointerlock.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import ModalHeader from "../modals/ModalHeader.vue";
 
 export default {
 	components: {
 		VueNeonLight,
-		ThreeJS
+		ThreeJS,
+        ModalHeader
 	},
 	data() {
 		return {
@@ -29,13 +31,18 @@ export default {
     <Dialog 
         v-if="pointerlockVisible" 
         :visible="pointerlockVisible" 
-        @update:visible="onHide" 
-        :maximized="true" 
+        @update:visible="onHide"
+        :maximized="true"
         :modal="true" 
+        :closable="false"
+        :unstyled="true"
         class="p-dialog-maximized" 
         style="z-index: 10;" 
         :contentStyle="'overflow-y: hidden'"
     >
+    <template #header>
+        <ModalHeader @close="onHide"/>
+    </template>
         <ThreeJS />
     </Dialog>
 </template>

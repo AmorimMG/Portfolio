@@ -71,6 +71,12 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.dock-demo {
+    padding: 0;
+    height: 100vh;
+    user-select: none;
+}
+
 .draggableApps {
     display: grid;
     grid-gap: 5px;
@@ -145,11 +151,6 @@ watchEffect(() => {
 
 .app-widgets > .h-full .card {
     width: 250px;
-}
-
-.dock-demo {
-    padding: 0;
-    height: 100vh;
 }
 
 .dock-demo > .dock-window {
