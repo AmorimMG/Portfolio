@@ -1,17 +1,5 @@
-<script setup lang="ts">
-import { defineEmits, watch } from "vue";
-import FileSystem from "../FileSystem.vue";
-
-const props = defineProps({
-	visible: Boolean,
-});
-
-watch(props, (newValue, oldValue) => {
-	if (newValue !== oldValue) {
-		console.log("Modal Visible:", newValue);
-	}
-});
-
+<script setup>
+import { defineEmits } from 'vue';
 const emit = defineEmits(["close"]);
 const closeModal = () => {
 	emit("close");
@@ -19,34 +7,16 @@ const closeModal = () => {
 </script>
 
 <template>
-<Dialog class="dialog-terminal" 
-    :visible="props.visible"  
-    :closable="false"
-    :unstyled="true"
->
-    <template #header>
-        <div class="modal-header">
+            <div class="modal-header">
             <div class="window-controls">
             <span class="close" @click="closeModal"></span>
             <span class="minimize" @click="closeModal"></span>
             <span class="maximize" @click="closeModal"></span>
             </div>
-            <div class="toolbar">
-                <button><</button>
-                <button>></button>
-                <input type="text" class="path-input" value="admin > Downloads > some-stuff" readonly />
-            </div>
         </div>
-    </template>
-    <FileSystem/>
-</Dialog>
 </template>
 
 <style scoped>
-.dialog-terminal {
-    border-radius: 12px;
-    overflow: hidden;
-}
 
 .modal-header {
   background-color: #e8e8e8;
@@ -96,11 +66,5 @@ const closeModal = () => {
   padding: 5px 10px;
   font-size: 14px;
   color: black;
-}
-
-.modal-body {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 20px;
 }
 </style>

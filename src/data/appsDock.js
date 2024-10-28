@@ -11,8 +11,8 @@ import CVModal from '../components/Modals/CVModal.vue';
 import DashboardModal from '../components/Modals/DashboardModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
-import PointerlockModal from "../components/Modals/PointerlockModal.vue";
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
+import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 /* import Actitivies from '../components/Cards/Activities.vue'; */
 
 import AmorimIcon from '../assets/images/Cards/profilePic.png';

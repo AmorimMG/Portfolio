@@ -4,11 +4,13 @@ import { onMounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
 import Terminal from "../Cards/Terminal.vue";
 import FileSystemModal from "../Modals/FileSystemModal.vue";
+import VscodeModal from '../Vscode/VscodeModal.vue';
 
 const FileSystemOpen = ref(false);
 const displayFinder = ref(false);
 const displayTerminal = ref(false);
 const displayPhotos = ref(false);
+const vscodeModalOpen = ref(false);
 const images = ref();
 const toast = useToast();
 const items = ref([
@@ -63,12 +65,7 @@ const items = ref([
         icon2: "https://carleton.ca/scs/wp-content/uploads/vscode-1.png",
 		icon: "https://timingapp.com/cdn-cgi/image/format=auto,width=256/img/app-icons/com.microsoft.VSCode/icon_128x128_2x.png",
 		command: () => {
-			toast.add({
-				severity: "warn",
-				summary: "Vscode has stopped working",
-				group: "tc",
-				life: 3000,
-			});
+            vscodeModalOpen.value = true;
 		},
     },
 	{
@@ -148,6 +145,8 @@ const emit = defineEmits(['close'])
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>
+
+    <VscodeModal @close="vscodeModalOpen = false" v-model:visible="vscodeModalOpen" />
     <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2" containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false" :showItemNavigators="true">
         <template #item="slotProps">
             <img :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
