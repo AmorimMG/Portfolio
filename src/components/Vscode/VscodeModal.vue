@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import ModalHeader from '../modals/ModalHeader.vue';
+import ModalHeader from '../Modals/ModalHeader.vue';
 import MonacoEditor from '../MonacoEditor.vue';
 import FileExplorer from './FileExplorer.vue';
 import StatusBar from './StatusBar.vue';

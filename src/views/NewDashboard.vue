@@ -1,5 +1,5 @@
 <script setup>
-import AmorimLogo from '@/assets/images/cards/profilePic.png';
+import AmorimLogo from '@/assets/images/Cards/profilePic.png';
 import { ref } from 'vue';
 import Dock from '../components/Dock/Dock.vue';
 

@@ -195,7 +195,7 @@ const sendEmail = async () => {
                     <div class="text-image-container">
                         <div class="center">
                             <CardEffect>
-                                <img class="profile-picture" src="@/assets/images/cards/eu.jpeg" alt="Image" />
+                                <img class="profile-picture" src="@/assets/images/Cards/eu.jpeg" alt="Image" />
                             </CardEffect>
                         </div>
                         <div class="center wrap" style="max-height: 100px">
