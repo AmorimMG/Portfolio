@@ -13,7 +13,7 @@ export default defineConfig(() => {
         plugins: [
             vue(),
             sentryVitePlugin({
-                authToken: process.env.SENTRY_AUTH_CODE,
+                authToken: process.env['SENTRY_AUTH_CODE'],
                 org: 'amorim-um',
                 project: 'javascript-vue'
             })
