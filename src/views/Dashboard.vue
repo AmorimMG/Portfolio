@@ -68,7 +68,7 @@ onMounted(() => {
         <Background />
         <ContextMenu global :model="items" />
         <div v-if="!isStarted" class="center">
-            <img class="gif-container" src="/src/assets/images/Cards/glitchIntroduction.gif" />
+            <img class="gif-container" src="../assets/images/Cards/glitchIntroduction.gif" />
             <div class="black-screen"></div>
         </div>
         <div :class="{ 'hidden': !isStarted, 'fade-in': isStarted }" class="grid components-container justify-content-center">
