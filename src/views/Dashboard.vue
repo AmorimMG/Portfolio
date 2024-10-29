@@ -14,7 +14,7 @@ const cards = ref(initialCards);
 const isStarted = ref(false);
 const menuVisible = ref(true);
 
-const items = ref([
+/* const items = ref([
 	{
 		label: "Translate",
 		icon: "pi pi-language",
@@ -40,7 +40,7 @@ const items = ref([
 		label: "Print",
 		icon: "pi pi-print",
 	},
-]);
+]); */
 
 const toggleMenu = () => {
 	menuVisible.value = !menuVisible.value;
@@ -66,7 +66,7 @@ onMounted(() => {
 
     <div class="layout-main-container">
         <Background />
-        <ContextMenu global :model="items" />
+<!--         <ContextMenu global :model="items" /> -->
         <div v-if="!isStarted" class="center">
             <img class="gif-container" src="@/assets/images/cards/glitchIntroduction.gif" />
             <div class="black-screen"></div>

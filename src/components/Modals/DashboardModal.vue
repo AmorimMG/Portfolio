@@ -59,7 +59,7 @@ export default {
 
 <template>
     <Button text class="w-full h-full" @click="dashboardVisible = true" />
-    <Dialog class="dialog-terminal" contentStyle="width: 100%; height: 100%;" 
+    <Dialog class="dialog-terminal" contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: auto;" 
             :visible="dashboardVisible"  
             @update:visible="dashboardVisible = $event"
             @hide="onHide"
@@ -79,9 +79,8 @@ export default {
                 <div class="right-section"></div>
             </div>
         </template>
-        <Dashboard v-if="dashboardVisible" />
+        <Dashboard class="layout-main-container" v-if="dashboardVisible" />
 
-        <!-- Resizable handles -->
         <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
         <span class="resize-handle right" @mousedown="startResize($event, 'right')"></span>
         <span class="resize-handle bottom" @mousedown="startResize($event, 'bottom')"></span>
@@ -144,7 +143,7 @@ export default {
 /* Resizable handle styling */
 .resize-handle {
     position: absolute;
-    background-color: #666;
+    background-color: transparent; /* cor do handler */
     z-index: 10;
 }
 
