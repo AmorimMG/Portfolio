@@ -1,7 +1,7 @@
 {
     "columns": 8,
     "firstgid": 1,
-    "image": "../../../assets/images/rpg/tiles.jpg",
+    "image": "@/assets/images/rpg/tiles.jpg",
     "imageheight": 256,
     "imagewidth": 256,
     "margin": 0,

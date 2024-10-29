@@ -2,11 +2,11 @@
 import { ref, watch } from 'vue';
 import AnaglyphText from '../components/Anaglyth.vue';
 
-import image1 from '../assets/images/intro/1.png';
-import image2 from '../assets/images/intro/2.png';
-import image3 from '../assets/images/intro/3.png';
-import image4 from '../assets/images/intro/4.png';
-import image5 from '../assets/images/intro/5.png';
+import image1 from '@/assets/images/intro/1.png';
+import image2 from '@/assets/images/intro/2.png';
+import image3 from '@/assets/images/intro/3.png';
+import image4 from '@/assets/images/intro/4.png';
+import image5 from '@/assets/images/intro/5.png';
 
 const images2 = ref([
     { id: 1, url: image1, title: '1thd', path: '/pointerlock' },
