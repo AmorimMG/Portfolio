@@ -1,7 +1,7 @@
 <script setup>
-import AmorimLogo from '@/assets/images/Cards/profilePic.png';
-import MacOSBackground from '@/assets/images/Dock/macOSbackground.jpg';
 import { ref } from 'vue';
+import AmorimLogo from '../assets/images/Cards/profilePic.png';
+import MacOSBackground from '../assets/images/Dock/macOSbackground.jpg';
 import Dock from '../components/Dock/Dock.vue';
 
 const isStarted = ref(false);
