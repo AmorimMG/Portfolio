@@ -1,6 +1,6 @@
 <script setup>
 import AmorimLogo from '@/assets/images/cards/profilePic.png';
-import MacOSBackground from '@/assets/images/dock/macos-background.png';
+import MacOSBackground from '@/assets/images/dock/macOSbackground.jpg';
 import { ref } from 'vue';
 import Dock from '../components/Dock/Dock.vue';
 
