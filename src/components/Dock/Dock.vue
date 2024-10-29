@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
-import { widgets as initialWidgets } from '../../data/appsDock';
+import draggable from 'vuedraggable';
+import { componentMap, widgets as initialWidgets } from '../../data/appsDock';
 import Select from '../Select.vue';
 import DockBottombar from './DockBottomBar.vue';
 import DockTopbar from './DockTopBar.vue';
@@ -61,9 +62,23 @@ watchEffect(() => {
         <Toast position="top-center" group="tc" />
         <DockTopbar @hide="onHide" v-model="background" />
         <div class="dock-window dock-advanced" :style="{ 'background-image': `url(${background})` }">
-            <div class="wrapper flex justify-content-between flex-wrap">
+            <div class="wrapper flex justify-content-between">
                 <div class="apps">
                     <Select />
+                </div>
+                <div class="widgets mr-8">
+                    <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
+                        <template #item="{ element }">
+                            <component
+                                class="app-widgets"
+                                :is="componentMap[element.name]"
+                                :style="{
+                                    'grid-column': 'span ' + element.colSpan,
+                                    'grid-row': 'span ' + element.rowSpan,
+                                }"
+                            />
+                        </template>
+                    </draggable>
                 </div>
             </div>
             <DockBottombar />
@@ -78,12 +93,27 @@ watchEffect(() => {
     user-select: none;
 }
 
-.draggableApps {
-    display: grid;
-    grid-gap: 5px;
+.dock-demo > .dock-window {
     width: 100%;
-    grid-template-rows: repeat(5, 1fr);
-    grid-auto-flow: column;
+    height: 100vh;
+    position: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.dock-demo .p-menubar {
+    padding: 0;
+    border-radius: 0;
+}
+
+.apps{
+    width: 100vw;
+    height: 100vh;
+}
+
+.widgets{
+    position: absolute;
+    right: 0;
 }
 
 .draggableWidgets {
@@ -92,33 +122,6 @@ watchEffect(() => {
     gap: 20px;
     grid-template-rows: repeat(3, 1fr);
     grid-auto-flow: column;
-}
-
-.app-card {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    opacity: 0;
-}
-
-.app-card * {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    flex-flow: wrap;
-}
-
-.app-icon-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: -80px;
 }
 
 .app-widgets {
@@ -143,21 +146,4 @@ watchEffect(() => {
     width: 250px;
 }
 
-.dock-demo > .dock-window {
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.dock-demo .p-menubar {
-    padding: 0;
-    border-radius: 0;
-}
-
-.widgets{
-    position: absolute;
-    right: 0;
-}
 </style>

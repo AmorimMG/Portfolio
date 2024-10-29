@@ -4,7 +4,6 @@ import { ref } from "vue";
 import draggable from 'vuedraggable';
 import { componentMap, apps as initialApps } from '../data/appsDock';
 
-// Import your components directly (assumes your imports are correct)
 import ClusterLinks from '../components/Cards/ClusterLinks.vue';
 import Discord from '../components/Cards/Discord.vue';
 import GithubHeatMap from '../components/Cards/HeatMap.vue';
@@ -18,8 +17,8 @@ import CVModal from '../components/Modals/CVModal.vue';
 import DashboardModal from '../components/Modals/DashboardModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
-import PointerlockModal from "../components/Modals/PointerlockModal.vue";
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
+import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
 export default {
     components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, DashboardModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal },
@@ -63,7 +62,6 @@ export default {
     },
 
     mounted() {
-        // Log componentMap to check if all components are properly loaded
         console.log('Component Map:', componentMap);
     }
 };
@@ -97,21 +95,6 @@ export default {
                 </div>
             </template>
         </draggable>
-        
-        <div class="widgets mr-8">
-                    <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
-                        <template #item="{ element }">
-                            <component
-                                class="app-card"
-                                :is="componentMap[element.name] || 'div'" 
-                                :style="{
-                                    'grid-column': 'span ' + element.colSpan,
-                                    'grid-row': 'span ' + element.rowSpan,
-                                }"
-                            />
-                        </template>
-        </draggable>
-    </div>
 
 <!-- <div
         v-for="id in range(400, 84)"
@@ -125,11 +108,22 @@ export default {
 
 <style>
 .draggableApps {
-    /* display: grid;
+    margin-bottom: 20vh;
+    display: inherit;
     grid-gap: 5px;
-    width: 100%;
-    grid-template-rows: repeat(5, 1fr);
-    grid-auto-flow: column; */
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    grid-auto-flow: column;
+}
+
+.app-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    transition: background-color 0.3s ease;
 }
 
 .app-container:hover {
@@ -153,13 +147,22 @@ export default {
     opacity: 0;
 }
 
+.app-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: -80px;
+}
+
 .container {
     padding: 0.5rem;
     display: grid;
     grid-gap: 0.5rem;
     grid-template-columns: repeat(20, 1fr);
     flex-wrap: wrap;
-    width: 80vw;
+    width: 100vw;
     height: 100vh;
     border-radius: 0.5rem;
     user-select: none;
@@ -171,6 +174,8 @@ export default {
 
 .selected {
     background-color: #4f90f2;
+    width: 100%;
+    height: 100%;
 }
 
 .selection-area {
