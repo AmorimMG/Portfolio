@@ -103,7 +103,7 @@ watch(dropdownValue, (newValue, oldValue) => {
 <template>
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo center">
-            <img alt="Logo" src="../assets/images/Cards/profilePic.png" />
+            <img alt="Logo" src="@/assets/images/Cards/profilePic.png" />
         </router-link>
         <button class="p-link layout-menu-button layout-topbar-button " @click="onMenuToggle()">
             <i class="pi pi-bars"></i>

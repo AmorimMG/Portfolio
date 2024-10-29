@@ -1,5 +1,4 @@
 <script setup>
-import macOSBackground from '@/assets/images/Dock/macOSbackground.jpg';
 import { ref } from 'vue';
 import AmorimLogo from '../assets/images/cards/profilePic.png';
 import Dock from '../components/Dock/Dock.vue';
@@ -24,7 +23,7 @@ const isStarted = ref(false);
         <Password placeholder="*****" :feedback="false" />
         <Button icon="pi pi-question" outlined class="p-button-rounded"/>
     </div>
-    <img width="100%" height="100%" class="background-container" :src="macOSBackground" />
+    <img width="100%" height="100%" class="background-container" src="@/assets/images/Dock/macOSbackground.jpg" />
 </div>
 <Dock v-else />
 </template>

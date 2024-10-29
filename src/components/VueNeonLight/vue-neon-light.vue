@@ -45,7 +45,7 @@ export default {
 <template>
     <Component :is="effectComponent">
         <span class="neon-text" :style="neonStyle" :class="{ flash: flash }">
-            {{ $slots.default()[0].children }}
+            {{ $slots.default?.()[0]?.children }}
         </span>
     </Component>
 </template>

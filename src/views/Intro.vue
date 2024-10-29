@@ -58,7 +58,7 @@ const prev = () => {
     <div class="page">
         <AnaglyphText class="center" text="Portfolios" />
         <div :class="['center w-full', bgEffectClass]">
-            <img class="tv" src="../assets/images/intro/tv.webp" />
+            <img class="tv" src="@/assets/images/intro/tv.webp" />
             <Galleria
                 v-model:activeIndex="activeIndex"
                 class="channels"
@@ -78,7 +78,7 @@ const prev = () => {
             </Galleria>
         </div>
         <div>
-            <img class="controle" src="../assets/images/intro/controle.png" />
+            <img class="controle" src="@/assets/images/intro/controle.png" />
             <div class="botoes-controle">
                 <div class="grid gap-2">
                     <Button class="botao-controle" icon="pi pi-arrow-left" @click="prev" />
