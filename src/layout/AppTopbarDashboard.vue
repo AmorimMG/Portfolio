@@ -103,7 +103,7 @@ watch(dropdownValue, (newValue, oldValue) => {
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo center flex-row" style="margin-top: 15px">
             <VueNeonLight color="#ff00ff" size="50px" :flash="true"> AMORIM </VueNeonLight>
-            <!-- <img alt="Logo" src="@/assets//images/Cards/profilePic.png" /> -->
+            <!-- <img alt="Logo" src="@/assets//images/cards/profilePic.png" /> -->
         </router-link>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton">

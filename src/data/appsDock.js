@@ -15,7 +15,7 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 /* import Actitivies from '../components/Cards/Activities.vue'; */
 
-import AmorimIcon from '@/assets/images/Cards/profilePic.png';
+import AmorimIcon from '@/assets/images/cards/profilePic.png';
 import CVIcon from '@/assets/images/dock/CV.svg';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
 import LastFMIcon from '@/assets/images/dock/lastFm.svg';
