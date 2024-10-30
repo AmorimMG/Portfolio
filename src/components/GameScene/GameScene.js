@@ -1,6 +1,6 @@
+import character from '@/assets/images/rpg/character.png';
+import tiles from '@/assets/images/rpg/tiles.jpg';
 import Phaser from 'phaser';
-import tiles from '../../../assets/images/rpg/tiles.jpg';
-import character from '../../../assets/images/rpg/character.png';
 
 class GameScene extends Phaser.Scene {
     constructor() {

@@ -1,8 +1,8 @@
 <script>
 import { ref } from "vue";
+import ModalHeader from "../Modals/ModalHeader.vue";
 import ThreeJS from "../ThreeJSGame/Pointerlock.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
-import ModalHeader from "../modals/ModalHeader.vue";
 
 export default {
 	components: {

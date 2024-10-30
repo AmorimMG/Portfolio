@@ -129,7 +129,7 @@ export default {
 <template>
     <div class="col-12 lg:col-12 xl:col-12">
         <CardEffect>
-            <div class="card mb-0 center">
+            <div id="GithubHeatMap" class="card mb-0 center">
                     <div class="calendar-heatmap">
                         <div class="flex w-full gap-1 justify-content-between">
                             <div class="legend-container">

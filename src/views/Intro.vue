@@ -2,11 +2,11 @@
 import { ref, watch } from 'vue';
 import AnaglyphText from '../components/Anaglyth.vue';
 
-import image1 from '../assets/images/intro/1.png';
-import image2 from '../assets/images/intro/2.png';
-import image3 from '../assets/images/intro/3.png';
-import image4 from '../assets/images/intro/4.png';
-import image5 from '../assets/images/intro/5.png';
+import image1 from '@/assets/images/intro/1.png';
+import image2 from '@/assets/images/intro/2.png';
+import image3 from '@/assets/images/intro/3.png';
+import image4 from '@/assets/images/intro/4.png';
+import image5 from '@/assets/images/intro/5.png';
 
 const images2 = ref([
     { id: 1, url: image1, title: '1thd', path: '/pointerlock' },
@@ -58,7 +58,7 @@ const prev = () => {
     <div class="page">
         <AnaglyphText class="center" text="Portfolios" />
         <div :class="['center w-full', bgEffectClass]">
-            <img class="tv" src="../assets/images/intro/tv.webp" />
+            <img class="tv" src="@/assets/images/intro/tv.webp" />
             <Galleria
                 v-model:activeIndex="activeIndex"
                 class="channels"
@@ -78,7 +78,7 @@ const prev = () => {
             </Galleria>
         </div>
         <div>
-            <img class="controle" src="../assets/images/intro/controle.png" />
+            <img class="controle" src="@/assets/images/intro/controle.png" />
             <div class="botoes-controle">
                 <div class="grid gap-2">
                     <Button class="botao-controle" icon="pi pi-arrow-left" @click="prev" />

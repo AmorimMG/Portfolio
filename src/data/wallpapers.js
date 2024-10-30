@@ -1,17 +1,17 @@
-import Wallpaper1 from '../assets/images/wallpapers/1.jpg';
-import Wallpaper10 from '../assets/images/wallpapers/10.png';
-import Wallpaper11 from '../assets/images/wallpapers/11.png';
-import Wallpaper12 from '../assets/images/wallpapers/12.png';
-import Wallpaper13 from '../assets/images/wallpapers/13.jpg';
-import Wallpaper14 from '../assets/images/wallpapers/14.png';
-import Wallpaper2 from '../assets/images/wallpapers/2.jpg';
-import Wallpaper3 from '../assets/images/wallpapers/3.png';
-import Wallpaper4 from '../assets/images/wallpapers/4.png';
-import Wallpaper5 from '../assets/images/wallpapers/5.png';
-import Wallpaper6 from '../assets/images/wallpapers/6.jpg';
-import Wallpaper7 from '../assets/images/wallpapers/7.png';
-import Wallpaper8 from '../assets/images/wallpapers/8.png';
-import Wallpaper9 from '../assets/images/wallpapers/9.png';
+import Wallpaper1 from '@/assets/images/wallpapers/1.jpg';
+import Wallpaper10 from '@/assets/images/wallpapers/10.png';
+import Wallpaper11 from '@/assets/images/wallpapers/11.png';
+import Wallpaper12 from '@/assets/images/wallpapers/12.png';
+import Wallpaper13 from '@/assets/images/wallpapers/13.jpg';
+import Wallpaper14 from '@/assets/images/wallpapers/14.png';
+import Wallpaper2 from '@/assets/images/wallpapers/2.jpg';
+import Wallpaper3 from '@/assets/images/wallpapers/3.png';
+import Wallpaper4 from '@/assets/images/wallpapers/4.png';
+import Wallpaper5 from '@/assets/images/wallpapers/5.png';
+import Wallpaper6 from '@/assets/images/wallpapers/6.jpg';
+import Wallpaper7 from '@/assets/images/wallpapers/7.png';
+import Wallpaper8 from '@/assets/images/wallpapers/8.png';
+import Wallpaper9 from '@/assets/images/wallpapers/9.png';
 
 export const wallpapers = [
     { label: 'Wallpaper 1', value: Wallpaper1 },

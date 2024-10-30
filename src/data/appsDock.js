@@ -15,10 +15,10 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 /* import Actitivies from '../components/Cards/Activities.vue'; */
 
-import AmorimIcon from '../assets/images/Cards/profilePic.png';
-import CVIcon from '../assets/images/dock/CV.svg';
-import FolderIcon from '../assets/images/dock/Folder.svg';
-import LastFMIcon from '../assets/images/dock/lastFm.svg';
+import AmorimIcon from '@/assets/images/cards/profilePic.png';
+import CVIcon from '@/assets/images/dock/CV.svg';
+import FolderIcon from '@/assets/images/dock/Folder.svg';
+import LastFMIcon from '@/assets/images/dock/lastFm.svg';
 
 
 export const componentMap = {
@@ -44,8 +44,8 @@ export const apps = [
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'projects', icon: FolderIcon },
     { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon },
-    {id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: "" },
-];
+    { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: FolderIcon }
+]
 
 export const widgets = [
     { id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 },

@@ -88,11 +88,12 @@ export default {
 
 <style>
 .canvasD {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: -999999;
     pointer-events: none;
     opacity: 0.2;
+    max-width: -webkit-fill-available;;
 }
 </style>

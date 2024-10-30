@@ -1,6 +1,7 @@
 <script setup>
+import AmorimLogo from '@/assets/images/cards/profilePic.png';
+import MacOSBackground from '@/assets/images/dock/macOSbackground.jpg';
 import { ref } from 'vue';
-import AmorimLogo from '../assets/images/Cards/profilePic.png';
 import Dock from '../components/Dock/Dock.vue';
 
 const isStarted = ref(false);
@@ -8,6 +9,11 @@ const isStarted = ref(false);
 
 <template>
 <div v-if="!isStarted" class="login-screen center">
+    <div>
+        <p style="color: red;">-------------------------</p>
+        <p style="color: red;">Work in progress</p>
+        <p style="color: red;">-------------------------</p>
+    </div>
     <div style="position: relative;">
         <div style="position: absolute; top: -5px; left: -5px; width: 110px; height: 110px; border: 5px solid black; border-radius: 25%;"></div>
         <Image :src="AmorimLogo" alt="Image" width="100" style="top: -1px;" />
@@ -18,7 +24,7 @@ const isStarted = ref(false);
         <Password placeholder="*****" :feedback="false" />
         <Button icon="pi pi-question" outlined class="p-button-rounded"/>
     </div>
-    <img width="100%" height="100%" class="background-container" src="/src/assets/images/Dock/macOSbackground.jpg" />
+    <img width="100%" height="100%" class="background-container" :src="MacOSBackground" />
 </div>
 <Dock v-else />
 </template>
