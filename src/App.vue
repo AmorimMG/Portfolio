@@ -11,6 +11,7 @@ export default {
 </script>
 
 <template>
+    <Message class="absolute top-0 w-full z-5" style="color: white" severity="info" icon="pi pi-info">In Development</Message>
     <Toast />
     <router-view />
     <DynamicModal />
