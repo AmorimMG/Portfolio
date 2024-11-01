@@ -9,11 +9,6 @@ const isStarted = ref(false);
 
 <template>
 <div v-if="!isStarted" class="login-screen center">
-    <div>
-        <p style="color: red;">-------------------------</p>
-        <p style="color: red;">Work in progress</p>
-        <p style="color: red;">-------------------------</p>
-    </div>
     <div style="position: relative;">
         <div style="position: absolute; top: -5px; left: -5px; width: 110px; height: 110px; border: 5px solid black; border-radius: 25%;"></div>
         <Image :src="AmorimLogo" alt="Image" width="100" style="top: -1px;" />

@@ -1,21 +1,26 @@
 <script>
+import { useToast } from "primevue/usetoast";
 import DynamicModal from './components/DynamicModal.vue';
-import NeonCursor from './components/NeonCursor.vue';
 
 export default {
     components: {
-        DynamicModal,
-        NeonCursor
+        DynamicModal
+    },
+    mounted(){
+        useToast().add({ severity: 'warn', summary: 'Warn Message', detail: 'This Project is in Development' });
     }
 };
 </script>
 
 <template>
-    <Message class="absolute top-0 w-full z-5" style="color: white" severity="info" icon="pi pi-info">In Development</Message>
     <Toast />
     <router-view />
     <DynamicModal />
-<!--     <NeonCursor /> -->
+    <NeonCursor />
 </template>
 
-<style scoped></style>
+<style>
+body{
+    user-select: none;
+}
+</style>
