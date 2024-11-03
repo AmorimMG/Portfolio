@@ -49,23 +49,19 @@ export default {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3 pb-0">
-        <CardEffect>
-            <div class="card mb-0 center" style="padding: 0">
-                <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
+    <div class="col-12 lg:col-12 xl:col-12 pb-0">
+        <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
                     <VueNeonLight size="15px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
-                </Button>
+        </Button>
+        <Dialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
+            <template #header>
+                <div class="inline-flex align-items-center justify-content-center gap-2">
+                    <h2>Your Weekly Track Chart</h2>
+                </div>
+            </template>
+            <div class="popup-content" style="height: 100%; height: 100% !important; overflow-y: auto !important; overflow-x: hidden !important">
+                <Chart :lastFMData="lastFMData" />
             </div>
-        </CardEffect>
-    <Dialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
-        <template #header>
-            <div class="inline-flex align-items-center justify-content-center gap-2">
-                <h2>Your Weekly Track Chart</h2>
-            </div>
-        </template>
-        <div class="popup-content" style="height: 100%; height: 100% !important; overflow-y: auto !important; overflow-x: hidden !important">
-            <Chart :lastFMData="lastFMData" />
-        </div>
-    </Dialog>
+        </Dialog>
     </div>
 </template>

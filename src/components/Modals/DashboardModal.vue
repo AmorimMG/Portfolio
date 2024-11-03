@@ -70,6 +70,7 @@ const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue')
                     <button @click="dashboardVisible = false" class="nav-button refresh"></button>
                 </div>
                 <div class="url-bar">https://amorim.pro/</div>
+                <div class="right-section"></div>
             </div>
         </template>
         <Dashboard ref="el" class="layout-main-container" v-if="dashboardVisible" />

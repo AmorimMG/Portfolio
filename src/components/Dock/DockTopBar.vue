@@ -7,6 +7,7 @@ import {
     getLanguageCookie,
     setLanguageCookie,
 } from "../../service/session";
+import CameraModal from "../Modals/CameraModal.vue";
 import ConfigModal from "../Modals/ConfigModal.vue";
 
 const { locale } = useI18n();
@@ -17,15 +18,28 @@ const dropdownValues = ref([
 ]);
 const dropdownValue = ref(null);
 const configModalVisible = ref(false);
+const cameraModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
 const onClose = () => {
 	emit("hide");
 };
 const currentTime = ref("");
 const timer = ref(null);
+const volumeValue = ref(null);
 
- const toggle = () => {
+const opWifi = ref();
+const opVolume = ref();
+
+ const toggleConfig = () => {
     configModalVisible.value = true;
+}
+
+const toggleWifi = (event) => {
+    opWifi.value.toggle(event);
+}
+
+const toggleVolume = (event) => {
+    opVolume.value.toggle(event);
 }
 
 const updateTime = () => {
@@ -226,9 +240,9 @@ const menubarItems = ref([
                     </div>
                 </template>
             </dropdown>
-            <i class="pi pi-video px-2" />
-            <i class="pi pi-wifi px-2" />
-            <i class="pi pi-volume-up px-2" />
+            <i class="pi pi-video px-2" @click="cameraModalVisible = true" />
+            <i class="pi pi-wifi px-2" @click="toggleWifi" />
+            <i class="pi pi-volume-up px-2" @click="toggleVolume"/>
             <span class="px-2">{{ currentTime }}</span>
             <i class="pi pi-search px-2" />
             <i class="pi pi-bars px-2" />
@@ -236,7 +250,7 @@ const menubarItems = ref([
             <button
                 type="button"
                 class="p-btn p-link layout-topbar-button px-2"
-                @click="toggle"
+                @click="toggleConfig"
             >
                 <i class="pi pi-palette"></i>
             </button>
@@ -251,6 +265,15 @@ const menubarItems = ref([
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
                 <i class="pi pi-times"></i>
             </button>
+            <OverlayPanel ref="opWifi">
+                aaaa sou um wifi
+            </OverlayPanel>
+
+            <OverlayPanel ref="opVolume">
+                <Slider v-model="volumeValue" class="w-14rem" />
+            </OverlayPanel>
+
+            <CameraModal @close="cameraModalVisible = false" v-model:visible="cameraModalVisible" />
             <ConfigModal @close="configModalVisible = false" v-model:visible="configModalVisible"  @update:modelValue="$emit('update:modelValue', $event)"/>
         </template>
     </Menubar>
