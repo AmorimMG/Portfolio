@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { defineEmits, watch } from "vue";
+import { defineEmits, ref, watch } from "vue";
 import FileSystem from "../FileSystem.vue";
 
 const props = defineProps({
 	visible: Boolean,
 });
+
+const isMaximized = ref(false);
 
 watch(props, (newValue, oldValue) => {
 	if (newValue !== oldValue) {
@@ -16,6 +18,10 @@ const emit = defineEmits(["close"]);
 const closeModal = () => {
 	emit("close");
 };
+
+const toggleMaximize = () => {
+  isMaximized.value = !isMaximized.value;
+};
 </script>
 
 <template>
@@ -23,13 +29,14 @@ const closeModal = () => {
     :visible="props.visible"  
     :closable="false"
     :unstyled="true"
+    :class="{ 'maximized': isMaximized }"
 >
     <template #header>
         <div class="modal-header">
             <div class="window-controls">
             <span class="close" @click="closeModal"></span>
             <span class="minimize" @click="closeModal"></span>
-            <span class="maximize" @click="closeModal"></span>
+            <span class="maximize" @click="toggleMaximize"></span>
             </div>
             <div class="toolbar">
                 <button><</button>
@@ -46,6 +53,17 @@ const closeModal = () => {
 .dialog-terminal {
     border-radius: 12px;
     overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.maximized {
+  transform: scale(1.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
 }
 
 .modal-header {

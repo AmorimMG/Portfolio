@@ -94,6 +94,7 @@ export default {
     z-index: -999999;
     pointer-events: none;
     opacity: 0.2;
-    max-width: -webkit-fill-available;;
+    max-width: -webkit-fill-available;
+    max-height: -webkit-fill-available;
 }
 </style>

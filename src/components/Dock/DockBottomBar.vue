@@ -62,8 +62,9 @@ const items = ref([
 	},
     {
 		label: "Vscode",
+        icon: vscodeIcon,
         icon2: "https://carleton.ca/scs/wp-content/uploads/vscode-1.png",
-		icon: "https://timingapp.com/cdn-cgi/image/format=auto,width=256/img/app-icons/com.microsoft.VSCode/icon_128x128_2x.png",
+		icon3: "https://timingapp.com/cdn-cgi/image/format=auto,width=256/img/app-icons/com.microsoft.VSCode/icon_128x128_2x.png",
 		command: () => {
             vscodeModalOpen.value = true;
 		},
