@@ -1,65 +1,59 @@
-<script>
-import { defineAsyncComponent } from 'vue';
+<script setup>
+import { vElementSize } from '@vueuse/components';
+import { defineAsyncComponent, ref } from 'vue';
 
-export default {
-    props: {
-        header: String
-    },
-    data() {
-        return {
-            dashboardData: [],
-            dashboardVisible: false,
-        };
-    },
-    methods: {
-        onHide() {
-            this.$emit('close');
-            this.dashboardVisible = false;
-        },
-        startResize(event, direction) {
-            event.preventDefault();
+const props = defineProps({
+    header: String
+});
 
-            const dialogElement = document.querySelector('.dialog-terminal');
-            const { width, height, top, left } = dialogElement.getBoundingClientRect();
-
-            const startX = event.clientX;
-            const startY = event.clientY;
-
-            const resize = (e) => {
-                if (direction.includes('right')) {
-                    dialogElement.style.width = `${width + e.clientX - startX}px`;
-                }
-                if (direction.includes('bottom')) {
-                    dialogElement.style.height = `${height + e.clientY - startY}px`;
-                }
-                if (direction.includes('left')) {
-                    dialogElement.style.width = `${width - (e.clientX - startX)}px`;
-                    dialogElement.style.left = `${left + (e.clientX - startX)}px`;
-                }
-                if (direction.includes('top')) {
-                    dialogElement.style.height = `${height - (e.clientY - startY)}px`;
-                    dialogElement.style.top = `${top + (e.clientY - startY)}px`;
-                }
-            };
-
-            const stopResize = () => {
-                window.removeEventListener("mousemove", resize);
-                window.removeEventListener("mouseup", stopResize);
-            };
-
-            window.addEventListener("mousemove", resize);
-            window.addEventListener("mouseup", stopResize);
-        }
-    },
-    components: {
-        Dashboard: defineAsyncComponent(() => import('../../views/Dashboard.vue'))
-    }
+const dashboardVisible = ref(false);
+const emit = defineEmits(["close"]);
+const onHide = () => {
+    emit('close');
+    dashboardVisible.value = false;
 };
+
+const startResize = (event, direction) => {
+    event.preventDefault();
+
+    const dialogElement = document.querySelector('.dialog-terminal');
+    const { width, height, top, left } = dialogElement.getBoundingClientRect();
+
+    const startX = event.clientX;
+    const startY = event.clientY;
+
+    const resize = (e) => {
+        if (direction.includes('right')) {
+            dialogElement.style.width = `${width + e.clientX - startX}px`;
+        }
+        if (direction.includes('bottom')) {
+            dialogElement.style.height = `${height + e.clientY - startY}px`;
+        }
+        if (direction.includes('left')) {
+            dialogElement.style.width = `${width - (e.clientX - startX)}px`;
+            dialogElement.style.left = `${left + (e.clientX - startX)}px`;
+        }
+        if (direction.includes('top')) {
+            dialogElement.style.height = `${height - (e.clientY - startY)}px`;
+            dialogElement.style.top = `${top + (e.clientY - startY)}px`;
+        }
+    };
+
+    const stopResize = () => {
+        window.removeEventListener("mousemove", resize);
+        window.removeEventListener("mouseup", stopResize);
+    };
+
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResize);
+};
+
+const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue'));
 </script>
 
 <template>
     <Button text class="w-full h-full" @click="dashboardVisible = true" />
-    <Dialog class="dialog-terminal" contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: auto;" 
+    <Dialog v-element-size="onResize" class="dialog-terminal" contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: auto;" 
             :visible="dashboardVisible"  
             @update:visible="dashboardVisible = $event"
             @hide="onHide"
@@ -76,12 +70,11 @@ export default {
                     <button @click="dashboardVisible = false" class="nav-button refresh"></button>
                 </div>
                 <div class="url-bar">https://amorim.pro/</div>
-                <div class="right-section"></div>
             </div>
         </template>
-        <Dashboard class="layout-main-container" v-if="dashboardVisible" />
+        <Dashboard ref="el" class="layout-main-container" v-if="dashboardVisible" />
 
-        <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
+         <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
         <span class="resize-handle right" @mousedown="startResize($event, 'right')"></span>
         <span class="resize-handle bottom" @mousedown="startResize($event, 'bottom')"></span>
         <span class="resize-handle left" @mousedown="startResize($event, 'left')"></span>
@@ -138,12 +131,10 @@ export default {
     font-weight: 500;
 }
 
-.right-section {}
-
 /* Resizable handle styling */
 .resize-handle {
     position: absolute;
-    background-color: transparent; /* cor do handler */
+    background-color: red; /* cor do handler */
     z-index: 10;
 }
 

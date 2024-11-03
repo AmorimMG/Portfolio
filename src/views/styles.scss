@@ -121,11 +121,17 @@
     top: 22px;
 }
 
+.terminal-card{
+    height: 100%;
+    max-height: -webkit-fill-available;
+    overflow-y: auto;
+}
+
 .p-terminal{
     height: 100%;
     background: none;
     box-shadow: var(--card-shadow);
-    max-height: 250px !important;
+/*     max-height: 250px !important; */
     overflow-y: auto !important;
     border: none;
 /*

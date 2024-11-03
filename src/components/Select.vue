@@ -76,7 +76,7 @@ export default {
     >
         <draggable class="draggableApps" v-model="apps" item-key="id" group="apps" animation="200">
             <template #item="{ element }">
-                <div class="app-container">
+                <div class="app-container" :class="{ selected: selected.has(element.id)}">
                     <component
                         class="app-card"
                         :is="getComponent(element.name)"
@@ -88,7 +88,7 @@ export default {
                     <div class="app-icon-wrapper selectable" 
                         :key="element.id"
                         :data-key="element.id"
-                        :class="{ selected: selected.has(element.id)}">
+                        >
                         <img :src="element.icon" style="width: 50px" />
                         <div class="app-title">{{ element.title }}</div>
                     </div>

@@ -1,4 +1,5 @@
 <script setup>
+import { useToast } from "primevue/usetoast";
 import { ref, watchEffect } from 'vue';
 import draggable from 'vuedraggable';
 import { componentMap, widgets as initialWidgets } from '../../data/appsDock';
@@ -18,11 +19,15 @@ const props = defineProps({
 const widgets = ref(initialWidgets);
 
 const background = ref(props.modelValue);
+const toast = useToast();
 
 const items = ref([
     {
 		label: "New Folder",
 		icon: "pi pi-folder",
+		command: () => {
+			toast.add({ severity: "info", summary: "Empty Trash", life: 3000 });
+		},
 	},
 	{
 		label: "Translate",
@@ -137,7 +142,6 @@ watchEffect(() => {
     font-size: 1rem !important;
     padding: 0;
     border: none;
-    background-color: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     text-align: center;
 }

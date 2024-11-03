@@ -2,12 +2,12 @@
 import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 
 import { useI18n } from "vue-i18n";
-import Wallpapers from '../../data/wallpapers.js';
 import AppConfig from "../../layout/AppConfig.vue";
 import {
     getLanguageCookie,
     setLanguageCookie,
 } from "../../service/session";
+import ConfigModal from "../Modals/ConfigModal.vue";
 
 const { locale } = useI18n();
 const dropdownValues = ref([
@@ -16,17 +16,16 @@ const dropdownValues = ref([
 	{ name: "English", code: "UK", value: "en" },
 ]);
 const dropdownValue = ref(null);
-const op = ref();
+const configModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
-
 const onClose = () => {
 	emit("hide");
 };
 const currentTime = ref("");
 const timer = ref(null);
 
-const toggle = (event) => {
-    op.value.toggle(event);
+ const toggle = () => {
+    configModalVisible.value = true;
 }
 
 const updateTime = () => {
@@ -203,9 +202,6 @@ const menubarItems = ref([
 		label: "Quit",
 	},
 ]);
-const backgroundImages = ref(Wallpapers);
-const selectedBackground = ref(null);
-
 </script>
 
 <template>
@@ -237,7 +233,6 @@ const selectedBackground = ref(null);
             <i class="pi pi-search px-2" />
             <i class="pi pi-bars px-2" />
             <app-config simple ref="appConfigRef"></app-config>
-
             <button
                 type="button"
                 class="p-btn p-link layout-topbar-button px-2"
@@ -245,7 +240,6 @@ const selectedBackground = ref(null);
             >
                 <i class="pi pi-palette"></i>
             </button>
-
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="appConfigRef.onConfigButtonClick()">
                 <i class="pi pi-cog"></i>
             </button>
@@ -257,12 +251,7 @@ const selectedBackground = ref(null);
             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
                 <i class="pi pi-times"></i>
             </button>
-
-            <OverlayPanel ref="op">
-            <div class="flex flex-column gap-3 w-25rem">
-                <Dropdown v-model="selectedBackground" :options="backgroundImages" optionLabel="label" optionValue="value" @update:modelValue="$emit('update:modelValue', $event)"/>
-            </div>
-        </OverlayPanel>
+            <ConfigModal @close="configModalVisible = false" v-model:visible="configModalVisible"  @update:modelValue="$emit('update:modelValue', $event)"/>
         </template>
     </Menubar>
 </template>

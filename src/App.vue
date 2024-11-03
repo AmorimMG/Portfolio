@@ -7,7 +7,7 @@ export default {
         DynamicModal
     },
     mounted(){
-        useToast().add({ severity: 'warn', summary: 'Warn Message', detail: 'This Project is in Development' });
+        useToast().add({ severity: 'info', summary: 'Info Message', detail: 'This Project is in Development' });
     }
 };
 </script>

@@ -49,9 +49,14 @@ export default {
 </script>
 
 <template>
-    <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
-        <VueNeonLight size="15px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
-    </Button>
+    <div class="col-4 lg:col-4 xl:col-3 pb-0">
+        <CardEffect>
+            <div class="card mb-0 center" style="padding: 0">
+                <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                    <VueNeonLight size="15px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
+                </Button>
+            </div>
+        </CardEffect>
     <Dialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
         <template #header>
             <div class="inline-flex align-items-center justify-content-center gap-2">
@@ -62,4 +67,5 @@ export default {
             <Chart :lastFMData="lastFMData" />
         </div>
     </Dialog>
+    </div>
 </template>
