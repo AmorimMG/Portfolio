@@ -9,20 +9,20 @@ const Endpoints = (instance) => ({
 
     Login: (data) => instance.post('login', data),
 
-    UsuarioCriar: (data) => instance.post('Usuarios/Inserir', data),
-    UsuarioEditar: (data) => instance.put('Usuarios/Atualizar', data),
-    UsuarioExcluir: (data) => instance.delete(`Usuarios/${data}`),
-    UsuarioObterTodos: () => instance.get('Usuarios'),
+    UsuarioCriar: (data) => instance.post('usuarios', data),
+    UsuarioEditar: (data) => instance.put(`usuarios/${data._id}`, data),
+    UsuarioExcluir: (data) => instance.delete(`usuarios/${data._id}`),
+    UsuarioObterTodos: () => instance.get('usuarios'),
 
     ProjetoCriar: (data) => instance.post('Projetos', data),
     ProjetoEditar: (data) => instance.put('Projetos', data),
     ProjetoExcluir: (data) => instance.delete(`Projetos/${data}`),
     ProjetoObterTodos: () => instance.get('Projetos'),
 
-    LinguagemCriar: (data) => instance.post('Linguagem', data),
-    LinguagemEditar: (data) => instance.put('Linguagem', data),
-    LinguagemExcluir: (data) => instance.delete(`Linguagem/${data}`),
-    LinguagemObterTodos: () => instance.get('Linguagem/ObterTodos'),
+    LinguagemCriar: (data) => instance.post('linguagens', data),
+    LinguagemEditar: (data) => instance.put(`linguagens/${data._id}`, data),
+    LinguagemExcluir: (data) => instance.delete(`linguagens/${data}`),
+    LinguagemObterTodos: () => instance.get('linguagens'),
 
     IA: (data) => instance.post('Chat/send', data)
 });

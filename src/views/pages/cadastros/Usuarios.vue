@@ -2,7 +2,6 @@
 import { useToast } from "primevue/usetoast";
 import { computed, onMounted, ref } from "vue";
 import { RESTAPI } from "../../../service/api";
-import { addDatabase } from "../../../service/firebase";
 import { getUserCookie } from "../../../service/session";
 import { exportCSV } from "../../../utils/exportCsv";
 
@@ -78,8 +77,8 @@ function editUser(user) {
 	userLogin.value = user.login;
 }
 
-function SalvaUsuario() {
-	/*     RESTAPI.UsuarioCriar(usuario.value)
+function SalvaUsuario() {     
+    RESTAPI.UsuarioCriar(usuario.value)
         .then(() => {
             getUsers();
             criarDialog.value = false;
@@ -88,8 +87,8 @@ function SalvaUsuario() {
         })
         .catch(() => {
             toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('UsuarioToastCreateError'), life: 3000 });
-        }); */
-	/* 
+        });
+         /*
     createUserWithEmailAndPassword(auth, usuario.value.email, usuario.value.password)
         .then((userCredential) => {
             // Signed in
@@ -104,14 +103,14 @@ function SalvaUsuario() {
             // ..
         }); */
 
-	addDatabase("projetos", usuario.value)
+/* 	addDatabase("projetos", usuario.value)
 		.then((res) => {
 			console.log(usuario.value);
 			console.log(res);
 		})
 		.catch((error) => {
 			console.error("Error adding user: ", error);
-		});
+		}); */
 }
 
 function EditaUsuario() {
@@ -137,10 +136,10 @@ function EditaUsuario() {
 }
 
 function deleteUser() {
-	RESTAPI.UsuarioExcluir(product.value.id)
+	RESTAPI.UsuarioExcluir(product.value._id)
 		.then(() => {
 			dataUsers.value = dataUsers.value.filter(
-				(u) => u.id !== product.value.id,
+				(u) => u.id !== product.value._id,
 			);
 			deleteDialog.value = false;
 			toast.add({
@@ -177,9 +176,9 @@ function deleteAll() {
 	}
 
 	selectedUser.value.forEach((user) => {
-		RESTAPI.UsuarioExcluir(user.id)
+		RESTAPI.UsuarioExcluir(user._id)
 			.then(() => {
-				dataUsers.value = dataUsers.value.filter((u) => u.id !== user.id);
+				dataUsers.value = dataUsers.value.filter((u) => u._id !== user._id);
 				toast.add({
 					severity: "success",
 					summary: $t("SummarioToastSucesso"),

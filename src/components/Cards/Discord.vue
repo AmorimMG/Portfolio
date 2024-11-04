@@ -23,7 +23,6 @@ const getDiscordInfo = () => {
 			}
 		})
 		.catch((error) => {
-			console.log(error);
 			toast.add({
 				severity: "error",
 				summary: error,

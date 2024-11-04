@@ -60,10 +60,6 @@ export default {
             return new Array(to).fill(0).map((_, i) => offset + i);
         },
     },
-
-    mounted() {
-        console.log('Component Map:', componentMap);
-    }
 };
 </script>
 

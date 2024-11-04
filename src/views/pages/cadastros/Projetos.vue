@@ -19,6 +19,10 @@ export default {
 			editProject: "",
 			dataUsers: [],
 			selectedUser: [],
+            languages: ref([]),
+            selectedLanguageNames: computed(() => {
+                return this.projeto.languages.map(language => language.name);
+            }),
 			gridColumns: computed(() => [
 				{ field: "languages", caption: "Linguas" },
 				{ field: "title", caption: "Titulo" },
@@ -31,6 +35,7 @@ export default {
 	},
 	created() {
 		this.getUsers();
+        this.getLanguages();
 	},
 	methods: {
 		formatMessage(data) {
@@ -61,6 +66,20 @@ export default {
 					});
 				});
 		},
+        getLanguages() {
+			RESTAPI.LinguagemObterTodos()
+				.then((response) => {
+					this.languages = response.data;
+				})
+				.catch(() => {
+					this.toast.add({
+						severity: "error",
+						summary: $t("SummarioToastError"),
+						detail: $t("ErroObterDadosGenerico"),
+						life: 3000,
+					});
+				});
+		},
 		getCancelUser() {
 			this.editaDialog = false;
 			this.getUsers();
@@ -71,33 +90,37 @@ export default {
 		editUser(user) {
 			this.editProject = user.login;
 		},
-		SalvaProjeto() {
-			RESTAPI.ProjetoCriar(this.projeto)
-				.then(() => {
-					this.getUsers();
-					this.criarDialog = false;
-					this.toast.add({
-						severity: "success",
-						summary: $t("SummarioToastSucesso"),
-						detail: $t("ProjetoToastCreate"),
-						life: 3000,
-					});
-					this.projeto = { admin: false };
-				})
-				.catch(() => {
-					this.toast.add({
-						severity: "error",
-						summary: $t("SummarioToastError"),
-						detail: $t("ProjetoToastCreateError"),
-						life: 3000,
-					});
-				}).finnaly(() => {
+        SalvaProjeto() {
+            const dataToSend = { ...this.projeto, languages: this.selectedLanguageNames };
+
+            RESTAPI.ProjetoCriar(dataToSend)
+                .then(() => {
+                    this.getUsers();
+                    this.criarDialog = false;
+                    this.toast.add({
+                        severity: "success",
+                        summary: $t("SummarioToastSucesso"),
+                        detail: $t("ProjetoToastCreate"),
+                        life: 3000,
+                    });
+                    this.projeto = { admin: false };
+                })
+                .catch(() => {
+                    this.toast.add({
+                        severity: "error",
+                        summary: $t("SummarioToastError"),
+                        detail: $t("ProjetoToastCreateError"),
+                        life: 3000,
+                    });
+                })
+                .finally(() => { // Corrected to .finally
                     this.projeto = { title: '', subtitle: '', link: '', description: '', img: '' };
                     this.criarDialog = false;
                 });
-		},
+        },
 		EditaProjeto() {
-			RESTAPI.ProjetoEditar(this.editProject)
+            const dataToSend = { ...this.editProject, languages: this.selectedLanguageNames };
+			RESTAPI.ProjetoEditar(dataToSend)
 				.then(() => {
 					this.getUsers();
 					this.editaDialog = false;
@@ -299,18 +322,30 @@ export default {
                                 <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col-6" style="width: -webkit-fill-available;">
+                        <div class="field col-6">
                             <FloatLabel>
-                                <FileUpload
+<!--                            <FileUpload
                                     mode="basic"
                                     accept="image/*"
                                     chooseLabel="Choose Image"
                                     @select="onFileSelect"
-                                />
-                                <!-- <InputText id="imagem" v-model="projeto.img" readonly required /> -->
+                                /> -->
+                                <InputText id="imagem" v-model="projeto.img" required />
+                                <label for="imagem">{{ $t('imagem') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <MultiSelect v-model="projeto.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                :maxSelectedLabels="3" class="w-full" required="true"/>
+                                <!-- <InputText id="languages" v-model="projeto.languages" required="true" /> -->
+                                <label for="languages">{{ $t('languages') }}</label>
+                            </FloatLabel>
+                        </div>
+                    </div>
+
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
@@ -318,7 +353,6 @@ export default {
                                 <label for="descricao">{{ $t('Descricao') }}</label>
                             </FloatLabel>
                         </div>
-                        
                     </div>
 
                     <template #footer>
@@ -359,13 +393,21 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
+                                <MultiSelect v-model="editProject.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                :maxSelectedLabels="3" class="w-full" required="true"/>
+                                <label for="languages">{{ $t('languages') }}</label>
+                            </FloatLabel>
+                        </div>
+                    </div>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
                                 <InputText id="descricao" v-model="editProject.description" required="true" />
                                 <label for="descricao">{{ $t('Descricao') }}</label>
                             </FloatLabel>
                         </div>
                         
                     </div>
-
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
                         <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaProjeto" />
@@ -383,7 +425,7 @@ export default {
 .table-container {
     line-break: anywhere;
     ::-webkit-scrollbar {
-        height: 8px; /* Adjust this value for the size of the scrollbar */
+        height: 8px;
     }
 }
 </style>

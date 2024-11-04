@@ -1,7 +1,7 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import Chart from 'primevue/chart';
+import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
     lastFMData: Object
@@ -41,7 +41,6 @@ const generateColorPalette = (numColors) => {
 const fetchLastFMData = async () => {
     try {
         const data = props.lastFMData;
-        console.log(data)
 
         const labels = data.map(track => track.name);
         const dataSet = data.map(track => parseInt(track.playcount));

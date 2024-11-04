@@ -15,15 +15,13 @@ export default {
 			editaDialog: ref(false),
 			toast: useToast(),
 			product: {},
-			Linguagem: {
-				admin: false,
-			},
-			userLogin: "",
-			dataUsers: [],
-			selectedUser: [],
+			Linguagem: {},
+			linguagemEdit: "",
+			dataLinguagem: [],
+			selectedLinguagem: [],
 			gridColumns: computed(() => [
-				{ field: "nome", caption: "Nome Linguagem" },
-				{ field: "tipo", caption: "Tipo Linguagem" },
+				{ field: "name", caption: "Nome" },
+				{ field: "knowledge", caption: "Conhecimento" },
 			]),
 		};
 	},
@@ -39,7 +37,7 @@ export default {
 			this.deleteDialog = true;
 		},
 		editaLinguagem(edit) {
-			this.userLogin = edit;
+			this.linguagemEdit = edit;
 			this.editaDialog = true;
 		},
 		openNew() {
@@ -48,7 +46,7 @@ export default {
 		getUsers() {
 			RESTAPI.LinguagemObterTodos()
 				.then((response) => {
-					this.dataUsers = response.data;
+					this.dataLinguagem = response.data;
 				})
 				.catch(() => {
 					this.toast.add({
@@ -64,10 +62,10 @@ export default {
 			this.getUsers();
 		},
 		handleExportCSV() {
-			exportCSV(this.dataUsers);
+			exportCSV(this.dataLinguagem);
 		},
 		editUser(user) {
-			this.userLogin = user.login;
+			this.linguagemEdit = user.login;
 		},
 		SalvaLinguagem() {
 			RESTAPI.LinguagemCriar(this.Linguagem)
@@ -92,7 +90,7 @@ export default {
 				});
 		},
 		EditaLinguagem() {
-			RESTAPI.LinguagemEditar(this.userLogin)
+			RESTAPI.LinguagemEditar(this.linguagemEdit)
 				.then(() => {
 					this.getUsers();
 					this.editaDialog = false;
@@ -113,9 +111,9 @@ export default {
 				});
 		},
 		deleteUser() {
-			RESTAPI.LinguagemExcluir(this.product.id)
+			RESTAPI.LinguagemExcluir(this.product._id)
 				.then(() => {
-					this.dataUsers = this.dataUsers.filter(
+					this.dataLinguagem = this.dataLinguagem.filter(
 						(u) => u.id !== this.product.id,
 					);
 					this.deleteDialog = false;
@@ -140,7 +138,7 @@ export default {
 			this.deleteAllDialog = true;
 		},
 		deleteAll() {
-			if (this.selectedUser.length === 0) {
+			if (this.selectedLinguagem.length === 0) {
 				this.toast.add({
 					severity: "warn",
 					summary: $t("SummarioToastWarn"),
@@ -150,10 +148,10 @@ export default {
 				return;
 			}
 
-			this.selectedUser.forEach((user) => {
-				RESTAPI.LinguagemExcluir(user.id)
+			this.selectedLinguagem.forEach((user) => {
+				RESTAPI.LinguagemExcluir(user._id)
 					.then(() => {
-						this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
+						this.dataLinguagem = this.dataLinguagem.filter((u) => u._id !== user._id);
 						this.toast.add({
 							severity: "success",
 							summary: $t("SummarioToastSucesso"),
@@ -171,7 +169,7 @@ export default {
 					});
 			});
 			this.deleteAllDialog = false;
-			this.selectedUser = [];
+			this.selectedLinguagem = [];
 		},
 		close() {
 			this.display = false;
@@ -184,13 +182,13 @@ export default {
     <div class="card">
         <h5 class="p-card-title">{{ $t('Linguagens') }}</h5>
         <div id="data-grid-demo">
-            <div v-if="dataUsers.length < 0">Carregando...</div>
+            <div v-if="dataLinguagem.length < 0">Carregando...</div>
             <div v-else>
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
                             <Button :label="$t('Novo')" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-                            <Button :label="$t('Deletar')" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteAll" :disabled="selectedUser.length === 0" />
+                            <Button :label="$t('Deletar')" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteAll" :disabled="selectedLinguagem.length === 0" />
                         </div>
                     </template>
 
@@ -200,9 +198,9 @@ export default {
                 </Toolbar>
                 <DataTable
                     ref="dt"
-                    v-model:selection="selectedUser"
-                    :value="dataUsers"
-                    dataKey="id"
+                    v-model:selection="selectedLinguagem"
+                    :value="dataLinguagem"
+                    dataKey="_id"
                     :paginator="true"
                     :rows="10"
                     :filters="filters"
@@ -214,7 +212,7 @@ export default {
                     class="table-container"
                 >
                     <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-                    <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">{{ column.caption }}</span>
                             <template v-if="column.field === 'ativo' || column.field === 'admin'">
@@ -238,7 +236,7 @@ export default {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ product.login }}</b
+                            >{{ $t('Tem Certeza que deseja excluir: ') }} <b>{{ product.name }}</b
                             >?</span
                         >
                     </div>
@@ -252,7 +250,7 @@ export default {
                     <div class="flex align-items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Linguagem') }}</b
+                            >{{ $t('Excluir') }} <b>{{ this.selectedLinguagem.length }} {{ $t('Linguagem') }}</b
                             >?</span
                         >
                     </div>
@@ -266,36 +264,19 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="Linguagem.nome" required="true" />
+                                <InputText id="name" v-model.trim="Linguagem.name" required="true" />
                                 <label for="name">{{ $t('Nome') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="email" v-model="Linguagem.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>
+                    </div>  
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="Linguagem.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputNumber id="knowledge" v-model.trim="Linguagem.knowledge" required="true" />
+                                <label for="conhecimento">{{ $t('Conhecimento') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText type="password" id="senha" v-model="Linguagem.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="Linguagem.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
-                    </div>
-
+                    </div> 
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
                         <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaLinguagem" />
@@ -306,40 +287,19 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="userLogin.nome" required="true" />
+                                <InputText id="name" v-model.trim="linguagemEdit.name" required="true" />
                                 <label for="name">{{ $t('Nome') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="email" v-model="userLogin.email" required="true" />
-                                <label for="email">{{ $t('Email') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>
+                    </div>  
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="userLogin.login" required="true" />
-                                <label for="login">{{ $t('Login') }}</label>
+                                <InputNumber id="knowledge" v-model.trim="linguagemEdit.knowledge" required="true" />
+                                <label for="conhecimento">{{ $t('Conhecimento') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText type="password" id="senha" v-model="userLogin.senha" required="true" />
-                                <label for="senha">{{ $t('Senha') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="userLogin.admin" />
-                        <label for="admin">{{ $t('Administrador') }}</label>
-                    </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="ativo" v-model="userLogin.ativo" />
-                        <label for="ativo">{{ $t('Ativo') }}</label>
-                    </div>
-
+                    </div> 
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
                         <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaLinguagem" />

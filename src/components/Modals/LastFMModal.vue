@@ -28,7 +28,6 @@ export default {
                     this.lastFMData = response.data.weeklytrackchart.track;
                 })
                 .catch((error) => {
-                    console.log(error);
                     this.toast.add({
                         severity: 'error',
                         summary: error,
