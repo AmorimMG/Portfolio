@@ -46,7 +46,7 @@ import ModalHeader from "./ModalHeader.vue";
 <template>
   <div>
     <Dialog class="dialog-terminal" 
-    :visible.sync="visible"
+    :visible.sync="visible"                                                 
     :closable="false"
     :unstyled="true"
     :style="{ width: '80rem', height: '50rem'}"

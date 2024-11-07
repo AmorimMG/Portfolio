@@ -123,6 +123,7 @@ export default {
     position: relative;
     transition: background-color 0.3s ease;
     width: 100px;
+    height: 100px;
 }
 
 .app-container:hover {
@@ -173,7 +174,7 @@ export default {
 
 .selected {
     background-color: #4f90f2;
-    height: 100%;
+    height: 100px;
     width: 100px;
 }
 
