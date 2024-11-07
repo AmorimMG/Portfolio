@@ -14,11 +14,19 @@ import LastFMModal from '../components/Modals/LastFMModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 /* import Actitivies from '../components/Cards/Activities.vue'; */
+import CameraModal from '../components/Modals/CameraModal.vue';
 
 import AmorimIcon from '@/assets/images/cards/profilePic.png';
+import Arc from '@/assets/images/dock/arc.png';
+import Camera from '@/assets/images/dock/camera.png';
 import CVIcon from '@/assets/images/dock/CV.svg';
+import Docker from '@/assets/images/dock/docker.png';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
+import Game from '@/assets/images/dock/game.png';
 import LastFMIcon from '@/assets/images/dock/lastFm.svg';
+import Raspberry from '@/assets/images/dock/raspberry.png';
+import Threejs from '@/assets/images/dock/threejs.png';
+
 
 
 export const componentMap = {
@@ -36,7 +44,8 @@ export const componentMap = {
     Stack,
     GithubHeatMap,
     DashboardModal,
-    PointerlockModal
+    PointerlockModal,
+    CameraModal
 };
 
 export const apps = [
@@ -44,8 +53,15 @@ export const apps = [
     { id: 5, name: 'LastFMModal', colSpan: 1, rowSpan: 1, title: 'LastFM', icon: LastFMIcon },
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon },
     { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon },
-    { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: FolderIcon }
-]
+    { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: Threejs },
+    { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Servidor', icon: Raspberry },
+    { id: 14, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Email', icon: Arc },
+    { id: 15, name: 'CameraModal', colSpan: 1, rowSpan: 1, title: 'Camera', icon: Camera },
+    { id: 16, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Docker', icon: Docker },
+    { id: 17, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Game', icon: Game },
+    { id: 18, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Game', icon: Game },
+    { id: 19, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Game', icon: Game },
+];
 
 export const widgets = [
     { id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 },

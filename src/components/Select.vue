@@ -13,6 +13,7 @@ import Stack from '../components/Cards/Stack.vue';
 import ThreeJSComponent from '../components/Cards/ThreeJS.vue';
 import Weather from '../components/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
+import CameraModal from '../components/Modals/CameraModal.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 import DashboardModal from '../components/Modals/DashboardModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
@@ -21,7 +22,7 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
 export default {
-    components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, DashboardModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal },
+    components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, DashboardModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal, CameraModal },
 
     data() {
         return {
@@ -104,12 +105,13 @@ export default {
 
 <style>
 .draggableApps {
-    margin-bottom: 20vh;
+    margin-bottom: 22vh;
     display: inherit;
     grid-gap: 5px;
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     grid-auto-flow: column;
+   /*  grid-auto-flow: row; */
 }
 
 .app-container{
@@ -120,6 +122,7 @@ export default {
     text-align: center;
     position: relative;
     transition: background-color 0.3s ease;
+    width: 100px;
 }
 
 .app-container:hover {
@@ -170,8 +173,8 @@ export default {
 
 .selected {
     background-color: #4f90f2;
-    width: 100%;
     height: 100%;
+    width: 100px;
 }
 
 .selection-area {
