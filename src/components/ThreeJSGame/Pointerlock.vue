@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { onMounted, ref, watch } from "vue";
+import { RESTAPI } from "../../service/api";
 
 import { CharacterControls } from "./characterControls";
 /* import { KeyDisplay } from '../ThreeJSGame/keys'; */
@@ -74,7 +75,11 @@ onMounted(() => {
 	addScene();
 	createRenderer();
 	generateFloor();
-	createTotems(totemsData);
+    RESTAPI.ProjetoObterTodos().then((response) => {
+        createTotems(response.data);
+    }).catch((error) => {
+        createTotems(totemsData);
+    });
 	/*     generateObjects(); */
 	watch(() => {
 		if (thirdPerson.value) {
