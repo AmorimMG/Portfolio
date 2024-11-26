@@ -56,8 +56,8 @@ export const apps = [
 
 export const widgets = [
     { id: 1, name: 'Spotify', colSpan: 1, rowSpan: 1 },
-    { id: 12, name: 'GithubHeatMap', colSpan: 1, rowSpan: 1 },
+/*     { id: 12, name: 'GithubHeatMap', colSpan: 1, rowSpan: 1 }, */
 /*     { id: 8, name: 'IA', colSpan: 1, rowSpan: 1 },  */
 /*     { id: 10, name: 'Weather', colSpan: 1, rowSpan: 1 },  */
-    { id: 11, name: 'Stack', colSpan: 1, rowSpan: 1 }, 
+/*     { id: 11, name: 'Stack', colSpan: 1, rowSpan: 1 },  */
 ];
