@@ -4,7 +4,7 @@ import { getDarkThemeCookie } from '../service/session';
 
 export default {
     props: {
-        theme: Boolean,
+        theme: Boolean
     },
     data() {
         return {
@@ -88,11 +88,13 @@ export default {
 
 <style>
 .canvasD {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: -999999;
     pointer-events: none;
     opacity: 0.2;
+    max-width: -webkit-fill-available;
+    max-height: -webkit-fill-available;
 }
 </style>

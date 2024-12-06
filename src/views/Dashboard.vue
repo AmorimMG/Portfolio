@@ -1,215 +1,161 @@
 <script setup>
+import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 //#region imports
-import { ref, onMounted, watch, provide } from 'vue';
-import draggable from 'vuedraggable';
-
-import Background from '../components/Background.vue';
-import DashboardTimeline from '../components/cards/HeatMap.vue';
-import ThreeJSComponent from '../components/cards/ThreeJS.vue';
-import Terminal from '../components/cards/Terminal.vue';
-import Stack from '../components/cards/Stack.vue';
-import Spotify from '../components/cards/Spotify.vue';
-import Discord from '../components/cards/Discord.vue';
-import CVModal from '../components/cards/modals/CVModal.vue';
-import LastFMModal from '../components/cards/modals/LastFMModal.vue';
-import EmailModal from '../components/cards/modals/EmailModal.vue';
-import ProjectsModal from '../components/cards/modals/ProjectsModal.vue';
-import ClusterLinks from '../components/cards/ClusterLinks.vue';
-import ClusterOpcoes from '../components/cards/ClusterOpcoes.vue';
-import Introduction from '../components/cards/Introduction.vue';
-import MapboxMap from '../components/Mapbox.vue';
-/* import Actitivies from '../components/cards/Activities.vue'; */
-
-import { formatMessage } from '../service/localization';
-import { setLanguageCookie, getLanguageCookie, setDarkThemeCookie } from '../service/session';
-/* import discordData from '../service/getDiscord'; */
-
+import { onMounted, ref } from "vue";
+import draggable from "vuedraggable";
+import Background from "../components/Background.vue";
+import Introduction from "../components/Cards/Introduction.vue";
+import { componentMap, cards as initialCards } from "../data/cardsDashboard";
 //#endregion
 
 //#region variables
-const overlayPanel = ref();
-const language = ref();
-const dropdownValue = ref();
+const cards = ref(initialCards);
 const isStarted = ref(false);
-const isGlitchActive = ref(false);
+const menuVisible = ref(true);
 
-const translations = ref({
-    gblHi: '',
-    gblAboutMe: '',
-    gblInterests: '',
-    gblSpotify: '',
-    gblBrazil: '',
-    gblCV: ''
-});
+/* const items = ref([
+	{
+		label: "Translate",
+		icon: "pi pi-language",
+	},
+	{
+		label: "Speech",
+		icon: "pi pi-volume-up",
+		items: [
+			{
+				label: "Start",
+				icon: "pi pi-caret-right",
+			},
+			{
+				label: "Stop",
+				icon: "pi pi-pause",
+			},
+		],
+	},
+	{
+		separator: true,
+	},
+	{
+		label: "Print",
+		icon: "pi pi-print",
+	},
+]); */
 
-const items = ref([
-    {
-        label: 'Translate',
-        icon: 'pi pi-language'
-    },
-    {
-        label: 'Speech',
-        icon: 'pi pi-volume-up',
-        items: [
-            {
-                label: 'Start',
-                icon: 'pi pi-caret-right'
-            },
-            {
-                label: 'Stop',
-                icon: 'pi pi-pause'
-            }
-        ]
-    },
-    {
-        separator: true
-    },
-    {
-        label: 'Print',
-        icon: 'pi pi-print'
-    }
-]);
-
-const componentMap = {
-    Introduction,
-    ClusterLinks,
-    ClusterOpcoes,
-    Spotify,
-    Discord,
-    ThreeJSComponent,
-    MapboxMap,
-    EmailModal,
-    CVModal,
-    LastFMModal,
-    ProjectsModal,
-    Terminal,
-    Stack,
-    DashboardTimeline
+const toggleMenu = () => {
+	menuVisible.value = !menuVisible.value;
 };
-
-const cards = ref([
-    { id: 1, name: 'Introduction' },
-    { id: 2, name: 'ClusterLinks' },
-    { id: 3, name: 'ClusterOpcoes' },
-    { id: 4, name: 'Spotify' },
-    { id: 5, name: 'Discord' },
-    { id: 6, name: 'ThreeJSComponent' },
-    { id: 7, name: 'MapboxMap' },
-    { id: 8, name: 'EmailModal' },
-    { id: 9, name: 'CVModal' },
-    { id: 10, name: 'LastFMModal' },
-    { id: 11, name: 'ProjectsModal' },
-    { id: 12, name: 'Terminal' },
-    { id: 13, name: 'Stack' },
-    { id: 14, name: 'DashboardTimeline' }
-]);
 
 //#endregion
 
 //#region methods
-function updateTranslations(languages) {
-    if (languages) {
-        language.value = languages;
-    } else if (languages?.value) {
-        language.value = languages.value;
-    } else {
-        language.value = 'pt'; // lingua padrão
-    }
-    translations.value.gblHi = formatMessage('gblHi', language.value);
-    translations.value.gblAboutMe = formatMessage('gblAboutMe', language.value);
-    translations.value.gblInterests = formatMessage('gblInterests', language.value);
-    translations.value.gblSpotify = formatMessage('gblSpotify', language.value);
-    translations.value.gblBrazil = formatMessage('gblBrazil', language.value);
-    translations.value.gblCV = formatMessage('gblCV', language.value);
-
-    applyGlitchEffect();
-    translations.value = { ...translations.value };
-}
-
-provide('translations', {
-    translations,
-    updateTranslations
-});
-
-const applyGlitchEffect = () => {
-    isGlitchActive.value = true;
-    setTimeout(() => {
-        isGlitchActive.value = false;
-    }, 2000);
-};
 
 onMounted(() => {
-    updateTranslations(getLanguageCookie() ?? 'pt');
-
-    setTimeout(() => {
-        isStarted.value = true;
-    }, 2000);
+	setTimeout(() => {
+		isStarted.value = true;
+	}, 2000);
 });
 
-watch(dropdownValue, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        setLanguageCookie(newValue.value);
-    }
-});
 //#endregion
 </script>
 
 <template>
+    <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+        <FontAwesomeIcon style="font-size: 20px" :icon="faBars" />
+    </button>
+
     <div class="layout-main-container">
-    <Background />
-    <ContextMenu global :model="items" />
-    <div v-if="!isStarted" class="center" style="intro-div">
-        <img class="gif-container" src="/src/assets/images/glitchIntroduction.gif" />
-        <div class="black-screen"></div>
-    </div>
-    <transition name="fade">
-        <div v-show="isStarted" class="grid justify-content-center">
-             <draggable class="grid col-12" v-model="cards" item-key="id" group="cards" animation="200">
-                <template #item="{ element }">
-                        <component :class="{ glitch: isGlitchActive }" :is="componentMap[element.name]" :translations="translations" :isGlitchActive="isGlitchActive" />
-                </template>
-            </draggable> 
-            <!--  <Actitivies :discordData="discordData()" /> -->
-            <OverlayPanel ref="overlayPanel">
-                <div class="flex flex-column gap-3 w-25rem">
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Share this document</span>
-                        <InputGroup>
-                            <InputText value="https://www.fiap.com.br/" readonly class="w-25rem"></InputText>
-                            <InputGroupAddon>
-                                <i class="pi pi-copy"></i>
-                            </InputGroupAddon>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Invite Member</span>
-                        <InputGroup>
-                            <Chips disabled></Chips>
-                            <Button label="Invite" icon="pi pi-users"></Button>
-                        </InputGroup>
-                    </div>
-                    <div>
-                        <span class="font-medium text-900 block mb-2">Team Members</span>
-                        <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                            <li v-for="member in members" :key="member.name" class="flex align-items-center gap-2">
-                                <img :src="`https://primefaces.org/cdn/primevue/images/avatar/${member.image}`" />
-                                <div>
-                                    <span class="font-medium">{{ member.name }}</span>
-                                    <div class="text-sm text-color-secondary">{{ member.email }}</div>
-                                </div>
-                                <div class="flex align-items-center gap-2 text-color-secondary ml-auto text-sm">
-                                    <span>{{ member.role }}</span>
-                                    <i class="pi pi-angle-down"></i>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </OverlayPanel>
+        <Background />
+<!--         <ContextMenu global :model="items" /> -->
+        <div v-if="!isStarted" class="center">
+            <img class="gif-container" src="@/assets/images/cards/glitchIntroduction.gif" />
+            <div class="black-screen"></div>
         </div>
-    </transition>
-    <SpeedDial :model="items" :radius="120" type="quarter-circle" direction="up-right" :style="{ position: 'fixed', left: '10px', bottom: '10px' }" />
-</div>
-<ScrollTop />
+        <div :class="{ 'hidden': !isStarted, 'fade-in': isStarted }" class="grid components-container justify-content-center">
+            <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
+            
+            <div id="Introduction" class="col-4 lg:col-3 xl:col-3 p-0">
+                <Introduction :menuVisible="menuVisible" @update:menuVisible="menuVisible = $event" />
+            </div>
+            <draggable
+                class="draggable col-12 lg:col-9 xl:col-9"
+                v-model="cards"
+                item-key="id"
+                group="cards"
+                animation="200"
+                >
+                <template #item="{ element }">
+                    <div
+                    class="grid"
+                    style="width: 100%; height: 100%;"
+                    :style="{
+                        'grid-column': 'span ' + element.colSpan,
+                        'grid-row': 'span ' + element.rowSpan
+                    }"
+                    >
+                    <!-- Check if there are two components to stack -->
+                    <template v-if="element.firstComponentName && element.secondComponentName">
+                        <div class="col-12 lg:col-9 xl:col-9 w-full" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <component class="w-full p-0" :class="{ 'aspect-ratio-2-1': true }" style="flex: 1" :is="componentMap[element.firstComponentName]" />
+                            <component class="w-full p-0" :class="{ 'aspect-ratio-2-1': true }" style="flex: 1"  :is="componentMap[element.secondComponentName]" />
+                        </div>
+                    </template>
+
+                    <!-- Render single component -->
+                    <template v-else>
+                        <component
+                        style="width: 100%"
+                        :is="componentMap[element.name]"
+                        :style="{
+                            'grid-column': 'span ' + element.colSpan,
+                            'grid-row': 'span ' + element.rowSpan
+                        }"
+                    />
+                    </template>
+                    </div>
+                </template>
+            </draggable>
+        </div>
+    </div>
+    <ScrollTop />
 </template>
+
 <style src="./styles.scss"></style>
+
+<style scoped>
+.black-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+}
+
+.gif-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.grid{
+    margin-left: 0;
+    margin-right: 0
+}
+
+.hidden {
+    display: none;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>

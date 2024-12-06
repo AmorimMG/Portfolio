@@ -13,7 +13,6 @@ const iframeSrc = ref('');
 const { onMenuToggle } = useLayout();
 
 export const openModal = (url) => {
-    console.log(url);
     onMenuToggle();
     cvVisible.value = true;
     iframeSrc.value = url;

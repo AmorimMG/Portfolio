@@ -1,0 +1,35 @@
+Pendencias Projeto
+---
+Dashboard
+ - [ ] Last.FM Estatisticas Incompleto  
+ - [ ] Melhorar Feedback 
+ - [ ] Adicionar Blog
+ - [ ] trocar/resolver ThreeJS Girar
+ - [ ] Vincular endpoint ao heatmap Github
+ - [ ] Adicionar Dashboard
+ - [ ] Criar Endpoints de editar/excluir para Projetos
+ - [ ] Adicionar Campo de Linguagens em Projetos
+ - [ ] Adicionar Key e Contexto em ChatGPT
+ - [ ] Vincular Endpoints de Linguagens ao Componente de Linguagems
+ - [ ] Melhorar Interação e Responsividade Mobile
+
+Pointerlock 
+ - [ ] Adicionar Modelo Astronauta
+ - [ ] Adicionar Animações
+ - [ ] Adicionar Mapa
+ - [ ] Mudar Céu para espaço
+ - [ ] Adicionar Terceira Pessoa
+ - [ ] Adicionar Corrida
+
+Blog
+ - [ ] Melhorar Hover
+ - [ ] Mudar alguns apps to widgets
+ - [ ] Melhorar Widget de Temperatura
+ - [ ] Adicionar mais funções relacionadas a Desktop
+ - [ ] Melhorar modal de visualação de markdown
+
+Serviços Homelab
+ - [ ] Endpoint iniciar servidor
+
+Consulta
+ - [] Trocar componente de Consulta utilizando Codemirror para Monaco

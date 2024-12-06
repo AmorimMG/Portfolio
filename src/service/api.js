@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ToastService from 'primevue/toastservice';
 import Endpoints from './endpoints';
 
 var baseURL = '';
@@ -12,6 +13,27 @@ if (window.location.hostname === 'amorim.pro') {
 const instance = axios.create({
     baseURL: baseURL
 });
+
+
+//Toast Error Handler
+instance.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		 const toastService = ToastService();
+		 if (toastService) {
+		     toastService.add({
+		         severity: 'error',
+		         summary: error.message || error,
+		         detail: error.response.data || error,
+		         life: 3000
+		     });
+		 }
+		return Promise.reject(error);
+	},
+);
+
 
 const RESTAPI = {
     ...Endpoints(instance)

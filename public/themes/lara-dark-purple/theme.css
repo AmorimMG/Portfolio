@@ -1,8 +1,14 @@
 :root {
-  font-family: "lores-12", sans-serif;
+  --surface-ground: #0f0026;
+  --surface-card: rgba(155, 89, 182, 0.15);
+  --sidebar-bg: #260d3d;
+
+  font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
-  --font-family: "lores-12", sans-serif;
+  --font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica,
+  Arial, "Lucida Grande", sans-serif;
+  --font-neon: "lores-12", sans-serif;
   --font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   --surface-a: #433864;
   --surface-b: #111827;
@@ -38,9 +44,7 @@
   --content-padding: 1.25rem;
   --inline-spacing: 0.5rem;
   --border-radius: 6px;
-  --surface-ground: #0f0026;
   --surface-section: #111827;
-  --surface-card: rgba(155, 89, 182, 0.15);
   --surface-overlay: #433864;
   --surface-border: #4d25b0;
   --surface-hover: rgba(255, 255, 255, 0.03);
@@ -57,7 +61,7 @@
   font-display: swap;
   font-style: normal;
   font-named-instance: "Regular";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 @font-face {
   font-family: "lores-12";
@@ -65,7 +69,7 @@
   font-display: swap;
   font-style: italic;
   font-named-instance: "Italic";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 :root {
   --blue-50:#f5f9ff;
@@ -10495,6 +10499,10 @@
     stroke-linecap: round;
   }
 
+  .app-widgets * {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
   @keyframes p-progress-spinner-rotate {
     100% {
       transform: rotate(360deg);
@@ -10711,7 +10719,6 @@
   }
 
   .p-terminal {
-    max-height: 300px;
     overflow: auto;
   }
 
@@ -10739,6 +10746,7 @@
     border: 1px solid #424b57;
     padding: 1.25rem;
   }
+
   .p-terminal .p-terminal-input {
     font-family: var(--font-family);
     font-feature-settings: var(--font-feature-settings, normal);

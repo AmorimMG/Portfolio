@@ -1,141 +1,226 @@
 <script>
-import { RESTAPI } from '../../../service/api';
-import { ref, computed } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import { exportCSV } from '../../../utils/exportCsv';
-import { getUserCookie } from '../../../service/session';
+import { useToast } from "primevue/usetoast";
+import { computed, ref } from "vue";
+import { RESTAPI } from "../../../service/api";
+import { exportCSV } from "../../../utils/exportCsv";
 
 export default {
-    data() {
-        return {
-            display: false,
-            deleteDialog: ref(false),
-            deleteAllDialog: ref(false),
-            criarDialog: ref(false),
-            dt: ref(),
-            editaDialog: ref(false),
-            toast: useToast(),
-            product: {},
-            usuario: {
-                admin: false
-            },
-            userLogin: '',
-            dataUsers: [],
-            selectedUser: [],
-            gridColumns: computed(() => [
-                { field: 'id', caption: 'ID' },
-                { field: 'usuario', caption: 'Usuario' },
-                { field: 'email', caption: 'Email' },
-            ]),
-            userCookie: getUserCookie(),
+	data() {
+		return {
+			display: false,
+			deleteDialog: ref(false),
+			deleteAllDialog: ref(false),
+			criarDialog: ref(false),
+			dt: ref(),
+			editaDialog: ref(false),
+			toast: useToast(),
+			product: {},
+            projeto: ref({ img: '' }),
+			editProject: "",
+			dataUsers: [],
+			selectedUser: [],
+            languages: ref([]),
+            selectedLanguageNames: computed(() => {
+                return this.projeto.languages.map(language => language.name);
+            }),
+			gridColumns: computed(() => [
+				{ field: "languages", caption: "Linguas" },
+				{ field: "title", caption: "Titulo" },
+				{ field: "subtitle", caption: "Subtitulo" },
+                { field: "description", caption: "Descrição" },
+                { field: "img", caption: "Imagem" },
+                { field: "link", caption: "Link" },
+			]),
+		};
+	},
+	created() {
+		this.getUsers();
+        this.getLanguages();
+	},
+	methods: {
+		formatMessage(data) {
+			return data;
+		},
+		confirmDelete(edit) {
+			this.product = edit;
+			this.deleteDialog = true;
+		},
+		editaProjeto(edit) {
+			this.editProject = edit;
+			this.editaDialog = true;
+		},
+		openNew() {
+			this.criarDialog = true;
+		},
+		getUsers() {
+			RESTAPI.ProjetoObterTodos()
+				.then((response) => {
+					this.dataUsers = response.data;
+				})
+				.catch(() => {
+					this.toast.add({
+						severity: "error",
+						summary: $t("SummarioToastError"),
+						detail: $t("ErroObterDadosGenerico"),
+						life: 3000,
+					});
+				});
+		},
+        getLanguages() {
+			RESTAPI.LinguagemObterTodos()
+				.then((response) => {
+					this.languages = response.data;
+				})
+				.catch(() => {
+					this.toast.add({
+						severity: "error",
+						summary: $t("SummarioToastError"),
+						detail: $t("ErroObterDadosGenerico"),
+						life: 3000,
+					});
+				});
+		},
+		getCancelUser() {
+			this.editaDialog = false;
+			this.getUsers();
+		},
+		handleExportCSV() {
+			exportCSV(this.dataUsers);
+		},
+		editUser(user) {
+			this.editProject = user.login;
+		},
+        SalvaProjeto() {
+            const dataToSend = { ...this.projeto, languages: this.selectedLanguageNames };
 
-        };
-    },
-    created() {
-        this.getUsers();
-        console.log(this.userCookie);
-    },
-    methods: {
-        formatMessage(data){
-            return data;
-        },
-        confirmDelete(edit) {
-            this.product = edit;
-            this.deleteDialog = true;
-        },
-        editaUsuario(edit) {
-            this.userLogin = edit;
-            this.editaDialog = true;
-        },
-        openNew() {
-            this.criarDialog = true;
-        },
-        getUsers() {
-            RESTAPI.UsuarioObterTodos()
-                .then((response) => {
-                    this.dataUsers = response.data;
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblErroObterDadosGenerico'), life: 3000 });
-                });
-        },
-        getCancelUser() {
-            this.editaDialog = false;
-            this.getUsers();
-        },
-        handleExportCSV() {
-            exportCSV(this.dataUsers);
-        },
-        editUser(user) {
-            this.userLogin = user.login;
-        },
-        SalvaUsuario() {
-            RESTAPI.UsuarioCriar(this.usuario)
+            RESTAPI.ProjetoCriar(dataToSend)
                 .then(() => {
                     this.getUsers();
                     this.criarDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastCreate'), life: 3000 });
-                    this.usuario = { admin: false };
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastCreateError'), life: 3000 });
-                });
-        },
-        EditaUsuario() {
-            RESTAPI.UsuarioEditar(this.userLogin)
-                .then(() => {
-                    this.getUsers();
-                    this.editaDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastEdit'), life: 3000 });
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastEditError'), life: 3000 });
-                });
-        },
-        deleteUser() {
-            RESTAPI.UsuarioExcluir(this.product.id)
-                .then(() => {
-                    this.dataUsers = this.dataUsers.filter((u) => u.id !== this.product.id);
-                    this.deleteDialog = false;
-                    this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastDelete'), life: 3000 });
-                })
-                .catch(() => {
-                    this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastDeleteError'), life: 3000 });
-                });
-        },
-        confirmDeleteAll(edit) {
-            this.accounts = edit;
-            this.deleteAllDialog = true;
-        },
-        deleteAll() {
-            if (this.selectedUser.length === 0) {
-                this.toast.add({ severity: 'warn', summary: this.formatMessage('gblSummarioToastWarn'), detail: this.formatMessage('gblNenhumaLinhaSelecionada'), life: 3000 });
-                return;
-            }
-
-            this.selectedUser.forEach((user) => {
-                RESTAPI.UsuarioExcluir(user.id)
-                    .then(() => {
-                        this.dataUsers = this.dataUsers.filter((u) => u.id !== user.id);
-                        this.toast.add({ severity: 'success', summary: this.formatMessage('gblSummarioToastSucesso'), detail: this.formatMessage('gblUsuarioToastDelete'), life: 3000 });
-                    })
-                    .catch(() => {
-                        this.toast.add({ severity: 'error', summary: this.formatMessage('gblSummarioToastError'), detail: this.formatMessage('gblUsuarioToastDeleteError'), life: 3000 });
+                    this.toast.add({
+                        severity: "success",
+                        summary: $t("SummarioToastSucesso"),
+                        detail: $t("ProjetoToastCreate"),
+                        life: 3000,
                     });
-            });
-            this.deleteAllDialog = false;
-            this.selectedUser = [];
+                    this.projeto = { admin: false };
+                })
+                .catch(() => {
+                    this.toast.add({
+                        severity: "error",
+                        summary: $t("SummarioToastError"),
+                        detail: $t("ProjetoToastCreateError"),
+                        life: 3000,
+                    });
+                })
+                .finally(() => { // Corrected to .finally
+                    this.projeto = { title: '', subtitle: '', link: '', description: '', img: '' };
+                    this.criarDialog = false;
+                });
         },
-        close() {
-            this.display = false;
+		EditaProjeto() {
+            const dataToSend = { ...this.editProject, languages: this.selectedLanguageNames };
+			RESTAPI.ProjetoEditar(dataToSend)
+				.then(() => {
+					this.getUsers();
+					this.editaDialog = false;
+					this.toast.add({
+						severity: "success",
+						summary: $t("SummarioToastSucesso"),
+						detail: $t("ProjetoToastEdit"),
+						life: 3000,
+					});
+				})
+				.catch(() => {
+					this.toast.add({
+						severity: "error",
+						summary: $t("SummarioToastError"),
+						detail: $t("ProjetoToastEditError"),
+						life: 3000,
+					});
+				});
+		},
+		deleteUser() {
+			RESTAPI.ProjetoExcluir(this.product._id)
+				.then(() => {
+					this.dataUsers = this.dataUsers.filter(
+						(u) => u._id !== this.product._id,
+					);
+					this.deleteDialog = false;
+					this.toast.add({
+						severity: "success",
+						summary: $t("SummarioToastSucesso"),
+						detail: $t("ProjetoToastDelete"),
+						life: 3000,
+					});
+				})
+				.catch(() => {
+					this.toast.add({
+						severity: "error",
+						summary: $t("SummarioToastError"),
+						detail: $t("ProjetoToastDeleteError"),
+						life: 3000,
+					});
+				});
+		},
+		confirmDeleteAll(edit) {
+			this.accounts = edit;
+			this.deleteAllDialog = true;
+		},
+		deleteAll() {
+			if (this.selectedUser.length === 0) {
+				this.toast.add({
+					severity: "warn",
+					summary: $t("SummarioToastWarn"),
+					detail: $t("NenhumaLinhaSelecionada"),
+					life: 3000,
+				});
+				return;
+			}
+
+			this.selectedUser.forEach((user) => {
+				RESTAPI.ProjetoExcluir(user._id)
+					.then(() => {
+						this.dataUsers = this.dataUsers.filter((u) => u._id !== user._id);
+						this.toast.add({
+							severity: "success",
+							summary: $t("SummarioToastSucesso"),
+							detail: $t("ProjetoToastDelete"),
+							life: 3000,
+						});
+					})
+					.catch(() => {
+						this.toast.add({
+							severity: "error",
+							summary: $t("SummarioToastError"),
+							detail: $t("ProjetoToastDeleteError"),
+							life: 3000,
+						});
+					});
+			});
+			this.deleteAllDialog = false;
+			this.selectedUser = [];
+		},
+        onFileSelect(event) {
+                const file = event.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.projeto.img = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
         },
-    }
+		close() {
+			this.display = false;
+		},
+	},
 };
 </script>
 
 <template>
     <div class="card">
-        <h5 class="p-card-title">Usuarios</h5>
+        <h5 class="p-card-title">Projetos</h5>
         <div id="data-grid-demo">
             <div v-if="dataUsers.length < 0">Carregando...</div>
             <div v-else>
@@ -155,13 +240,16 @@ export default {
                     ref="dt"
                     v-model:selection="selectedUser"
                     :value="dataUsers"
-                    dataKey="id"
+                    dataKey="_id"
                     :paginator="true"
                     :rows="10"
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
                     responsiveLayout="scroll"
+                    scrollable
+                    scrollHeight="50vh"
+                    class="table-container"
                 >
                     <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -178,121 +266,151 @@ export default {
                     </Column>
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
-                            <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaUsuario(slotProps.data)" />
-                            <Button :disabled="slotProps.data?.id === this.userCookie?.id" v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+                            <Button v-tooltip="'Editar'" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaProjeto(slotProps.data)" />
+                            <Button v-tooltip="'Excluir'" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
 
-                <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblExcluir')" :modal="true">
+                <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="$t('Excluir')" :modal="true">
                     <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ this.formatMessage('gblExcluir') }} <b>{{ product.login }}</b
+                            >{{ $t('Excluir') }} <b>{{ product.title }}</b
                             >?</span
                         >
                     </div>
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteDialog = false" />
-                        <Button :label="this.formatMessage('gblSim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteDialog = false" />
+                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="deleteAllDialog" :header="this.formatMessage('gblExcluir')" :modal="true" :style="{ width: '450px' }">
+                <Dialog v-model:visible="deleteAllDialog" :header="$t('Excluir')" :modal="true" :style="{ width: '450px' }">
                     <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product"
-                            >{{ this.formatMessage('gblExcluir') }} <b>{{ this.selectedUser.length }} {{ this.formatMessage('gblUsuarios') }}</b
+                            >{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Projetos') }}</b
                             >?</span
                         >
                     </div>
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteAllDialog = false" />
-                        <Button :label="this.formatMessage('gblSim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteAllDialog = false" />
+                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblCriar')" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="$t('Criar')" :modal="true" class="p-fluid">
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="usuario.nome" required="true" />
-                                <label for="name">{{ this.formatMessage('gblNome') }}</label>
+                                <InputText id="titulo" v-model.trim="projeto.title" required="true" />
+                                <label for="titulo">{{ $t('Titulo') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="email" v-model="usuario.email" required="true" />
-                                <label for="email">{{ this.formatMessage('gblEmail') }}</label>
+                                <InputText id="subtitulo" v-model="projeto.subtitle" required="true" />
+                                <label for="subtitulo">{{ $t('SubTitulo') }}</label>
+                            </FloatLabel>
+                        </div>
+                    </div>
+                    <div class="row flex">
+                        <div class="field col-6">
+                            <FloatLabel>
+                                <InputText id="link" v-model="projeto.link" required="true" />
+                                <label for="link">{{ $t('Link') }}</label>
+                            </FloatLabel>
+                        </div>
+                        <div class="field col-6">
+                            <FloatLabel>
+<!--                            <FileUpload
+                                    mode="basic"
+                                    accept="image/*"
+                                    chooseLabel="Choose Image"
+                                    @select="onFileSelect"
+                                /> -->
+                                <InputText id="imagem" v-model="projeto.img" required />
+                                <label for="imagem">{{ $t('imagem') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="usuario.login" required="true" />
-                                <label for="login">{{ this.formatMessage('gblLogin') }}</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText type="password" id="senha" v-model="usuario.senha" required="true" />
-                                <label for="senha">{{ this.formatMessage('gblSenha') }}</label>
+                                <MultiSelect v-model="projeto.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                :maxSelectedLabels="3" class="w-full" required="true"/>
+                                <!-- <InputText id="languages" v-model="projeto.languages" required="true" /> -->
+                                <label for="languages">{{ $t('languages') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="usuario.admin" />
-                        <label for="admin">{{ this.formatMessage('gblAdministrador') }}</label>
+
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <InputText id="descricao" v-model="projeto.description" required="true" />
+                                <label for="descricao">{{ $t('Descricao') }}</label>
+                            </FloatLabel>
+                        </div>
                     </div>
 
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
-                        <Button :label="this.formatMessage('gblSalvar')" icon="pi pi-check" class="p-button-text" @click="SalvaUsuario" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaProjeto" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="this.formatMessage('gblEditar')" :modal="true" class="p-fluid" @update:visible="getCancelUser">
+                <Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="$t('Editar')" :modal="true" class="p-fluid" @update:visible="getCancelUser">
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="name" v-model.trim="userLogin.nome" required="true" />
-                                <label for="name">{{ this.formatMessage('gblNome') }}</label>
+                                <InputText id="titulo" v-model.trim="editProject.title" required="true" />
+                                <label for="titulo">{{ $t('Titulo') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="email" v-model="userLogin.email" required="true" />
-                                <label for="email">{{ this.formatMessage('gblEmail') }}</label>
+                                <InputText id="subtitulo" v-model="editProject.subtitle" required="true" />
+                                <label for="subtitulo">{{ $t('SubTitulo') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <InputText id="login" v-model="userLogin.login" required="true" />
-                                <label for="login">{{ this.formatMessage('gblLogin') }}</label>
+                                <InputText id="link" v-model="editProject.link" required="true" />
+                                <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
                         <div class="field col">
                             <FloatLabel>
-                                <InputText type="password" id="senha" v-model="userLogin.senha" required="true" />
-                                <label for="senha">{{ this.formatMessage('gblSenha') }}</label>
+                                <InputText id="imagem" v-model="editProject.img" required="true" />
+                                <label for="imagem">{{ $t('imagem') }}</label>
                             </FloatLabel>
                         </div>
                     </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="admin" v-model="userLogin.admin" />
-                        <label for="admin">{{ this.formatMessage('gblAdministrador') }}</label>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <MultiSelect v-model="editProject.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                :maxSelectedLabels="3" class="w-full" required="true"/>
+                                <label for="languages">{{ $t('languages') }}</label>
+                            </FloatLabel>
+                        </div>
                     </div>
-                    <div class="field-checkbox mb-0">
-                        <input type="checkbox" id="ativo" v-model="userLogin.ativo" />
-                        <label for="ativo">{{ this.formatMessage('gblAtivo') }}</label>
+                    <div class="row flex">
+                        <div class="field col">
+                            <FloatLabel>
+                                <InputText id="descricao" v-model="editProject.description" required="true" />
+                                <label for="descricao">{{ $t('Descricao') }}</label>
+                            </FloatLabel>
+                        </div>
+                        
                     </div>
-
                     <template #footer>
-                        <Button :label="this.formatMessage('gblCancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
-                        <Button :label="this.formatMessage('gblSalvar')" icon="pi pi-check" class="p-button-text" @click="EditaUsuario" />
+                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
+                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaProjeto" />
                     </template>
                 </Dialog>
             </div>
@@ -300,4 +418,14 @@ export default {
     </div>
 </template>
 
-<style></style>
+<style scoped>
+.card {
+    aspect-ratio: unset;
+}
+.table-container {
+    line-break: anywhere;
+    ::-webkit-scrollbar {
+        height: 8px;
+    }
+}
+</style>

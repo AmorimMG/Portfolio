@@ -1,8 +1,3 @@
-.intro-div {
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s;
@@ -24,7 +19,7 @@
 
 .p-dialog-content {
     padding: 0;
-    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .iframe {
@@ -46,58 +41,13 @@
     flex-direction: column;
 }
 
-.dot {
-    height: 20px;
-    width: 20px;
-    background-color: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.red-dot {
-    height: 10px;
-    width: 10px;
-    background-color: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
-
 .card {
     user-select: none;
 }
 
-.p-overlaypanel-content {
-    background-color: #4d25b0 !important;
-    border-color: #abcb1a;
-    border-style: solid;
-}
-
-.lights {
-    filter: drop-shadow(0 0 4px purple) drop-shadow(0 0 6px purple) drop-shadow(0 0 10px purple);
-}
-
-.greenLights {
-    filter: drop-shadow(0 0 4px #abcb1a) drop-shadow(0 0 6px #abcb1a) drop-shadow(0 0 10px #abcb1a);
-}
-
-.gif-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-.black-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    z-index: 999;
+.aspect-ratio-2-1 .card {
+    aspect-ratio: 2 / 1 !important;
+    padding: 0 !important;
 }
 
 .overlay {
@@ -130,123 +80,101 @@
     transform: rotate(0deg);
 }
 
-.p-terminal {
-    max-height: 300px;
-    height: 100%;
-}
-
-.custom-terminal {
-    width: 100%;
-    height: 100%;
-}
-
-.custom-terminal-white {
-    width: 100%;
-    height: 100%;
-}
-
-.custom-terminal .p-terminal-welcome-msg,
-.custom-terminal .p-terminal-prompt {
-    color: rgb(0, 255, 0);
-}
-
-.custom-terminal-white .p-terminal-welcome-msg,
-.custom-terminal-white .p-terminal-prompt {
-    color: rgb(0, 255, 0);
-}
-
 .isLink {
     display: none;
-}
-
-.animated-image {
-    position: absolute;
-    top: -40px;
-    right: 10px;
-    width: 150px;
-    height: 150px;
-    transition: top 0.1s ease-out, transform 0.1s ease-out;
-    transform: rotate(180deg);
-    opacity: 0;
-}
-
-.animated-image.show {
-    top: -52px;
-    transform: rotate(180deg);
-    opacity: 1;
-}
-
-.animated-image-hide {
-    top: -80px;
-    opacity: 0;
-    transition: top 0.1s ease-out, opacity 0.1s ease-out;
 }
 
 .layout-main-container {
     overflow-x: hidden;
 }
 
-.spotify-img {
-    border: solid 0.5px #1db954;
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    margin-right: 15px;
-}
-
-.spotify-texts {
-    color: #999;
-    margin-top: -3px;
-    line-height: 1;
-    width: 80%;
-}
-
-.spotify-title {
-    margin-left: 12%;
-    margin-top: 20%;
-}
-
-.cluster {
-    display: grid;
-    grid-template: repeat(2, 1fr) / repeat(2, 1fr);
-    gap: 10px;
-    width: 100%;
-}
-
-.grid-2 {
-    display: grid;
-    grid-template: repeat(auto-fill, 270px) / repeat(auto-fill, 270px);
-}
-
-.mapboxgl-control-container {
-    display: none;
-}
-
-.mapboxgl-canvas {
-    width: 100%;
-    height: 100%;
+.components-container{
+    display: flex;
+    flex-direction: row;
+    margin: 0;
 }
 
 .draggable {
     display: flex;
     flex-wrap: wrap;
+    padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    height: auto;
+    padding: 25px;
 }
+
 .draggable-item {
     margin: 10px;
     cursor: move;
 }
 
+.layout-main-container{
+    height: 100vh;
+}
+
+#toggleMenuButton {
+    position: absolute;
+    right: 15px;
+    top: 22px;
+}
+
+.terminal-card{
+    height: 100%;
+    max-height: -webkit-fill-available;
+    overflow-y: auto;
+}
+
+.p-terminal{
+    height: 100%;
+    background: none;
+    box-shadow: var(--card-shadow);
+/*     max-height: 250px !important; */
+    overflow-y: auto !important;
+    border: none;
+/*
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+*/
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--glow-position);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+.p-terminal-content {
+    // Conteudo do terminal
+}
+    
+.p-terminal-prompt {
+    color: #48FE48 !important;
+}
+
 @media screen and (min-width: 1960px) {
     .layout-main-container {
-        padding: 50px 200px 10px 200px !important;
-        padding-left: 200px !important;
+        padding: 95px 0px 0px 0px !important;
     }
 }
 
 @media (min-width: 992px) {
     .layout-main-container {
-        padding: 50px 200px 10px 200px !important;
-        padding-left: 200px !important;
+        padding: 0px 0px 0px 0px !important;
     }
 
     .stroke-white {
@@ -255,60 +183,48 @@
     }
 
     .p-terminal {
-        min-height: 300px;
-    }
-}
-
-@media (max-width: 991px) {
-    .layout-main-container {
-        padding: 2rem !important;
-        padding-left: 25px !important;
-        font-size: 5px !important;
+        height: 100%;
     }
 
-    .spotify {
-        grid-column: span 2;
-    }
-
-    .stroke-white {
-        height: 1.5rem;
-        margin: 2rem !important;
-    }
-
-    .localizacao {
+    #toggleMenuButton {
         display: none;
     }
 
+    
+}
+
+@media (max-width: 991px) {
+    .draggable {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        overflow-x: hidden;
+        grid-template-columns: repeat(2, minmax(50px, 1fr));
+    }
+
+    .layout-main-container {
+        padding: 0 !important;
+    }
+
+    #Introduction{
+        width: 95%;
+        position: absolute;
+        right: 0;
+    }
+
+    #Stack{
+        display: none;
+    }
+    
     #Anilist {
         display: none;
     }
 
-    #Threejs {
+    #ClusterLinks {
         display: none;
     }
 
-    .gif-container {
-        width: 80%;
+    #AI {
+        display: none;
     }
 
-    .spotify {
-        margin-top: 0px !important;
-    }
-
-    .spotify-img {
-        width: 40px !important;
-        height: 40px !important;
-    }
-
-    .spotify-texts {
-        font-size: 12px !important;
-    }
-
-    .spotify-title {
-        font-size: 3em !important;
-    }
-
-    .p-terminal {
-        min-height: 300px;
-    }
 }

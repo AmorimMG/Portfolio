@@ -1,8 +1,12 @@
 :root {
-  font-family: "lores-12", sans-serif;
+    --surface-ground: #8a5cf668; /* Very light, almost white, blue background for a fresh look */
+    --surface-card: #ffffff; /* Crisp white for card backgrounds to ensure clarity */
+    --sidebar-bg: #e2e9f0; /* Soft, muted blue for the sidebar, offering a calm feel */
+
+    font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
-  --font-family:"lores-12", sans-serif;
+  --font-family: Roboto, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   --font-feature-settings: "cv02","cv03","cv04","cv11";
   --surface-a:#ffffff;
   --surface-b:#f9fafb;
@@ -38,9 +42,7 @@
   --content-padding:1.25rem;
   --inline-spacing:0.5rem;
   --border-radius:6px;
-  --surface-ground:#f9fafb;
   --surface-section:#ffffff;
-  --surface-card:#ffffff;
   --surface-overlay:#ffffff;
   --surface-border:#dfe7ef;
   --surface-hover:#f6f9fc;
@@ -57,7 +59,7 @@
   font-display: swap;
   font-style: normal;
   font-named-instance: "Regular";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 @font-face {
   font-family: "lores-12";
@@ -65,7 +67,7 @@
   font-display: swap;
   font-style: italic;
   font-named-instance: "Italic";
-  src: url("./fonts/LoRes12OT-Regular.woff2?v=3.19") format("woff2");
+  src: url("./fonts/beon-webfont.ttf");
 }
 :root {
   --blue-50:#f5f9ff;
@@ -10850,6 +10852,10 @@
       animation-iteration-count: infinite;
       animation-delay: 0s;
   }
+
+  .app-widgets * {
+    background-color: rgba(0, 0, 0, 0.2);
+}
   
   @keyframes glitch-anim {
     0% { 
