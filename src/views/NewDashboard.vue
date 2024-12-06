@@ -1,14 +1,22 @@
 <script setup>
+import { onMounted } from 'vue';
 import AmorimLogo from '@/assets/images/cards/profilePic.png';
 import MacOSBackground from '@/assets/images/dock/macOSbackground.jpg';
 import { ref } from 'vue';
 import Dock from '../components/Dock/Dock.vue';
+import BootupScreen from '../components/BootupScreen.vue';
 
-const isStarted = ref(false);
+const isStarted = ref(true);
+
+onMounted(() => {
+	setTimeout(() => {
+		isStarted.value = false;
+	}, 3000);
+});
 </script>
 
 <template>
-<div v-if="!isStarted" class="login-screen center">
+<!-- <div v-if="!isStarted" class="login-screen center">
     <div style="position: relative;">
         <div style="position: absolute; top: -5px; left: -5px; width: 110px; height: 110px; border: 5px solid black; border-radius: 25%;"></div>
         <Image :src="AmorimLogo" alt="Image" width="100" style="top: -1px;" />
@@ -20,11 +28,32 @@ const isStarted = ref(false);
         <Button icon="pi pi-question" outlined class="p-button-rounded"/>
     </div>
     <img width="100%" height="100%" class="background-container" :src="MacOSBackground" />
+</div> -->
+<div v-if="isStarted" class="center">
+    <BootupScreen/>
 </div>
-<Dock v-else />
+<Dock :class="{ 'hidden': isStarted, 'fade-in': !isStarted }" v-else />
 </template>
 
 <style scoped>
+.black-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 999;
+}
+
+.gif-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
 .center{
     display: flex;
     justify-content: center;
