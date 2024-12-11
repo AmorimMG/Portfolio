@@ -1,14 +1,20 @@
 <script setup>
 import { useToast } from "primevue/usetoast";
 import { ref, watchEffect } from 'vue';
+import { useI18n } from "vue-i18n";
 import draggable from 'vuedraggable';
 import { componentMap, widgets as initialWidgets } from '../../data/appsDock';
 import Select from '../Select.vue';
 import DockBottombar from './DockBottomBar.vue';
 import DockTopbar from './DockTopBar.vue';
 
-const emit = defineEmits(['update:modelValue']);
+import {
+    getLanguageCookie,
+    setLanguageCookie,
+} from "../../service/session";
 
+const emit = defineEmits(['update:modelValue']);
+const { locale } = useI18n();
 const props = defineProps({
     modelValue: {
         type: String,
@@ -32,6 +38,32 @@ const items = ref([
 	{
 		label: "Translate",
 		icon: "pi pi-language",
+        items: [
+			{
+				label: "Português",
+				icon: "pi pi-caret-right",
+                command: () => {
+                    setLanguageCookie('pt');
+                    locale.value = 'pt';
+                },
+			},
+			{
+				label: "Espanõl",
+				icon: "pi pi-pause",
+                command: () => {
+                    setLanguageCookie('es');
+                    locale.value = 'es';
+                },
+			},
+            {
+                label: "English",
+                icon: "pi pi-pause",
+                command: () => {
+                    setLanguageCookie('en');
+                    locale.value = 'en';
+                },
+            }
+		],
 	},
 	{
 		label: "Speech",
@@ -58,14 +90,29 @@ const items = ref([
 
 watchEffect(() => {
     background.value = props.modelValue;
-})
+
+	const cookieValue = getLanguageCookie();
+	if (
+		cookieValue &&
+		dropdownValues.value.some((option) => option.value === cookieValue)
+	) {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === cookieValue,
+		);
+	} else {
+		dropdownValue.value = dropdownValues.value.find(
+			(option) => option.value === "en",
+		);
+		locale.value = "en";
+	}
+});
 </script>
 
 <template>
     <div class="dock-demo">
         <ContextMenu global :model="items" />
         <Toast position="top-center" group="tc" />
-        <DockTopbar @hide="onHide" v-model="background" />
+        <DockTopbar v-model="background" />
         <div class="dock-window dock-advanced" :style="{ 'background-image': `url(${background})` }">
             <div class="wrapper flex justify-content-between">
                 <div class="apps">
@@ -125,7 +172,7 @@ watchEffect(() => {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 20px;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
     grid-auto-flow: column;
 }
 

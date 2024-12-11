@@ -4,6 +4,10 @@ const emit = defineEmits(["close"]);
 const closeModal = () => {
 	emit("close");
 };
+
+const onMaximize = () => {
+    emit("maximize");
+};
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const closeModal = () => {
             <div class="window-controls">
             <span class="close" @click="closeModal"></span>
             <span class="minimize" @click="closeModal"></span>
-            <span class="maximize" @click="closeModal"></span>
+            <span class="maximize" @click="onMaximize"></span>
             </div>
         </div>
 </template>

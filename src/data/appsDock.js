@@ -15,6 +15,7 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 /* import Actitivies from '../components/Cards/Activities.vue'; */
 import CameraModal from '../components/Modals/CameraModal.vue';
+import ConfigModal from '../components/Modals/ConfigModal.vue';
 
 import AmorimIcon from '@/assets/images/cards/profilePic.png';
 import Camera from '@/assets/images/dock/camera.png';
@@ -40,7 +41,8 @@ export const componentMap = {
     GithubHeatMap,
     DashboardModal,
     PointerlockModal,
-    CameraModal
+    CameraModal,
+    ConfigModal
 };
 
 export const apps = [
@@ -49,9 +51,9 @@ export const apps = [
     { id: 7, name: 'ProjectsModal', colSpan: 1, rowSpan: 1, title: 'Projects', icon: FolderIcon },
     { id: 9, name: 'DashboardModal', colSpan: 1, rowSpan: 1, title: 'Amorim', icon: AmorimIcon },
     { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'JOGO', icon: Threejs },
-    { id: 13, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Servidor', icon: Raspberry },
-    { id: 14, name: 'CameraModal', colSpan: 1, rowSpan: 1, title: 'Camera', icon: Camera },
-    { id: 15, name: 'CameraModal', colSpan: 1, rowSpan: 1, title: 'Wallpaper', icon: Camera },
+    { id: 14, name: 'PointerlockModal', colSpan: 1, rowSpan: 1, title: 'Servidor', icon: Raspberry },
+    { id: 15, name: 'CameraModal', colSpan: 1, rowSpan: 1, title: 'Camera', icon: Camera },
+    { id: 16, name: 'ConfigModal', colSpan: 1, rowSpan: 1, title: 'Wallpaper', icon: Camera },
 ];
 
 export const widgets = [

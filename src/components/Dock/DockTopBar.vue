@@ -20,9 +20,7 @@ const dropdownValue = ref(null);
 const configModalVisible = ref(false);
 const cameraModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
-const onClose = () => {
-	emit("hide");
-};
+
 const currentTime = ref("");
 const timer = ref(null);
 const volumeValue = ref(null);
@@ -262,19 +260,19 @@ const menubarItems = ref([
                     <i class="pi pi-sign-in"></i>
                 </button>
             </router-link>
-            <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
+<!--             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
                 <i class="pi pi-times"></i>
-            </button>
+            </button> -->
             <OverlayPanel ref="opWifi">
-                aaaa sou um wifi
+                i'm a wifi
             </OverlayPanel>
 
             <OverlayPanel ref="opVolume">
                 <Slider v-model="volumeValue" class="w-14rem" />
             </OverlayPanel>
 
-            <CameraModal @close="cameraModalVisible = false" v-model:visible="cameraModalVisible" />
-            <ConfigModal @close="configModalVisible = false" v-model:visible="configModalVisible"  @update:modelValue="$emit('update:modelValue', $event)"/>
+            <CameraModal @close="cameraModalVisible = false" :isTopbar="true" v-model:visible="cameraModalVisible" />
+            <ConfigModal @close="configModalVisible = false" :isTopbar="true" v-model:visible="configModalVisible"  @update:modelValue="$emit('update:modelValue', $event)"/>
         </template>
     </Menubar>
 </template>

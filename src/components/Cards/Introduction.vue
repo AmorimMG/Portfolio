@@ -202,6 +202,8 @@ const sendEmail = async () => {
                             <p>
                                 {{ $t('AboutMe') }}
                                 <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer" style="color: #48FE48" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">FIAP.</a>
+                                {{ $t('AboutMe2') }}
+                                <a href="https://www.meta3group.com.br/" target="_blank" rel="noopener noreferrer" style="color: #48FE48" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">Meta3.</a>
                             </p>
                             <br />
                             <p>
@@ -217,7 +219,7 @@ const sendEmail = async () => {
                     <div class="flex flex-column" style="padding: 20px">
                         <p>{{ $t('Contact.message') }}</p>
                         <div class="center mt-5">
-                            <Button outlined @click="showEmailModal" style="color: #48FE48" class="underline">
+                            <Button outlined @click="window.location.href = 'mailto:gabriel@amorim.pro'" style="color: #48FE48" class="underline">
                                 gabriel@amorim.pro
                             </Button>
                         </div>

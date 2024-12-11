@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 const progress = ref(0);
 
 onMounted(() => {
@@ -16,7 +16,7 @@ onMounted(() => {
 <template>
   <div class="gif-container">
     <i class="apple-icon pi pi-apple"></i>
-    <ProgressBar :value="progress" mode="determinate" :showValue="false" style="height: 9px; width: 250px; background: white;" />
+    <ProgressBar :value="progress" mode="determinate" :showValue="false" style="height: 9px; width: 250px; background: grey" />
   </div>
 
   <div class="black-screen"></div>

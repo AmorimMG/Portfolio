@@ -1,8 +1,11 @@
 <script setup>
+import AmorimIcon from '@/assets/images/cards/profilePic.png';
 import { useToast } from "primevue/usetoast";
 import { onMounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
 import Terminal from "../Cards/Terminal.vue";
+import CustomDialog from '../Modals/CustomDialog.vue';
+import DashboardModal from '../Modals/DashboardModal.vue';
 import FileSystemModal from "../Modals/FileSystemModal.vue";
 import VscodeModal from '../Vscode/VscodeModal.vue';
 
@@ -11,16 +14,17 @@ const displayFinder = ref(false);
 const displayTerminal = ref(false);
 const displayPhotos = ref(false);
 const vscodeModalOpen = ref(false);
+const dashboardModalOpen = ref(false);
 const images = ref();
 const toast = useToast();
 const items = ref([
-	{
+/* 	{
 		label: "Finder",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
 		command: () => {
 			displayFinder.value = true;
 		},
-	},
+	}, */
 	{
 		label: "Terminal",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/terminal.svg",
@@ -78,12 +82,22 @@ const items = ref([
 	{
 		label: "GitHub",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/github.svg",
+        command: () => {
+            window.open("https://github.com/AmorimMG", "_blank");
+		},
 	},
 	{
 		label: "Trash",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/trash.png",
 		command: () => {
 			toast.add({ severity: "info", summary: "Empty Trash", life: 3000 });
+		},
+	},
+    {
+		label: "Amorim",
+		icon: AmorimIcon,
+		command: () => {
+			dashboardModalOpen.value = true;
 		},
 	},
 ]);
@@ -125,7 +139,11 @@ watch(FileSystemOpen,(newValue)=>{
     }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'update:visible'])
+
+const closeModalTerminal = () => {
+	displayTerminal.value = false;
+}
 </script>
 
 <template>
@@ -137,10 +155,9 @@ const emit = defineEmits(['close'])
         </template>
 
     </Dock>
-    <Dialog class="dialog-terminal" v-model:visible="displayTerminal" header="Terminal" contentStyle="width: 100%; height: 100%; padding: 20px;"
-    :breakpoints="{ '960px': '50vw' }" :style="{ width: '50vw', height: '40vh' }" :maximizable="true">
+    <CustomDialog :visible.sync="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; padding: 40px; background-color: black">
             <Terminal class="w-full h-full" />
-    </Dialog>
+    </CustomDialog>
         <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
@@ -152,6 +169,8 @@ const emit = defineEmits(['close'])
             <img :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
         </template>
     </Galleria>
+
+    <DashboardModal @close="dashboardModalOpen = false" v-model:visible="dashboardModalOpen" />
 </template>
 <style scoped>
 .draggable-dock {

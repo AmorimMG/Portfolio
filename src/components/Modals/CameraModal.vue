@@ -1,18 +1,24 @@
 <script setup>
 import { defineEmits, ref } from 'vue';
-import ModalHeader from "./ModalHeader.vue";
+import vueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import CustomDialog from './CustomDialog.vue';
 
     const props = defineProps ({
         visible: {
             type: Boolean,
             default: false,
-        }
+        },
+        isTopbar: {
+            type: Boolean,
+            default: false,
+        },
     });
 
     const emit = defineEmits(["update:visible"]);
     
     const webcam = ref(null);
     const isLive = ref(false);
+    const openCamera = ref(false);
     let stream = null;
 
     const startWebcam = async () => {
@@ -38,32 +44,37 @@ import ModalHeader from "./ModalHeader.vue";
     const closeModal = () => {
         isLive.value = false;
         emit("update:visible", false);
+        openCamera.value = false;
         stopWebcam();
     }
-
 </script>
 
 <template>
-  <div>
-    <Dialog class="dialog-terminal" 
-    :visible.sync="visible"                                                 
-    :closable="false"
-    :unstyled="true"
-    :style="{ width: '80rem', height: '50rem'}"
+    <Button v-if="!isTopbar" text class="w-full h-full" @click="openCamera = true" style="width: 100%; height: 100%; justify-content: center">
+        <vueNeonLight size="15px" :flash="false" style="color: white"></vueNeonLight>
+    </Button>
+    <CustomDialog
+    :visible.sync="visible || openCamera"
+    @update:visible="closeModal"
+    :maximized="false"
 >
-    <template #header>
-        <ModalHeader @close="closeModal"/>
-    </template>
-    <div class="flex justify-content-center align-item-center">
-        <Button v-if="!isLive" @click="startWebcam()">Start Webcam</Button>
-        <video ref="webcam" autoplay playsinline width="100%" :style="{ display: isLive ? 'block' : 'none' }"></video>
+    <div class="flex justify-content-center align-item-center video-container">
+        <Button style="height: 50px;" size="large" v-if="!isLive" @click="startWebcam()">Start Webcam</Button>
+        <video ref="webcam" autoplay playsinline width="100%" height="100%" :style="{ display: isLive ? 'block' : 'none' }"></video>
     </div>
-    </Dialog>
-  </div>
+    </CustomDialog>
 </template>
 
 <style scoped>
 video {
   max-width: 100%;
+}
+
+.video-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 </style>

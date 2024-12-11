@@ -1,16 +1,50 @@
 <script setup>
 import { vElementSize } from '@vueuse/components';
-import { defineAsyncComponent, ref } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 
 const props = defineProps({
-    header: String
+    header: String,
+    visible: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const dashboardVisible = ref(false);
+const url = ref("https://amorim.pro/"); // Track the URL from the input
+const isDashboard = computed(() => url.value === "https://amorim.pro/");
 const emit = defineEmits(["close"]);
+
 const onHide = () => {
-    emit('close');
+    emit("close");
     dashboardVisible.value = false;
+    emit("update:visible", false);
+};
+
+// Validates and prepares URL for iframe
+const validatedUrl = computed(() => {
+    let finalUrl = url.value.trim();
+    if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
+        finalUrl = `https://${finalUrl}`;
+    }
+    return finalUrl;
+});
+
+// Toggles the 'p-dialog-maximized' class
+const onForward = () => {
+    const dialogElement = document.querySelector('.dialog-terminal');
+    if (dialogElement.classList.contains('p-dialog-maximized')) {
+        dialogElement.classList.remove('p-dialog-maximized');
+    } else {
+        dialogElement.classList.add('p-dialog-maximized');
+    }
+};
+
+const refreshPage = () => {
+    if (!isDashboard.value) {
+        const iframe = document.querySelector(".browser-iframe");
+        if (iframe) iframe.src = iframe.src;
+    }
 };
 
 const startResize = (event, direction) => {
@@ -53,29 +87,48 @@ const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue')
 
 <template>
     <Button text class="w-full h-full" @click="dashboardVisible = true" />
-    <Dialog v-element-size="onResize" class="dialog-terminal" contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: auto;" 
-            :visible="dashboardVisible"  
-            @update:visible="dashboardVisible = $event"
-            @hide="onHide"
-            :closable="false"
-            :breakpoints="{ '960px': '50vw' }"  
-            :style="{ width: '90vw', height: '90vh' }"
-            :unstyled="true"
-            >
+    <Dialog
+        v-element-size="onResize"
+        class="dialog-terminal p-dialog-maximized"
+        contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: none;"
+        :visible="dashboardVisible || visible"
+        @update:visible="dashboardVisible = $event"
+        @hide="onHide"
+        :maximized="true"
+        :closable="false"
+        :breakpoints="{ '960px': '50vw' }"
+        :style="{ width: '90vw', height: '90vh' }"
+        :unstyled="true"
+    >
         <template #header>
             <div class="safari-header w-full flex justify-content-between items-center">
                 <div class="header-buttons">
-                    <button @click="dashboardVisible = false" class="nav-button back"></button>
-                    <button @click="dashboardVisible = false" class="nav-button forward"></button>
-                    <button @click="dashboardVisible = false" class="nav-button refresh"></button>
+                    <button @click="onHide" class="nav-button back"></button>
+                    <button @click="onForward" class="nav-button forward"></button>
+                    <button @click="refreshPage" class="nav-button refresh"></button>
                 </div>
-                <div class="url-bar">https://amorim.pro/</div>
+                <input
+                    disabled
+                    v-model="url"
+                    class="url-bar"
+                    placeholder="Enter URL..."
+                    @keyup.enter="updateView"
+                />
                 <div class="right-section"></div>
             </div>
         </template>
-        <Dashboard ref="el" class="layout-main-container" v-if="dashboardVisible" />
+        <template v-if="isDashboard">
+            <Dashboard ref="el" class="layout-main-container" />
+        </template>
+        <template v-else>
+            <iframe
+                :src="validatedUrl"
+                class="browser-iframe"
+                style="width: 100%; height: 100%; border: none;"
+            ></iframe>
+        </template>
 
-         <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
+        <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
         <span class="resize-handle right" @mousedown="startResize($event, 'right')"></span>
         <span class="resize-handle bottom" @mousedown="startResize($event, 'bottom')"></span>
         <span class="resize-handle left" @mousedown="startResize($event, 'left')"></span>
@@ -135,7 +188,7 @@ const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue')
 /* Resizable handle styling */
 .resize-handle {
     position: absolute;
-    background-color: red; /* cor do handler */
+    /* background-color: red; */ /* cor do handler */
     z-index: 10;
 }
 

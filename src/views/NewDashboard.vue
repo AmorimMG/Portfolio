@@ -1,10 +1,7 @@
 <script setup>
-import { onMounted } from 'vue';
-import AmorimLogo from '@/assets/images/cards/profilePic.png';
-import MacOSBackground from '@/assets/images/dock/macOSbackground.jpg';
-import { ref } from 'vue';
-import Dock from '../components/Dock/Dock.vue';
+import { onMounted, ref } from 'vue';
 import BootupScreen from '../components/BootupScreen.vue';
+import Dock from '../components/Dock/Dock.vue';
 
 const isStarted = ref(true);
 

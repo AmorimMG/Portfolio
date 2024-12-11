@@ -16,7 +16,6 @@ export default {
     <Toast />
     <router-view />
     <DynamicModal />
-    <NeonCursor />
 </template>
 
 <style>

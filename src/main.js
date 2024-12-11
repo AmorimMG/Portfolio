@@ -108,6 +108,7 @@ import TreeSelect from "primevue/treeselect";
 import TreeTable from "primevue/treetable";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import VirtualScroller from "primevue/virtualscroller";
+import CustomDialog from "./components/Modals/CustomDialog.vue";
 
 import "@/assets/styles.scss";
 
@@ -191,6 +192,7 @@ app.component("DataView", DataView);
 app.component("DataViewLayoutOptions", DataViewLayoutOptions);
 app.component("DeferredContent", DeferredContent);
 app.component("Dialog", Dialog);
+app.component("CustomDialog", CustomDialog);
 app.component("Divider", Divider);
 app.component("Dock", Dock);
 app.component("Dropdown", Dropdown);

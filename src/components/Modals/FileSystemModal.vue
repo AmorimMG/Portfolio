@@ -1,52 +1,25 @@
 <script setup lang="ts">
-import { defineEmits, ref, watch } from "vue";
+import { defineEmits } from "vue";
 import FileSystem from "../FileSystem.vue";
+import CustomDialog from "./CustomDialog.vue";
 
 const props = defineProps({
 	visible: Boolean,
-});
-
-const isMaximized = ref(false);
-
-watch(props, (newValue, oldValue) => {
-	if (newValue !== oldValue) {
-		console.log("Modal Visible:", newValue);
-	}
 });
 
 const emit = defineEmits(["close"]);
 const closeModal = () => {
 	emit("close");
 };
-
-const toggleMaximize = () => {
-  isMaximized.value = !isMaximized.value;
-};
 </script>
 
 <template>
-<Dialog class="dialog-terminal" 
-    :visible="props.visible"  
-    :closable="false"
-    :unstyled="true"
-    :class="{ 'maximized': isMaximized }"
+<CustomDialog class="dialog-terminal" 
+    :visible="props.visible"
+    @update:visible="closeModal"
 >
-    <template #header>
-        <div class="modal-header">
-            <div class="window-controls">
-            <span class="close" @click="closeModal"></span>
-            <span class="minimize" @click="closeModal"></span>
-            <span class="maximize" @click="toggleMaximize"></span>
-            </div>
-            <div class="toolbar">
-                <button><</button>
-                <button>></button>
-                <input type="text" class="path-input" value="admin > Downloads > some-stuff" readonly />
-            </div>
-        </div>
-    </template>
     <FileSystem/>
-</Dialog>
+</CustomDialog>
 </template>
 
 <style scoped>

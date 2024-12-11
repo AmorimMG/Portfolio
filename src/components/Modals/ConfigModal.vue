@@ -8,22 +8,31 @@ defineProps ({
     visible: {
         type: Boolean,
         default: false,
-    }
+    },
+    isTopbar: {
+            type: Boolean,
+            default: false,
+    },
 });
 
 const selectedBackground = ref('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
 
 const backgroundImages = ref(Wallpapers);
 const emit = defineEmits(["update:visible, update:modelValue"]);
+const openWallpaper = ref(false);
 
 const closeModal = () => {
     emit("update:visible", false);
+    openWallpaper.value = false;
 };
 </script>
 
 <template>
+<Button v-if="!isTopbar" text class="w-full h-full" @click="openWallpaper = true" style="width: 100%; height: 100%; justify-content: center">
+        <VueNeonLight size="15px" :flash="false" style="color: white"></VueNeonLight>
+</Button>
 <Dialog class="dialog-terminal" 
-    :visible="visible"  
+    :visible="visible || openWallpaper"  
     :closable="false"
     :unstyled="true"
     :style="{ width: '80rem', height: '50rem', overflowY: 'auto' }"
@@ -34,7 +43,7 @@ const closeModal = () => {
     </template>
     <div style="background-color: rgba(0, 0, 0, 0.2);">
         <div class="flex justify-content-center align-item-center">
-            <h1> Actual Image</h1>
+            <h1>Actual Image</h1>
         </div>
         <div class="flex flex-column gap-6">
             <div class="flex flex-wrap justify-content-center gap-3">
