@@ -71,6 +71,15 @@ watchEffect(() => {
 	}
 });
 
+watch(locale, (newLocale) => {
+    const newDropdownValue = dropdownValues.value.find(
+        (option) => option.value === newLocale
+    );
+    if (newDropdownValue) {
+        dropdownValue.value = newDropdownValue;
+    }
+});
+
 watch(dropdownValue, (newValue, oldValue) => {
 	if (newValue !== oldValue) {
 		setLanguageCookie(newValue.value);

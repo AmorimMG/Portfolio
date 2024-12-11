@@ -41,7 +41,7 @@ const items = ref([
         items: [
 			{
 				label: "Português",
-				icon: "pi pi-caret-right",
+				icon: "pi pi-language",
                 command: () => {
                     setLanguageCookie('pt');
                     locale.value = 'pt';
@@ -49,7 +49,7 @@ const items = ref([
 			},
 			{
 				label: "Espanõl",
-				icon: "pi pi-pause",
+				icon: "pi pi-language",
                 command: () => {
                     setLanguageCookie('es');
                     locale.value = 'es';
@@ -57,7 +57,7 @@ const items = ref([
 			},
             {
                 label: "English",
-                icon: "pi pi-pause",
+                icon: "pi pi-language",
                 command: () => {
                     setLanguageCookie('en');
                     locale.value = 'en';

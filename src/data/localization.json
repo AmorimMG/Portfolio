@@ -67,7 +67,43 @@
 			"Hire": "I am available for freelance opportunities. Let's discuss how I can help with your project.",
 			"Funfact": "Did you know that I once climbed Mount Everest? (Just kidding!)",
 			"UnknownCommand": "Unknown command: "
-		}
+		},
+
+        "apps": {
+            "CV": "Resume",
+            "LastFM": "LastFM",
+            "Projects": "Projects",
+            "Amorim": "Amorim",
+            "JOGO": "Game",
+            "Servidor": "Server",
+            "Camera": "Camera",
+            "Wallpaper": "Wallpaper"
+          },
+
+          "DocktopBar": {
+            "Finder": "Finder",
+            "File": "File",
+            "New": "New",
+            "Bookmark": "Bookmark",
+            "Video": "Video",
+            "Delete": "Delete",
+            "Export": "Export",
+            "Edit": "Edit",
+            "Left": "Left",
+            "Right": "Right",
+            "Center": "Center",
+            "Justify": "Justify",
+            "Users": "Users",
+            "Search": "Search",
+            "Filter": "Filter",
+            "Print": "Print",
+            "List": "List",
+            "Events": "Events",
+            "Save": "Save",
+            "Archive": "Archive",
+            "Remove": "Remove",
+            "Quit": "Quit"
+          }
 	},
 	"es": {
 		"Hi": "¡Hola, soy Amorim!",
@@ -136,7 +172,43 @@
 			"Hire": "Estoy disponible para oportunidades freelance. Hablemos sobre cómo puedo ayudarte con tu proyecto.",
 			"Funfact": "¿Sabías que una vez escalé el Monte Everest? (¡Es una broma!)",
 			"UnknownCommand": "Comando desconocido: "
-		}
+		},
+
+        "apps": {
+            "CV": "Reanudar",
+            "LastFM": "LastFM",
+            "Projects": "Proyectos",
+            "Amorim": "Amorim",
+            "JOGO": "Juego",
+            "Servidor": "Servidor",
+            "Camera": "Cámara",
+            "Wallpaper": "Fondo de pantalla"
+          },
+
+          "DocktopBar": {
+            "Finder": "Buscador",
+            "File": "Archivo",
+            "New": "Nuevo",
+            "Bookmark": "Marcador",
+            "Video": "Video",
+            "Delete": "Eliminar",
+            "Export": "Exportar",
+            "Edit": "Editar",
+            "Left": "Izquierda",
+            "Right": "Derecha",
+            "Center": "Centro",
+            "Justify": "Justificar",
+            "Users": "Usuarios",
+            "Search": "Buscar",
+            "Filter": "Filtrar",
+            "Print": "Imprimir",
+            "List": "Lista",
+            "Events": "Eventos",
+            "Save": "Guardar",
+            "Archive": "Archivar",
+            "Remove": "Eliminar",
+            "Quit": "Salir"
+          }
 	},
 	"pt": {
 		"Hi": "Oi, sou Amorim!",
@@ -204,6 +276,42 @@
 			"Hire": "Estou disponível para oportunidades freelance. Vamos discutir como posso ajudar com seu projeto.",
 			"Funfact": "Você sabia que uma vez escalei o Monte Everest? (Só brincando!)",
 			"UnknownCommand": "Comando desconhecido: "
-		}
+		},
+
+        "apps": {
+            "CV": "Currículo",
+            "LastFM": "LastFM",
+            "Projects": "Projetos",
+            "Amorim": "Amorim",
+            "JOGO": "Jogo",
+            "Servidor": "Servidor",
+            "Camera": "Câmera",
+            "Wallpaper": "Papel de Parede"
+          },
+
+        "DocktopBar": {
+            "Finder": "Localizador",
+            "File": "Arquivo",
+            "New": "Novo",
+            "Bookmark": "Favorito",
+            "Video": "Vídeo",
+            "Delete": "Excluir",
+            "Export": "Exportar",
+            "Edit": "Editar",
+            "Left": "Esquerda",
+            "Right": "Direita",
+            "Center": "Centro",
+            "Justify": "Justificar",
+            "Users": "Usuários",
+            "Search": "Buscar",
+            "Filter": "Filtrar",
+            "Print": "Imprimir",
+            "List": "Lista",
+            "Events": "Eventos",
+            "Save": "Salvar",
+            "Archive": "Arquivar",
+            "Remove": "Remover",
+            "Quit": "Sair"
+        }
 	}
 }

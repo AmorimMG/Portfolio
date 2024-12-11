@@ -46,6 +46,15 @@ const updateTime = () => {
 	currentTime.value = now.toLocaleTimeString(locale.value, options);
 };
 
+watch(locale, (newLocale) => {
+    const newDropdownValue = dropdownValues.value.find(
+        (option) => option.value === newLocale
+    );
+    if (newDropdownValue) {
+        dropdownValue.value = newDropdownValue;
+    }
+});
+
 onMounted(() => {
 	if (getLanguageCookie()) {
 		dropdownValue.value = dropdownValues.value.find(

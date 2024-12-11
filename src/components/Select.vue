@@ -1,6 +1,6 @@
 <script>
 import SelectionArea from "@viselect/vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import draggable from 'vuedraggable';
 import { componentMap, apps as initialApps } from '../data/appsDock';
 
@@ -21,16 +21,26 @@ import LastFMModal from '../components/Modals/LastFMModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
+import { useI18n } from "vue-i18n";
+
 export default {
     components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, DashboardModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal, CameraModal },
-
+    setup() {
+        const { t } = useI18n();
+        const localizedApps = computed(() => {
+            return initialApps.map(app => ({
+                ...app,
+                title: t(`apps.${app.title}`),
+            }));
+        });
+        const apps = ref(localizedApps);
+        return { apps, localizedApps };
+    },
     data() {
         return {
             selected: new Set(),
-            apps: ref(initialApps)
         };
     },
-
     computed: {
         getComponent() {
             return (name) => componentMap[name] || 'div';
