@@ -7,19 +7,13 @@ pipeline {
         }
 
         stages {
-            stage('Checkout SCM') {
-                steps {
-                    checkout scm
-                }
-            }
-
             stage('Docker Stop Previous Build') {
                 steps {
                     script {
-                        sh "docker ps -a -q --filter ancestor=$REGISTRY | xargs -r docker stop"
-                        sh "docker ps -a -q --filter ancestor=$REGISTRY | xargs -r docker rm"
-
-                        sh "docker images -q $REGISTRY | xargs -r docker rmi -f"
+                        def containers = sh(script: "docker ps -a --format \"{{.ID}} {{.Image}}\" | grep $REGISTRY | awk '{print \$1}'", returnStdout: true).trim().split()
+                        for (container in containers) {
+                            sh "docker stop $container || true"
+                        }
                     }
                 }
             }
@@ -49,10 +43,31 @@ pipeline {
                 }
             }
 
-            stage('Docker Run Build') {
+            stage('Deploy New Container') {
                 steps {
                     script {
-                        sh "docker run --restart=always --name portfolio --network bridge -d -p 5173:5173/tcp $REGISTRY:$DOCKER_TAG"
+                        sh "docker run --restart=always --name $CONTAINER-$DOCKER_TAG --network bridge -d -p 5173:5173/tcp $REGISTRY:$DOCKER_TAG"
+                    }
+                }
+            }
+        }
+		
+		 post {
+            success {
+                script {
+                    def containers = sh(script: "docker ps -a --filter \"status=exited\" --format \"{{.ID}} {{.Image}}\" | grep $REGISTRY | awk '{print \$1}'", returnStdout: true).trim().split()
+                    for (container in containers) {
+                        sh "docker rm -v $container || true"
+                    }
+                }
+            }
+            failure {
+                script {
+                    sh "docker stop $REGISTRY:$DOCKER_TAG || true"
+                    sh "docker rm -v $REGISTRY:$DOCKER_TAG || true"
+                    def containers = sh(script: "docker ps -a --filter \"status=exited\" --format \"{{.ID}} {{.Image}}\" | grep $REGISTRY | awk '{print \$1}'", returnStdout: true).trim().split()
+                    for (container in containers) {
+                        sh "docker start $container || true"
                     }
                 }
             }
