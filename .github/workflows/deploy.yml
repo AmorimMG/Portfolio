@@ -3,7 +3,7 @@ name: Docker CI/CD
 on:
   push:
     branches:
-      - main  # Adjust to match your main branch
+      - master  # Adjust to match your main branch
 
 jobs:
   build-and-deploy:
