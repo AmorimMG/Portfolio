@@ -3,7 +3,7 @@ name: Docker CI/CD
 on:
   push:
     branches:
-      - master  #  Adjust to match your main branch
+      - master  # Adjust to match your main branch
 
 jobs:
   build-and-deploy:
@@ -12,21 +12,25 @@ jobs:
     env:
       REGISTRY: "amorimmg/portfolio"
       DOCKER_TAG: "1.${{ github.run_number }}"
+      NODE_OPTIONS: "--max-old-space-size=4096"  # Increase memory limit for Node.js to 4GB
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Stop Previous Container
+      - name: Stop and Remove Previous Container (if exists)
         run: |
-          CONTAINERS=$(docker ps -a --format "{{.ID}} {{.Image}}" | grep $REGISTRY | awk '{print $1}')
-          for CONTAINER in $CONTAINERS; do
-            docker stop $CONTAINER || true
-          done
+          CONTAINER_ID=$(docker ps -q -f "name=portfolio-${{ env.DOCKER_TAG }}")
+          if [ -n "$CONTAINER_ID" ]; then
+            echo "Stopping and removing previous container"
+            docker stop $CONTAINER_ID
+            docker rm -v $CONTAINER_ID
+          fi
 
       - name: Build Docker Image
         run: |
-          docker build -t $REGISTRY:$DOCKER_TAG .
+          # Use --no-cache to avoid using outdated cache, and use multi-stage builds for smaller image sizes
+          docker build --no-cache --build-arg NODE_OPTIONS="${{ env.NODE_OPTIONS }}" -t $REGISTRY:$DOCKER_TAG .
 
       - name: Push Docker Image
         env:
@@ -38,7 +42,18 @@ jobs:
 
       - name: Deploy New Container
         run: |
+          echo "Deploying the new container"
           docker run --restart=always --name portfolio-$DOCKER_TAG --network bridge -d -p 5173:5173 $REGISTRY:$DOCKER_TAG
+          # Check if the container is running successfully
+          CONTAINER_STATUS=$(docker ps -q -f "name=portfolio-${{ env.DOCKER_TAG }}")
+          if [ -z "$CONTAINER_STATUS" ]; then
+            echo "Deployment failed! Rolling back..."
+            # Rollback to the previous container (if you have a backup or fallback strategy)
+            # docker run --restart=always --name portfolio-previous --network bridge -d -p 5173:5173 $REGISTRY:<previous_tag>
+            exit 1  # Fail the job if the container isn't running
+          else
+            echo "Container deployed successfully"
+          fi
 
       - name: Clean Up Exited Containers
         run: |
