@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import CardEffect from "../CardEffect.vue";
-import Dock from "../Dock/DockModal.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import FileSystemModal from "./FileSystemModal.vue";
 
-const blogVisible = ref(false);
+const fileSystemOpen = ref(false);
 
 const onHide = () => {
-	blogVisible.value = false;
+	fileSystemOpen.value = false;
 };
 </script>
 
@@ -15,13 +15,12 @@ const onHide = () => {
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
-                <Button text @click="blogVisible = true" style="width: 100%; height: 100%; justify-content: center">
+                <Button text @click="fileSystemOpen = true" style="width: 100%; height: 100%; justify-content: center">
                     <VueNeonLight size="30px" :flash="false" style="color: white">{{$t('blog')}}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>
-
-        <Dock :visible="blogVisible" @hide="onHide" />
+        <FileSystemModal @close="fileSystemOpen = false" v-model:visible="fileSystemOpen" />
     </div>
 </template>
 

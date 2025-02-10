@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { useConfigModalStore } from '@/stores/configModal';
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 
 import { useI18n } from "vue-i18n";
 import AppConfig from "../../layout/AppConfig.vue";
@@ -7,10 +8,9 @@ import {
     getLanguageCookie,
     setLanguageCookie,
 } from "../../service/session";
-import CameraModal from "../Modals/CameraModal.vue";
 import ConfigModal from "../Modals/ConfigModal.vue";
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const dropdownValues = ref([
 	{ name: "Português", code: "BR", value: "pt" },
 	{ name: "Español", code: "ES", value: "es" },
@@ -20,11 +20,11 @@ const dropdownValue = ref(null);
 const configModalVisible = ref(false);
 const cameraModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
-
+const configModalStore = useConfigModalStore();
 const currentTime = ref("");
 const timer = ref(null);
 const volumeValue = ref(null);
-
+const isMobile = ref(window.innerWidth <= 768);
 const opWifi = ref();
 const opVolume = ref();
 
@@ -90,6 +90,7 @@ watchEffect(() => {
 		);
 		locale.value = "en";
 	}
+    
 });
 
 watch(dropdownValue, (newValue, oldValue) => {
@@ -101,9 +102,9 @@ watch(dropdownValue, (newValue, oldValue) => {
 
 const appConfigRef = ref(null);
 
-const menubarItems = ref([
+const menubarItems = computed(() => [
 	{
-		label: "Finder",
+		label: t('DockTopBar.Finder'),
 		class: "menubar-root",
 	},
 	{
@@ -137,7 +138,7 @@ const menubarItems = ref([
 		],
 	},
 	{
-		label: "Edit",
+		label: t('DockTopBar.Edit'),
 		items: [
 			{
 				label: "Left",
@@ -158,22 +159,22 @@ const menubarItems = ref([
 		],
 	},
 	{
-		label: "Users",
+		label: t('DockTopBar.Users'),
 		items: [
 			{
-				label: "New",
+				label: t('DockTopBar.New'),
 				icon: "pi pi-fw pi-user-plus",
 			},
 			{
-				label: "Delete",
+				label: t('DockTopBar.Delete'),
 				icon: "pi pi-fw pi-user-minus",
 			},
 			{
-				label: "Search",
+				label: t('DockTopBar.Search'),
 				icon: "pi pi-fw pi-users",
 				items: [
 					{
-						label: "Filter",
+						label: t('DockTopBar.Filter'),
 						icon: "pi pi-fw pi-filter",
 						items: [
 							{
@@ -184,7 +185,7 @@ const menubarItems = ref([
 					},
 					{
 						icon: "pi pi-fw pi-bars",
-						label: "List",
+						label: t('DockTopBar.List'),
 					},
 				],
 			},
@@ -194,15 +195,15 @@ const menubarItems = ref([
 		label: "Events",
 		items: [
 			{
-				label: "Edit",
+				label: t('DockTopBar.Edit'),
 				icon: "pi pi-fw pi-pencil",
 				items: [
 					{
-						label: "Save",
+						label: t('DockTopBar.Save'),
 						icon: "pi pi-fw pi-calendar-plus",
 					},
 					{
-						label: "Delete",
+						label: t('DockTopBar.Delete'),
 						icon: "pi pi-fw pi-calendar-minus",
 					},
 				],
@@ -212,7 +213,7 @@ const menubarItems = ref([
 				icon: "pi pi-fw pi-calendar-times",
 				items: [
 					{
-						label: "Remove",
+						label: t('DockTopBar.Remove'),
 						icon: "pi pi-fw pi-calendar-minus",
 					},
 				],
@@ -220,13 +221,33 @@ const menubarItems = ref([
 		],
 	},
 	{
-		label: "Quit",
+		label: t('DockTopBar.Quit'),
 	},
 ]);
+
+const updateScreenSize = () => {
+	isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(async () => {
+	window.addEventListener("resize", updateScreenSize);
+});
+
+onUnmounted(() => {
+	window.removeEventListener("resize", updateScreenSize);
+});
 </script>
 
 <template>
-    <Menubar style="overflow-y: hidden" :model="menubarItems">
+    <Menubar style="overflow-y: hidden" 
+    :model="!isMobile ? menubarItems: []" 
+    :pt="{
+            // fixes https://github.com/primefaces/primevue/issues/6141
+            action: {
+                ariaHidden: false,
+            },
+        }"
+    >
         <template #start>
             <i class="pi pi-apple px-2"></i>
         </template>
@@ -269,7 +290,7 @@ const menubarItems = ref([
                     <i class="pi pi-sign-in"></i>
                 </button>
             </router-link>
-<!--             <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
+<!--        <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
                 <i class="pi pi-times"></i>
             </button> -->
             <OverlayPanel ref="opWifi">
@@ -282,6 +303,12 @@ const menubarItems = ref([
 
             <CameraModal @close="cameraModalVisible = false" :isTopbar="true" v-model:visible="cameraModalVisible" />
             <ConfigModal @close="configModalVisible = false" :isTopbar="true" v-model:visible="configModalVisible"  @update:modelValue="$emit('update:modelValue', $event)"/>
+<!--             <ConfigModal
+                :visible="configModalStore.visible"
+                :isTopbar="true"
+                @close="configModalStore.setVisible(false)"
+                @update:modelValue="configModalStore.setVisible($event)"
+            /> -->
         </template>
     </Menubar>
 </template>

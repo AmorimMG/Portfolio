@@ -1,6 +1,7 @@
 <script setup>
+import { useConfigModalStore } from '@/stores/configModal';
 import { useToast } from "primevue/usetoast";
-import { ref, watchEffect } from 'vue';
+import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useI18n } from "vue-i18n";
 import draggable from 'vuedraggable';
 import { componentMap, widgets as initialWidgets } from '../../data/appsDock';
@@ -15,16 +16,17 @@ import {
 
 const emit = defineEmits(['update:modelValue']);
 const { locale } = useI18n();
-const props = defineProps({
+/* const props = defineProps({
     modelValue: {
         type: String,
         default: 'https://primefaces.org/cdn/primevue/images/dock/window.jpg',
     },
-});
+}); */
 
+const isMobile = ref(window.innerWidth <= 768);
 const widgets = ref(initialWidgets);
-
-const background = ref(props.modelValue);
+const configModalStore = useConfigModalStore();
+const background = ref(configModalStore.getBackground());
 const toast = useToast();
 
 const items = ref([
@@ -89,22 +91,26 @@ const items = ref([
 ]);
 
 watchEffect(() => {
-    background.value = props.modelValue;
+    background.value = configModalStore.getBackground();
 
 	const cookieValue = getLanguageCookie();
-	if (
-		cookieValue &&
-		dropdownValues.value.some((option) => option.value === cookieValue)
-	) {
-		dropdownValue.value = dropdownValues.value.find(
-			(option) => option.value === cookieValue,
-		);
+	if (cookieValue) {
+		locale.value = cookieValue;
 	} else {
-		dropdownValue.value = dropdownValues.value.find(
-			(option) => option.value === "en",
-		);
 		locale.value = "en";
 	}
+});
+
+const updateScreenSize = () => {
+	isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(async () => {
+	window.addEventListener("resize", updateScreenSize);
+});
+
+onUnmounted(() => {
+	window.removeEventListener("resize", updateScreenSize);
 });
 </script>
 
@@ -118,7 +124,7 @@ watchEffect(() => {
                 <div class="apps">
                     <Select />
                 </div>
-                <div class="widgets mr-8">
+                <div v-if="!isMobile" class="widgets mr-8">
                     <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
                         <template #item="{ element }">
                             <component

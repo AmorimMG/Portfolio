@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useConfigModalStore } from '@/stores/configModal';
 import { defineEmits, ref } from "vue";
 import draggable from "vuedraggable";
 import Wallpapers from '../../data/wallpapers.js';
@@ -16,7 +17,7 @@ defineProps ({
 });
 
 const selectedBackground = ref('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
-
+const configModalStore = useConfigModalStore();
 const backgroundImages = ref(Wallpapers);
 const emit = defineEmits(["update:visible, update:modelValue"]);
 const openWallpaper = ref(false);
@@ -47,13 +48,13 @@ const closeModal = () => {
         </div>
         <div class="flex flex-column gap-6">
             <div class="flex flex-wrap justify-content-center gap-3">
-                <img :src="selectedBackground" width="450" alt="Selected Background" class="border-round" />
+                <img :src="configModalStore.getBackground()" width="450" height="200" alt="Selected Background" class="border-round" />
             </div>
             <draggable v-model="backgroundImages" item-key="value" class="flex flex-wrap justify-content-center gap-3 mb-3">
                 <template #item="{ element }">
                     <div>
-                        <img @click="() => {$emit('update:modelValue', element.value); selectedBackground = element.value}" :src="element.value" alt="Selected Background" class="w-12rem h-10rem shadow-2 border-round" />
-                        <p class="text-center">{{ element.label }}</p>
+                        <img @click="() => {$emit('update:modelValue', element.value); selectedBackground = element.value; configModalStore.setBackground(element.value)}" :src="element.value" alt="Selected Background" class="w-12rem h-10rem shadow-2 border-round" />
+                        <p style="color: white" class="text-center">{{ element.label }}</p>
                     </div>
                 </template>
             </draggable> 

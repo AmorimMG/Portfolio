@@ -114,6 +114,7 @@ import "@/assets/styles.scss";
 
 import * as Sentry from "@sentry/vue";
 
+import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 import localization from "./data/localization.json";
 
@@ -127,6 +128,7 @@ const i18n = new createI18n({
 });
 
 const app = createApp(App);
+const pinia = createPinia();
 
 app.use(VueFire, {
 	firebaseApp,
@@ -134,6 +136,7 @@ app.use(VueFire, {
 });
 /* app.use(firebaseApp); */
 /* app.use(getAnalytics(app)); */
+app.use(pinia);
 app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(i18n);

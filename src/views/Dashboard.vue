@@ -1,7 +1,8 @@
 <script setup>
+//#region imports
 import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-//#region imports
+
 import { onMounted, ref } from "vue";
 import draggable from "vuedraggable";
 import Background from "../components/Background.vue";
@@ -66,7 +67,6 @@ onMounted(() => {
 
     <div class="layout-main-container">
         <Background />
-<!--         <ContextMenu global :model="items" /> -->
         <div v-if="!isStarted" class="center">
             <img class="gif-container" src="@/assets/images/cards/glitchIntroduction.gif" />
             <div class="black-screen"></div>

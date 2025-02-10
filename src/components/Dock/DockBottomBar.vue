@@ -1,7 +1,7 @@
 <script setup>
 import AmorimIcon from '@/assets/images/cards/profilePic.png';
 import { useToast } from "primevue/usetoast";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
 import Terminal from "../Cards/Terminal.vue";
 import CustomDialog from '../Modals/CustomDialog.vue';
@@ -9,6 +9,7 @@ import DashboardModal from '../Modals/DashboardModal.vue';
 import FileSystemModal from "../Modals/FileSystemModal.vue";
 import VscodeModal from '../Vscode/VscodeModal.vue';
 
+const isMobile = ref(window.innerWidth <= 768);
 const FileSystemOpen = ref(false);
 const displayFinder = ref(false);
 const displayTerminal = ref(false);
@@ -116,13 +117,26 @@ const responsiveOptions = ref([
 	},
 ]);
 
+const filteredItems = computed(() => {
+	return isMobile.value ? items.value.slice(0, 4) : items.value;
+});
+
+const updateScreenSize = () => {
+	isMobile.value = window.innerWidth <= 768;
+};
+
 onMounted(async () => {
+	window.addEventListener("resize", updateScreenSize);
 	try {
 		const data = await PhotoService.getImages();
 		images.value = data;
 	} catch (error) {
 		console.error("Failed to fetch images:", error);
 	}
+});
+
+onUnmounted(() => {
+	window.removeEventListener("resize", updateScreenSize);
 });
 
 const onDockItemClick = (event, item) => {
@@ -147,13 +161,12 @@ const closeModalTerminal = () => {
 </script>
 
 <template>
-    <Dock style="margin-bottom: 6rem" :model="items">
+    <Dock style="margin-bottom: 6rem" :model="filteredItems">
         <template #item="{ item }">
             <a v-tooltip.top="item.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, item)">
                 <img :alt="item.label" :src="item.icon" style="width: 50px" />
             </a>
         </template>
-
     </Dock>
     <CustomDialog :visible.sync="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; padding: 40px; background-color: black">
             <Terminal class="w-full h-full" />
