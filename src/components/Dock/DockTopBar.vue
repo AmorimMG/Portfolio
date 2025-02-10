@@ -23,7 +23,8 @@ const emit = defineEmits(['update:modelValue', 'hide']);
 const configModalStore = useConfigModalStore();
 const currentTime = ref("");
 const timer = ref(null);
-const volumeValue = ref(null);
+const volumeValue = ref(0);
+const audio = ref(null);
 const isMobile = ref(window.innerWidth <= 768);
 const opWifi = ref();
 const opVolume = ref();
@@ -40,11 +41,35 @@ const toggleVolume = (event) => {
     opVolume.value.toggle(event);
 }
 
+const initializeAudio = () => {
+  audio.value = new Audio('/sounds/JustAJoke.mp3');
+  audio.value.loop = true;
+  audio.value.volume = 0;
+};
+
 const updateTime = () => {
 	const now = new Date();
 	const options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
 	currentTime.value = now.toLocaleTimeString(locale.value, options);
 };
+
+watch(volumeValue, (newVolume) => {
+    console.log(newVolume);
+
+  if (!audio.value) return;
+
+  if (newVolume > 0) {
+    console.log(audio.value);
+    if (audio.value.paused) {
+      audio.value.play();
+    }
+  } else {
+    audio.value.pause();
+  }
+  audio.value.volume = newVolume / 100;
+});
+
+initializeAudio();
 
 watch(locale, (newLocale) => {
     const newDropdownValue = dropdownValues.value.find(

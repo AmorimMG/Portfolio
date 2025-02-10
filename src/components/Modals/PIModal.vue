@@ -32,11 +32,11 @@ export default {
             </div>
         </CardEffect>
         <Dialog :visible="piVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
-<!--             <div class="zoom-controls">
-                <Button @click="zoomIn">Zoom In</Button>
-                <Button @click="zoomOut">Zoom Out</Button>
+             <div class="zoom-controls">
+<!--                 <Button @click="zoomIn">Zoom In</Button>
+                <Button @click="zoomOut">Zoom Out</Button> -->
                 <Button v-tooltip.top="'Close'" icon="pi pi-times" severity="danger" @click="onHide()"></Button>
-            </div> -->
+            </div>
             <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
                 <iframe id="iframe" class="iframe" ref="iframe" src="https://pi.amorim.pro" scrolling="auto" style="border: none"></iframe>
             </div>

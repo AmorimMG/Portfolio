@@ -14,7 +14,7 @@ import ConfigModal from "../components/Modals/ConfigModal.vue";
 import DashboardModal from "../components/Modals/DashboardModal.vue";
 import EmailModal from "../components/Modals/EmailModal.vue";
 import LastFMModal from "../components/Modals/LastFMModal.vue";
-import PiModal from "../components/Modals/PiModal.vue";
+import PiModal from "../components/Modals/PIModal.vue";
 import ProjectsModal from "../components/Modals/ProjectsModal.vue";
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
