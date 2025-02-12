@@ -1,17 +1,39 @@
-import axios from 'axios';
-import Endpoints from './endpoints';
+import axios from "axios";
+import Endpoints from "./endpoints";
+import { getUserCookie, removeUserCookie } from "./session";
 
-var baseURL = '';
+const isLocalhost = () => {
+	if (typeof window !== "undefined") {
+		return (
+			window.location.hostname === "localhost" ||
+			window.location.hostname === "127.0.0.1"
+		);
+	}
+	return false;
+};
 
-if (window.location.hostname === 'amorim.pro') {
-    baseURL = 'https://api.amorim.pro/';
-} else {
-    baseURL = 'http://localhost:4000/';
-}
+const localhost = isLocalhost();
+const baseURL = localhost ? "http://localhost:4000" : "https://api.amorim.pro";
 
 const instance = axios.create({
-    baseURL: baseURL
+	baseURL: baseURL,
 });
+
+//Request Interceptor
+instance.interceptors.request.use(
+	async (config) => {
+		const user = getUserCookie();
+
+		if (user?.id && user.access_token) {
+			config.headers.Authorization = `Bearer ${user.access_token}`;
+		}
+
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	},
+);
 
 //Toast Error Handler
 instance.interceptors.response.use(
@@ -19,7 +41,12 @@ instance.interceptors.response.use(
 		return response;
 	},
 	(error) => {
-/* 		 const toastService = ToastService();
+		if (error.response?.status === 401) {
+			removeUserCookie();
+			window.location.href = "/login";
+		}
+
+		/* 		 const toastService = ToastService();
 		 if (toastService) {
 		     toastService.add({
 		         severity: 'error',
@@ -32,10 +59,9 @@ instance.interceptors.response.use(
 	},
 );
 
-
 const RESTAPI = {
-    ...Endpoints(instance)
+	...Endpoints(instance),
 };
 
-export { RESTAPI, baseURL };
+export { baseURL, RESTAPI };
 export default instance;

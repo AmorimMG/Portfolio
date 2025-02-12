@@ -44,7 +44,7 @@ const closeModal = () => {
     </template>
     <div style="background-color: rgba(0, 0, 0, 0.2);">
         <div class="flex justify-content-center align-item-center">
-            <h1>Actual Image</h1>
+            <h1>Background</h1>
         </div>
         <div class="flex flex-column gap-6">
             <div class="flex flex-wrap justify-content-center gap-3">

@@ -72,20 +72,20 @@ const form = ref({
 
 function handleSubmit() {
 	const user = {
-		email: form.value.login,
-		password: form.value.password,
+		usuario: form.value.login,
+		senha: form.value.password,
 	};
 	if (validateUser(form.value)) {
 		sessionModule.actions
 			?.login({ user })
 			.then((res) => {
-				console.log(res);
 				toast.add({
 					severity: "success",
 					summary: "gblSummarioToastSucesso",
 					detail: "gblUsuarioLogadoSucesso",
 					life: 3000,
 				});
+                console.log("levando para cadastros")
 				router.push("/cadastros/dashboard");
 			})
 			.catch((error) => {

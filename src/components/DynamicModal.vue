@@ -1,9 +1,9 @@
 <script>
-import { ref, defineComponent, nextTick } from 'vue';
-import { useLayout } from '../../src/layout/composables/layout';
-import ProgressSpinner from 'primevue/progressspinner';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
+import { defineComponent, nextTick, ref } from 'vue';
+import { useLayout } from '../../src/layout/composables/layout';
 
 const cvVisible = ref(false);
 const loading = ref(true);
@@ -26,6 +26,10 @@ export const openModal = (url) => {
             }, 0);
         }
     });
+};
+
+export const closeModal = () => {
+    cvVisible.value = false;
 };
 
 export default defineComponent({

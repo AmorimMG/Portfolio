@@ -20,7 +20,7 @@ export default {
 			dataLinguagem: [],
 			selectedLinguagem: [],
 			gridColumns: computed(() => [
-				{ field: "name", caption: "Nome" },
+				{ field: "nome", caption: "Nome" },
 				{ field: "knowledge", caption: "Conhecimento" },
 			]),
 		};

@@ -20,8 +20,9 @@ export default {
 			dataUsers: [],
 			selectedUser: [],
             languages: ref([]),
+            file: ref(),
             selectedLanguageNames: computed(() => {
-                return this.projeto.languages.map(language => language.name);
+                return this.projeto.languages.map(language => language.nome);
             }),
 			gridColumns: computed(() => [
 				{ field: "languages", caption: "Linguas" },
@@ -91,12 +92,20 @@ export default {
 			this.editProject = user.login;
 		},
         SalvaProjeto() {
-            const dataToSend = { ...this.projeto, languages: this.selectedLanguageNames };
+            const formData = new FormData();
+            formData.append('title', this.projeto.title);
+            formData.append('subtitle', this.projeto.subtitle);
+            formData.append('link', this.projeto.link);
+            formData.append('description', this.projeto.description);
+            formData.append('languages', JSON.stringify(this.selectedLanguageNames));
+        
+            if (this.file) {
+                formData.append('file', this.file);
+            }
 
-            RESTAPI.ProjetoCriar(dataToSend)
+            RESTAPI.ProjetoCriar(formData)
                 .then(() => {
                     this.getUsers();
-                    this.criarDialog = false;
                     this.toast.add({
                         severity: "success",
                         summary: $t("SummarioToastSucesso"),
@@ -113,11 +122,12 @@ export default {
                         life: 3000,
                     });
                 })
-                .finally(() => { // Corrected to .finally
-                    this.projeto = { title: '', subtitle: '', link: '', description: '', img: '' };
+                .finally(() => {
+                    this.projeto = { title: '', subtitle: '', link: '', description: '' };
                     this.criarDialog = false;
                 });
         },
+
 		EditaProjeto() {
             const dataToSend = { ...this.editProject, languages: this.selectedLanguageNames };
 			RESTAPI.ProjetoEditar(dataToSend)
@@ -202,14 +212,17 @@ export default {
 			this.selectedUser = [];
 		},
         onFileSelect(event) {
-                const file = event.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.projeto.img = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
+            const file = event.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const binaryData = e.target.result; // This is already a Base64 string
+                    const blob = new Blob([binaryData], { type: file.type });
+                    console.log(blob);
+                    this.file = blob;
+                };
+                reader.readAsArrayBuffer(file); 
+            }
         },
 		close() {
 			this.display = false;
@@ -324,21 +337,21 @@ export default {
                         </div>
                         <div class="field col-6">
                             <FloatLabel>
-<!--                            <FileUpload
+                            <FileUpload
                                     mode="basic"
                                     accept="image/*"
                                     chooseLabel="Choose Image"
                                     @select="onFileSelect"
-                                /> -->
-                                <InputText id="imagem" v-model="projeto.img" required />
-                                <label for="imagem">{{ $t('imagem') }}</label>
+                                />
+<!--                                 <InputText id="imagem" v-model="projeto.img" required />
+                                <label for="imagem">{{ $t('imagem') }}</label> -->
                             </FloatLabel>
                         </div>
                     </div>
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <MultiSelect v-model="projeto.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                <MultiSelect v-model="projeto.languages" :options="languages" filter optionLabel="nome" placeholder="Select Languages"
                                 :maxSelectedLabels="3" class="w-full" required="true"/>
                                 <!-- <InputText id="languages" v-model="projeto.languages" required="true" /> -->
                                 <label for="languages">{{ $t('languages') }}</label>
@@ -393,7 +406,7 @@ export default {
                     <div class="row flex">
                         <div class="field col">
                             <FloatLabel>
-                                <MultiSelect v-model="editProject.languages" :options="languages" filter optionLabel="name" placeholder="Select Languages"
+                                <MultiSelect v-model="editProject.languages" :options="languages" filter optionLabel="nome" placeholder="Select Languages"
                                 :maxSelectedLabels="3" class="w-full" required="true"/>
                                 <label for="languages">{{ $t('languages') }}</label>
                             </FloatLabel>

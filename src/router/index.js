@@ -1,6 +1,7 @@
 import AppLayout from "@/layout/AppLayout.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import sessionModule from "../service/session";
+import checkTokenMiddleware from "../middleware/checkTokenMiddleware";
+import sessionModule, { getUserCookie } from "../service/session";
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -32,25 +33,23 @@ const router = createRouter({
 				},
 			],
 		},
-        {
-            component: AppLayout,
+		{
+			component: AppLayout,
 			path: "/consultas",
 			children: [
 				{
 					path: "/consultas/consultaSQL",
 					name: "consultas-sql",
-					component: () =>
-						import("@/views/pages/consultas/ConsultaSQL.vue"),
+					component: () => import("@/views/pages/consultas/ConsultaSQL.vue"),
 				},
-                {
+				{
 					path: "/consultas/controleRemoto",
 					name: "controle-remoto",
-					component: () =>
-						import("@/views/pages/consultas/ControleRemoto.vue"),
+					component: () => import("@/views/pages/consultas/ControleRemoto.vue"),
 				},
-            ]
-        },
-        {
+			],
+		},
+		{
 			path: "/",
 			name: "new-dashboard",
 			component: () => import("@/views/NewDashboard.vue"),
@@ -60,7 +59,7 @@ const router = createRouter({
 			name: "dashboard",
 			component: () => import("@/views/Dashboard.vue"),
 		},
-        {
+		{
 			path: "/teste",
 			name: "teste",
 			component: () => import("@/components/Select.vue"),
@@ -97,8 +96,8 @@ router.beforeEach(async (to, from, next) => {
 	const workerPaths = [
 		"/whatsappclone",
 		"/cv",
-        "/en.html",
-        "/index.html",
+		"/en.html",
+		"/index.html",
 		"/netflixclone",
 		"/rawg",
 		"/instagramclone",
@@ -118,11 +117,13 @@ router.beforeEach(async (to, from, next) => {
 
 	// Handle authentication for cadastros paths
 	if (to.path.includes("/cadastros") || to.path.includes("/consultas")) {
-		const isLoggedIn = await sessionModule.actions.isUserLogged();
-		if (!isLoggedIn) {
+		const user = getUserCookie();
+		if (!user) {
 			sessionModule.actions.logout();
 			return next("/login");
 		}
+
+		return await checkTokenMiddleware(to, from, next);
 	}
 
 	next();
