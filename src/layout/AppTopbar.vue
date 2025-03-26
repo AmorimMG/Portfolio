@@ -10,6 +10,7 @@ import {
 import { useRouter } from "vue-router";
 import { getLanguageCookie, setLanguageCookie } from "../service/session";
 import sessionModule from "../service/session.js";
+import AppConfig from "./AppConfig.vue";
 import { useLayout } from "./composables/layout";
 const { onMenuToggle } = useLayout();
 const outsideClickListener = ref(null);
@@ -23,6 +24,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	unbindOutsideClickListener();
 });
+
+const appConfigRef = ref(null);
 
 const dropdownValues = ref([
 	{ name: "Português", code: "BR", value: "pt" },
@@ -114,6 +117,10 @@ watch(dropdownValue, (newValue, oldValue) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
+            <app-config simple ref="appConfigRef"></app-config>
+            <button class="p-btn p-link layout-topbar-button px-2 mr-3" type="button" @click="appConfigRef.onConfigButtonClick()">
+                <i class="pi pi-cog"></i>
+            </button>
             <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex align-items-center">

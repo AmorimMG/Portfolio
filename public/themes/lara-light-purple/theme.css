@@ -9293,6 +9293,7 @@
     width: 25rem;
     white-space: pre-line;
     word-break: break-word;
+    z-index: 999;
   }
 
   .p-toast-message-icon {

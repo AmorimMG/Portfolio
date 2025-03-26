@@ -82,6 +82,16 @@ export const SidebarItems = [
 						icon: "pi pi-fw pi-server",
 						command: () => openModal("https://stremio.amorim.pro"),
 					},
+                    {
+						label: "UpSnap",
+						icon: "pi pi-fw pi-server",
+						command: () => openModal("https://ligar.amorim.pro"),
+					},
+                    {
+						label: "Tachiyomi",
+						icon: "pi pi-fw pi-server",
+						command: () => openModal("https://tachiyomi.amorim.pro"),
+					},
 				],
 			},
 			{
