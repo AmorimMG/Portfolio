@@ -41,28 +41,13 @@ const router = createRouter({
 					path: "/consultas/consultaSQL",
 					name: "consultas-sql",
 					component: () => import("@/views/pages/consultas/ConsultaSQL.vue"),
-				},
-				{
-					path: "/consultas/controleRemoto",
-					name: "controle-remoto",
-					component: () => import("@/views/pages/consultas/ControleRemoto.vue"),
-				},
+				}
 			],
 		},
 		{
 			path: "/",
 			name: "new-dashboard",
 			component: () => import("@/views/NewDashboard.vue"),
-		},
-		{
-			path: "/old",
-			name: "dashboard",
-			component: () => import("@/views/Dashboard.vue"),
-		},
-		{
-			path: "/teste",
-			name: "teste",
-			component: () => import("@/components/Select.vue"),
 		},
 		{
 			path: "/tv",

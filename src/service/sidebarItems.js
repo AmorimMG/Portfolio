@@ -49,13 +49,7 @@ export const SidebarItems = [
 						icon: "pi pi-fw pi-users",
 						to: "/consultas/consultaSQL",
 						command: () => closeModal(),
-					},
-					{
-						label: "Controle Remoto",
-						icon: "pi pi-fw pi-users",
-						to: "/consultas/controleRemoto",
-						command: () => closeModal(),
-					},
+					}
 				],
 			},
 			{

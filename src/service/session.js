@@ -1,9 +1,7 @@
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import cookies from "js-cookie";
 import { RESTAPI } from "./api";
 // eslint-disable-next-line no-unused-vars
 
-const auth = getAuth();
 const SESSION_COOKIE = "user";
 const LANGUAGE_COOKIE = "Language";
 const DARKTHEME_COOKIE = "DarkTheme";
@@ -44,19 +42,6 @@ export function getDarkThemeCookie() {
 
 const sessionModule = {
 	actions: {
-		/* //FireBase Login
-        login({ user }) {
-            return new Promise((resolve, reject) => {
-                signInWithEmailAndPassword(auth, user.email, user.password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        resolve(user);
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    });
-            });
-        }, */
 		login({ user }) {
 			return new Promise((resolve, reject) => {
 				RESTAPI.Login({
@@ -73,32 +58,8 @@ const sessionModule = {
 					});
 			});
 		},
-		isUserLogged() {
-			return new Promise((resolve, reject) => {
-				onAuthStateChanged(
-					auth,
-					(user) => {
-						if (user) {
-							resolve(true);
-						} else {
-							resolve(false);
-						}
-					},
-					(error) => {
-						reject(error);
-					},
-				);
-			});
-		},
 		logout() {
-			signOut(auth)
-				.then(() => {
-					return true;
-				})
-				.catch((error) => {
-					console.log(error);
-					return false;
-				});
+			removeUserCookie();
 		},
 	},
 };
