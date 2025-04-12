@@ -15,38 +15,38 @@ import Spotify from "../components/Cards/Spotify.vue";
 import ThreeJSComponent from "../components/Cards/ThreeJS.vue";
 
 export const componentMap = {
-	ClusterLinks,
-	Spotify,
-	ThreeJSComponent,
-	EmailModal,
-	CVModal,
-	IA,
-	Blog,
-	ProjectsModal,
-	Terminal,
-	Stack,
-	DashboardTimeline,
-	Photos,
+  ClusterLinks,
+  Spotify,
+  ThreeJSComponent,
+  EmailModal,
+  CVModal,
+  IA,
+  Blog,
+  ProjectsModal,
+  Terminal,
+  Stack,
+  DashboardTimeline,
+  Photos,
 };
 
 export const cards = [
-	{ id: 1, name: "CVModal", colSpan: 1, rowSpan: 1 },
-	{ id: 2, name: "Spotify", colSpan: 2, rowSpan: 1 },
-	{ id: 3, name: "Stack", colSpan: 1, rowSpan: 2 },
-	{
-		id: 4,
-		firstComponentName: "Photos",
-		secondComponentName: "Blog",
-		colSpan: 1,
-		rowSpan: 1,
-	},
-	{ id: 5, name: "IA", colSpan: 1, rowSpan: 1 },
-	{ id: 6, name: "ThreeJSComponent", colSpan: 1, rowSpan: 1 },
-	{ id: 7, name: "ProjectsModal", colSpan: 1, rowSpan: 1 },
-	/* 	{ id: 6, name: "Blog", colSpan: 1, rowSpan: 1 }, */
-	{ id: 8, name: "Terminal", colSpan: 2, rowSpan: 1 },
-	{ id: 9, name: "ClusterLinks", colSpan: 1, rowSpan: 1 },
-	{ id: 10, name: "DashboardTimeline", colSpan: 4, rowSpan: 1 },
+  { id: 1, name: "CVModal", colSpan: 1, rowSpan: 1 },
+  { id: 2, name: "Spotify", colSpan: 2, rowSpan: 1 },
+  { id: 3, name: "Stack", colSpan: 1, rowSpan: 2 },
+  {
+    id: 4,
+    firstComponentName: "Photos",
+    secondComponentName: "Blog",
+    colSpan: 1,
+    rowSpan: 1,
+  },
+  { id: 5, name: "IA", colSpan: 1, rowSpan: 1 },
+  { id: 6, name: "ThreeJSComponent", colSpan: 1, rowSpan: 1 },
+  { id: 7, name: "ProjectsModal", colSpan: 1, rowSpan: 1 },
+  /* 	{ id: 6, name: "Blog", colSpan: 1, rowSpan: 1 }, */
+  { id: 8, name: "Terminal", colSpan: 2, rowSpan: 1 },
+  { id: 9, name: "ClusterLinks", colSpan: 1, rowSpan: 1 },
+  { id: 10, name: "DashboardTimeline", colSpan: 4, rowSpan: 1 },
 ];
 
 /* { id: 2, name: 'Discord', colSpan: 1, rowSpan: 1 }, */

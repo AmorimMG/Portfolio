@@ -52,16 +52,6 @@ function getUsers() {
         .catch(() => {
             toast.add({ severity: 'error', summary: $t('SummarioToastError'), detail: $t('ErroObterDadosGenerico'), life: 3000 });
         }); 
-
-//Busca do Firebase
-/* 	getDatabase("projetos")
-		.then((response) => {
-			console.log(response);
-			dataUsers.value = response;
-		})
-		.catch((error) => {
-			console.error("Error fetching data:", error);
-		}); */
 }
 
 function getCancelUser() {

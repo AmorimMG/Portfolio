@@ -1,7 +1,6 @@
 <script>
 import { ref } from "vue";
 import draggable from "vuedraggable";
-import { projetos } from "../../data/projetos";
 import { RESTAPI } from "../../service/api";
 import CardEffect from "../CardEffect.vue";
 import Projects from "../Projects.vue";
@@ -29,9 +28,7 @@ export default {
     created() {
         RESTAPI.ProjetoObterTodos().then((response) => {
             this.projects = response.data;
-        }).catch((error) => {
-            this.projects = projetos;
-        });
+        })
     },
 };
 </script>
