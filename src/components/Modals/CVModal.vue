@@ -47,7 +47,7 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight size="30px" :flash="false" color="#ff00ff90">{{$t('cv')}}</VueNeonLight>
+                    <VueNeonLight :flash="false" color="#ff00ff90">{{$t('cv')}}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

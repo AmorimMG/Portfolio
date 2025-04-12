@@ -205,14 +205,11 @@
         padding-top: 1rem;
         padding-bottom: 1rem;
         overflow-x: hidden;
-        grid-template-columns: repeat(2, minmax(50px, 1fr));
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+        margin: 0;
+        padding: 0;
     }
-
-    .draggableApps {
-        grid-auto-flow: row !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-
+    
     .layout-main-container {
         padding: 0 !important;
         display: block;

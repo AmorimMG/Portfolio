@@ -66,15 +66,19 @@ import CustomDialog from './CustomDialog.vue';
 </template>
 
 <style scoped>
-video {
+.video-container {
+  aspect-ratio: 16 / 9;
+  width: 100%;
   max-width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.video-container {
-    background-color: rgba(0, 0, 0, 0.2);
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

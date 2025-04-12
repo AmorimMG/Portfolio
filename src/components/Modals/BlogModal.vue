@@ -16,7 +16,7 @@ const onHide = () => {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="fileSystemOpen = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight size="30px" :flash="false" style="color: white">{{$t('blog')}}</VueNeonLight>
+                    <VueNeonLight :flash="false" style="color: white">{{$t('blog')}}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

@@ -27,7 +27,7 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="piVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight size="30px" :flash="false" color="#ff00ff90">{{$t('pi')}}</VueNeonLight>
+                    <VueNeonLight :flash="false" color="#ff00ff90">{{$t('pi')}}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

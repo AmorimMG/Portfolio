@@ -110,13 +110,13 @@ export default {
         class="selectable"
         :class="{ selected: selected.has(id) }"
     /> -->
-</SelectionArea>
+    </SelectionArea>
 </template>
 
 <style>
 .draggableApps {
     margin-bottom: 22vh;
-    display: inherit;
+    display: grid;
     grid-gap: 5px;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
@@ -191,5 +191,12 @@ export default {
 .selection-area {
     background: #4f90f22d;
     border: 1px solid #4f90f2;
+}
+
+@media (max-width: 991px) {
+  .draggableApps {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row;
+  }
 }
 </style>

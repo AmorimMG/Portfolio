@@ -10,7 +10,6 @@ export default {
 		},
 		size: {
 			type: String,
-			default: "72px",
 		},
 		flash: {
 			type: Boolean,

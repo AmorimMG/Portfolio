@@ -16,7 +16,7 @@ const online = ref(false);
                     </div>
                     <div class="flex flex-row gap-2">
                         <div v-if="online" ref="mapContainer" class="map-container"></div>
-                        <VueNeonLight size="30px" style="color: white" v-else>OFFLINE</VueNeonLight>
+                        <VueNeonLight style="color: white" v-else>OFFLINE</VueNeonLight>
                         <span class="dot"></span>
                     </div>
                 </div>

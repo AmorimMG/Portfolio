@@ -124,7 +124,7 @@ onUnmounted(() => {
                 <div class="apps">
                     <Select />
                 </div>
-                <div v-if="!isMobile" class="widgets mr-8">
+                <div class="widgets mr-8">
                     <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
                         <template #item="{ element }">
                             <component
@@ -203,4 +203,16 @@ onUnmounted(() => {
     width: 250px;
 }
 
+@media (max-width: 991px) {
+  .draggableWidgets {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row;
+  }
+
+  .widgets {
+        margin-right: 0;
+        right: auto;
+        position: fixed;
+    }
+}
 </style>

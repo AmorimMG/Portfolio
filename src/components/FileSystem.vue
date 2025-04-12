@@ -66,24 +66,26 @@ const renderedContent = computed(() => {
 <template>
   <div class="file-manager">
     <div class="sidebar">
-      <div class="section">
-        <h3>Devices</h3>
-        <ul>
-          <li>System</li>
-        </ul>
-      </div>
-      <div class="section">
-        <h3>Favorites</h3>
-        <ul>
-          <li>Applications</li>
-          <li>Desktop</li>
-          <li>Documents</li>
-          <li>Downloads</li>
-          <li>Pictures</li>
-        </ul>
-      </div>
-    </div>
+  <div class="section">
+    <h3>🖥️ Devices</h3>
+    <ul>
+      <li>💻 System</li>
+    </ul>
+  </div>
+  <div class="section">
+    <h3>⭐ Favorites</h3>
+    <ul>
+      <li>📦 Applications</li>
+      <li>🖥️ Desktop</li>
+      <li>📄 Documents</li>
+      <li>⬇️ Downloads</li>
+      <li>🖼️ Pictures</li>
+    </ul>
+  </div>
+</div>
     <div class="main-content w-full">
+    <Splitter>
+    <SplitterPanel class="flex items-center justify-center" :size="100" :minSize="20"> 
       <div class="file-list w-full">
         <table>
           <thead>
@@ -109,15 +111,19 @@ const renderedContent = computed(() => {
           </tbody>
         </table>
       </div>
-      <div v-if="selectedPost" class="preview-pane w-full">
-        <h2 style="color: black">{{ selectedPost.date }}.{{ selectedPost.type }}</h2>
-        <div class="markdown-content" v-html="renderedContent"></div>
-      </div>
+
+    </SplitterPanel>
+    <SplitterPanel v-if="selectedPost" class="flex items-center justify-center" :size="50" :minSize="35"> 
+        <div class="preview-pane w-full">
+          <h2 style="color: black">{{ selectedPost.date }}.{{ selectedPost.type }}</h2>
+          <div class="markdown-content" v-html="renderedContent"></div>
+        </div></SplitterPanel>
+    </Splitter>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style >
 :deep .markdown-content {
     h1,
     h2,
@@ -125,6 +131,10 @@ const renderedContent = computed(() => {
     p {
         color: black !important;
     }
+}
+.p-splitter {
+  background-color: transparent;
+  border: none;
 }
 
 li{
