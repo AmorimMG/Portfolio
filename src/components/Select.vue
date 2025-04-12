@@ -15,7 +15,7 @@ import Weather from '../components/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 import CameraModal from '../components/Modals/CameraModal.vue';
-import DashboardModal from '../components/Modals/DashboardModal.vue';
+import PortfolioModal from '../components/Modals/PortfolioModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
@@ -24,7 +24,7 @@ import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 import { useI18n } from "vue-i18n";
 
 export default {
-    components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, DashboardModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal, CameraModal },
+    components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, PortfolioModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal, CameraModal },
     setup() {
         const { t } = useI18n();
         const localizedApps = computed(() => {

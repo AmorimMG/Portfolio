@@ -5,7 +5,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
 import Terminal from "../Cards/Terminal.vue";
 import CustomDialog from '../Modals/CustomDialog.vue';
-import DashboardModal from '../Modals/DashboardModal.vue';
+import PortfolioModal from '../Modals/PortfolioModal.vue';
 import FileSystemModal from "../Modals/FileSystemModal.vue";
 import VscodeModal from '../Vscode/VscodeModal.vue';
 
@@ -15,7 +15,7 @@ const displayFinder = ref(false);
 const displayTerminal = ref(false);
 const displayPhotos = ref(false);
 const vscodeModalOpen = ref(false);
-const dashboardModalOpen = ref(false);
+const portfolioModalOpen = ref(false);
 const images = ref();
 const toast = useToast();
 const items = ref([
@@ -98,7 +98,7 @@ const items = ref([
 		label: "Amorim",
 		icon: AmorimIcon,
 		command: () => {
-			dashboardModalOpen.value = true;
+			portfolioModalOpen.value = true;
 		},
 	},
 ]);
@@ -168,7 +168,7 @@ const closeModalTerminal = () => {
             </a>
         </template>
     </Dock>
-    <CustomDialog :visible.sync="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; padding: 40px; background-color: black">
+    <CustomDialog :visible.sync="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; background-color: black">
             <Terminal class="w-full h-full" />
     </CustomDialog>
         <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
@@ -183,7 +183,7 @@ const closeModalTerminal = () => {
         </template>
     </Galleria>
 
-    <DashboardModal @close="dashboardModalOpen = false" v-model:visible="dashboardModalOpen" />
+    <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
 </template>
 <style scoped>
 .draggable-dock {

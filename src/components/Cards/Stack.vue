@@ -83,7 +83,7 @@ const getLanguages = () => {
     loading.value = true;
     RESTAPI.LinguagemObterTodos()
         .then((response) => {
-            words.value = response.data.map((item) => [item.name, item.knowledge]);
+            words.value = response.data.map((item) => [item.nome, item.peso]);
             loading.value = false;
         })
         .catch(() => {

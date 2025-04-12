@@ -17,7 +17,7 @@ const closeModal = () => {
         :visible="props.visible"
         @update:visible="closeModal"
     >
-        <iframe src="https://stackblitz.com/github.com/AmorimMG/Portfolio?embed=1&file=src/views/NewDashboard.vue&hideNavigation=1&theme=dark" class="vscode-wrapper" title="VS Code for macOS Web"></iframe>
+        <iframe src="https://stackblitz.com/github.com/AmorimMG/Portfolio?embed=1&file=src/views/Dashboard.vue&hideNavigation=1&theme=dark" class="vscode-wrapper" title="VS Code for macOS Web"></iframe>
     </CustomDialog>
 </template>
 

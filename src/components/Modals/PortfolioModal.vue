@@ -10,14 +10,14 @@ const props = defineProps({
     },
 });
 
-const dashboardVisible = ref(false);
+const portfolioVisible = ref(false);
 const url = ref("https://amorim.pro/"); // Track the URL from the input
-const isDashboard = computed(() => url.value === "https://amorim.pro/");
+const isPortfolio = computed(() => url.value === "https://amorim.pro/");
 const emit = defineEmits(["close"]);
 
 const onHide = () => {
     emit("close");
-    dashboardVisible.value = false;
+    portfolioVisible.value = false;
     emit("update:visible", false);
 };
 
@@ -41,7 +41,7 @@ const onForward = () => {
 };
 
 const refreshPage = () => {
-    if (!isDashboard.value) {
+    if (!isPortfolio.value) {
         const iframe = document.querySelector(".browser-iframe");
         if (iframe) iframe.src = iframe.src;
     }
@@ -82,17 +82,17 @@ const startResize = (event, direction) => {
     window.addEventListener("mouseup", stopResize);
 };
 
-const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue'));
+const Portfolio = defineAsyncComponent(() => import('../../views/Portfolio.vue'));
 </script>
 
 <template>
-    <Button text class="w-full h-full" @click="dashboardVisible = true" />
+    <Button text class="w-full h-full" @click="portfolioVisible = true" />
     <Dialog
         v-element-size="onResize"
         class="dialog-terminal p-dialog-maximized"
         contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: none;"
-        :visible="dashboardVisible || visible"
-        @update:visible="dashboardVisible = $event"
+        :visible="portfolioVisible || visible"
+        @update:visible="portfolioVisible = $event"
         @hide="onHide"
         :maximized="true"
         :closable="false"
@@ -117,8 +117,8 @@ const Dashboard = defineAsyncComponent(() => import('../../views/Dashboard.vue')
                 <div class="right-section"></div>
             </div>
         </template>
-        <template v-if="isDashboard">
-            <Dashboard ref="el" class="layout-main-container" />
+        <template v-if="isPortfolio">
+            <Portfolio ref="el" class="layout-main-container" />
         </template>
         <template v-else>
             <iframe

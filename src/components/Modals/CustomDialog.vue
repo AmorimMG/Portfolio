@@ -80,12 +80,13 @@ export default {
 </script>
 
 <template>
+  <!-- TODO - Fix the height of the dialog -->
   <Dialog
     v-bind="$props"
     :visible="visible"
     @update:visible="handleVisibilityChange"
     @hide="closeModal"
-    contentStyle="width: 100%; height: 100%; overflow-y: none;"
+    contentStyle="width: 100%; height: 500px; overflow-y: none;"
   >
     <template #header>
       <ModalHeader @maximize="onMaximize" @close="closeModal" />

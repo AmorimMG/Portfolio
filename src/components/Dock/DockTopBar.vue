@@ -9,6 +9,7 @@ import {
     setLanguageCookie,
 } from "../../service/session";
 import ConfigModal from "../Modals/ConfigModal.vue";
+import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters";
 
 const { locale, t } = useI18n();
 const dropdownValues = ref([
@@ -49,8 +50,13 @@ const initializeAudio = () => {
 
 const updateTime = () => {
 	const now = new Date();
-	const options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
-	currentTime.value = now.toLocaleTimeString(locale.value, options);
+	if(isMobile.value){
+		const options = { hour: "2-digit", minute: "2-digit" };
+		currentTime.value = now.toLocaleTimeString("pt", options);
+	}else{
+		const options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
+		currentTime.value = now.toLocaleTimeString(locale.value, options);
+	}
 };
 
 watch(volumeValue, (newVolume) => {
@@ -264,7 +270,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Menubar style="overflow-y: hidden" 
+    <Menubar id="mobileMenubar" v-if="!isMobile" style="overflow-y: hidden" 
     :model="!isMobile ? menubarItems: []" 
     :pt="{
             // fixes https://github.com/primefaces/primevue/issues/6141
@@ -336,5 +342,69 @@ onUnmounted(() => {
             /> -->
         </template>
     </Menubar>
+
+	<Menubar v-if="isMobile" style="overflow-y: hidden" 
+    :model="[]" 
+    :pt="{
+            // fixes https://github.com/primefaces/primevue/issues/6141
+            action: {
+                ariaHidden: false,
+            },
+        }"
+    >
+        <template #start>
+            <span class="px-2">{{ currentTime }}</span>
+			<dropdown class="ml-4" v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
+                <template #value="slotProps">
+                    <div v-if="slotProps.value" class="flex align-items-center">
+                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 15px" />
+                    </div>
+                    <span v-else>
+                        {{ slotProps.placeholder }}
+                    </span>
+                </template>
+                <template #option="slotProps">
+                    <div class="flex align-items-center">
+                        <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                        <div>{{ slotProps.option.name }}</div>
+                    </div>
+                </template>
+            </dropdown>
+        </template>
+        <template #end>
+			<div
+				style="
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background-color: black;
+					width: 200px;
+					height: 100%;
+					border-radius: 0px;
+					border-bottom-left-radius: 10px;
+					border-bottom-right-radius: 10px;
+					z-index: 15;
+				"
+			></div>
+            <i class="pi pi-wifi px-2"/>
+			<FontAwesomeIcon :icon="faBatteryThreeQuarters" />
+
+            <router-link style="opacity: 1" to="/login">
+                <button class="p-btn p-link layout-topbar-button px-2" type="button">
+                    <i class="pi pi-sign-in"></i>
+                </button>
+            </router-link>
+        </template>
+    </Menubar>
 </template>
-<style lang="scss" scoped></style>
+
+<style lang="scss">
+.p-dropdown{
+	background-color: transparent;
+}
+
+.p-dropdown-trigger{
+	display: none;
+}
+</style>

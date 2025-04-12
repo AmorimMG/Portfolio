@@ -25,7 +25,7 @@ const onMaximize = () => {
 .modal-header {
   background-color: #e8e8e8;
   border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-top-right-radius: 0px;
   padding: 10px;
 }
 

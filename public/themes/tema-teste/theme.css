@@ -10846,11 +10846,11 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    background-color: #00FF00;
+    background-color: #e8e8e8;
   }
   
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #999;
   }
   .p-stepper .p-stepper-header.p-highlight .p-stepper-action .p-stepper-number {
     background: #a78bfa;
@@ -10911,13 +10911,5 @@
   
   ::-webkit-scrollbar {
     width: 5px;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background-color: #00FF00;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: transparent;
   }
 }

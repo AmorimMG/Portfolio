@@ -118,8 +118,11 @@ const renderedContent = computed(() => {
 </template>
 
 <style scoped>
-.markdown-content{
-    h1,h2, p{
+:deep .markdown-content {
+    h1,
+    h2,
+    h3,
+    p {
         color: black !important;
     }
 }

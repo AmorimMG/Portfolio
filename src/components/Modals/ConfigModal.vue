@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigModalStore } from '@/stores/configModal';
-import { defineEmits, ref } from "vue";
+import { defineEmits, ref, onMounted } from "vue";
 import draggable from "vuedraggable";
 import Wallpapers from '../../data/wallpapers.js';
 import ModalHeader from "./ModalHeader.vue";
@@ -21,6 +21,12 @@ const configModalStore = useConfigModalStore();
 const backgroundImages = ref(Wallpapers);
 const emit = defineEmits(["update:visible, update:modelValue"]);
 const openWallpaper = ref(false);
+
+const loadedImages = ref(new Set<string>());
+
+const handleImageLoad = (src: string) => {
+    loadedImages.value.add(src);
+};
 
 const closeModal = () => {
     emit("update:visible", false);
@@ -52,12 +58,33 @@ const closeModal = () => {
             </div>
             <draggable v-model="backgroundImages" item-key="value" class="flex flex-wrap justify-content-center gap-3 mb-3">
                 <template #item="{ element }">
-                    <div>
-                        <img @click="() => {$emit('update:modelValue', element.value); selectedBackground = element.value; configModalStore.setBackground(element.value)}" :src="element.value" alt="Selected Background" class="w-12rem h-10rem shadow-2 border-round" />
-                        <p style="color: white" class="text-center">{{ element.label }}</p>
+                    <div class="flex flex-column align-items-center" style="width: 12rem;">
+                        <div style="width: 12rem; height: 10rem; position: relative;">
+                        <Skeleton
+                            v-if="!loadedImages.has(element.value)"
+                            width="100%"
+                            height="100%"
+                            class="border-round"
+                            style="position: absolute; top: 0; left: 0; z-index: 1;"
+                        />
+                        <img
+                            v-show="loadedImages.has(element.value)"
+                            @load="handleImageLoad(element.value)"
+                            @click="() => {
+                            $emit('update:modelValue', element.value);
+                            selectedBackground = element.value;
+                            configModalStore.setBackground(element.value);
+                            }"
+                            :src="element.value"
+                            alt="Selected Background"
+                            class="w-full h-full shadow-2 border-round"
+                            style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;"
+                        />
+                        </div>
+                        <p style="color: white" class="text-center mt-2">{{ element.label }}</p>
                     </div>
-                </template>
-            </draggable> 
+                    </template>
+            </draggable>
         </div>
     </div>
 </Dialog>

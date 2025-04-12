@@ -84,7 +84,7 @@ export default {
 <template>
     <div class="col-12 lg:col-12 xl:col-12 pb-0">
     <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
-        <VueNeonLight size="15px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
+        <VueNeonLight size="10px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
     </Button>
     <Dialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
                         <template #header>

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import CardEffect from "./CardEffect.vue";
 
 const props = defineProps({
@@ -27,13 +28,35 @@ const props = defineProps({
         required: true
     }]
 });
+
+const imageLoaded = ref(false);
+
+const handleImageLoad = () => {
+	imageLoaded.value = true;
+};
 </script>
 
 <template>
     <CardEffect>
         <Card style="width: 25rem; overflow: hidden">
             <template #header>
-                <img height="200px" :alt="title" :src="props.img" />
+                <div style="width: 100%; height: 200px; position: relative; overflow: hidden;">
+                    <Skeleton
+                        v-if="!imageLoaded"
+                        width="100%"
+                        height="100%"
+                        class="border-round"
+                        style="position: absolute; top: 0; left: 0; z-index: 1;"
+                    />
+                    <img
+                        v-show="imageLoaded"
+                        :alt="title"
+                        :src="props.img"
+                        height="200px"
+                        style="width: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;"
+                        @load="handleImageLoad"
+                    />
+                </div>
             </template>
             <template #title>{{ props.title }}</template>
             <template #subtitle>

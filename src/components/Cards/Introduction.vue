@@ -147,9 +147,9 @@ const sendEmail = async () => {
             <div class="flex flex-column justify-content-between m-3" style="text-align: start; position: relative">
                 <div class="settings">
                     <div class="flex gap-3">
-<!--                         <button class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+                        <button class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
                             <i class="pi pi-bars"></i>
-                        </button> -->
+                        </button>
                         <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
                             <i class="pi pi-cog"></i>
                         </button>
@@ -177,9 +177,9 @@ const sendEmail = async () => {
                                 </div>
                             </template>
                         </dropdown>
-                        <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
+<!--                          <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
                             <FontAwesomeIcon style="font-size: '$scale'" :icon="faBars" />
-                        </button>
+                        </button> -->
                     </div>
                 </div>
                 <div class="upper">

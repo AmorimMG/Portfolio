@@ -9,10 +9,6 @@ import { RESTAPI } from "../../service/api";
 import { CharacterControls } from "./characterControls";
 /* import { KeyDisplay } from '../ThreeJSGame/keys'; */
 
-import Portfolio from "/projects/Portfolio.png";
-import PortfolioAPI from "/projects/PortfolioAPI.png";
-import WhatsappClone from "/projects/WhatsappClone.png";
-
 const blocker = ref(null);
 const instructions = ref(null);
 const firstPersonContainer = ref(null);
@@ -41,36 +37,6 @@ let characterModel = null;
 var model = null;
 const canRender = ref(true);
 
-const totemsData = [
-	{
-		id: 1,
-		img: Portfolio,
-		title: "Creative Tim",
-		subtitle: "Creative Tim",
-		description:
-			"Creative Tim is a design agency specialized in creating beautiful UI/UX design and themes.",
-		link: "https://github.com/AmorimMG/Portfolio",
-	},
-	{
-		id: 2,
-		img: PortfolioAPI,
-		title: "PrimeVue",
-		subtitle: "PrimeTek",
-		description:
-			"PrimeVue is a popular UI Component Suite for Vue featuring 80+ components.",
-		link: "https://github.com/AmorimMG/Portfolio-API",
-	},
-	{
-		id: 3,
-		img: WhatsappClone,
-		title: "PrimeFaces",
-		subtitle: "PrimeTek",
-		description:
-			"PrimeFaces is a popular UI Component Suite for JSF featuring 100+ components.",
-		link: "https://github.com/AmorimMG/whatsappclone",
-	},
-];
-
 onMounted(() => {
 	addScene();
 	createRenderer();
@@ -78,7 +44,7 @@ onMounted(() => {
     RESTAPI.ProjetoObterTodos().then((response) => {
         createTotems(response.data);
     }).catch((error) => {
-        createTotems(totemsData);
+        console.error("Error fetching totems:", error);
     });
 	/*     generateObjects(); */
 	watch(() => {

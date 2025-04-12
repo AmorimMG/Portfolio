@@ -118,7 +118,7 @@
 #toggleMenuButton {
     position: absolute;
     right: 15px;
-    top: 22px;
+    top: 15px;
 }
 
 .terminal-card{
@@ -131,7 +131,7 @@
     height: 100%;
     background: none;
     box-shadow: var(--card-shadow);
-/*     max-height: 250px !important; */
+    max-height: 180px !important;
     overflow-y: auto !important;
     border: none;
 /*
@@ -170,6 +170,10 @@
     .layout-main-container {
         padding: 95px 0px 0px 0px !important;
     }
+
+    #draggableCards {
+        display: grid;
+    }
 }
 
 @media (min-width: 992px) {
@@ -190,6 +194,9 @@
         display: none;
     }
 
+    #draggableCards {
+        display: grid;
+    }
     
 }
 
@@ -201,14 +208,25 @@
         grid-template-columns: repeat(2, minmax(50px, 1fr));
     }
 
+    .draggableApps {
+        grid-auto-flow: row !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
     .layout-main-container {
         padding: 0 !important;
+        display: block;
+    }
+
+    #components-container{
+        height: 100%;
     }
 
     #Introduction{
-        width: 95%;
-        position: absolute;
-        right: 0;
+        height: 95%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     #Stack{
@@ -227,4 +245,7 @@
         display: none;
     }
 
+    #draggableCards {
+        display: none;
+    }
 }
