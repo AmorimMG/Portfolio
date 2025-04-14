@@ -15,6 +15,7 @@ export default {
             toast: useToast(),
             lastFMData: [],
             lastFMUserData: [],
+            imageLoaded: ref(false),
             user: ref('RecNove'),
             lastFMVisible: ref(false),
             loading: false,
@@ -39,6 +40,9 @@ export default {
                 day: 'numeric',
             });
         },
+        handleImageLoad(){
+            this.imageLoaded = true;
+        },
         handleChangeTabs(tabs) {
             if (tabs.index === 0) {
                 /* this.obterCodigoFonte(this.selectedNode.id); */
@@ -50,6 +54,7 @@ export default {
             }
         },
         getLastFmUserData(lastFMUsername) {
+            this.imageLoaded = false;
             return RESTAPI.ObterUsuarioLastFM(lastFMUsername)
                 .then((response) => {
                     this.lastFMUserData = response.data.user;
@@ -136,7 +141,12 @@ export default {
                             <TabPanel :header="$t('LastFM.Profile')">
                                 <div class="grid p-3">
                                     <div class="col-12 md:col-4 flex flex-column align-items-center text-center">
-                                        <Image :src="lastFMUserData.image[3]['#text']" alt="Avatar" width="150" preview class="mb-3 border-circle shadow-2"/>
+                                        <Skeleton
+                                            v-if="!imageLoaded"
+                                            class="mb-3 border-circle shadow-2"
+                                            style="width: 150px; height: 150px;"
+                                        />
+                                        <Image v-show="imageLoaded" @load="handleImageLoad" :src="lastFMUserData.image[3]['#text']" alt="Avatar" width="150" preview class="mb-3 border-circle shadow-2"/>
                                         <h2>{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
                                         <a :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline">
                                             @{{ lastFMUserData.name }}
