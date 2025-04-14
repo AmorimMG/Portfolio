@@ -16,12 +16,6 @@ import {
 
 const emit = defineEmits(['update:modelValue']);
 const { locale } = useI18n();
-/* const props = defineProps({
-    modelValue: {
-        type: String,
-        default: 'https://primefaces.org/cdn/primevue/images/dock/window.jpg',
-    },
-}); */
 
 const isMobile = ref(window.innerWidth <= 768);
 const widgets = ref(initialWidgets);
@@ -157,6 +151,7 @@ onUnmounted(() => {
     position: fixed;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .dock-demo .p-menubar {
@@ -215,6 +210,10 @@ onUnmounted(() => {
         margin-right: 0;
         right: auto;
         position: fixed;
+    }
+
+    .wrapper{
+        margin-top: 50px;
     }
 }
 </style>

@@ -1,4 +1,13 @@
+import { useConfigModalStore } from "@/stores/configModal";
+
+const configModalStore = useConfigModalStore();
+const selectedBackground = configModalStore.getBackground();
+
 export const wallpapers = [
+  {
+    label: "Wallpaper 0",
+    value: selectedBackground,
+  },
   {
     label: "Wallpaper 1",
     value:

@@ -7749,7 +7749,8 @@
   }
   .p-dock.p-dock-mobile.p-dock-top .p-dock-list-container, .p-dock.p-dock-mobile.p-dock-bottom .p-dock-list-container {
     overflow-x: auto;
-    width: 100%;
+    width: 95%;
+    border-radius: 20px;
   }
   .p-dock.p-dock-mobile.p-dock-top .p-dock-list-container .p-dock-list, .p-dock.p-dock-mobile.p-dock-bottom .p-dock-list-container .p-dock-list {
     margin: 0 auto;

@@ -170,7 +170,6 @@ export default {
     padding: 0.5rem;
     display: grid;
     grid-gap: 0.5rem;
-    grid-template-columns: repeat(20, 1fr);
     flex-wrap: wrap;
     width: 100vw;
     height: 100vh;
@@ -198,8 +197,13 @@ export default {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-flow: row;
   }
+
   .container {
     padding: 0;
+  }
+
+  .app-icon-wrapper > img{
+        width: 60px !important;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup>
 import { useConfigModalStore } from '@/stores/configModal';
-import { faSignal } from '@fortawesome/free-solid-svg-icons';
+import { faSignal, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
@@ -53,7 +53,7 @@ const updateTime = () => {
 	const now = new Date();
 	if(isMobile.value){
 		const options = { hour: "2-digit", minute: "2-digit" };
-		currentTime.value = now.toLocaleTimeString("en", options);
+		currentTime.value = now.toLocaleTimeString("pt", options);
 	}else{
 		const options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
 		currentTime.value = now.toLocaleTimeString(locale.value, options);
@@ -271,7 +271,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Menubar id="mobileMenubar" v-if="!isMobile" style="overflow-y: hidden" 
+    <Menubar v-if="!isMobile" style="overflow-y: hidden" 
     :model="!isMobile ? menubarItems: []" 
     :pt="{
             // fixes https://github.com/primefaces/primevue/issues/6141
@@ -344,7 +344,7 @@ onUnmounted(() => {
         </template>
     </Menubar>
 
-	<Menubar v-if="isMobile" style="overflow-y: hidden; font-size: medium; height: 50px; border-radius: 0px;" 
+	<Menubar v-if="isMobile" class="mobileMenubar"
     :model="[]" 
     :pt="{
             // fixes https://github.com/primefaces/primevue/issues/6141
@@ -353,36 +353,29 @@ onUnmounted(() => {
             },
         }"
     >
-        <template #start>
-			<FontAwesomeIcon class="pr-2" :icon="faSignal" />
-			Verizon LTE
-        </template>
-        <template #end>
-			<div
-				style="
-					position: absolute;
-					top: 35%;
-					left: 45%;
-				"
-			>
-			<span>{{ currentTime }}</span>
-			</div>
-
-			
-		<div class="flex">
-			<router-link style="opacity: 1" to="/login">
-					<button class="p-btn p-link layout-topbar-button px-2" type="button">
-						<i class="pi pi-sign-in"></i>
-					</button>
-			</router-link>
-
-			<div class="flex">
+        <template #start >
+			<div class="flex justify-content-evenly align-items-center">
 				<div>
-					39%
+					<span>{{ currentTime }}</span>
+				</div>
+				<div class="flex align-items-center justify-content-center" style="width: 150px;">
+					<div
+							style="
+								background-color: black;
+								width: 150px;
+								height: 30px;
+								border-radius: 20px;
+								margin-left: 30px;
+							"
+						>
+					</div>
+				</div>
+				<div class="flex">
+					<FontAwesomeIcon class="pr-2" :icon="faSignal" />
+					<FontAwesomeIcon class="pr-2" :icon="faWifi" />
 					<FontAwesomeIcon :icon="faBatteryThreeQuarters" />
 				</div>
 			</div>
-		</div>
         </template>
     </Menubar>
 </template>
@@ -394,5 +387,21 @@ onUnmounted(() => {
 
 .p-dropdown-trigger{
 	display: none;
+}
+
+.mobileMenubar{
+	background: transparent; 
+	overflow-y: hidden; 
+	font-size: medium; 
+	height: 50px; 
+	border-radius: 0px; 
+	position: absolute; 
+	width: 100%; 
+	z-index: 2; 
+	border: none;
+}
+
+.mobileMenubar > .p-menubar-start{
+	width: 100%;
 }
 </style>
