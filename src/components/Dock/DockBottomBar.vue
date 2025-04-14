@@ -7,10 +7,12 @@ import Terminal from "../Cards/Terminal.vue";
 import CustomDialog from '../Modals/CustomDialog.vue';
 import FileSystemModal from "../Modals/FileSystemModal.vue";
 import PortfolioModal from '../Modals/PortfolioModal.vue';
+import TrashModal from '../Modals/TrashModal.vue';
 import VscodeModal from '../Vscode/VscodeModal.vue';
 
 const isMobile = ref(window.innerWidth <= 768);
 const FileSystemOpen = ref(false);
+const TrashOpen = ref(false);
 const displayFinder = ref(false);
 const displayTerminal = ref(false);
 const displayPhotos = ref(false);
@@ -91,7 +93,7 @@ const items = ref([
 		label: "Trash",
 		icon: "https://primefaces.org/cdn/primevue//images/dock/trash.png",
 		command: () => {
-			toast.add({ severity: "info", summary: "Empty Trash", life: 3000 });
+			TrashOpen.value = true;
 		},
 	},
     {
@@ -153,6 +155,12 @@ watch(FileSystemOpen,(newValue)=>{
     }
 })
 
+watch(TrashOpen,(newValue)=>{
+    if(!newValue){
+        emit('close')
+    }
+})
+
 const emit = defineEmits(['close', 'update:visible'])
 
 const closeModalTerminal = () => {
@@ -171,7 +179,8 @@ const closeModalTerminal = () => {
     <CustomDialog :visible.sync="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; background-color: black">
             <Terminal class="w-full h-full" />
     </CustomDialog>
-        <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
+    <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
+	<TrashModal @close="TrashOpen = false" v-model:visible="TrashOpen" />
     <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>

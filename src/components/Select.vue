@@ -1,9 +1,14 @@
 <script>
-import SelectionArea from "@viselect/vue";
-import { computed, ref } from "vue";
-import draggable from 'vuedraggable';
-import { componentMap, apps as initialApps } from '../data/appsDock';
+import { useAppsStore } from '@/stores/useAppsStore';
+import { useTrashStore } from '@/stores/useTrashStore';
 
+import SelectionArea from "@viselect/vue";
+
+import { ref } from "vue";
+import draggable from 'vuedraggable';
+import { componentMap } from '../data/appsDock';
+
+import { useI18n } from "vue-i18n";
 import ClusterLinks from '../components/Cards/ClusterLinks.vue';
 import Discord from '../components/Cards/Discord.vue';
 import GithubHeatMap from '../components/Cards/HeatMap.vue';
@@ -21,24 +26,47 @@ import PortfolioModal from '../components/Modals/PortfolioModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
-import { useI18n } from "vue-i18n";
-
 export default {
     components: { SelectionArea, draggable, ClusterLinks, Discord, GithubHeatMap, IA, Spotify, Stack, ThreeJSComponent, Weather, MapboxMap, CVModal, PortfolioModal, EmailModal, LastFMModal, PointerlockModal, ProjectsModal, CameraModal },
     setup() {
         const { t } = useI18n();
-        const localizedApps = computed(() => {
-            return initialApps.map(app => ({
-                ...app,
-                title: t(`apps.${app.title}`),
-            }));
-        });
-        const apps = ref(localizedApps);
-        return { apps, localizedApps };
+        const appsStore = useAppsStore();
+        const trashStore = useTrashStore();
+        const contextMenuRef = ref(null);
+
+        const addApp = (newApp) => {
+            appsStore.apps.push({
+                ...newApp,
+                id: Date.now(),
+                title: t(`${newApp.title}`)
+            });
+        };
+
+        function removeApp(app) {
+            // remove da lista de apps e adiciona na lixeira
+            apps.value = apps.value.filter(a => a.id !== app.id);
+            trashStore.addToTrash(app);
+        }
+
+        return { appsStore, trashStore, addApp, removeApp, contextMenuRef };
     },
     data() {
         return {
             selected: new Set(),
+            contextApp: null,
+            trash: [],
+            contextItems: [
+                {
+                    label: 'Renomear',
+                    icon: 'pi pi-pencil',
+                    command: () => this.renameApp(this.contextApp),
+                },
+                {
+                    label: 'Remover',
+                    icon: 'pi pi-trash',
+                    command: () => this.appsStore.removeApp(this.contextApp),
+                },
+            ],
         };
     },
     computed: {
@@ -48,20 +76,34 @@ export default {
     },
 
     methods: {
+        onAppRightClick(event, app) {
+            event.preventDefault();
+            this.contextApp = app;
+            this.$refs.contextMenuRef.show(event);
+        },
+        renameApp(app) {
+            const newName = prompt("Novo nome:", app.title);
+            if (newName) app.title = newName;
+        },
         extractIds(els) {
             return els
               .map((v) => v.getAttribute("data-key"))
               .filter(Boolean)
               .map(Number);
         },
-
         onStart({ event, selection }) {
             if (!event?.ctrlKey && !event?.metaKey) {
               selection.clearSelection();
               this.selected.clear();
             }
         },
-
+        restoreApp(app) {
+            this.appsStore.restoreApp(app);
+            this.trashStore.trash = this.trash.filter(a => a.id !== app.id);
+        },
+        deleteApp(app) {
+            this.trash = this.trash.filter(a => a.id !== app.id);
+        },
         onMove({ store: { changed: { added, removed } } }) {
             this.extractIds(added).forEach((id) => this.selected.add(id));
             this.extractIds(removed).forEach((id) => this.selected.delete(id));
@@ -70,7 +112,7 @@ export default {
         range(to, offset = 0) {
             return new Array(to).fill(0).map((_, i) => offset + i);
         },
-    },
+    }
 };
 </script>
 
@@ -81,9 +123,9 @@ export default {
         :on-move="onMove"
         :on-start="onStart"
     >
-        <draggable class="draggableApps" v-model="apps" item-key="id" group="apps" animation="200">
+        <draggable class="draggableApps" v-model="appsStore.apps" item-key="id" group="apps" animation="200">
             <template #item="{ element }">
-                <div class="app-container" :class="{ selected: selected.has(element.id)}">
+                <div class="app-container" :class="{ selected: selected.has(element.id)}" @contextmenu="onAppRightClick($event, element)">
                     <component
                         class="app-card"
                         :is="getComponent(element.name)"
@@ -102,15 +144,8 @@ export default {
                 </div>
             </template>
         </draggable>
-
-<!-- <div
-        v-for="id in range(400, 84)"
-        :key="id"
-        :data-key="id"
-        class="selectable"
-        :class="{ selected: selected.has(id) }"
-    /> -->
     </SelectionArea>
+    <ContextMenu ref="contextMenuRef" :model="contextItems" />
 </template>
 
 <style>

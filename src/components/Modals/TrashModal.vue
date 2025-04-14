@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineEmits } from "vue";
-import FileSystem from "../FileSystem.vue";
-import SidebarFileSystem from "../sidebarFileSystem.vue";
+import { defineEmits, ref } from "vue";
+import sidebarFileSystem from '../sidebarFileSystem.vue';
+import Trash from "../Trash.vue";
 import CustomDialog from "./CustomDialog.vue";
 
 const props = defineProps({
@@ -12,6 +12,27 @@ const emit = defineEmits(["close"]);
 const closeModal = () => {
 	emit("close");
 };
+
+const trash = ref([
+  {
+    id: 1,
+    title: 'App Exemplo',
+    name: 'AppExemplo',
+    icon: '📦',
+    colSpan: 1,
+    rowSpan: 1,
+  },
+]);
+
+function handleRestore(app) {
+  // aqui você insere na lista de apps do Select.vue, ou emite evento
+  console.log('Restaurar', app);
+  trash.value = trash.value.filter(a => a.id !== app.id);
+}
+
+function handleDelete(app) {
+  trash.value = trash.value.filter(a => a.id !== app.id);
+}
 </script>
 
 <template>
@@ -19,9 +40,9 @@ const closeModal = () => {
     :visible="props.visible"
     @update:visible="closeModal"
 >
-  <SidebarFileSystem>
-      <FileSystem/>
-  </SidebarFileSystem>
+  <sidebarFileSystem>
+    <Trash :trash="trash" @restore="handleRestore" @delete="handleDelete"/>
+  </sidebarFileSystem>
 </CustomDialog>
 </template>
 

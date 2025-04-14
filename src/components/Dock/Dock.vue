@@ -1,4 +1,6 @@
 <script setup>
+import FileIcon from "@/assets/images/dock/File.png";
+import FolderIcon from "@/assets/images/dock/Folder.svg";
 import { useConfigModalStore } from '@/stores/configModal';
 import { useToast } from "primevue/usetoast";
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
@@ -16,6 +18,7 @@ import {
 
 const emit = defineEmits(['update:modelValue']);
 const { locale } = useI18n();
+const selectRef = ref(null);
 
 const isMobile = ref(window.innerWidth <= 768);
 const widgets = ref(initialWidgets);
@@ -28,7 +31,30 @@ const items = ref([
 		label: "New Folder",
 		icon: "pi pi-folder",
 		command: () => {
-			toast.add({ severity: "info", summary: "Empty Trash", life: 3000 });
+			const newApp = {
+                name: "NewAppComponent",
+                icon: FolderIcon,
+                colSpan: 1,
+                rowSpan: 1,
+                title: "newFolder"
+            };
+    
+        selectRef.value?.addApp(newApp);
+		},
+	},
+    {
+		label: "New File",
+		icon: "pi pi-file",
+		command: () => {
+			const newApp = {
+                name: "NewAppComponent",
+                icon: FileIcon,
+                colSpan: 1,
+                rowSpan: 1,
+                title: "newFile"
+            };
+    
+        selectRef.value?.addApp(newApp);
 		},
 	},
 	{
@@ -116,7 +142,7 @@ onUnmounted(() => {
         <div class="dock-window dock-advanced" :style="{ 'background-image': `url(${background})` }">
             <div class="wrapper flex justify-content-between">
                 <div class="apps">
-                    <Select />
+                    <Select ref="selectRef" />
                 </div>
                 <div class="widgets mr-8">
                     <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
