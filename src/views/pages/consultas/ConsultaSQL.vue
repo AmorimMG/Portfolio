@@ -672,7 +672,7 @@ watch(length, (newLength, oldLength) => {
   </Dialog>
 </template>
 
-<style>
+<style scoped>
 .tableViewer > .p-dialog-header {
   background-color: rgba(104, 159, 56, 0.92);
   color: white;

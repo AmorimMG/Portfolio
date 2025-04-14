@@ -34,21 +34,7 @@ export default {
         const trashStore = useTrashStore();
         const contextMenuRef = ref(null);
 
-        const addApp = (newApp) => {
-            appsStore.apps.push({
-                ...newApp,
-                id: Date.now(),
-                title: t(`${newApp.title}`)
-            });
-        };
-
-        function removeApp(app) {
-            // remove da lista de apps e adiciona na lixeira
-            apps.value = apps.value.filter(a => a.id !== app.id);
-            trashStore.addToTrash(app);
-        }
-
-        return { appsStore, trashStore, addApp, removeApp, contextMenuRef };
+        return { appsStore, trashStore, contextMenuRef };
     },
     data() {
         return {
@@ -148,7 +134,7 @@ export default {
     <ContextMenu ref="contextMenuRef" :model="contextItems" />
 </template>
 
-<style>
+<style scoped>
 .draggableApps {
     margin-bottom: 22vh;
     display: grid;

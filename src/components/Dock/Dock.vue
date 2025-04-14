@@ -2,6 +2,7 @@
 import FileIcon from "@/assets/images/dock/File.png";
 import FolderIcon from "@/assets/images/dock/Folder.svg";
 import { useConfigModalStore } from '@/stores/configModal';
+import { useAppsStore } from '@/stores/useAppsStore';
 import { useToast } from "primevue/usetoast";
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useI18n } from "vue-i18n";
@@ -19,6 +20,7 @@ import {
 const emit = defineEmits(['update:modelValue']);
 const { locale } = useI18n();
 const selectRef = ref(null);
+const appsStore = useAppsStore();
 
 const isMobile = ref(window.innerWidth <= 768);
 const widgets = ref(initialWidgets);
@@ -36,10 +38,10 @@ const items = ref([
                 icon: FolderIcon,
                 colSpan: 1,
                 rowSpan: 1,
-                title: "newFolder"
+                title: null
             };
     
-        selectRef.value?.addApp(newApp);
+        appsStore.addApp(newApp);
 		},
 	},
     {
@@ -51,10 +53,10 @@ const items = ref([
                 icon: FileIcon,
                 colSpan: 1,
                 rowSpan: 1,
-                title: "newFile"
+                title: null
             };
     
-        selectRef.value?.addApp(newApp);
+            appsStore.addApp(newApp);
 		},
 	},
 	{

@@ -86,7 +86,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .canvasD {
     position: absolute;
     top: 0;

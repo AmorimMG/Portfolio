@@ -16,6 +16,8 @@
 		"Editar": "Edit",
 		"Excluir": "Delete",
 
+		"newName": "New Name",
+
 		"Login": {
 			"Welcome": "Welcome",
 			"SingIn": "Sign in to continue",
@@ -130,6 +132,8 @@
 		"Editar": "Editar",
 		"Excluir": "Eliminar",
 
+		"newName": "Nuevo Nombre",
+
 		"Login": {
 			"Welcome": "Bienvenido",
 			"SingIn": "Iniciar sesión para continuar",
@@ -243,6 +247,8 @@
 		"Criar": "Criar",
 		"Editar": "Editar",
 		"Excluir": "Excluir",
+
+		"newName": "Novo Nome",
 
 		"Login": {
 			"Welcome": "Bem vindo",

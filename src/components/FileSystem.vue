@@ -101,11 +101,12 @@ const renderedContent = computed(() => {
     </Splitter>
 </template>
 
-<style >
+<style scoped>
 :deep .markdown-content {
     h1,
     h2,
     h3,
+    li,
     p {
         color: black !important;
     }

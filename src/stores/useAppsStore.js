@@ -16,11 +16,17 @@ export const useAppsStore = defineStore("apps", () => {
   );
 
   function addApp(newApp) {
-    apps.value.push({
-      ...newApp,
-      id: Date.now(),
-      title: t(`${newApp.title}`),
-    });
+    if (!newApp.title) {
+      const newName = t("newName");
+      const appName = prompt(newName);
+      newApp.title = appName;
+    }
+    if (newApp)
+      apps.value.push({
+        ...newApp,
+        id: Date.now(),
+        title: newApp.title,
+      });
   }
 
   function removeApp(app) {

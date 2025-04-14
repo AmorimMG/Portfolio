@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 li{
     color: black;
 }

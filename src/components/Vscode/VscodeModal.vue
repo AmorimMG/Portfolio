@@ -21,7 +21,7 @@ const closeModal = () => {
     </CustomDialog>
 </template>
 
-<style>
+<style scoped>
 .vscode-wrapper{
     width: 100%;
     height: 100%;

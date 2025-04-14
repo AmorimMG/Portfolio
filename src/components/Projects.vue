@@ -82,5 +82,3 @@ const handleImageLoad = () => {
         </Card>
     </CardEffect>
 </template>
-
-<style></style>

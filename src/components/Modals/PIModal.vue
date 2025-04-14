@@ -44,7 +44,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
 .zoom-controls {
     position: absolute;
     top: 10px;
