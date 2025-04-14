@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigModalStore } from '@/stores/configModal';
-import { defineEmits, ref, onMounted } from "vue";
+import { defineEmits, onMounted, ref } from "vue";
 import draggable from "vuedraggable";
 import Wallpapers from '../../data/wallpapers.js';
 import ModalHeader from "./ModalHeader.vue";
@@ -17,6 +17,7 @@ defineProps ({
 });
 
 const selectedBackground = ref('https://primefaces.org/cdn/primevue/images/dock/window.jpg');
+
 const configModalStore = useConfigModalStore();
 const backgroundImages = ref(Wallpapers);
 const emit = defineEmits(["update:visible, update:modelValue"]);
@@ -32,6 +33,22 @@ const closeModal = () => {
     emit("update:visible", false);
     openWallpaper.value = false;
 };
+
+onMounted(() => {
+    const updateBackgroundForMobile = () => {
+        if (window.innerWidth <= 991) {
+            selectedBackground.value = 'https://wallpapers.ispazio.net/wp-content/uploads/2018/05/1010.pink-375w-812h.m4v-00m00s00-753DE07E-1A7E-40BF-8EA5-CA247BC94B8F-468x1024.jpg';
+            configModalStore.setBackground(selectedBackground.value);
+        } else {
+            selectedBackground.value = 'https://primefaces.org/cdn/primevue/images/dock/window.jpg';
+            configModalStore.setBackground(selectedBackground.value);
+        }
+    };
+
+    updateBackgroundForMobile();
+    window.addEventListener('resize', updateBackgroundForMobile);
+});
+
 </script>
 
 <template>

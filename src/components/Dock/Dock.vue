@@ -204,9 +204,11 @@ onUnmounted(() => {
 }
 
 @media (max-width: 991px) {
+
   .draggableWidgets {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-flow: row;
+    display: none;
   }
 
   .widgets {

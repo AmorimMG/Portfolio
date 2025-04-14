@@ -15,9 +15,9 @@ import Weather from '../components/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 import CameraModal from '../components/Modals/CameraModal.vue';
-import PortfolioModal from '../components/Modals/PortfolioModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
+import PortfolioModal from '../components/Modals/PortfolioModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
@@ -197,6 +197,9 @@ export default {
   .draggableApps {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-flow: row;
+  }
+  .container {
+    padding: 0;
   }
 }
 </style>

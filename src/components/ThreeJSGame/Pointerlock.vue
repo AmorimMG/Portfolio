@@ -531,7 +531,7 @@ function ThirdPerson() {
                 <div ref="instructions" class="instructions">
                     <p style="font-size: 12px; color: red">------- in Developement -------</p>
                     <p style="font-size: 36px">Click to play</p>
-                    <p>Move: WASD<br />Jump: SPACE<br />Look: MOUSE<br />Change POV: R<br />Run: Shift</p>
+                    <p>Move: WASD<br />Jump: SPACE<br />Look: MOUSE<br />Run: Shift<br />Change POV: R (not working)</p>
                     
                     <p style="font-size: 12px; color: red">------- in Developement -------</p>
                 </div>

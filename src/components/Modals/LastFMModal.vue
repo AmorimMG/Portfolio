@@ -17,17 +17,27 @@ export default {
             lastFMUserData: [],
             user: ref('RecNove'),
             lastFMVisible: ref(false),
+            loading: false,
             tabs: [
                 { title: 'Tab 1', content: 'Tab 1 Content' },
                 { title: 'Tab 2', content: 'Tab 2 Content' },
                 { title: 'Tab 3', content: 'Tab 3 Content' }
-            ]
+            ],
+            chartKey: 0, 
         };
     },
     methods: {
         onHide() {
             this.$emit('close');
             this.lastFMVisible = false;
+        },
+        formatDate(timestamp) {
+            const date = new Date(parseInt(timestamp) * 1000);
+            return date.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
         },
         handleChangeTabs(tabs) {
             if (tabs.index === 0) {
@@ -36,10 +46,11 @@ export default {
 
             if (tabs.index === 1) {
                 /* this.obterDetalhes(this.selectedNode.id); */
+                this.chartKey++;
             }
         },
         getLastFmUserData(lastFMUsername) {
-            RESTAPI.ObterUsuarioLastFM(lastFMUsername)
+            return RESTAPI.ObterUsuarioLastFM(lastFMUsername)
                 .then((response) => {
                     this.lastFMUserData = response.data.user;
                 })
@@ -52,9 +63,10 @@ export default {
                 });
         },
         getLastFMInfo(lastFMUsername) {
-            RESTAPI.ObterLastFM(lastFMUsername)
+            return RESTAPI.ObterLastFM(lastFMUsername)
                 .then((response) => {
-                    this.lastFMData = response.data.weeklytrackchart.track;
+                    this.lastFMData = [...response.data.weeklytrackchart.track];
+                    this.chartKey++; // força o re-render do chart
                 })
                 .catch((error) => {
                     this.toast.add({
@@ -65,8 +77,13 @@ export default {
                 });
         },
         getData() {
-            this.getLastFMInfo(this.user);
-            this.getLastFmUserData(this.user);
+            this.loading = true;
+            Promise.all([
+                this.getLastFMInfo(this.user),
+                this.getLastFmUserData(this.user)
+            ]).finally(() => {
+                this.loading = false;
+            });
         }
     },
     components: {
@@ -89,35 +106,101 @@ export default {
     <Dialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
                         <template #header>
                             <div class="inline-flex align-items-center justify-content-center gap-2">
-                                <h2>Your Weekly Track Chart</h2>
+                                <h2>{{$t('LastFM.WeeklyTrackChart')}}</h2>
                             </div>
                         </template>
                         <div class="border-round border-1 surface-border p-4 surface-card">
-                            <ul class="m-0 p-0 list-none">
-                                <li class="mb-3">
-                                    <div class="flex">
-                                        <Image :src="lastFMUserData.image[2]['#text']" class="m-4"/>
-                                        <div class="mt-3 align-self-center" style="flex: 1">
-                                            <FloatLabel>
-                                                <InputText id="username" v-model="user" />
-                                                <label for="username">Username</label>
-                                            </FloatLabel>
-                                            <Button text @click="getData(user)" style="width: 100%; height: 100%; justify-content: center">
-                                                <VueNeonLight size="15px" :flash="false" style="color: white">Get Info</VueNeonLight>
-                                            </Button>
+                            <div class="flex flex-column md:flex-row align-items-center justify-content-between gap-3">
+                                <FloatLabel class="w-full md:w-6">
+                                    <InputText id="username" v-model="user" class="w-full" @keyup.enter="getData(user)" />
+                                    <label for="username">{{$t('LastFM.Username')}}</label>
+                                </FloatLabel>
+                                <Button text @click="getData(user)" class="w-full md:w-2 md:ml-3">
+                                    <VueNeonLight size="15px" :flash="false" style="color: white">
+                                        {{$t('LastFM.GetInfo')}}
+                                    </VueNeonLight>
+                                </Button>
+                            </div>
+
+                            <div v-if="loading" class="mt-4 text-center">
+                                <ProgressSpinner style="width: 40px; height: 40px" />
+                                <p class="mt-2 text-sm text-color-secondary">{{$t('LastFM.LoadingUser')}}</p>
+                            </div>
+
+                            <div v-else-if="lastFMUserData && lastFMUserData.name" class="mt-3 text-center">
+                                <Tag severity="success">{{$t('LastFM.UserLoaded')}}: {{ lastFMUserData.name }}</Tag>
+                            </div>
+                        </div>
+
+                        <TabView @tab-change="handleChangeTabs($event)">
+                            <TabPanel :header="$t('LastFM.Profile')">
+                                <div class="grid p-3">
+                                    <div class="col-12 md:col-4 flex flex-column align-items-center text-center">
+                                        <Image :src="lastFMUserData.image[3]['#text']" alt="Avatar" width="150" preview class="mb-3 border-circle shadow-2"/>
+                                        <h2>{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
+                                        <a :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline">
+                                            @{{ lastFMUserData.name }}
+                                        </a>
+                                        <Tag severity="info" class="mt-2">{{ lastFMUserData.country }}</Tag>
+                                    </div>
+
+                                    <!-- Estatísticas -->
+                                    <div class="col-12 md:col-8">
+                                        <div class="grid">
+                                            <div class="col-6 md:col-4">
+                                                <Card>
+                                                    <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
+                                                    <template #content>
+                                                        <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.track_count }}</h3>
+                                                    </template>
+                                                </Card>
+                                            </div>
+                                            <div class="col-6 md:col-4">
+                                                <Card>
+                                                    <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
+                                                    <template #content>
+                                                        <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.artist_count }}</h3>
+                                                    </template>
+                                                </Card>
+                                            </div>
+                                            <div class="col-6 md:col-4">
+                                                <Card>
+                                                    <template #title>💿 {{ $t('LastFM.Albums') }}</template>
+                                                    <template #content>
+                                                        <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.album_count }}</h3>
+                                                    </template>
+                                                </Card>
+                                            </div>
+                                            <div class="col-6 md:col-4">
+                                                <Card>
+                                                    <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
+                                                    <template #content>
+                                                        <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.playcount }}</h3>
+                                                    </template>
+                                                </Card>
+                                            </div>
+                                            <div class="col-6 md:col-4">
+                                                <Card>
+                                                    <template #title>📅 {{ $t('LastFM.Registered') }}</template>
+                                                    <template #content>
+                                                        <h3 class="text-lg">
+                                                            {{ formatDate(lastFMUserData.registered.unixtime) }}
+                                                        </h3>
+                                                    </template>
+                                                </Card>
+                                            </div>
                                         </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <TabView @tab-change="handleChangeTabs($event)">
-                            <TabPanel header="t('Profile')">
-                                <p>Profile</p>
+                                </div>
                             </TabPanel>
-                            <TabPanel header="t('Charts')">
-                            <div class="popup-content" style="height: 100%; height: 100% !important; overflow-y: auto !important; overflow-x: hidden !important">
-                                <Chart :lastFMData="lastFMData" />
-                            </div>
+                            <TabPanel :header="$t('LastFM.Charts')">
+                                <div class="popup-content" style="height: 100%; overflow-y: auto; overflow-x: hidden">
+                                    <div v-if="loading" class="text-center mt-4">
+                                        <ProgressSpinner />
+                                        <p class="mt-2 text-sm text-color-secondary">{{$t('LastFM.LoadingCharts')}}</p>
+                                    </div>
+                                    <Chart v-else :lastFMData="lastFMData" :key="chartKey" />
+                                </div>
                             </TabPanel>
                         </TabView>
                     </Dialog>

@@ -5,8 +5,8 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { PhotoService } from "../../service/ThirdPartyEndpoints";
 import Terminal from "../Cards/Terminal.vue";
 import CustomDialog from '../Modals/CustomDialog.vue';
-import PortfolioModal from '../Modals/PortfolioModal.vue';
 import FileSystemModal from "../Modals/FileSystemModal.vue";
+import PortfolioModal from '../Modals/PortfolioModal.vue';
 import VscodeModal from '../Vscode/VscodeModal.vue';
 
 const isMobile = ref(window.innerWidth <= 768);
@@ -161,7 +161,7 @@ const closeModalTerminal = () => {
 </script>
 
 <template>
-    <Dock style="margin-bottom: 6rem" :model="filteredItems">
+    <Dock style="margin-bottom: 5rem" :model="filteredItems">
         <template #item="{ item }">
             <a v-tooltip.top="item.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, item)">
                 <img :alt="item.label" :src="item.icon" style="width: 50px" />

@@ -52,7 +52,7 @@ export const wallpapers = [
   {
     label: "Wallpaper 11",
     value:
-      "https://raw.githubusercontent.com/AmorimMG/cdn/main/uploads/wallpaper1.jpg",
+      "https://raw.githubusercontent.com/AmorimMG/cdn/main/uploads/wallpaper11.png",
   },
   {
     label: "Wallpaper 12",

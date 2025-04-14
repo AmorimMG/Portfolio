@@ -7753,6 +7753,9 @@
   }
   .p-dock.p-dock-mobile.p-dock-top .p-dock-list-container .p-dock-list, .p-dock.p-dock-mobile.p-dock-bottom .p-dock-list-container .p-dock-list {
     margin: 0 auto;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
   }
   .p-dock.p-dock-mobile.p-dock-left .p-dock-list-container, .p-dock.p-dock-mobile.p-dock-right .p-dock-list-container {
     overflow-y: auto;

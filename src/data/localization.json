@@ -103,6 +103,15 @@
 			"Archive": "Archive",
 			"Remove": "Remove",
 			"Quit": "Quit"
+		},
+
+		"LastFM": {
+			"Profile": "Profile",
+			"Charts": "Charts",
+			"Username": "Username",
+			"GetInfo": "Get Info",
+			"LastFMStatics": "Last.FM Statics",
+			"WeeklyTrackChart": "Weekly Track Chart"
 		}
 	},
 	"es": {
@@ -208,6 +217,15 @@
 			"Archive": "Archivar",
 			"Remove": "Eliminar",
 			"Quit": "Salir"
+		},
+
+		"LastFM": {
+			"Profile": "Perfil",
+			"Charts": "Gráficos",
+			"Username": "Nombre de usuario",
+			"GetInfo": "Obtener información",
+			"LastFMStatics": "Estadísticas de Last.FM",
+			"WeeklyTrackChart": "Gráfico de canciones semanal"
 		}
 	},
 	"pt": {
@@ -312,6 +330,15 @@
 			"Archive": "Arquivar",
 			"Remove": "Remover",
 			"Quit": "Sair"
+		},
+
+		"LastFM": {
+			"Profile": "Perfil",
+			"Charts": "Gráficos",
+			"Username": "Usuário",
+			"GetInfo": "Obter Informações",
+			"LastFMStatics": "Estatísticas Last.FM",
+			"WeeklyTrackChart": "Gráfico de Músicas Semanal"
 		}
 	}
 }

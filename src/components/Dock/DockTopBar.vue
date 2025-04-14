@@ -1,15 +1,16 @@
 <script setup>
 import { useConfigModalStore } from '@/stores/configModal';
+import { faSignal } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
-
 import { useI18n } from "vue-i18n";
 import AppConfig from "../../layout/AppConfig.vue";
 import {
-    getLanguageCookie,
-    setLanguageCookie,
+	getLanguageCookie,
+	setLanguageCookie,
 } from "../../service/session";
 import ConfigModal from "../Modals/ConfigModal.vue";
-import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters";
 
 const { locale, t } = useI18n();
 const dropdownValues = ref([
@@ -52,7 +53,7 @@ const updateTime = () => {
 	const now = new Date();
 	if(isMobile.value){
 		const options = { hour: "2-digit", minute: "2-digit" };
-		currentTime.value = now.toLocaleTimeString("pt", options);
+		currentTime.value = now.toLocaleTimeString("en", options);
 	}else{
 		const options = { weekday: "short", hour: "2-digit", minute: "2-digit" };
 		currentTime.value = now.toLocaleTimeString(locale.value, options);
@@ -343,7 +344,7 @@ onUnmounted(() => {
         </template>
     </Menubar>
 
-	<Menubar v-if="isMobile" style="overflow-y: hidden" 
+	<Menubar v-if="isMobile" style="overflow-y: hidden; font-size: medium; height: 50px; border-radius: 0px;" 
     :model="[]" 
     :pt="{
             // fixes https://github.com/primefaces/primevue/issues/6141
@@ -353,48 +354,35 @@ onUnmounted(() => {
         }"
     >
         <template #start>
-            <span class="px-2">{{ currentTime }}</span>
-			<dropdown class="ml-4" v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
-                <template #value="slotProps">
-                    <div v-if="slotProps.value" class="flex align-items-center">
-                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 15px" />
-                    </div>
-                    <span v-else>
-                        {{ slotProps.placeholder }}
-                    </span>
-                </template>
-                <template #option="slotProps">
-                    <div class="flex align-items-center">
-                        <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
-                        <div>{{ slotProps.option.name }}</div>
-                    </div>
-                </template>
-            </dropdown>
+			<FontAwesomeIcon class="pr-2" :icon="faSignal" />
+			Verizon LTE
         </template>
         <template #end>
 			<div
 				style="
 					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-					background-color: black;
-					width: 200px;
-					height: 100%;
-					border-radius: 0px;
-					border-bottom-left-radius: 10px;
-					border-bottom-right-radius: 10px;
-					z-index: 15;
+					top: 35%;
+					left: 45%;
 				"
-			></div>
-            <i class="pi pi-wifi px-2"/>
-			<FontAwesomeIcon :icon="faBatteryThreeQuarters" />
+			>
+			<span>{{ currentTime }}</span>
+			</div>
 
-            <router-link style="opacity: 1" to="/login">
-                <button class="p-btn p-link layout-topbar-button px-2" type="button">
-                    <i class="pi pi-sign-in"></i>
-                </button>
-            </router-link>
+			
+		<div class="flex">
+			<router-link style="opacity: 1" to="/login">
+					<button class="p-btn p-link layout-topbar-button px-2" type="button">
+						<i class="pi pi-sign-in"></i>
+					</button>
+			</router-link>
+
+			<div class="flex">
+				<div>
+					39%
+					<FontAwesomeIcon :icon="faBatteryThreeQuarters" />
+				</div>
+			</div>
+		</div>
         </template>
     </Menubar>
 </template>

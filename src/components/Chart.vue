@@ -40,7 +40,8 @@ const generateColorPalette = (numColors) => {
 
 const fetchLastFMData = async () => {
     try {
-        const data = props.lastFMData;
+        const data = props.lastFMData ?? [];
+
 
         const labels = data.map(track => track.name);
         const dataSet = data.map(track => parseInt(track.playcount));
