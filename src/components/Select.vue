@@ -134,7 +134,7 @@ export default {
     <ContextMenu ref="contextMenuRef" :model="contextItems" />
 </template>
 
-<style scoped>
+<style>
 .draggableApps {
     margin-bottom: 22vh;
     display: grid;
