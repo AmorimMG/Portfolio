@@ -1,5 +1,5 @@
 <script setup>
-import FileIcon from "@/assets/images/dock/File.png";
+import FileIcon from "@/assets/images/dock/file.png";
 import FolderIcon from "@/assets/images/dock/Folder.svg";
 import { useConfigModalStore } from '@/stores/configModal';
 import { useAppsStore } from '@/stores/useAppsStore';
