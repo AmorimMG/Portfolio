@@ -73,14 +73,14 @@ export default {
         },
         extractIds(els) {
             return els
-              .map((v) => v.getAttribute("data-key"))
-              .filter(Boolean)
-              .map(Number);
+                .map((v) => v.getAttribute("data-key"))
+                .filter(Boolean)
+                .map(Number);
         },
         onStart({ event, selection }) {
             if (!event?.ctrlKey && !event?.metaKey) {
-              selection.clearSelection();
-              this.selected.clear();
+                selection.clearSelection();
+                this.selected.clear();
             }
         },
         restoreApp(app) {
@@ -103,27 +103,16 @@ export default {
 </script>
 
 <template>
-    <SelectionArea
-        class="container"
-        :options="{ selectables: '.selectable' }"
-        :on-move="onMove"
-        :on-start="onStart"
-    >
+    <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onMove" :on-start="onStart">
         <draggable class="draggableApps" v-model="appsStore.apps" item-key="id" group="apps" animation="200">
             <template #item="{ element }">
-                <div class="app-container" :class="{ selected: selected.has(element.id)}" @contextmenu="onAppRightClick($event, element)">
-                    <component
-                        class="app-card"
-                        :is="getComponent(element.name)"
-                        :style="{
-                            'grid-column': 'span ' + element.colSpan,
-                            'grid-row': 'span ' + element.rowSpan,
-                        }"
-                    />
-                    <div class="app-icon-wrapper selectable" 
-                        :key="element.id"
-                        :data-key="element.id"
-                        >
+                <div class="app-container" :class="{ selected: selected.has(element.id) }"
+                    @contextmenu="onAppRightClick($event, element)">
+                    <component class="app-card" :is="getComponent(element.name)" :style="{
+                        'grid-column': 'span ' + element.colSpan,
+                        'grid-row': 'span ' + element.rowSpan,
+                    }" />
+                    <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id">
                         <img :src="element.icon" style="width: 50px" />
                         <div class="app-title">{{ element.title }}</div>
                     </div>
@@ -135,6 +124,38 @@ export default {
 </template>
 
 <style>
+/* Animação de entrada (pop-in) */
+.app-enter-active {
+    transition: all 0.3s ease;
+}
+
+.app-enter-from {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.app-enter-to {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Animação de saída (pop-out) */
+.app-leave-active {
+    transition: all 0.3s ease;
+    position: absolute;
+    /* evita quebra de layout durante saída */
+}
+
+.app-leave-from {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.app-leave-to {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
 .draggableApps {
     margin-bottom: 22vh;
     display: grid;
@@ -142,10 +163,10 @@ export default {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-auto-flow: column;
-   /*  grid-auto-flow: row; */
+    /*  grid-auto-flow: row; */
 }
 
-.app-container{
+.app-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -198,7 +219,7 @@ export default {
     user-select: none;
 }
 
-.container > div {
+.container>div {
     border-radius: 0.25rem;
 }
 
@@ -214,17 +235,17 @@ export default {
 }
 
 @media (max-width: 991px) {
-  .draggableApps {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-flow: row;
-  }
+    .draggableApps {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-flow: row;
+    }
 
-  .container {
-    padding: 0;
-  }
+    .container {
+        padding: 0;
+    }
 
-  .app-icon-wrapper > img{
+    .app-icon-wrapper>img {
         width: 60px !important;
-  }
+    }
 }
 </style>
