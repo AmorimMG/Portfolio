@@ -6867,7 +6867,6 @@
   .p-dialog .p-dialog-content {
     background: #433864;
     color: rgba(255, 255, 255, 0.87);
-    padding: 0 1.5rem 2rem 1.5rem;
   }
   .p-dialog .p-dialog-content:last-of-type {
     border-bottom-right-radius: 6px;

@@ -139,7 +139,7 @@ onUnmounted(() => {
         <ContextMenu global :model="items" />
         <Toast position="top-center" group="tc" />
         <DockTopbar v-model="background" />
-        <div class="dock-window dock-advanced relative overflow-hidden">
+        <div class="dock-window dock-advanced overflow-hidden">
             <transition name="fade" mode="out-in">
                 <div class="w-full h-full absolute inset-0 z-0 bg-cover bg-center" :key="background"
                     :style="{ 'background-image': `url(${background})` }"></div>

@@ -5,26 +5,28 @@ import { RESTAPI } from "../../service/api";
 import CardEffect from "../CardEffect.vue";
 import Projects from "../Projects.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import CustomDialog from "./CustomDialog.vue";
 
 export default {
-	components: {
-		CardEffect,
-		Projects,
-		draggable,
-		VueNeonLight
-	},
-	data() {
-		return {
-			projectsVisible: ref(false),
-			projects: ref("")
-		};
-	},
-	methods: {
-		onHide() {
-			this.$emit("close");
-			this.projectsVisible = false;
-		},
-	},
+    components: {
+        CardEffect,
+        Projects,
+        draggable,
+        VueNeonLight,
+        CustomDialog
+    },
+    data() {
+        return {
+            projectsVisible: ref(false),
+            projects: ref("")
+        };
+    },
+    methods: {
+        onHide() {
+            this.$emit("close");
+            this.projectsVisible = false;
+        },
+    },
     created() {
         RESTAPI.ProjetoObterTodos().then((response) => {
             this.projects = response.data;
@@ -38,22 +40,26 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight :flash="false" style="color: white">{{$t('projects')}}</VueNeonLight>
+                    <VueNeonLight :flash="false" style="color: white">{{ $t('projects') }}</VueNeonLight>
                 </Button>
             </div>
         </CardEffect>
-        <Dialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
+        <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true"
+            class="dialog-terminal p-dialog-maximized">
             <template #header>
                 <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
             </template>
-            <div class="popup-content" style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px);">
+            <div class="popup-content"
+                style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px);">
                 <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="center col-4" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
+                        <Projects class="center col-4" :languages="element.languages" :img="element.img"
+                            :title="element.title" :subtitle="element.subtitle" :description="element.description"
+                            :link="element.link" />
                     </template>
                 </draggable>
             </div>
-        </Dialog>
+        </CustomDialog>
     </div>
 </template>
 
