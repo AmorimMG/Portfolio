@@ -1,6 +1,6 @@
 <template>
     <div className="card">
-        <div class="font-semibold text-xl mb-4">Empty Page</div>
+        <h5>Empty Page</h5>
         <p>Use this page to start from scratch and place your custom content.</p>
     </div>
 </template>

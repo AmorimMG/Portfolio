@@ -1,0 +1,248 @@
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.p-dropdown-trigger {
+    display: contents;
+}
+
+.p-dropdown {
+    background: none;
+    border: none;
+}
+
+.p-dialog-content {
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card {
+    user-select: none;
+}
+
+.aspect-ratio-2-1 .card {
+    aspect-ratio: 2 / 1 !important;
+    padding: 0 !important;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.overlay.active {
+    display: block;
+}
+
+.rotate,
+.rotate-reverse {
+    transition: transform 0.5s ease;
+}
+
+.rotate {
+    transform: rotate(20deg);
+    filter: brightness(40%);
+}
+
+.rotate-reverse {
+    transform: rotate(0deg);
+}
+
+.isLink {
+    display: none;
+}
+
+.layout-main-container {
+    overflow-x: hidden;
+}
+
+.components-container{
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+.draggable {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    height: auto;
+    padding: 25px;
+}
+
+.draggable-item {
+    margin: 10px;
+    cursor: move;
+}
+
+.layout-main-container{
+    height: 100vh;
+}
+
+#toggleMenuButton {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.terminal-card{
+    height: 100%;
+    max-height: -webkit-fill-available;
+    overflow-y: auto;
+}
+
+.p-terminal{
+    height: 100%;
+    background: none;
+    box-shadow: var(--card-shadow);
+    max-height: 180px !important;
+    overflow-y: auto !important;
+    border: none;
+/*
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+*/
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--glow-position);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+.p-terminal-content {
+    // Conteudo do terminal
+}
+    
+.p-terminal-prompt {
+    color: #48FE48 !important;
+}
+
+@media screen and (min-width: 1960px) {
+    .layout-main-container {
+        padding: 95px 0px 0px 0px !important;
+    }
+
+    #draggableCards {
+        display: grid;
+    }
+}
+
+@media (min-width: 992px) {
+    .layout-main-container {
+        padding: 0px 0px 0px 0px !important;
+    }
+
+    .stroke-white {
+        height: 1.5rem;
+        margin: 2rem !important;
+    }
+
+    .p-terminal {
+        height: 100%;
+    }
+
+    #toggleMenuButton {
+        display: none;
+    }
+
+    #draggableCards {
+        display: grid;
+    }
+    
+}
+
+@media (max-width: 991px) {
+    .draggable {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        overflow-x: hidden;
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+        margin: 0;
+        padding: 0;
+    }
+    
+    .layout-main-container {
+        padding: 0 !important;
+        display: block;
+    }
+
+    #components-container{
+        height: 100%;
+    }
+
+    #Introduction{
+        height: 95%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #Stack{
+        display: none;
+    }
+    
+    #Anilist {
+        display: none;
+    }
+
+    #ClusterLinks {
+        display: none;
+    }
+
+    #AI {
+        display: none;
+    }
+
+    #draggableCards {
+        display: none;
+    }
+}

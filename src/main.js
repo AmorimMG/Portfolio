@@ -7,9 +7,23 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
+import { createPinia } from 'pinia';
+import { createI18n } from 'vue-i18n';
+import CustomDialog from './components/Modals/CustomDialog.vue';
+import localization from './data/localization.json';
+
 import '@/assets/styles.scss';
 
 const app = createApp(App);
+const pinia = createPinia();
+
+const messages = localization;
+const i18n = new createI18n({
+    locale: 'en', // Default locale
+    fallbackLocale: 'en',
+    legacy: false,
+    messages
+});
 
 app.use(router);
 app.use(PrimeVue, {
@@ -20,7 +34,14 @@ app.use(PrimeVue, {
         }
     }
 });
+
+// Adicionado por mim
+app.use(pinia);
+app.use(i18n);
+
 app.use(ToastService);
 app.use(ConfirmationService);
+
+app.component('CustomDialog', CustomDialog);
 
 app.mount('#app');

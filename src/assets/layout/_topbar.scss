@@ -159,6 +159,7 @@
 }
 
 .config-panel {
+    z-index: 1;
     .config-panel-label {
         font-size: 0.875rem;
         color: var(--text-secondary-color);
