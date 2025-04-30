@@ -7,6 +7,7 @@ import { useToast } from 'primevue/usetoast';
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { widgets as initialWidgets } from '../../data/appsDock';
+import DockBottomBar from './DockBottomBar.vue';
 import DockTopbar from './DockTopBar.vue';
 
 import { getLanguageCookie, setLanguageCookie } from '../../service/session';
@@ -156,7 +157,7 @@ onUnmounted(() => {
                     </draggable>
                 </div>
             </div>
-            <!--   <DockBottombar /> -->
+            <DockBottomBar />
         </div>
     </div>
 </template>

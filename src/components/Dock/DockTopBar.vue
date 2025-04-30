@@ -1,4 +1,5 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
 import { useConfigModalStore } from '@/stores/configModal';
 import { faSignal, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faBatteryThreeQuarters } from '@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters';
@@ -18,6 +19,7 @@ const dropdownValue = ref(null);
 const configModalVisible = ref(false);
 const cameraModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
+const { toggleDarkMode, isDarkTheme } = useLayout();
 const configModalStore = useConfigModalStore();
 const currentTime = ref('');
 const timer = ref(null);
@@ -293,6 +295,9 @@ onUnmounted(() => {
             <app-config simple ref="appConfigRef"></app-config>
             <button type="button" class="p-btn p-link layout-topbar-button px-2" @click="toggleConfig">
                 <i class="pi pi-palette"></i>
+            </button>
+            <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+                <i :class="['pi px-2', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
             </button>
             <button
                 v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
