@@ -1,7 +1,15 @@
 <script setup>
 import AmorimIcon from '@/assets/images/cards/profilePic.png';
+import Dock from 'primevue/dock';
 import { useToast } from 'primevue/usetoast';
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { PhotoService } from '../../service/ThirdPartyEndpoints';
+import Terminal from '../Cards/Terminal.vue';
+import CustomDialog from '../Modals/CustomDialog.vue';
+import FileSystemModal from '../Modals/FileSystemModal.vue';
+import PortfolioModal from '../Modals/PortfolioModal.vue';
+import TrashModal from '../Modals/TrashModal.vue';
+import VscodeModal from '../Vscode/VscodeModal.vue';
 
 const isMobile = ref(window.innerWidth <= 768);
 const FileSystemOpen = ref(false);
@@ -15,12 +23,12 @@ const images = ref();
 const toast = useToast();
 const items = ref([
     /* 	{
-			label: "Finder",
-			icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
-			command: () => {
-				displayFinder.value = true;
-			},
-		}, */
+            label: "Finder",
+            icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
+            command: () => {
+                displayFinder.value = true;
+            },
+        }, */
     {
         label: 'Terminal',
         icon: 'https://primefaces.org/cdn/primevue//images/dock/terminal.svg',
@@ -120,7 +128,7 @@ const updateScreenSize = () => {
     isMobile.value = window.innerWidth <= 768;
 };
 
-/* onMounted(async () => {
+onMounted(async () => {
     window.addEventListener('resize', updateScreenSize);
     try {
         const data = await PhotoService.getImages();
@@ -133,7 +141,7 @@ const updateScreenSize = () => {
 onUnmounted(() => {
     window.removeEventListener('resize', updateScreenSize);
 });
- */
+
 const onDockItemClick = (event, item) => {
     if (item.command) {
         item.command();
@@ -142,7 +150,7 @@ const onDockItemClick = (event, item) => {
     event.preventDefault();
 };
 
-/* watch(FileSystemOpen, (newValue) => {
+watch(FileSystemOpen, (newValue) => {
     if (!newValue) {
         emit('close');
     }
@@ -152,7 +160,7 @@ watch(TrashOpen, (newValue) => {
     if (!newValue) {
         emit('close');
     }
-}); */
+});
 
 const emit = defineEmits(['close', 'update:visible']);
 
@@ -162,47 +170,46 @@ const closeModalTerminal = () => {
 </script>
 
 <template>
-    <div style="margin-bottom: 5rem; background-color: red">teste</div>
-    <!--     <Dock style="margin-bottom: 5rem" :model="filteredItems">
+    <Dock style="margin-bottom: 5rem" :model="filteredItems">
         <template #item="{ item }">
             <a v-tooltip.top="item.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, item)">
                 <img loading="lazy" :alt="item.label" :src="item.icon" style="width: 50px" />
             </a>
         </template>
-    </Dock> -->
-    <!--     <CustomDialog v-model:visible="displayTerminal" @update:visible="closeModalTerminal" contentStyle="width: 100%; height: 100%; background-color: black">
+    </Dock>
+    <CustomDialog v-model:visible="displayTerminal" @update:visible="closeModalTerminal"
+        contentStyle="width: 100%; height: 100%; background-color: black">
         <Terminal class="w-full h-full" />
-    </CustomDialog>http://localhost:5174/
+    </CustomDialog>
     <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
     <TrashModal @close="TrashOpen = false" v-model:visible="TrashOpen" />
-    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
+    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }"
+        :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>
 
     <VscodeModal @close="vscodeModalOpen = false" v-model:visible="vscodeModalOpen" />
-    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2" containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false" :showItemNavigators="true">
+    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2"
+        containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false"
+        :showItemNavigators="true">
         <template #item="slotProps">
             <img loading="lazy" :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
         </template>
     </Galleria>
 
-    <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" /> -->
+    <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
 </template>
 <style scoped>
-.draggable-dock {
-    width: 100%;
-    margin-bottom: 200px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 10px;
-}
-
-.draggable-dock > a:hover {
-    transform: scale(1.2);
+.p-dock {
+    z-index: 10;
 }
 
 .dialog-terminal {
     overflow-x: hidden;
+}
+
+.p-dock-item {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 </style>

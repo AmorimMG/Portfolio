@@ -292,7 +292,6 @@ onUnmounted(() => {
             <span class="px-2">{{ currentTime }}</span>
             <i class="pi pi-search px-2" />
             <i class="pi pi-bars px-2" />
-            <app-config simple ref="appConfigRef"></app-config>
             <button type="button" class="p-btn p-link layout-topbar-button px-2" @click="toggleConfig">
                 <i class="pi pi-palette"></i>
             </button>

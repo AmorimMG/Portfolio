@@ -20,7 +20,7 @@ export default {
             w: 0,
             h: 0,
             p: [],
-            isDarkTheme: false,
+            isDarkTheme: getDarkThemeCookie() ?? true,
             themeCheckInterval: null,
             darkProvide: false
         };
@@ -76,7 +76,7 @@ export default {
         clearInterval(this.interval);
         clearInterval(this.themeCheckInterval);
         window.removeEventListener('resize', this.resize);
-    },
+    }
 };
 </script>
 

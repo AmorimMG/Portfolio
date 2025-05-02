@@ -1,22 +1,22 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import BootupScreen from '../components/BootupScreen.vue';
-import Dock from '../components/Dock/Dock.vue';
+import System from '../components/Dock/System.vue';
 
 const isStarted = ref(true);
 
 onMounted(() => {
-	setTimeout(() => {
-		isStarted.value = false;
-	}, 3000);
+    setTimeout(() => {
+        isStarted.value = false;
+    }, 3000);
 });
 </script>
 
 <template>
-<div v-if="isStarted" class="center">
-    <BootupScreen/>
-</div>
-<Dock :class="{ 'hidden': isStarted, 'fade-in': !isStarted }" />
+    <div v-if="isStarted" class="center">
+        <BootupScreen />
+    </div>
+    <System :class="{ hidden: isStarted, 'fade-in': !isStarted }" />
 </template>
 
 <style scoped>
@@ -38,7 +38,7 @@ onMounted(() => {
     z-index: 1000;
 }
 
-.center{
+.center {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,12 +46,12 @@ onMounted(() => {
     gap: 10px;
 }
 
-.login-screen{
+.login-screen {
     width: 100vw;
     height: 100vh;
 }
 
-.background-container{
+.background-container {
     top: 0;
     left: 0;
     position: absolute;

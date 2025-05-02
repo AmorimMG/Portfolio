@@ -3,17 +3,17 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
 import { defineComponent, nextTick, ref } from 'vue';
-import { useLayout } from '../../src/layout/composables/layout';
+import { useLayout } from '@/layout/composables/layout';
 
 const cvVisible = ref(false);
 const loading = ref(true);
 const scale = ref(1);
 const showButtons = ref(true);
 const iframeSrc = ref('');
-const { onMenuToggle } = useLayout();
+const { toggleMenu } = useLayout();
 
 export const openModal = (url) => {
-    onMenuToggle();
+    toggleMenu();
     cvVisible.value = true;
     iframeSrc.value = url;
 
@@ -87,7 +87,7 @@ export default defineComponent({
             toggleButtons,
             closeModal,
             openModal,
-            onMenuToggle
+            toggleMenu
         };
     }
 });
@@ -97,19 +97,24 @@ export default defineComponent({
     <Dialog v-model:visible="cvVisible" :maximized="true" :modal="true" class="p-dialog-maximized">
         <div class="zoom-controls">
             <div class="flex gap-1" v-if="showButtons">
-                <Button v-tooltip.top="'Sidebar Toggler'" icon="pi pi-bars" class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()" />
+                <Button v-tooltip.top="'Sidebar Toggler'" icon="pi pi-bars"
+                    class="p-link layout-menu-button layout-topbar-button" @click="toggleMenu()" />
                 <Button v-tooltip.top="'Zoom Out'" icon="pi pi-search-minus" severity="help" @click="zoomOut" />
                 <Button v-tooltip.top="'Zoom In'" icon="pi pi-search-plus" severity="help" @click="zoomIn" />
                 <Button v-tooltip.top="'Close'" icon="pi pi-times" severity="danger" @click="closeModal"></Button>
             </div>
-            <Button v-if="!showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-v" @click="toggleButtons()" />
-            <Button v-if="showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-h" @click="toggleButtons()" />
+            <Button v-if="!showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-v"
+                @click="toggleButtons()" />
+            <Button v-if="showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-h"
+                @click="toggleButtons()" />
         </div>
         <div class="flex justify-content-center align-items-center">
             <ProgressSpinner class="h-full" v-if="loading" />
         </div>
-        <div class="iframe-container" :class="{ hidden: !cvVisible }" style="width: 100%; height: 100%; overflow: hidden; position: absolute; top: 0; left: 0">
-            <iframe id="iframe" class="iframe" ref="iframe" :src="iframeSrc" scrolling="auto" style="border: none" @load="onIframeLoad"></iframe>
+        <div class="iframe-container" :class="{ hidden: !cvVisible }"
+            style="width: 100%; height: 100%; overflow: hidden; position: absolute; top: 0; left: 0">
+            <iframe id="iframe" class="iframe" ref="iframe" :src="iframeSrc" scrolling="auto" style="border: none"
+                @load="onIframeLoad"></iframe>
         </div>
     </Dialog>
 </template>
@@ -154,6 +159,6 @@ export default defineComponent({
 }
 
 .layout-sidebar {
-    z-index: 9999 !important;
+    z-index: 1200 !important;
 }
 </style>

@@ -129,15 +129,12 @@ export default {
     <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onMove" :on-start="onStart">
         <draggable class="draggableApps" v-model="appsStore.apps" item-key="id" group="apps" animation="200">
             <template #item="{ element }">
-                <div class="app-container" :class="{ selected: selected.has(element.id) }" @contextmenu="onAppRightClick($event, element)">
-                    <component
-                        class="app-card"
-                        :is="getComponent(element.name)"
-                        :style="{
-                            'grid-column': 'span ' + element.colSpan,
-                            'grid-row': 'span ' + element.rowSpan
-                        }"
-                    />
+                <div class="app-container" :class="{ selected: selected.has(element.id) }"
+                    @contextmenu="onAppRightClick($event, element)">
+                    <component class="app-card" :is="getComponent(element.name)" :style="{
+                        'grid-column': 'span ' + element.colSpan,
+                        'grid-row': 'span ' + element.rowSpan
+                    }" />
                     <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id">
                         <img loading="lazy" :src="element.icon" width="50px" height="50px" />
                         <div class="app-title">{{ element.title }}</div>
@@ -243,9 +240,10 @@ export default {
     height: 100vh;
     border-radius: 0.5rem;
     user-select: none;
+    max-width: none;
 }
 
-.container > div {
+.container>div {
     border-radius: 0.25rem;
 }
 
@@ -270,7 +268,7 @@ export default {
         padding: 0;
     }
 
-    .app-icon-wrapper > img {
+    .app-icon-wrapper>img {
         width: 60px !important;
     }
 }

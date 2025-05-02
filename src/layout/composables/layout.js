@@ -1,10 +1,11 @@
 import { computed, reactive } from 'vue';
+import { getDarkThemeCookie, setDarkThemeCookie } from '../../service/session.js';
 
 const layoutConfig = reactive({
     preset: 'Aura',
     primary: 'purple',
     surface: null,
-    darkTheme: true,
+    darkTheme: getDarkThemeCookie() === 'true',
     menuMode: 'static'
 });
 
@@ -36,6 +37,8 @@ export function useLayout() {
     const executeDarkModeToggle = () => {
         layoutConfig.darkTheme = !layoutConfig.darkTheme;
         document.documentElement.classList.toggle('app-dark');
+
+        setDarkThemeCookie(layoutConfig.darkTheme);
     };
 
     const toggleMenu = () => {

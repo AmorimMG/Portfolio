@@ -21,7 +21,7 @@ const routes = [
             {
                 path: '/cadastros/dashboard',
                 name: 'cadastros-dashboard',
-                component: () => CadastrosDashboard
+                component: CadastrosDashboard
             },
             {
                 path: '/cadastros/usuarios',

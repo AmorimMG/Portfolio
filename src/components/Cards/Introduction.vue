@@ -21,7 +21,6 @@ const dropdownValues = ref([
 ]);
 
 const dropdownValue = ref(null);
-const appConfigRef = ref(null);
 const feedback = ref();
 const name = ref('');
 const email = ref('');
@@ -153,7 +152,6 @@ const sendEmail = async () => {
                         </button>
                     </router-link>
                 </div>
-                <app-config simple ref="appConfigRef"></app-config>
                 <div class="flex gap-3">
                     <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex align-items-center">
                         <template #value="slotProps">
