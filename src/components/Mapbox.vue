@@ -10,7 +10,7 @@ const online = ref(false);
     <div class="col-4 lg:col-4 xl:col-3">
         <CardEffect>
             <div class="card mb-0 center" :style="{ padding: 0 }">
-                <div class="center flex-column gap-2">
+                <div class="center flex-col gap-2">
                     <div class="center">
                         <div class="title-container gap-3"><i class="pi pi-map"></i> MapBox</div>
                     </div>

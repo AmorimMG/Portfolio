@@ -1,36 +1,17 @@
 <script setup>
-import { ref } from "vue";
-import CardEffect from "./CardEffect.vue";
+import { ref } from 'vue';
+import CardEffect from './CardEffect.vue';
 
 const props = defineProps({
-    img: {
-        type: String,
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    subtitle: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    link: {
-        type: String,
-        required: true,
-    },
-    languages: [{
-        type: String,
-        required: true
-    }]
+    img: String,
+    title: String,
+    subtitle: String,
+    description: String,
+    link: String,
+    languages: Array
 });
 
 const imageLoaded = ref(false);
-
 const handleImageLoad = () => {
     imageLoaded.value = true;
 };
@@ -38,38 +19,42 @@ const handleImageLoad = () => {
 
 <template>
     <CardEffect>
-        <Card style="width: 25rem; overflow: hidden">
-            <template #header>
-                <div style="width: 100%; height: 200px; position: relative; overflow: hidden;">
-                    <Skeleton v-if="!imageLoaded" width="100%" height="100%" class="border-round"
-                        style="position: absolute; top: 0; left: 0; z-index: 1;" />
-                    <img loading="lazy" v-show="imageLoaded" :alt="title" :src="props.img" height="200px"
-                        style="width: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;"
-                        @load="handleImageLoad" />
+        <div class="rounded-xl overflow-hidden shadow-lg bg-zinc-900 text-white w-[25rem]">
+            <!-- Header / Image -->
+            <div class="relative w-full h-[200px] overflow-hidden">
+                <div v-if="!imageLoaded" class="absolute inset-0 bg-zinc-700 animate-pulse z-10 rounded-t-xl"></div>
+                <img v-show="imageLoaded" :alt="title" :src="props.img" loading="lazy"
+                    class="absolute inset-0 w-full h-full object-cover z-20" @load="handleImageLoad" />
+            </div>
+
+            <!-- Title -->
+            <div class="px-4 pt-4 text-xl font-bold">
+                {{ props.title }}
+            </div>
+
+            <!-- Subtitle & Tags -->
+            <div class="px-4 mt-1 flex justify-between items-center flex-wrap gap-2">
+                <span class="text-sm text-zinc-300">{{ props.subtitle }}</span>
+                <div class="flex flex-wrap gap-2 mt-1">
+                    <span v-for="language in languages" :key="language"
+                        class="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                        {{ language }}
+                    </span>
                 </div>
-            </template>
-            <template #title>{{ props.title }}</template>
-            <template #subtitle>
-                <div class="flex justify-content-between align-items-center">
-                    <div>
-                        {{ props.subtitle }}
-                    </div>
-                    <div class="flex gap-3 mt-1">
-                        <Tag class="p-2" v-for="language in languages" :value="language" :key="language"
-                            severity="success"></Tag>
-                    </div>
-                </div>
-            </template>
-            <template #content>
-                <p class="m-0">{{ props.description }}</p>
-            </template>
-            <template #footer>
-                <div class="flex gap-4 mt-1">
-                    <a class="w-full" :href="props.link" target="_blank" rel="noopener noreferrer">
-                        <Button label="Open" outlined class="w-full" />
-                    </a>
-                </div>
-            </template>
-        </Card>
+            </div>
+
+            <!-- Description -->
+            <div class="px-4 py-2 text-sm text-zinc-200">
+                {{ props.description }}
+            </div>
+
+            <!-- Footer / Button -->
+            <div class="px-4 pb-4 mt-2">
+                <a :href="props.link" target="_blank" rel="noopener noreferrer" class="block">
+                    <button
+                        class="w-full bg-transparent border border-white text-white py-2 rounded hover:bg-white hover:text-black transition">Open</button>
+                </a>
+            </div>
+        </div>
     </CardEffect>
 </template>

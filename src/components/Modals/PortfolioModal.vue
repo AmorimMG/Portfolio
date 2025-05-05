@@ -1,206 +1,50 @@
 <script setup>
-import { vElementSize } from '@vueuse/components';
-import { computed, defineAsyncComponent, ref } from 'vue';
+import { ref } from 'vue';
+import Portfolio from '../Portfolio.vue';
+import CustomDialog from './CustomDialog.vue';
 
 const props = defineProps({
     header: String,
     visible: {
         type: Boolean,
-        default: false,
-    },
+        default: false
+    }
 });
 
 const portfolioVisible = ref(false);
-const url = ref("https://amorim.pro/"); // Track the URL from the input
-const isPortfolio = computed(() => url.value === "https://amorim.pro/");
-const emit = defineEmits(["close"]);
+const url = ref('https://amorim.pro/');
+const emit = defineEmits(['close']);
 
 const onHide = () => {
-    emit("close");
+    emit('close');
     portfolioVisible.value = false;
-    emit("update:visible", false);
+    emit('update:visible', false);
 };
-
-// Validates and prepares URL for iframe
-const validatedUrl = computed(() => {
-    let finalUrl = url.value.trim();
-    if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
-        finalUrl = `https://${finalUrl}`;
-    }
-    return finalUrl;
-});
-
-// Toggles the 'p-dialog-maximized' class
-const onForward = () => {
-    const dialogElement = document.querySelector('.dialog-terminal');
-    if (dialogElement.classList.contains('p-dialog-maximized')) {
-        dialogElement.classList.remove('p-dialog-maximized');
-    } else {
-        dialogElement.classList.add('p-dialog-maximized');
-    }
-};
-
-const refreshPage = () => {
-    if (!isPortfolio.value) {
-        const iframe = document.querySelector(".browser-iframe");
-        if (iframe) iframe.src = iframe.src;
-    }
-};
-
-const startResize = (event, direction) => {
-    event.preventDefault();
-
-    const dialogElement = document.querySelector('.dialog-terminal');
-    const { width, height, top, left } = dialogElement.getBoundingClientRect();
-
-    const startX = event.clientX;
-    const startY = event.clientY;
-
-    const resize = (e) => {
-        if (direction.includes('right')) {
-            dialogElement.style.width = `${width + e.clientX - startX}px`;
-        }
-        if (direction.includes('bottom')) {
-            dialogElement.style.height = `${height + e.clientY - startY}px`;
-        }
-        if (direction.includes('left')) {
-            dialogElement.style.width = `${width - (e.clientX - startX)}px`;
-            dialogElement.style.left = `${left + (e.clientX - startX)}px`;
-        }
-        if (direction.includes('top')) {
-            dialogElement.style.height = `${height - (e.clientY - startY)}px`;
-            dialogElement.style.top = `${top + (e.clientY - startY)}px`;
-        }
-    };
-
-    const stopResize = () => {
-        window.removeEventListener("mousemove", resize);
-        window.removeEventListener("mouseup", stopResize);
-    };
-
-    window.addEventListener("mousemove", resize);
-    window.addEventListener("mouseup", stopResize);
-};
-
-const Portfolio = defineAsyncComponent(() => import('../../views/Portfolio.vue'));
 </script>
 
 <template>
     <Button text class="w-full h-full" @click="portfolioVisible = true" />
-    <Dialog
-        v-element-size="onResize"
-        class="dialog-terminal p-dialog-maximized"
+    <CustomDialog v-element-size="onResize" class="dialog-terminal p-dialog-maximized"
         contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: none;"
-        :visible="portfolioVisible || visible"
-        @update:visible="portfolioVisible = $event"
-        @hide="onHide"
-        :maximized="true"
-        :closable="false"
-        :breakpoints="{ '960px': '50vw' }"
-        :style="{ width: '90vw', height: '90vh' }"
-        :unstyled="true"
-    >
+        :visible="portfolioVisible || visible" @update:visible="portfolioVisible = $event" @hide="onHide"
+        :maximized="true" :closable="false" :breakpoints="{ '960px': '50vw' }"
+        :style="{ width: '90vw', height: '90vh' }" :unstyled="true">
         <template #header>
-            <div class="safari-header w-full flex justify-content-between items-center">
-                <div class="header-buttons">
-                    <button @click="onHide" class="nav-button back"></button>
-                    <button @click="onForward" class="nav-button forward"></button>
-                    <button @click="refreshPage" class="nav-button refresh"></button>
+            <div
+                class="safari-header w-full flex items-center justify-between px-3 py-2 bg-neutral-100 border-b border-neutral-300">
+                <div class="flex gap-2">
+                    <button @click="onHide" class="w-3 h-3 rounded-full bg-red-500"></button>
+                    <button @click="onForward" class="w-3 h-3 rounded-full bg-yellow-400"></button>
+                    <button @click="refreshPage" class="w-3 h-3 rounded-full bg-green-500"></button>
                 </div>
-                <input
-                    disabled
-                    v-model="url"
-                    class="url-bar"
-                    placeholder="Enter URL..."
-                    @keyup.enter="updateView"
-                />
-                <div class="right-section"></div>
+                <input disabled v-model="url"
+                    class="bg-zinc-800 text-white text-sm font-medium px-3 py-1 rounded-lg shadow-inner ml-3 w-full max-w-lg"
+                    placeholder="Enter URL..." />
+                <div class="w-10"></div>
             </div>
         </template>
-        <template v-if="isPortfolio">
-            <Portfolio ref="el" class="layout-main-container" />
-        </template>
-        <template v-else>
-            <iframe
-                :src="validatedUrl"
-                class="browser-iframe"
-                style="width: 100%; height: 100%; border: none;"
-            ></iframe>
-        </template>
-
-        <span class="resize-handle top" @mousedown="startResize($event, 'top')"></span>
-        <span class="resize-handle right" @mousedown="startResize($event, 'right')"></span>
-        <span class="resize-handle bottom" @mousedown="startResize($event, 'bottom')"></span>
-        <span class="resize-handle left" @mousedown="startResize($event, 'left')"></span>
-        <span class="resize-handle top-right" @mousedown="startResize($event, 'top right')"></span>
-        <span class="resize-handle top-left" @mousedown="startResize($event, 'top left')"></span>
-        <span class="resize-handle bottom-right" @mousedown="startResize($event, 'bottom right')"></span>
-        <span class="resize-handle bottom-left" @mousedown="startResize($event, 'bottom left')"></span>
-    </Dialog>
+        <Portfolio ref="el" class="layout-main-container" />
+    </CustomDialog>
 </template>
 
-<style scoped>
-.dialog-terminal {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    min-width: 200px;
-    min-height: 200px;
-}
-
-.safari-header {
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
-    background-color: #f2f2f7;
-    border-bottom: 1px solid #dcdcdc;
-}
-
-.header-buttons {
-    display: flex;
-    gap: 8px;
-}
-
-.nav-button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #c4c4c4;
-    border: none;
-    cursor: pointer;
-}
-
-.back { background-color: #ff5f57; }
-.forward { background-color: #febc2e; }
-.refresh { background-color: #28c840; }
-
-.url-bar {
-    padding: 6px 12px;
-    border-radius: 8px;
-    margin-left: 12px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    background-color: #333;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* Resizable handle styling */
-.resize-handle {
-    position: absolute;
-    /* background-color: red; */ /* cor do handler */
-    z-index: 10;
-}
-
-/* Individual handles */
-.top { top: 0; left: 0; right: 0; height: 5px; cursor: ns-resize; }
-.right { top: 0; right: 0; bottom: 0; width: 5px; cursor: ew-resize; }
-.bottom { left: 0; right: 0; bottom: 0; height: 5px; cursor: ns-resize; }
-.left { top: 0; left: 0; bottom: 0; width: 5px; cursor: ew-resize; }
-
-/* Corner handles */
-.top-right { top: 0; right: 0; width: 10px; height: 10px; cursor: nesw-resize; }
-.top-left { top: 0; left: 0; width: 10px; height: 10px; cursor: nwse-resize; }
-.bottom-right { bottom: 0; right: 0; width: 10px; height: 10px; cursor: nwse-resize; }
-.bottom-left { bottom: 0; left: 0; width: 10px; height: 10px; cursor: nesw-resize; }
-</style>
+<style scoped></style>

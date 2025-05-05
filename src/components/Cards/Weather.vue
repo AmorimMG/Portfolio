@@ -18,7 +18,7 @@ const computedScale = ref(getComputedStyle(document.documentElement).getProperty
 </script>
 
 <template>
-    <div class="w-full h-full center flex-column gap-3">
+    <div class="w-full h-full center flex-col gap-3">
         <div class="center">
             <div class="gap-3"><i class="pi pi-cloud"></i> Weather</div>
         </div>

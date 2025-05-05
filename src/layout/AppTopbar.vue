@@ -1,10 +1,10 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
 import { computed, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { useLayout } from '@/layout/composables/layout';
-import AppConfigurator from './AppConfigurator.vue';
 import { getLanguageCookie, setLanguageCookie } from '../service/session';
 import sessionModule from '../service/session.js';
+import AppConfigurator from './AppConfigurator.vue';
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
@@ -118,9 +118,9 @@ watch(dropdownValue, (newValue, oldValue) => {
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
-                        class="dropdown flex align-items-center layout-topbar-action">
+                        class="dropdown flex items-center layout-topbar-action">
                         <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex align-items-center">
+                            <div v-if="slotProps.value" class="flex items-center">
                                 <img loading="lazy" :alt="slotProps.value.label"
                                     src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
                                     :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
@@ -131,7 +131,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                             </span>
                         </template>
                         <template #option="slotProps">
-                            <div class="flex align-items-center">
+                            <div class="flex items-center">
                                 <img loading="lazy" :alt="slotProps.option.label"
                                     src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
                                     :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"

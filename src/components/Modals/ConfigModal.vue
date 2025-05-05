@@ -48,31 +48,33 @@ const closeModal = () => {
             <ModalHeader @close="closeModal" />
         </template>
         <div style="background-color: rgba(0, 0, 0, 0.2);">
-            <div class="flex justify-content-center align-item-center">
-                <h1>Background</h1>
+            <div class="flex justify-center items-center py-6">
+                <h1 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight drop-shadow-md">
+                    Choose Your Background
+                </h1>
             </div>
-            <div class="flex flex-column gap-6">
-                <div class="flex flex-wrap justify-content-center gap-3">
-                    <img loading="lazy" :src="configModalStore.getBackground()" width="450" height="200"
-                        alt="Selected Background" class="border-round" />
+
+            <div class="flex flex-col gap-6 px-4 py-6">
+                <div class="flex justify-center">
+                    <img loading="lazy" :src="configModalStore.getBackground()" alt="Selected Background"
+                        class="rounded-xl w-full max-w-[700px] shadow-lg" width="450" height="200" />
                 </div>
                 <draggable v-model="backgroundImages" item-key="value"
-                    class="flex flex-wrap justify-content-center gap-3 mb-3">
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 pb-6">
                     <template #item="{ element }">
-                        <div class="flex flex-column align-items-center" style="width: 12rem;">
-                            <div style="width: 12rem; height: 10rem; position: relative;">
-                                <Skeleton v-if="!loadedImages.has(element.value)" width="100%" height="100%"
-                                    class="border-round" style="position: absolute; top: 0; left: 0; z-index: 1;" />
-                                <img loading="lazy" v-show="loadedImages.has(element.value)"
-                                    @load="handleImageLoad(element.value)" @click="() => {
+                        <div class="flex flex-col items-center text-white">
+                            <div
+                                class="relative w-full aspect-[6/5] rounded-xl overflow-hidden shadow-md cursor-pointer transition-transform duration-200 hover:scale-105">
+                                <Skeleton v-if="!loadedImages.has(element.value)" class="absolute inset-0 rounded-xl" />
+                                <img v-show="loadedImages.has(element.value)" @load="handleImageLoad(element.value)"
+                                    @click="() => {
                                         $emit('update:modelValue', element.value);
                                         selectedBackground = element.value;
                                         configModalStore.setBackground(element.value);
-                                    }" :src="element.value" alt="Selected Background"
-                                    class="w-full h-full shadow-2 border-round"
-                                    style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2;" />
+                                    }" :src="element.value" alt="Background"
+                                    class="absolute inset-0 w-full h-full object-cover rounded-xl" />
                             </div>
-                            <p style="color: white" class="text-center mt-2">{{ element.label }}</p>
+                            <p class="text-sm text-center mt-2">{{ element.label }}</p>
                         </div>
                     </template>
                 </draggable>

@@ -261,25 +261,25 @@ onMounted(() => {
             </div>
         </div>
         <div class="col-12 xl:col-6">
-            <div class="card flex flex-column align-items-center">
+            <div class="card flex flex-col items-center">
                 <h5 class="text-left w-full">Pie Chart</h5>
                 <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>
         <div class="col-12 xl:col-6">
-            <div class="card flex flex-column align-items-center">
+            <div class="card flex flex-col items-center">
                 <h5 class="text-left w-full">Doughnut Chart</h5>
                 <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
             </div>
         </div>
         <div class="col-12 xl:col-6">
-            <div class="card flex flex-column align-items-center">
+            <div class="card flex flex-col items-center">
                 <h5 class="text-left w-full">Polar Area Chart</h5>
                 <Chart type="polarArea" :data="polarData" :options="polarOptions"></Chart>
             </div>
         </div>
         <div class="col-12 xl:col-6">
-            <div class="card flex flex-column align-items-center">
+            <div class="card flex flex-col items-center">
                 <h5 class="text-left w-full">Radar Chart</h5>
                 <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
             </div>

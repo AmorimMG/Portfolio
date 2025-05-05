@@ -179,142 +179,146 @@ export default {
 </script>
 
 <template>
-    <div class="card">
-        <h5 class="p-card-title">{{ $t('Linguagens') }}</h5>
-        <div id="data-grid-demo">
-            <div v-if="dataLinguagem.length < 0">Carregando...</div>
-            <div v-else>
-                <Toolbar class="mb-4">
-                    <template v-slot:start>
-                        <div class="my-2">
-                            <Button :label="$t('Novo')" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-                            <Button :label="$t('Deletar')" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteAll" :disabled="selectedLinguagem.length === 0" />
-                        </div>
-                    </template>
+	<div class="card">
+		<h5 class="p-card-title">{{ $t('Linguagens') }}</h5>
+		<div id="data-grid-demo">
+			<div v-if="dataLinguagem.length < 0">Carregando...</div>
+			<div v-else>
+				<Toolbar class="mb-4">
+					<template v-slot:start>
+						<div class="my-2">
+							<Button :label="$t('Novo')" icon="pi pi-plus" class="p-button-success mr-2"
+								@click="openNew" />
+							<Button :label="$t('Deletar')" icon="pi pi-trash" class="p-button-danger"
+								@click="confirmDeleteAll" :disabled="selectedLinguagem.length === 0" />
+						</div>
+					</template>
 
-                    <template v-slot:end>
-                        <Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="handleExportCSV()" />
-                    </template>
-                </Toolbar>
-                <DataTable
-                    ref="dt"
-                    v-model:selection="selectedLinguagem"
-                    :value="dataLinguagem"
-                    dataKey="_id"
-                    :paginator="true"
-                    :rows="10"
-                    :filters="filters"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    :rowsPerPageOptions="[5, 10, 25]"
-                    responsiveLayout="scroll"
-                    scrollable
-                    scrollHeight="50vh"
-                    class="table-container"
-                >
-                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-                    <Column v-for="column in gridColumns" :key="column.field" :field="column.field" :header="column.caption" :sortable="true" headerStyle="min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">{{ column.caption }}</span>
-                            <template v-if="column.field === 'ativo' || column.field === 'admin'">
-                                <i v-if="slotProps.data[column.field]" class="pi pi-check"></i>
-                                <i v-else class="pi pi-times"></i>
-                            </template>
-                            <template v-else>
-                                {{ slotProps.data[column.field] }}
-                            </template>
-                        </template>
-                    </Column>
-                    <Column headerStyle="min-width:10rem;">
-                        <template #body="slotProps">
-                            <Button v-tooltip="$t('Editar')" icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editaLinguagem(slotProps.data)" />
-                            <Button v-tooltip="$t('Excluir')" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
-                        </template>
-                    </Column>
-                </DataTable>
+					<template v-slot:end>
+						<Button label="Exportar" icon="pi pi-upload" class="p-button-help" @click="handleExportCSV()" />
+					</template>
+				</Toolbar>
+				<DataTable ref="dt" v-model:selection="selectedLinguagem" :value="dataLinguagem" dataKey="_id"
+					:paginator="true" :rows="10" :filters="filters"
+					paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+					:rowsPerPageOptions="[5, 10, 25]" responsiveLayout="scroll" scrollable scrollHeight="50vh"
+					class="table-container">
+					<Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+					<Column v-for="column in gridColumns" :key="column.field" :field="column.field"
+						:header="column.caption" :sortable="true" headerStyle="min-width:10rem;">
+						<template #body="slotProps">
+							<span class="p-column-title">{{ column.caption }}</span>
+							<template v-if="column.field === 'ativo' || column.field === 'admin'">
+								<i v-if="slotProps.data[column.field]" class="pi pi-check"></i>
+								<i v-else class="pi pi-times"></i>
+							</template>
+							<template v-else>
+								{{ slotProps.data[column.field] }}
+							</template>
+						</template>
+					</Column>
+					<Column headerStyle="min-width:10rem;">
+						<template #body="slotProps">
+							<Button v-tooltip="$t('Editar')" icon="pi pi-pencil"
+								class="p-button-rounded p-button-success mr-2"
+								@click="editaLinguagem(slotProps.data)" />
+							<Button v-tooltip="$t('Excluir')" icon="pi pi-trash"
+								class="p-button-rounded p-button-danger mt-2" @click="confirmDelete(slotProps.data)" />
+						</template>
+					</Column>
+				</DataTable>
 
-                <Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }" :header="$t('Excluir')" :modal="true">
-                    <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
-                        <span v-if="product"
-                            >{{ $t('Tem Certeza que deseja excluir: ') }} <b>{{ product.name }}</b
-                            >?</span
-                        >
-                    </div>
-                    <template #footer>
-                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteDialog = false" />
-                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
-                    </template>
-                </Dialog>
+				<Dialog class="dialog-component" v-model:visible="deleteDialog" :style="{ width: '450px' }"
+					:header="$t('Excluir')" :modal="true">
+					<div class="flex items-center">
+						<i class="pi pi-exclamation-triangle mr-3 p-large" />
+						<span v-if="product">{{ $t('Tem Certeza que deseja excluir: ') }} <b>{{ product.name
+								}}</b>?</span>
+					</div>
+					<template #footer>
+						<Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text"
+							@click="deleteDialog = false" />
+						<Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteUser" />
+					</template>
+				</Dialog>
 
-                <Dialog v-model:visible="deleteAllDialog" :header="$t('Excluir')" :modal="true" :style="{ width: '450px' }">
-                    <div class="flex align-items-center">
-                        <i class="pi pi-exclamation-triangle mr-3 p-large" />
-                        <span v-if="product"
-                            >{{ $t('Excluir') }} <b>{{ this.selectedLinguagem.length }} {{ $t('Linguagem') }}</b
-                            >?</span
-                        >
-                    </div>
-                    <template #footer>
-                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="deleteAllDialog = false" />
-                        <Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
-                    </template>
-                </Dialog>
+				<Dialog v-model:visible="deleteAllDialog" :header="$t('Excluir')" :modal="true"
+					:style="{ width: '450px' }">
+					<div class="flex items-center">
+						<i class="pi pi-exclamation-triangle mr-3 p-large" />
+						<span v-if="product">{{ $t('Excluir') }} <b>{{ this.selectedLinguagem.length }} {{
+							$t('Linguagem')
+								}}</b>?</span>
+					</div>
+					<template #footer>
+						<Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text"
+							@click="deleteAllDialog = false" />
+						<Button :label="$t('Sim')" icon="pi pi-check" class="p-button-text" @click="deleteAll" />
+					</template>
+				</Dialog>
 
-                <Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="$t('Criar')" :modal="true" class="p-fluid">
-                    <div class="row flex">
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="name" v-model.trim="Linguagem.name" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>  
-                    <div class="row flex">
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputNumber id="knowledge" v-model.trim="Linguagem.knowledge" required="true" />
-                                <label for="conhecimento">{{ $t('Conhecimento') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div> 
-                    <template #footer>
-                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="criarDialog = false" />
-                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="SalvaLinguagem" />
-                    </template>
-                </Dialog>
+				<Dialog v-model:visible="criarDialog" :style="{ width: '450px' }" :header="$t('Criar')" :modal="true"
+					class="p-fluid">
+					<div class="row flex">
+						<div class="field col">
+							<FloatLabel>
+								<InputText id="name" v-model.trim="Linguagem.name" required="true" />
+								<label for="name">{{ $t('Nome') }}</label>
+							</FloatLabel>
+						</div>
+					</div>
+					<div class="row flex">
+						<div class="field col">
+							<FloatLabel>
+								<InputNumber id="knowledge" v-model.trim="Linguagem.knowledge" required="true" />
+								<label for="conhecimento">{{ $t('Conhecimento') }}</label>
+							</FloatLabel>
+						</div>
+					</div>
+					<template #footer>
+						<Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text"
+							@click="criarDialog = false" />
+						<Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text"
+							@click="SalvaLinguagem" />
+					</template>
+				</Dialog>
 
-                <Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="$t('Editar')" :modal="true" class="p-fluid" @update:visible="getCancelUser">
-                    <div class="row flex">
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputText id="name" v-model.trim="linguagemEdit.name" required="true" />
-                                <label for="name">{{ $t('Nome') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div>  
-                    <div class="row flex">
-                        <div class="field col">
-                            <FloatLabel>
-                                <InputNumber id="knowledge" v-model.trim="linguagemEdit.knowledge" required="true" />
-                                <label for="conhecimento">{{ $t('Conhecimento') }}</label>
-                            </FloatLabel>
-                        </div>
-                    </div> 
-                    <template #footer>
-                        <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text" @click="getCancelUser" />
-                        <Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text" @click="EditaLinguagem" />
-                    </template>
-                </Dialog>
-            </div>
-        </div>
-    </div>
+				<Dialog v-model:visible="editaDialog" :style="{ width: '450px' }" :header="$t('Editar')" :modal="true"
+					class="p-fluid" @update:visible="getCancelUser">
+					<div class="row flex">
+						<div class="field col">
+							<FloatLabel>
+								<InputText id="name" v-model.trim="linguagemEdit.name" required="true" />
+								<label for="name">{{ $t('Nome') }}</label>
+							</FloatLabel>
+						</div>
+					</div>
+					<div class="row flex">
+						<div class="field col">
+							<FloatLabel>
+								<InputNumber id="knowledge" v-model.trim="linguagemEdit.knowledge" required="true" />
+								<label for="conhecimento">{{ $t('Conhecimento') }}</label>
+							</FloatLabel>
+						</div>
+					</div>
+					<template #footer>
+						<Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text"
+							@click="getCancelUser" />
+						<Button :label="$t('Salvar')" icon="pi pi-check" class="p-button-text"
+							@click="EditaLinguagem" />
+					</template>
+				</Dialog>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped>
 .card {
-    aspect-ratio: unset;
+	aspect-ratio: unset;
 }
+
 .table-container {
-    line-break: anywhere;
+	line-break: anywhere;
 }
 </style>

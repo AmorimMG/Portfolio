@@ -40,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="w-full h-full center flex-column gap-3">
+	<div class="w-full h-full center flex-col gap-3">
 		<div class="center">
 			<div class="gap-2"><i class="pi pi-discord"></i> Discord</div>
 		</div>

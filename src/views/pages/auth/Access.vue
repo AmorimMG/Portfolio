@@ -3,17 +3,16 @@ import AppConfig from '@/layout/AppConfigurator.vue';
 </script>
 
 <template>
-    <div
-        class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
-        <div class="flex flex-column align-items-center justify-content-center">
+    <div class="surface-ground flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+        <div class="flex flex-col items-center justify-center">
             <img loading="lazy" src="@/assets/images/cards/profilePic.png" alt="Profile logo"
                 class="mb-5 w-6rem flex-shrink-0" />
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, rgba(247, 149, 48, 0.4) 10%, rgba(247, 149, 48, 0) 30%)">
-                <div class="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center"
+                <div class="w-full surface-card py-8 px-5 sm:px-8 flex flex-col items-center"
                     style="border-radius: 53px">
-                    <div class="grid flex flex-column align-items-center">
-                        <div class="flex justify-content-center align-items-center bg-orange-500 border-circle"
+                    <div class="grid flex flex-col items-center">
+                        <div class="flex justify-center items-center bg-orange-500 border-circle"
                             style="width: 3.2rem; height: 3.2rem">
                             <i class="text-50 pi pi-fw pi-lock text-2xl"></i>
                         </div>

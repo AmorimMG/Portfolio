@@ -36,22 +36,30 @@ export default {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3 pb-0">
+    <div class="w-full sm:w-1/3 lg:w-1/3 xl:w-1/4 pb-0">
         <CardEffect>
-            <div class="card mb-0 center" style="padding: 0">
-                <Button text @click="projectsVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight :flash="false" style="color: white">{{ $t('projects') }}</VueNeonLight>
+            <div class="card mb-0 flex justify-center items-center p-0">
+                <Button text @click="projectsVisible = true" class="w-full h-full flex justify-center items-center">
+                    <VueNeonLight :flash="false" class="text-white">
+                        {{ $t('projects') }}
+                    </VueNeonLight>
                 </Button>
             </div>
         </CardEffect>
-        <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="dialog-terminal p-dialog-maximized">
+
+        <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true"
+            class="dialog-terminal p-dialog-maximized">
             <template #header>
-                <div class="inline-flex align-items-center justify-content-center gap-2">AmorimMG</div>
+                <div class="inline-flex items-center justify-center gap-2">AmorimMG</div>
             </template>
-            <div class="popup-content" style="background: rgba(40, 33, 59, 0.9) !important; backdrop-filter: blur(10px)">
-                <draggable class="grid" v-model="projects" item-key="id" group="projects" animation="200">
+
+            <div class="overflow-x-hidden" style="background: rgba(40, 33, 59, 0.9); backdrop-filter: blur(10px)">
+                <draggable class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-12" v-model="projects"
+                    item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="center col-4" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
+                        <Projects class="flex justify-center items-center" :languages="element.languages"
+                            :img="element.img" :title="element.title" :subtitle="element.subtitle"
+                            :description="element.description" :link="element.link" />
                     </template>
                 </draggable>
             </div>
@@ -79,24 +87,5 @@ export default {
     height: 100%;
     border: none;
     transform-origin: 0 0;
-}
-
-.popup-content {
-    overflow-x: hidden;
-}
-
-.p-dialog-content {
-    padding: 0;
-    overflow-x: hidden;
-}
-
-.grid {
-    padding: 50px;
-}
-
-.center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 </style>

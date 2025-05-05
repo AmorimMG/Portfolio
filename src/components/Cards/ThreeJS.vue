@@ -135,31 +135,31 @@ watch(container, (newValue) => {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3 pb-0">
-        <CardEffect>
-            <div class="neonCard card mb-0 flex justify-content-center align-items-center">
-                <div v-if="isLoading" class="loading">Loading...</div>
-                <div ref="container" class="three-container"></div>
-            </div>
-        </CardEffect>
-    </div>
+	<div class="col-4 lg:col-4 xl:col-3 pb-0">
+		<CardEffect>
+			<div class="neonCard card mb-0 flex justify-center items-center">
+				<div v-if="isLoading" class="loading">Loading...</div>
+				<div ref="container" class="three-container"></div>
+			</div>
+		</CardEffect>
+	</div>
 </template>
 
 <style scoped>
 .neonCard {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
 }
 
 .three-container {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .loading {
-  color: #00ff00;
-  font-size: 1.2em;
+	color: #00ff00;
+	font-size: 1.2em;
 }
 </style>

@@ -1,9 +1,9 @@
 <script>
+import { useLayout } from '@/layout/composables/layout';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import ProgressSpinner from 'primevue/progressspinner';
 import { defineComponent, nextTick, ref } from 'vue';
-import { useLayout } from '@/layout/composables/layout';
 
 const cvVisible = ref(false);
 const loading = ref(true);
@@ -108,7 +108,7 @@ export default defineComponent({
             <Button v-if="showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-h"
                 @click="toggleButtons()" />
         </div>
-        <div class="flex justify-content-center align-items-center">
+        <div class="flex justify-center items-center">
             <ProgressSpinner class="h-full" v-if="loading" />
         </div>
         <div class="iframe-container" :class="{ hidden: !cvVisible }"

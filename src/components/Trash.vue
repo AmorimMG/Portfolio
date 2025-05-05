@@ -16,15 +16,13 @@ function permanentDelete(app) {
 
 <template>
   <div class="w-full h-full">
-    <div class="w-full h-full flex flex-column justify-content-center align-items-center"
-      v-if="trashStore.trash.length === 0">
+    <div class="w-full h-full flex flex-col justify-center items-center" v-if="trashStore.trash.length === 0">
       <h1>🗑️</h1>
       Nada na lixeira
     </div>
     <ul v-else>
-      <li class="flex flex-row justify-content-between align-items-center" v-for="app in trashStore.trash"
-        :key="app.id">
-        <div class="flex flex-row justify-content-between align-items-center">
+      <li class="flex flex-row justify-content-between items-center" v-for="app in trashStore.trash" :key="app.id">
+        <div class="flex flex-row justify-content-between items-center">
           <img loading="lazy" :src="app.icon" width="50px" height="50px" alt="App Icon">
           <div class="ml-5"> {{ app.title }} </div>
         </div>
