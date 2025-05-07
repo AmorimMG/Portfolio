@@ -297,7 +297,7 @@ export default {
                     <div class="flex items-center">
                         <i class="pi pi-exclamation-triangle mr-3 p-large" />
                         <span v-if="product">{{ $t('Excluir') }} <b>{{ this.selectedUser.length }} {{ $t('Projetos')
-                                }}</b>?</span>
+                        }}</b>?</span>
                     </div>
                     <template #footer>
                         <Button :label="$t('Cancelar')" icon="pi pi-times" class="p-button-secondary p-button-text"
@@ -323,13 +323,13 @@ export default {
                         </div>
                     </div>
                     <div class="row flex">
-                        <div class="field col-6">
+                        <div class="field col-span-6">
                             <FloatLabel>
                                 <InputText id="link" v-model="projeto.link" required="true" />
                                 <label for="link">{{ $t('Link') }}</label>
                             </FloatLabel>
                         </div>
-                        <div class="field col-6">
+                        <div class="field col-span-6">
                             <FloatLabel>
                                 <FileUpload mode="basic" accept="image/*" chooseLabel="Choose Image"
                                     @select="onFileSelect" />

@@ -7,31 +7,42 @@ import { useTrashStore } from './useTrashStore';
 export const useAppsStore = defineStore('apps', () => {
     const { t } = useI18n();
     const trashStore = useTrashStore();
-    const apps = ref(
-        initialApps.map((app) => ({
+
+    const GRID_SIZE = 40;
+
+    const apps = ref(Array(GRID_SIZE).fill({ id: null }));
+
+    initialApps.slice(0, GRID_SIZE).forEach((app, index) => {
+        apps.value[index] = {
             ...app,
             id: Date.now() + Math.random(),
             title: t(`apps.${app.title}`)
-        }))
-    );
+        };
+    });
 
     function addApp(newApp) {
+        const emptyIndex = apps.value.findIndex((slot) => slot.id === null); // Verifique se o slot está vazio
+        if (emptyIndex === -1) return;
+
         if (!newApp.title) {
             const newName = t('newName');
             const appName = prompt(newName);
             newApp.title = appName;
         }
-        if (newApp)
-            apps.value.push({
-                ...newApp,
-                id: Date.now(),
-                title: newApp.title
-            });
+
+        apps.value[emptyIndex] = {
+            ...newApp,
+            id: Date.now(),
+            title: newApp.title
+        };
     }
 
     function removeApp(app) {
-        apps.value = apps.value.filter((a) => a.id !== app.id);
-        trashStore.addToTrash(app);
+        const index = apps.value.findIndex((a) => a?.id === app.id);
+        if (index !== -1) {
+            apps.value[index] = null;
+            trashStore.addToTrash(app);
+        }
     }
 
     function restoreApp(app) {

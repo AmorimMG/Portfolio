@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import draggable from 'vuedraggable';
-import { widgets as initialWidgets, componentMap } from '../data/appsDock';
+import { componentMap, widgets as initialWidgets } from '../data/appsDock';
 const widgets = ref(initialWidgets);
 </script>
 
@@ -23,6 +23,7 @@ const widgets = ref(initialWidgets);
     gap: 20px;
     grid-template-rows: repeat(1, 1fr);
     grid-auto-flow: column;
+    margin-top: 10px;
 }
 
 .app-widgets {

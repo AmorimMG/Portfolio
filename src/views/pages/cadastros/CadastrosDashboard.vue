@@ -153,7 +153,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <div>
                                 <span>Storage: </span>
                                 <span :style="{ width: totalPercent + '%' }" class="text-right"> {{ totalPercent
-                                    }}%</span>
+                                }}%</span>
                             </div>
                             <span class="font-medium">1TB</span>
                         </div>
@@ -169,7 +169,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
 
             <div class="grid">
                 <div class="flex flex-col gap-3">
-                    <div class="col-12 lg:col-6 xl:col-3">
+                    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
                         <div class="card-dashboard mb-0">
                             <div class="flex justify-content-between mb-3">
                                 <div>
@@ -185,7 +185,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <span class="text-500">since last visit</span>
                         </div>
                     </div>
-                    <div class="col-12 lg:col-6 xl:col-3">
+                    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
                         <div class="card-dashboard mb-0">
                             <div class="flex justify-content-between mb-3">
                                 <div>
@@ -201,7 +201,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <span class="text-500">since last week</span>
                         </div>
                     </div>
-                    <div class="col-12 lg:col-6 xl:col-3">
+                    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
                         <div class="card-dashboard mb-0">
                             <div class="flex justify-content-between mb-3">
                                 <div>
@@ -217,7 +217,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                             <span class="text-500">newly registered</span>
                         </div>
                     </div>
-                    <div class="col-12 lg:col-6 xl:col-3">
+                    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
                         <div class="card-dashboard mb-0">
                             <div class="flex justify-content-between mb-3">
                                 <div>
@@ -234,7 +234,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                         </div>
                     </div>
                 </div>
-                <div class="col-12 xl:col-6 flex flex-col gap-2">
+                <div class="col-span-12 xl:col-span-6 flex flex-col gap-2">
                     <div class="card-dashboard">
                         <h5>Recent Sales</h5>
                         <DataTable :value="products" :rows="5" :paginator="true" responsiveLayout="scroll">
@@ -350,7 +350,7 @@ watch([getPrimary, getSurface, isDarkTheme], () => {
                         </ul>
                     </div>
                 </div>
-                <div class="col-12 xl:col-6 flex flex-col gap-2">
+                <div class="col-span-12 xl:col-span-6 flex flex-col gap-2">
                     <div class="card-dashboard">
                         <h5>Sales Overview</h5>
                     </div>

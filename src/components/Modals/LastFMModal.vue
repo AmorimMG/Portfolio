@@ -105,7 +105,7 @@ export default {
 </script>
 
 <template>
-    <div class="col-12 lg:col-12 xl:col-12 pb-0">
+    <div class="col-span-12 lg:col-span-12 xl:col-span-12 pb-0">
         <Button text class="w-full h-full" @click="lastFMVisible = true"
             style="width: 100%; height: 100%; justify-content: center">
             <VueNeonLight size="10px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
@@ -143,7 +143,7 @@ export default {
             <Tabs @tab-change="handleChangeTabs($event)">
                 <TabPanel :header="$t('LastFM.Profile')">
                     <div class="grid p-3">
-                        <div class="col-12 md:col-4 flex flex-col items-center text-center">
+                        <div class="col-span-12 md:col-span-4 flex flex-col items-center text-center">
                             <Skeleton v-if="!imageLoaded" class="mb-3 border-circle shadow-2"
                                 style="width: 150px; height: 150px" />
                             <Image v-show="imageLoaded" @load="handleImageLoad" :src="lastFMUserData.image[3]['#text']"
@@ -155,9 +155,9 @@ export default {
                         </div>
 
                         <!-- Estatísticas -->
-                        <div class="col-12 md:col-8">
+                        <div class="col-span-12 md:col-span-8">
                             <div class="grid">
-                                <div class="col-6 md:col-4">
+                                <div class="col-span-6 md:col-span-4">
                                     <Card>
                                         <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
                                         <template #content>
@@ -166,16 +166,16 @@ export default {
                                         </template>
                                     </Card>
                                 </div>
-                                <div class="col-6 md:col-4">
+                                <div class="col-span-6 md:col-span-4">
                                     <Card>
                                         <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
                                         <template #content>
                                             <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.artist_count
-                                            }}</h3>
+                                                }}</h3>
                                         </template>
                                     </Card>
                                 </div>
-                                <div class="col-6 md:col-4">
+                                <div class="col-span-6 md:col-span-4">
                                     <Card>
                                         <template #title>💿 {{ $t('LastFM.Albums') }}</template>
                                         <template #content>
@@ -184,7 +184,7 @@ export default {
                                         </template>
                                     </Card>
                                 </div>
-                                <div class="col-6 md:col-4">
+                                <div class="col-span-6 md:col-span-4">
                                     <Card>
                                         <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
                                         <template #content>
@@ -193,7 +193,7 @@ export default {
                                         </template>
                                     </Card>
                                 </div>
-                                <div class="col-6 md:col-4">
+                                <div class="col-span-6 md:col-span-4">
                                     <Card>
                                         <template #title>📅 {{ $t('LastFM.Registered') }}</template>
                                         <template #content>

@@ -6,16 +6,24 @@ import Weather from '../Cards/Weather.vue';
 import LastFMModal from '../Modals/LastFMModal.vue';
 </script>
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-span-4 lg:col-span-4 xl:col-span-3">
         <CardEffect>
             <div class="card clusterT" style="padding: 0">
                 <div class="card-wrapper">
-                    <div class="card-body"><LastFMModal /></div>
-                    <div class="card-body"><Discord /></div>
+                    <div class="card-body">
+                        <LastFMModal />
+                    </div>
+                    <div class="card-body">
+                        <Discord />
+                    </div>
                 </div>
                 <div class="card-wrapper">
-                    <div class="card-body"><Weather /></div>
-                    <div class="card-body"><Valorant /></div>
+                    <div class="card-body">
+                        <Weather />
+                    </div>
+                    <div class="card-body">
+                        <Valorant />
+                    </div>
                 </div>
             </div>
         </CardEffect>

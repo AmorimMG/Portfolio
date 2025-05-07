@@ -21,7 +21,7 @@ import AppConfig from '@/layout/AppConfigurator.vue';
                             admins.</span>
                         <img loading="lazy" src="@/assets/images/cards/profilePic.png" alt="Access denied" class="mb-5"
                             width="80%" />
-                        <div class="col-12 mt-5 text-center">
+                        <div class="col-span-12 mt-5 text-center">
                             <i class="pi pi-fw pi-arrow-left text-blue-500 mr-2" style="vertical-align: center"></i>
                             <router-link to="/" class="text-blue-500">Go to Dashboard</router-link>
                         </div>

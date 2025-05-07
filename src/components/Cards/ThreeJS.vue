@@ -135,7 +135,7 @@ watch(container, (newValue) => {
 </script>
 
 <template>
-	<div class="col-4 lg:col-4 xl:col-3 pb-0">
+	<div class="col-span-4 lg:col-span-4 xl:col-span-3 pb-0">
 		<CardEffect>
 			<div class="neonCard card mb-0 flex justify-center items-center">
 				<div v-if="isLoading" class="loading">Loading...</div>

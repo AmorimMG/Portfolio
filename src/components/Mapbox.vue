@@ -7,7 +7,7 @@ const online = ref(false);
 
 </script>
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-span-4 lg:col-span-4 xl:col-span-3">
         <CardEffect>
             <div class="card mb-0 center" :style="{ padding: 0 }">
                 <div class="center flex-col gap-2">

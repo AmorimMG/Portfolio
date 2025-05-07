@@ -50,7 +50,7 @@ export default {
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-3">
+    <div class="col-span-4 lg:col-span-4 xl:col-span-3">
         <CardEffect class="w-full">
             <div class="card page">
                 <div class="album-info" v-if="currentTrack">

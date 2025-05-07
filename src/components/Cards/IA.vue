@@ -18,70 +18,73 @@ const overlayVisible = ref(true);
 const chatWrapper = ref(null);
 
 const sendMessage = async () => {
-	if (!userInput.value.trim()) return;
+    if (!userInput.value.trim()) return;
 
-	messages.value.push({ role: "user", content: userInput.value });
+    messages.value.push({ role: "user", content: userInput.value });
     scrollToBottom();
-	const messageToSend = {
-		prompt: userInput.value,
-		context: context.value,
-	};
-	userInput.value = "";
-	loading.value = true;
+    const messageToSend = {
+        prompt: userInput.value,
+        context: context.value,
+    };
+    userInput.value = "";
+    loading.value = true;
 
-	try {
-		const aiResponse = await RESTAPI.IA(messageToSend);
-		messages.value.push({ role: "ai", content: aiResponse.data });
-	} catch (error) {
-		let errorMessage = error.message;
-		if (error.response && error.response.status === 429) {
-			errorMessage =
-				"You have exceeded the number of daily requests, please try again later!";
-		}
-		messages.value.push({
-			role: "ai",
-			content: errorMessage,
-			isError: true,
-		});
-		console.error("Error fetching AI response:", error);
-	} finally {
-		loading.value = false;
+    try {
+        const aiResponse = await RESTAPI.IA(messageToSend);
+        messages.value.push({ role: "ai", content: aiResponse.data });
+    } catch (error) {
+        let errorMessage = error.message;
+        if (error.response && error.response.status === 429) {
+            errorMessage =
+                "You have exceeded the number of daily requests, please try again later!";
+        }
+        messages.value.push({
+            role: "ai",
+            content: errorMessage,
+            isError: true,
+        });
+        console.error("Error fetching AI response:", error);
+    } finally {
+        loading.value = false;
         scrollToBottom();
-	}
+    }
 };
-	
+
 const scrollToBottom = () => {
-	nextTick(() => {
-		if (chatWrapper.value) {
-			chatWrapper.value.scrollTop = chatWrapper.value.scrollHeight;
-		}
-	});
+    nextTick(() => {
+        if (chatWrapper.value) {
+            chatWrapper.value.scrollTop = chatWrapper.value.scrollHeight;
+        }
+    });
 };
 
 const hideOverlay = () => {
-	overlayVisible.value = false;
-	setTimeout(() => {
-		showOverlay.value = false;
-	}, 500);
+    overlayVisible.value = false;
+    setTimeout(() => {
+        showOverlay.value = false;
+    }, 500);
 };
 </script>
 
 <template>
-    <div class="col-4 lg:col-4 xl:col-4 pb-0" @click="hideOverlay">
+    <div class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0" @click="hideOverlay">
         <CardEffect>
             <div class="card chat-container">
                 <div v-if="showOverlay" class="overlay" :class="{ 'fade-out': !overlayVisible }">
-                    <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }}</VueNeonLight>
+                    <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }}
+                    </VueNeonLight>
                 </div>
                 <div ref="chatWrapper" class="chat-wrapper">
-                    <div v-for="(message, index) in messages" :key="index" :class="['message', message.role, { 'error-message': message.isError }]">
+                    <div v-for="(message, index) in messages" :key="index"
+                        :class="['message', message.role, { 'error-message': message.isError }]">
                         <p>{{ message.content }}</p>
                     </div>
                 </div>
-                    <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
+                <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
                 <div class="input-container">
-                        <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
-                        <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
+                    <InputText class="w-full" v-model="userInput" :placeholder="typeMessage"
+                        @keyup.enter="sendMessage" />
+                    <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
                 </div>
             </div>
         </CardEffect>

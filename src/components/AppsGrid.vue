@@ -69,17 +69,26 @@ export default {
                 {
                     label: 'Remover',
                     icon: 'pi pi-trash',
-                    command: () => this.appsStore.removeApp(this.contextApp)
+                    command: () => {
+                        if (this.contextApp) this.appsStore.removeApp(this.contextApp);
+                    }
                 }
             ]
         };
     },
     computed: {
+        filledGrid: {
+            get() {
+                return this.appsStore.apps;
+            },
+            set(val) {
+                this.appsStore.apps = val;
+            }
+        },
         getComponent() {
             return (name) => componentMap[name] || 'div';
         }
     },
-
     methods: {
         onAppRightClick(event, app) {
             event.preventDefault();
@@ -87,11 +96,13 @@ export default {
             this.$refs.contextMenuRef.show(event);
         },
         renameApp(app) {
+            if (!app) return;
             const newName = prompt('Novo nome:', app.title);
             if (newName) app.title = newName;
         },
         extractIds(els) {
             return els
+                .filter((v) => v && v.getAttribute)
                 .map((v) => v.getAttribute('data-key'))
                 .filter(Boolean)
                 .map(Number);
@@ -103,11 +114,13 @@ export default {
             }
         },
         restoreApp(app) {
+            if (!app) return;
             this.appsStore.restoreApp(app);
-            this.trashStore.trash = this.trash.filter((a) => a.id !== app.id);
+            this.trashStore.trash = this.trash.filter((a) => a && a.id !== app.id);
         },
         deleteApp(app) {
-            this.trash = this.trash.filter((a) => a.id !== app.id);
+            if (!app) return;
+            this.trash = this.trash.filter((a) => a && a.id !== app.id);
         },
         onMove({
             store: {
@@ -127,10 +140,12 @@ export default {
 
 <template>
     <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onMove" :on-start="onStart">
-        <draggable class="draggableApps" v-model="appsStore.apps" item-key="id" group="apps" animation="200">
-            <template #item="{ element }">
-                <div class="app-container" :class="{ selected: selected.has(element.id) }"
-                    @contextmenu="onAppRightClick($event, element)">
+        <draggable v-model="filledGrid" item-key="id" :move="() => true"
+            :component-data="{ tag: 'div', class: 'draggableApps' }"
+            :clone="(original) => ({ ...original, id: Date.now() })">
+            <template #item="{ element, index }">
+                <div v-if="element && element.id !== null" class="app-container"
+                    :class="{ selected: selected.has(element.id) }" @contextmenu="onAppRightClick($event, element)">
                     <component class="app-card" :is="getComponent(element.name)" :style="{
                         'grid-column': 'span ' + element.colSpan,
                         'grid-row': 'span ' + element.rowSpan
@@ -140,13 +155,23 @@ export default {
                         <div class="app-title">{{ element.title }}</div>
                     </div>
                 </div>
+                <div v-else class="empty-slot"></div>
             </template>
         </draggable>
+
         <ContextMenu ref="contextMenuRef" :model="contextItems" />
     </SelectionArea>
 </template>
 
 <style>
+.empty-slot {
+    width: 100px;
+    height: 100px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+}
+
 /* Animação de entrada (pop-in) */
 .app-enter-active {
     transition: all 0.3s ease;

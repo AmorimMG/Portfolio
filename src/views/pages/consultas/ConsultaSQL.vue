@@ -285,8 +285,8 @@ watch(length, (newLength, oldLength) => {
 
 <template>
     <div class="grid">
-        <div style="width: 100%" class="container-main flex col-11 flex-row">
-            <div style="margin-top: 40px; width: 50px" class="col-1 flex flex-col gap-6 items-center">
+        <div style="width: 100%" class="container-main flex col-span-11 flex-row">
+            <div style="margin-top: 40px; width: 50px" class="col-span-1 flex flex-col gap-6 items-center">
                 <div class="flex flex-col gap-1">
                     <Button icon="pi pi-play" severity="help" raised @click="fetchTable()" />
                     <Button icon="pi pi-save" severity="success" raised @click="openSaveConfig()" />

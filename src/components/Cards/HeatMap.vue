@@ -7,7 +7,7 @@ import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 export default {
 	components: {
 		CardEffect,
-        VueNeonLight
+		VueNeonLight
 	},
 	data() {
 		return {
@@ -127,93 +127,95 @@ export default {
 </script>
 
 <template>
-    <div class="col-12 lg:col-12 xl:col-12">
-        <CardEffect>
-            <div id="GithubHeatMap" class="card mb-0 center">
-                    <div class="calendar-heatmap">
-                        <div class="flex w-full gap-1 justify-content-between">
-                            <div class="legend-container">
-                                <div class="legend">
-                                    <div v-for="color in GithubColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
-                                </div>
-                                <VueNeonLight color="white" size="25px" :flash="false"> Github </VueNeonLight>
-                            </div>
-                        </div>
-                        <div class="calendar">
-                            <div v-for="(month, index) in months" :key="index" class="month">
-                                <p>{{ month }}</p>
-                                <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
-                                    <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
-                                        {{ day }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </CardEffect>
-    </div>
+	<div class="col-span-12 lg:col-span-12 xl:col-span-12">
+		<CardEffect>
+			<div id="GithubHeatMap" class="card mb-0 center">
+				<div class="calendar-heatmap">
+					<div class="flex w-full gap-1 justify-content-between">
+						<div class="legend-container">
+							<div class="legend">
+								<div v-for="color in GithubColors" :key="color" class="legend-item"
+									:style="{ backgroundColor: color }"></div>
+							</div>
+							<VueNeonLight color="white" size="25px" :flash="false"> Github </VueNeonLight>
+						</div>
+					</div>
+					<div class="calendar">
+						<div v-for="(month, index) in months" :key="index" class="month">
+							<p>{{ month }}</p>
+							<div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
+								<div v-for="day in daysInWeek(year, index, week)" :key="day" class="day"
+									:style="{ backgroundColor: getColor(index, day) }">
+									{{ day }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</CardEffect>
+	</div>
 </template>
 
 <style scoped>
 .card {
-    max-height: 300px;
+	max-height: 300px;
 }
 
 .calendar-heatmap {
-    scale: 0.9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	scale: 0.9;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .legend-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
 }
 
 .legend {
-    display: flex;
-    justify-content: space-between;
-    width: 150px;
-    margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	width: 150px;
+	margin-bottom: 10px;
 }
 
 .legend-item {
-    width: 15px;
-    height: 15px;
-    flex-direction: row;
-    display: flex;
+	width: 15px;
+	height: 15px;
+	flex-direction: row;
+	display: flex;
 }
 
 .calendar {
-    display: flex;
+	display: flex;
 }
 
 .month {
-    margin: 0 5px;
+	margin: 0 5px;
 }
 
 .month-header {
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 3px;
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 3px;
 }
 
 .week {
-    display: flex;
+	display: flex;
 }
 
 .day {
-    width: 15px;
-    height: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1px;
-    font-size: 10px;
-    cursor: pointer;
+	width: 15px;
+	height: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 1px;
+	font-size: 10px;
+	cursor: pointer;
 }
 </style>

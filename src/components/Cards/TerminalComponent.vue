@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div id="Terminal" class="col-4 lg:col-4 xl:col-4 pb-0">
+    <div id="Terminal" class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0">
         <CardEffect>
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
                 <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
