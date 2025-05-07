@@ -48,15 +48,16 @@ onMounted(() => {
             </div>
         </transition>
         <div id="components-container" :class="{ hidden: !isStarted, 'fade-in': isStarted }"
-            class="grid components-container justify-center">
+            class="grid grid-cols-12 gap-4 justify-center">
             <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
 
             <div :style="{ display: menuVisible ? 'flex' : 'none' }" id="Introduction"
-                class="col-4 lg:col-3 xl:col-3 p-0">
+                class="col-span-12 lg:col-span-3 xl:col-span-3 p-0">
                 <Introduction :menuVisible="menuVisible" @update:menuVisible="menuVisible = $event" />
             </div>
             <draggable :style="{ display: !menuVisible ? 'grid' : '' }" id="draggableCards"
-                class="draggable col-12 lg:col-9 xl:col-9" v-model="cards" item-key="id" group="cards" animation="200">
+                class="draggable col-span-12 lg:col-span-9 xl:col-span-9" v-model="cards" item-key="id" group="cards"
+                animation="200">
                 <template #item="{ element }">
                     <div class="grid" style="width: 100%; height: 100%" :style="{
                         'grid-column': 'span ' + element.colSpan,

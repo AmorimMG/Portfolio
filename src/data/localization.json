@@ -10,7 +10,7 @@
 		"home": "Home",
 		"blog": "Blog",
 		"projects": "Projects",
-		"CV": "CV",
+		"cv": "CV",
 
 		"Criar": "Create",
 		"Editar": "Edit",
@@ -72,14 +72,15 @@
 		},
 
 		"apps": {
-			"CV": "Resume",
+			"cv": "Resume",
 			"LastFM": "LastFM",
 			"Projects": "Projects",
 			"Amorim": "Amorim",
 			"JOGO": "Game",
 			"Servidor": "Server",
 			"Camera": "Camera",
-			"Wallpaper": "Wallpaper"
+			"Wallpaper": "Wallpaper",
+            "Severence": "Severance"
 		},
 
 		"DockTopBar": {
@@ -188,14 +189,15 @@
 		},
 
 		"apps": {
-			"CV": "Reanudar",
+			"cv": "Reanudar",
 			"LastFM": "LastFM",
 			"Projects": "Proyectos",
 			"Amorim": "Amorim",
 			"JOGO": "Juego",
 			"Servidor": "Servidor",
 			"Camera": "Cámara",
-			"Wallpaper": "Fondo de pantalla"
+			"Wallpaper": "Fondo de pantalla",
+            "Severence": "Severance"
 		},
 
 		"DockTopBar": {
@@ -303,14 +305,15 @@
 		},
 
 		"apps": {
-			"CV": "Currículo",
+			"cv": "Currículo",
 			"LastFM": "LastFM",
 			"Projects": "Projetos",
 			"Amorim": "Amorim",
 			"JOGO": "Jogo",
 			"Servidor": "Servidor",
 			"Camera": "Câmera",
-			"Wallpaper": "Papel de Parede"
+			"Wallpaper": "Papel de Parede",
+            "Severence": "Severance"
 		},
 
 		"DockTopBar": {

@@ -104,6 +104,7 @@
     grid-template-columns: repeat(4, minmax(200px, 1fr));
     height: auto;
     padding: 25px;
+    gap: 1rem;
 }
 
 .draggable-item {
@@ -137,7 +138,7 @@
 /*
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; 
+    justify-content: flex-end;
 */
 
     &::before {
@@ -161,7 +162,7 @@
 .p-terminal-content {
     // Conteudo do terminal
 }
-    
+
 .p-terminal-prompt {
     color: #48FE48 !important;
 }
@@ -197,7 +198,7 @@
     #draggableCards {
         display: grid;
     }
-    
+
 }
 
 @media (max-width: 991px) {
@@ -208,8 +209,9 @@
         grid-template-columns: repeat(4, minmax(100px, 1fr));
         margin: 0;
         padding: 0;
+        gap: 1rem;
     }
-    
+
     .layout-main-container {
         padding: 0 !important;
         display: block;
@@ -229,7 +231,7 @@
     #Stack{
         display: none;
     }
-    
+
     #Anilist {
         display: none;
     }

@@ -4,12 +4,11 @@ import Dock from 'primevue/dock';
 import { useToast } from 'primevue/usetoast';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { PhotoService } from '../../service/ThirdPartyEndpoints';
-import Terminal from '../Cards/Terminal.vue';
-import CustomDialog from '../Modals/CustomDialog.vue';
 import FileSystemModal from '../Modals/FileSystemModal.vue';
 import PortfolioModal from '../Modals/PortfolioModal.vue';
+import TerminalModal from '../Modals/TerminalModal.vue';
 import TrashModal from '../Modals/TrashModal.vue';
-import VscodeModal from '../Vscode/VscodeModal.vue';
+import VscodeModal from '../Modals/VscodeModal.vue';
 
 const isMobile = ref(window.innerWidth <= 768);
 const FileSystemOpen = ref(false);
@@ -177,18 +176,11 @@ const closeModalTerminal = () => {
             </a>
         </template>
     </Dock>
-    <CustomDialog v-model:visible="displayTerminal" @update:visible="closeModalTerminal"
-        contentStyle="width: 100%; height: 100%; background-color: black">
-        <Terminal class="w-full h-full" />
-    </CustomDialog>
+    <TerminalModal @close="displayTerminal = false" v-model:visible="displayTerminal" />
     <FileSystemModal @close="FileSystemOpen = false" v-model:visible="FileSystemOpen" />
     <TrashModal @close="TrashOpen = false" v-model:visible="TrashOpen" />
-    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }"
-        :style="{ width: '40vw' }" :maximizable="true">
-        <Tree :value="items" />
-    </Dialog>
-
     <VscodeModal @close="vscodeModalOpen = false" v-model:visible="vscodeModalOpen" />
+    <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
     <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2"
         containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false"
         :showItemNavigators="true">
@@ -196,8 +188,10 @@ const closeModalTerminal = () => {
             <img loading="lazy" :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
         </template>
     </Galleria>
-
-    <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
+    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }"
+        :style="{ width: '40vw' }" :maximizable="true">
+        <Tree :value="items" />
+    </Dialog>
 </template>
 <style scoped>
 .p-dock {

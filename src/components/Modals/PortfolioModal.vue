@@ -13,22 +13,19 @@ const props = defineProps({
 
 const portfolioVisible = ref(false);
 const url = ref('https://amorim.pro/');
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update:visible']);
 
-const onHide = () => {
-    emit('close');
-    portfolioVisible.value = false;
+const closeModal = () => {
     emit('update:visible', false);
 };
 </script>
 
 <template>
     <Button text class="w-full h-full" @click="portfolioVisible = true" />
-    <CustomDialog v-element-size="onResize" class="dialog-terminal p-dialog-maximized"
+    <CustomDialog class="dialog-terminal p-dialog-maximized"
         contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: none;"
-        :visible="portfolioVisible || visible" @update:visible="portfolioVisible = $event" @hide="onHide"
-        :maximized="true" :closable="false" :breakpoints="{ '960px': '50vw' }"
-        :style="{ width: '90vw', height: '90vh' }" :unstyled="true">
+        :visible="portfolioVisible || visible" @update:visible="closeModal" :maximized="true" :closable="false"
+        :breakpoints="{ '960px': '50vw' }" :style="{ width: '90vw', height: '90vh' }" :unstyled="true">
         <template #header>
             <div
                 class="safari-header w-full flex items-center justify-between px-3 py-2 bg-neutral-100 border-b border-neutral-300">

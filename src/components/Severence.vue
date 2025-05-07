@@ -376,9 +376,9 @@ onMounted(() => {
     }
 
     #header {
-        position: relative;
+        position: absolute;
         width: 100vmin;
-        top: calc(50% - 50.75vmin);
+        top: calc(50% - 44vmin);
         display: flex;
         justify-content: flex-end;
 

@@ -8,6 +8,7 @@ import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppConfigurator from '../../layout/AppConfigurator.vue';
 import { getLanguageCookie, setLanguageCookie } from '../../service/session';
+import ConfigModal from '../Modals/ConfigModal.vue';
 
 const { locale, t } = useI18n();
 const dropdownValues = ref([
@@ -317,14 +318,9 @@ onUnmounted(() => {
                 <Slider v-model="volumeValue" class="w-14rem" />
             </Popover>
 
-            <CameraModal @close="cameraModalVisible = false" :isTopbar="true" v-model:visible="cameraModalVisible" />
-            <!--             <ConfigModal @close="configModalVisible = false" :isTopbar="true" v-model:visible="configModalVisible" @update:modelValue="$emit('update:modelValue', $event)" /> -->
-            <!--             <ConfigModal
-                :visible="configModalStore.visible"
-                :isTopbar="true"
-                @close="configModalStore.setVisible(false)"
-                @update:modelValue="configModalStore.setVisible($event)"
-            /> -->
+            <CameraModal :isTopbar="true" v-model:visible="cameraModalVisible" />
+            <ConfigModal :isTopbar="true" v-model:visible="configModalVisible"
+                @update:modelValue="$emit('update:modelValue', $event)" />
         </template>
     </Menubar>
 

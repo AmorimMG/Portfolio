@@ -1,7 +1,7 @@
 <script>
-import { ref } from "vue";
-import CardEffect from "../CardEffect.vue";
-import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import { ref } from 'vue';
+import CardEffect from '../CardEffect.vue';
+import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 import CustomDialog from './CustomDialog.vue';
 
 export default {
@@ -12,15 +12,15 @@ export default {
     },
     data() {
         return {
-            piVisible: ref(false),
+            piVisible: ref(false)
         };
     },
     methods: {
         onHide() {
-            this.$emit("close");
+            this.$emit('close');
             this.piVisible = false;
-        },
-    },
+        }
+    }
 };
 </script>
 
@@ -29,16 +29,12 @@ export default {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="piVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight :flash="false" color="#ff00ff90">{{ $t('pi') }}</VueNeonLight>
+                    <VueNeonLight :flash="false" color="#ff00ff90"> pi </VueNeonLight>
                 </Button>
             </div>
         </CardEffect>
         <CustomDialog :visible="piVisible" @update:visible="onHide()" :maximized="true" :modal="true"
             class="dialog-terminal p-dialog-maximized" contentStyle="width: 100%; height: 100%;">
-            <div class="zoom-controls">
-                <!--                 <Button @click="zoomIn">Zoom In</Button>
-                <Button @click="zoomOut">Zoom Out</Button> -->
-            </div>
             <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
                 <iframe id="iframe" class="iframe" ref="iframe" src="https://pi.amorim.pro" scrolling="auto"
                     style="border: none"></iframe>

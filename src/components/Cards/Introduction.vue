@@ -140,7 +140,9 @@ const sendEmail = async () => {
                     </button> -->
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                        type="button" class="layout-topbar-action layout-topbar-action-highlight">
+                        type="button"
+                        class="layout-topbar-action layout-topbar-action-highlight"
+                    >
                         <i class="pi pi-cog px-2"></i>
                     </button>
                     <AppConfigurator />
@@ -151,14 +153,10 @@ const sendEmail = async () => {
                     </router-link>
                 </div>
                 <div class="flex gap-3">
-                    <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
-                        class="dropdown flex items-center">
+                    <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex items-center">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.value.label"
-                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                    :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                    style="width: 20px" />
+                                <img loading="lazy" :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 20px" />
                             </div>
                             <span v-else>
                                 {{ slotProps.placeholder }}
@@ -166,10 +164,7 @@ const sendEmail = async () => {
                         </template>
                         <template #option="slotProps">
                             <div class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.option.label"
-                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                    :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
-                                    style="width: 18px" />
+                                <img loading="lazy" :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
                                 <div>{{ slotProps.option.name }}</div>
                             </div>
                         </template>
@@ -181,18 +176,12 @@ const sendEmail = async () => {
             </div>
             <div class="upper">
                 <div class="flex flex-row justify-content-between m-3">
-                    <div class="center flex-row gap-2" style="color: white"><i class="pi pi-comment"></i> {{
-                        $t('AboutMeButton') }}
-                    </div>
+                    <div class="center flex-row gap-2" style="color: white"><i class="pi pi-comment"></i> {{ $t('AboutMeButton') }}</div>
                     <div class="flex gap-3">
-                        <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i
-                                class="pi pi-github zoom"></i></a>
-                        <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank"
-                            rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
-                        <a href="https://www.instagram.com/amorim.gg_/" target="_blank" rel="noopener noreferrer"><i
-                                class="pi pi-instagram zoom"></i></a>
-                        <a href="https://discord.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i
-                                class="pi pi-discord zoom"></i></a>
+                        <a href="https://github.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-github zoom"></i></a>
+                        <a href="https://www.linkedin.com/in/gabrielamorim0/" target="_blank" rel="noopener noreferrer"><i class="pi pi-linkedin zoom"></i></a>
+                        <a href="https://www.instagram.com/amorim.gg_/" target="_blank" rel="noopener noreferrer"><i class="pi pi-instagram zoom"></i></a>
+                        <a href="https://discord.com/AmorimMG" target="_blank" rel="noopener noreferrer"><i class="pi pi-discord zoom"></i></a>
                         <a href="https://steamcommunity.com/id/RecNove/" target="_blank" rel="noopener noreferrer">
                             <FontAwesomeIcon class="zoom" :icon="faSteamSymbol" />
                         </a>
@@ -207,20 +196,15 @@ const sendEmail = async () => {
                 <div class="text-image-container">
                     <div class="center">
                         <CardEffect>
-                            <img loading="lazy" class="profile-picture" src="@/assets/images/cards/eu.jpeg"
-                                alt="Image" />
+                            <img loading="lazy" class="profile-picture" src="@/assets/images/cards/eu.jpeg" alt="Image" />
                         </CardEffect>
                     </div>
                     <div class="center wrap" style="max-height: 100px">
                         <p>
                             {{ $t('AboutMe') }}
-                            <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer"
-                                style="color: #48fe48" class="underline" @mouseenter="toggleFiap"
-                                @mouseleave="toggleFiap">FIAP.</a>
-                            {{ $t('AboutMe2') }}
-                            <a href="https://www.meta3group.com.br/" target="_blank" rel="noopener noreferrer"
-                                style="color: #48fe48" class="underline" @mouseenter="toggleFiap"
-                                @mouseleave="toggleFiap">Meta3.</a>
+                            <a href="https://www.fiap.com.br/" target="_blank" rel="noopener noreferrer" style="color: #48fe48" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">FIAP.</a>
+                            {{ $t('AboutMe') }}
+                            <a href="https://www.meta3group.com.br/" target="_blank" rel="noopener noreferrer" style="color: #48fe48" class="underline" @mouseenter="toggleFiap" @mouseleave="toggleFiap">Meta3.</a>
                         </p>
                         <br />
                         <p>
@@ -231,27 +215,21 @@ const sendEmail = async () => {
             </div>
             <div class="bottom">
                 <div class="flex flex-row justify-content-between m-3">
-                    <div class="center flex-row gap-2" style="color: white"><i class="pi pi-phone"></i> {{
-                        $t('Contact.title') }}
-                    </div>
+                    <div class="center flex-row gap-2" style="color: white"><i class="pi pi-phone"></i> {{ $t('Contact.title') }}</div>
                 </div>
                 <div class="flex flex-col" style="padding: 20px">
                     <p>{{ $t('Contact.message') }}</p>
                     <div class="center mt-5">
-                        <Button outlined @click="window.location.href = 'mailto:gabriel@amorim.pro'"
-                            style="color: #48fe48" class="underline"> gabriel@amorim.pro </Button>
+                        <Button outlined @click="window.location.href = 'mailto:gabriel@amorim.pro'" style="color: #48fe48" class="underline"> gabriel@amorim.pro </Button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="sticky-button center mb-3">
-            <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback"
-                @click="toggleFeedback" />
+        <div class="sticky-button center mb-9">
+            <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback" @click="toggleFeedback" />
         </div>
     </div>
-    <Popover
-        style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
-        ref="feedback" appendTo="body">
+    <Popover style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0" ref="feedback" appendTo="body">
         <div style="padding: 1rem">
             <div class="center">
                 <VueNeonLight color="white" size="25px" :flash="false"> Feedback </VueNeonLight>

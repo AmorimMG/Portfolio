@@ -51,7 +51,7 @@ export const componentMap = {
 };
 
 export const apps = [
-    { id: 4, name: 'CVModal', colSpan: 1, rowSpan: 1, title: 'CV', icon: CVIcon },
+    { id: 4, name: 'CVModal', colSpan: 1, rowSpan: 1, title: 'cv', icon: CVIcon },
     {
         id: 5,
         name: 'LastFMModal',

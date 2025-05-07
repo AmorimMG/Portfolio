@@ -3,17 +3,15 @@ import FileIcon from '@/assets/images/dock/file.png';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
 import { useConfigModalStore } from '@/stores/configModal';
 import { useAppsStore } from '@/stores/useAppsStore';
-import { useToast } from 'primevue/usetoast';
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import Widgets from '../Widgets.vue';
 import DockBottomBar from './DockBottomBar.vue';
 import DockTopbar from './DockTopBar.vue';
-import Widgets from '../Widgets.vue';
 
 import { getLanguageCookie, setLanguageCookie } from '../../service/session';
 
-const emit = defineEmits(['update:modelValue']);
 const { locale } = useI18n();
 const selectRef = ref(null);
 const appsStore = useAppsStore();
@@ -22,8 +20,6 @@ const isMobile = ref(window.innerWidth <= 768);
 
 const configModalStore = useConfigModalStore();
 const background = ref(configModalStore.getBackground());
-
-const toast = useToast();
 
 const items = ref([
     {
@@ -132,8 +128,7 @@ onUnmounted(() => {
 <template>
     <div class="dock-demo">
         <ContextMenu global :model="items" />
-        <Toast position="top-center" group="tc" />
-        <DockTopbar v-model="background" />
+        <DockTopbar />
         <div class="dock-window dock-advanced overflow-hidden">
             <transition name="fade" mode="out-in">
                 <div class="w-full h-full absolute inset-0 z-0 bg-cover bg-center" :key="background"
