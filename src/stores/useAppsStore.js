@@ -10,7 +10,8 @@ export const useAppsStore = defineStore('apps', () => {
 
     const GRID_SIZE = 40;
 
-    const apps = ref(Array(GRID_SIZE).fill({ id: null }));
+    const EMPTY_SLOT = { id: null };
+    const apps = ref(Array(GRID_SIZE).fill(EMPTY_SLOT));
 
     initialApps.slice(0, GRID_SIZE).forEach((app, index) => {
         apps.value[index] = {
@@ -38,9 +39,11 @@ export const useAppsStore = defineStore('apps', () => {
     }
 
     function removeApp(app) {
+        if (!app || app.id == null) return;
+
         const index = apps.value.findIndex((a) => a?.id === app.id);
         if (index !== -1) {
-            apps.value[index] = null;
+            apps.value[index] = EMPTY_SLOT;
             trashStore.addToTrash(app);
         }
     }
