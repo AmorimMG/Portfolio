@@ -1,48 +1,84 @@
 <script setup>
+import { useLayout } from '@/layout/composables/layout';
 import AnsiToHtml from 'ansi-to-html';
 import TerminalService from 'primevue/terminalservice';
-import { computed, onBeforeUnmount, onMounted } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CardEffect from '../CardEffect.vue';
 
 const { t } = useI18n();
+const { isDarkTheme } = useLayout();
 const ansiToHtml = new AnsiToHtml();
 
 const neofetchOutput = () => {
-    const rawAnsi = `
-\u001b[38;5;46m         ,xNMM.           \u001b[0m  \u001b[38;5;118mportfolio@amorim\u001b[0m
-\u001b[38;5;46m       .OMMMMo            \u001b[0m  ------------------------
-\u001b[38;5;46m       OMMM0,             \u001b[0m  \u001b[1mOS\u001b[0m: VueOS 3.0 (Custom)
-\u001b[38;5;46m     .;loddo:. loolloddol;.\u001b[0m  \u001b[1mHost\u001b[0m: WebPortfolio
-\u001b[38;5;46m   cKMMMMMMMMMMMMMMMMMMMMMM0:\u001b[0m  \u001b[1mKernel\u001b[0m: Tailwind 3.x
-\u001b[38;5;220m .KMMMMMMMMMMMMMMMMMMMMMMMWd.\u001b[0m  \u001b[1mUptime\u001b[0m: 42 hours
-\u001b[38;5;208m XMMMMMMMMMMMMMMMMMMMMMMMX.\u001b[0m   \u001b[1mPackages\u001b[0m: Vue + PrimeVue
-\u001b[38;5;203m ;MMMMMMMMMMMMMMMMMMMMMMMM:\u001b[0m   \u001b[1mShell\u001b[0m: PrimeTerminal
-\u001b[38;5;198m :MMMMMMMMMMMMMMMMMMMMMMMM:\u001b[0m   \u001b[1mResolution\u001b[0m: 100% responsive
-\u001b[38;5;135m .MMMMMMMMMMMMMMMMMMMMMMMMX.\u001b[0m  \u001b[1mFont\u001b[0m: Inherited Sans
-\u001b[38;5;99m  kMMMMMMMMMMMMMMMMMMMMMMMWd.\u001b[0m  \u001b[1mCPU\u001b[0m: Human Imagination
-\u001b[38;5;69m   .XMMMMMMMMMMMMMMMMMMMMMMMK.\u001b[0m \u001b[1mGPU\u001b[0m: CSS Renderer
-\u001b[38;5;33m    kMMMMMMMMMMMMMMMMMMMMMMd \u001b[0m \u001b[1mMemory\u001b[0m: Unlimited
-\u001b[38;5;27m     ;KMMMMMMMWXXWMMMMMMMK;\u001b[0m
-\u001b[38;5;27m        .cooc,.    .,coo:.\u001b[0m
-    `;
-    const terminalCommandList = document.querySelector('.p-terminal-command-list');
+    console.log('neofetchOutput called'); //const neofetchOutput = () => {
+    console.log('neofetchOutput called'); //
 
-    if (!terminalCommandList) {
-        console.error('Element with class "p-terminal-command-list" not found.');
+    var rawAnsi = `
+\u001b[0m\u001b \u001b[0m
+\u001b[38;5;46m                    'c.          \u001b[0m\u001b[38;5;15m------------------\u001b[0m
+\u001b[38;5;46m                 ,xNMM.          \u001b[0m\u001b[38;5;15m------------------\u001b[0m
+\u001b[38;5;46m               .OMMMMo           \u001b[0m\u001b[38;5;15mOS:\u001b[0m VueOS 3.0 (Custom)
+\u001b[38;5;46m               OMMM0,            \u001b[0m\u001b[38;5;15mHost:\u001b[0m WebPortfolio
+\u001b[38;5;46m     .;loddo:'  ':olloddol;.    \u001b[0m\u001b[38;5;15mKernel:\u001b[0m Tailwind 3.x
+\u001b[38;5;46m   cKMMMMMMMMMMNWMMMMMMMMMM0:   \u001b[0m\u001b[38;5;15mUptime:\u001b[0m 42 hours
+\u001b[38;5;220m .KMMMMMMMMMMMMMMMMMMMMMMMWd.   \u001b[0m\u001b[38;5;15mPackages:\u001b[0m Vue + PrimeVue
+\u001b[38;5;208m XMMMMMMMMMMMMMMMMMMMMMMMX.     \u001b[0m\u001b[38;5;15mShell:\u001b[0m PrimeTerminal
+\u001b[38;5;203m;MMMMMMMMMMMMMMMMMMMMMMMM:      \u001b[0m\u001b[38;5;15mResolution:\u001b[0m 100% responsive
+\u001b[38;5;198m:MMMMMMMMMMMMMMMMMMMMMMMM:      \u001b[0m\u001b[38;5;15mFont:\u001b[0m Inherited Sans
+\u001b[38;5;135m.MMMMMMMMMMMMMMMMMMMMMMMMX.     \u001b[0m\u001b[38;5;15mCPU:\u001b[0m Human Imagination
+\u001b[38;5;99m kMMMMMMMMMMMMMMMMMMMMMMMWd.    \u001b[0m\u001b[38;5;15mGPU:\u001b[0m CSS Renderer
+\u001b[38;5;69m .XMMMMMMMMMMMMMMMMMMMMMMMMk    \u001b[0m\u001b[38;5;15mMemory:\u001b[0m Unlimited
+\u001b[38;5;33m  'XMMMMMMMMMMMMMMMMMMMMMMK.    \u001b[0m\u001b[38;5;45m███\u001b[38;5;51m███\u001b[38;5;87m███\u001b[38;5;123m███\u001b[38;5;159m███\u001b[38;5;195m███\u001b[0m
+\u001b[38;5;27m    kMMMMMMMMWXXWMMMMMMMk.      \u001b[0m\u001b[38;5;45m███\u001b[38;5;51m███\u001b[38;5;87m███\u001b[38;5;123m███\u001b[38;5;159m███\u001b[38;5;195m███\u001b[0m
+\u001b[38;5;27m     ;KMXk;;'  ..';;XMXk'       \u001b[0m
+\u001b[0m\u001b \u001b[0m
+`;
+
+    if (isDarkTheme) {
+        rawAnsi = rawAnsi.replace(/\u001b\[38;5;(\d+)m/g, (match, p1) => {
+            return `\u001b[38;5;${parseInt(p1) + 8}m`;
+        });
+    }
+
+    const terminalContent = document.querySelector('.p-terminal-command-list');
+    if (!terminalContent) {
+        console.error('Terminal content not found'); // Log para depuração
         return;
     }
 
-    // Substitui \n por <br> para preservar quebras de linha
-    const formattedAnsi = rawAnsi.replace(/\n/g, '<br>');
+    // Encontra o último comando inserido (que é o comando 'neofetch')
+    const commands = terminalContent.querySelectorAll('[data-pc-section="commands"]');
+    const lastCommandContainer = commands[commands.length - 1];
 
-    // Cria uma nova div para o comando
-    const commandDiv = document.createElement('div');
-    commandDiv.className = 'p-terminal-command';
-    commandDiv.innerHTML = ansiToHtml.toHtml(formattedAnsi);
+    if (!lastCommandContainer) return;
 
-    // Adiciona a nova div ao final da lista
-    terminalCommandList.appendChild(commandDiv);
+    const preElement = document.createElement('pre');
+    preElement.className = 'p-terminal-command neofetch-output';
+
+    const codeElement = document.createElement('code');
+    codeElement.innerHTML = ansiToHtml.toHtml(rawAnsi);
+
+    preElement.appendChild(codeElement);
+
+    // Insere o neofetch após o último comando
+    lastCommandContainer.appendChild(preElement);
+};
+
+const clearTerminal = () => {
+    // Limpa os comandos mantendo a estrutura do terminal
+    const commandList = document.querySelector('.p-terminal-command-list');
+    if (!commandList) return;
+
+    // Remove apenas os elementos de comando, preservando a estrutura base
+    const commands = commandList.querySelectorAll('[data-pc-section="commands"]');
+    commands.forEach((cmd) => cmd.remove());
+
+    // Limpa o input
+    const input = document.querySelector('.p-terminal-prompt-value');
+    if (input) {
+        input.value = '';
+    }
 };
 
 const commandHandler = (text) => {
@@ -81,11 +117,11 @@ const commandHandler = (text) => {
             response = `Commands are: ${commandLabels.join(', ')}`;
             break;
         case 'clear':
-            response = '';
             clearTerminal();
+            // Não emite response para evitar nova entrada no histórico
             setTimeout(() => {
-                clearTerminal();
-            }, 1);
+                clearTerminal(); // Garante que tudo foi limpo
+            }, 50);
             return;
         case 'about':
             response = computed(() => t('Terminal.About'));
@@ -145,30 +181,29 @@ const commandHandler = (text) => {
             response = computed(() => t('Terminal.Funfact'));
             break;
         case 'neofetch':
-            neofetchOutput();
-            break;
-
+            setTimeout(() => {
+                neofetchOutput();
+            }, 50);
+            return;
         default:
             response = `Unknown command: ${command}`;
     }
 
-    TerminalService.emit('response', response);
-};
-
-const clearTerminal = () => {
-    const terminalContent = document.querySelector('.p-terminal-content');
-    const commandSections = terminalContent.querySelectorAll('[data-pc-section="commands"]');
-    for (const section of commandSections) {
-        section.remove();
+    if (response) {
+        TerminalService.emit('response', response);
     }
 };
 
 onMounted(() => {
+    console.log('onMounted executed'); // Log para depuração
     TerminalService.on('command', commandHandler);
 
-    setTimeout(() => {
-        TerminalService.emit('command', 'neofetch');
-    }, 200);
+    nextTick(() => {
+        console.log('Emitting neofetch command'); // Log para depuração
+        setTimeout(() => {
+            TerminalService.emit('command', 'neofetch');
+        }, 1000); // Aumente o tempo para garantir que o terminal esteja pronto
+    });
 });
 
 onBeforeUnmount(() => {
@@ -206,7 +241,8 @@ onBeforeUnmount(() => {
 }
 
 .p-terminal-command {
-    white-space: pre;
+    white-space: pre !important;
+    font-family: monospace;
     /* Preserva espaços e quebras de linha */
     font-family: 'Courier New', Courier, monospace;
     /* Usa uma fonte monoespaçada */
@@ -219,14 +255,42 @@ onBeforeUnmount(() => {
 }
 
 .p-terminal-command-list {
-    white-space: pre-wrap;
-    /* Permite quebras de linha sem alterar o formato */
-    word-break: normal;
-    /* Evita que palavras sejam quebradas */
+    white-space: pre;
+    word-break: keep-all;
     overflow-x: auto;
-    /* Adiciona rolagem horizontal, se necessário */
     font-family: 'Courier New', Courier, monospace;
-    /* Garante fonte monoespaçada no container */
+}
+
+.neofetch-output {
+    display: block;
+    margin: 0;
+    padding: 0;
+    white-space: pre !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    line-height: 1.2 !important;
+    font-size: inherit !important;
+    background: transparent !important;
+    border: none !important;
+    overflow-x: auto;
+    tab-size: 8;
+}
+
+.neofetch-output code {
+    white-space: pre !important;
+    font-family: inherit !important;
+    line-height: inherit !important;
+    font-size: inherit !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.p-terminal-command-list {
+    white-space: pre !important;
+    word-break: keep-all !important;
+    overflow-x: auto !important;
+    font-family: 'Courier New', Courier, monospace !important;
 }
 
 .terminal-card {

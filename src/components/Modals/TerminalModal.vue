@@ -24,8 +24,7 @@ const closeModal = () => {
                 </Button>
             </div>
         </CardEffect>
-        <CustomDialog :visible="props.visible" @update:visible="closeModal"
-            contentStyle="width: 100%; height: 100%; background-color: black">
+        <CustomDialog :visible="props.visible" @update:visible="closeModal" tentStyle="width: 100%; height: 100%">
             <TerminalComponent class="w-full h-full" />
         </CustomDialog>
     </div>
