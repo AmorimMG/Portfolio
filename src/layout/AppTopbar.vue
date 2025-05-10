@@ -117,7 +117,7 @@ watch(dropdownValue, (newValue, oldValue) => {
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
+                    <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
                         class="dropdown flex items-center layout-topbar-action">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
@@ -139,7 +139,7 @@ watch(dropdownValue, (newValue, oldValue) => {
                                 <div>{{ slotProps.option.name }}</div>
                             </div>
                         </template>
-                    </dropdown>
+                    </Select>
 
                     <button @click="logout" class="p-btn p-link layout-topbar-action">
                         <i class="pi pi-sign-out"></i>

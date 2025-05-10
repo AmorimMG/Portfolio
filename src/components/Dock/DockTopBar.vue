@@ -266,7 +266,7 @@ onUnmounted(() => {
             <i class="pi pi-apple px-2"></i>
         </template>
         <template #end>
-            <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
+            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex items-center">
                         <img loading="lazy" :alt="slotProps.value.label"
@@ -285,7 +285,7 @@ onUnmounted(() => {
                         <div>{{ slotProps.option.name }}</div>
                     </div>
                 </template>
-            </dropdown>
+            </Select>
             <i class="pi pi-video px-2" @click="cameraModalVisible = true" />
             <i class="pi pi-wifi px-2" @click="toggleWifi" />
             <i class="pi pi-volume-up px-2" @click="toggleVolume" />

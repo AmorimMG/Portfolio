@@ -11,9 +11,6 @@ const { isDarkTheme } = useLayout();
 const ansiToHtml = new AnsiToHtml();
 
 const neofetchOutput = () => {
-    console.log('neofetchOutput called'); //const neofetchOutput = () => {
-    console.log('neofetchOutput called'); //
-
     var rawAnsi = `
 \u001b[0m\u001b \u001b[0m
 \u001b[38;5;46m                    'c.          \u001b[0m\u001b[38;5;15m------------------\u001b[0m
@@ -195,11 +192,9 @@ const commandHandler = (text) => {
 };
 
 onMounted(() => {
-    console.log('onMounted executed'); // Log para depuração
     TerminalService.on('command', commandHandler);
 
     nextTick(() => {
-        console.log('Emitting neofetch command'); // Log para depuração
         setTimeout(() => {
             TerminalService.emit('command', 'neofetch');
         }, 1000); // Aumente o tempo para garantir que o terminal esteja pronto

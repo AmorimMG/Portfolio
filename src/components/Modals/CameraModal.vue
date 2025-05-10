@@ -50,17 +50,19 @@ const closeModal = () => {
 </script>
 
 <template>
-    <Button v-if="!isTopbar" text class="w-full h-full" @click="openCamera = true"
-        style="width: 100%; height: 100%; justify-content: center">
-        <vueNeonLight size="15px" :flash="false" style="color: white"></vueNeonLight>
-    </Button>
-    <CustomDialog :visible="visible || openCamera" @update:visible="closeModal" :maximized="false">
-        <div class="flex justify-center items-center video-container">
-            <Button style="height: 50px" size="large" v-if="!isLive" @click="startWebcam()">Start Webcam</Button>
-            <video ref="webcam" autoplay playsinline width="100%" height="100%"
-                :style="{ display: isLive ? 'block' : 'none' }"></video>
-        </div>
-    </CustomDialog>
+    <div class="portfolio-root" v-bind="$attrs">
+        <Button v-if="!isTopbar" text class="w-full h-full" @click="openCamera = true"
+            style="width: 100%; height: 100%; justify-content: center">
+            <vueNeonLight size="15px" :flash="false" style="color: white"></vueNeonLight>
+        </Button>
+        <CustomDialog :visible="visible || openCamera" @update:visible="closeModal" :maximized="false">
+            <div class="flex justify-center items-center video-container">
+                <Button style="height: 50px" size="large" v-if="!isLive" @click="startWebcam()">Start Webcam</Button>
+                <video ref="webcam" autoplay playsinline width="100%" height="100%"
+                    :style="{ display: isLive ? 'block' : 'none' }"></video>
+            </div>
+        </CustomDialog>
+    </div>
 </template>
 
 <style scoped>

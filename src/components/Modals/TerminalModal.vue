@@ -20,7 +20,7 @@ const closeModal = () => {
         <CardEffect>
             <div class="card mb-0 center" style="padding: 0">
                 <Button text @click="cvVisible = true" style="width: 100%; height: 100%; justify-content: center">
-                    <VueNeonLight :flash="false" color="#ff00ff90">{{ $t('terminal') }}</VueNeonLight>
+                    <VueNeonLight :flash="false" color="#ff00ff90"> Terminal </VueNeonLight>
                 </Button>
             </div>
         </CardEffect>

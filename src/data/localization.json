@@ -109,6 +109,12 @@
 		},
 
 		"LastFM": {
+            "UserLoaded": "User Loaded",
+            "Tracks": "Tracks",
+            "Albums": "Albums",
+            "Artists": "Artists",
+            "Playcount": "Play Count",
+            "Registered": "Registered",
 			"Profile": "Profile",
 			"Charts": "Charts",
 			"Username": "Username",
@@ -226,6 +232,12 @@
 		},
 
 		"LastFM": {
+            "UserLoaded": "Usuario Cargado",
+            "Tracks": "Canciones",
+            "Albums": "Álbumes",
+            "Artists": "Artistas",
+            "Playcount": "Reproducciones",
+            "Registered": "Registrado",
 			"Profile": "Perfil",
 			"Charts": "Gráficos",
 			"Username": "Nombre de usuario",
@@ -342,6 +354,12 @@
 		},
 
 		"LastFM": {
+            "UserLoaded": "Usuário Carregado",
+            "Tracks": "Faixas",
+            "Albums": "Álbuns",
+            "Artists": "Artistas",
+            "Playcount": "Contagem de Reproduções",
+            "Registered": "Registrado",
 			"Profile": "Perfil",
 			"Charts": "Gráficos",
 			"Username": "Usuário",

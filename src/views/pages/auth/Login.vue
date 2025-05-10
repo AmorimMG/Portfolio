@@ -96,7 +96,7 @@ sessionModule.actions.logout();
                     style="background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                     <div class="w-full py-8 px-8 sm:px-8 rounded-[53px]">
                         <div class="flex justify-end">
-                            <dropdown v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
+                            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
                                 class="dropdown">
                                 <template #value="slotProps">
                                     <div v-if="slotProps.value" class="flex items-center">
@@ -116,7 +116,7 @@ sessionModule.actions.logout();
                                         <div>{{ slotProps.option.name }}</div>
                                     </div>
                                 </template>
-                            </dropdown>
+                            </Select>
                         </div>
 
                         <div class="mt-5 flex flex-col items-center text-center mb-5">

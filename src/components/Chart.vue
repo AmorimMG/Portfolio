@@ -42,9 +42,8 @@ const fetchLastFMData = async () => {
     try {
         const data = props.lastFMData ?? [];
 
-
-        const labels = data.map(track => track.name);
-        const dataSet = data.map(track => parseInt(track.playcount));
+        const labels = data.map((track) => track.name);
+        const dataSet = data.map((track) => parseInt(track.playcount));
         const colors = generateColorPalette(dataSet.length);
 
         barData.value = {
@@ -65,7 +64,7 @@ const fetchLastFMData = async () => {
                 {
                     data: dataSet,
                     backgroundColor: colors,
-                    hoverBackgroundColor: colors.map(color => color.replace('50%', '40%'))
+                    hoverBackgroundColor: colors.map((color) => color.replace('50%', '40%'))
                 }
             ]
         };
@@ -109,7 +108,6 @@ const fetchLastFMData = async () => {
             ],
             labels: labels
         };
-
     } catch (error) {
         console.error('Error fetching LastFM data:', error);
     }
@@ -233,12 +231,21 @@ const setChart = () => {
 };
 
 watch(
-    layoutConfig.theme,
-    () => {
-        setColorOptions();
-        setChart();
+    () => layoutConfig?.theme,
+    (newTheme) => {
+        try {
+            if (newTheme) {
+                setColorOptions();
+                setChart();
+            }
+        } catch (error) {
+            console.error('Error updating chart theme:', error);
+        }
     },
-    { immediate: true }
+    {
+        immediate: true,
+        deep: true
+    }
 );
 
 onMounted(() => {
