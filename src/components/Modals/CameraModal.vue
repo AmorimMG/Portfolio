@@ -3,7 +3,7 @@ import { defineEmits, ref } from 'vue';
 import vueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 import CustomDialog from './CustomDialog.vue';
 
-const props = defineProps({
+defineProps({
     visible: {
         type: Boolean,
         default: false

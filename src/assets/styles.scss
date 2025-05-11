@@ -3,3 +3,22 @@
 @use '@/assets/tailwind.css';
 @use '@/assets/layout/layout.scss';
 @use '@/assets/demo/demo.scss';
+
+/* Arquivo global.css ou <style> sem scoped */
+body,
+.p-component-overlay,
+.p-dialog {
+    overflow: visible !important;
+}
+
+.p-dialog {
+    max-width: none !important;
+    max-height: none !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+.p-dialog {
+    transform: none !important;
+}

@@ -25,7 +25,7 @@ const closeModal = () => {
             </div>
         </CardEffect>
         <CustomDialog :visible="props.visible" @update:visible="closeModal" tentStyle="width: 100%; height: 100%">
-            <TerminalComponent class="w-full h-full" />
+            <TerminalComponent :isCard="false" class="w-full h-full" />
         </CustomDialog>
     </div>
 </template>

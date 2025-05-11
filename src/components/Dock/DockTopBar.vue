@@ -328,7 +328,7 @@ onUnmounted(() => {
         }
     }">
         <template #start>
-            <div class="flex justify-content-evenly items-center">
+            <div class="w-full flex justify-evenly items-center">
                 <div>
                     <span>{{ currentTime }}</span>
                 </div>

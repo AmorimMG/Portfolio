@@ -15,7 +15,7 @@ export default {
         },
         style: {
             type: Object,
-            default: () => ({ width: '80rem', height: '50rem', overflowY: 'none', backgroundColor: 'white' })
+            default: () => ({ width: '80rem', height: '50rem', overflowY: 'auto', backgroundColor: 'white' })
         },
         modal: {
             type: Boolean,
@@ -81,7 +81,7 @@ export default {
 
 <template>
     <Dialog v-bind="$props" v-if="visible" :visible="visible" @update:visible="handleVisibilityChange"
-        @hide="closeModal" contentStyle="width: 100%; height: 100%; overflow-y: none;">
+        @hide="closeModal" contentStyle="width: 100%; height: 500px; overflow-y: none;">
         <template #header>
             <ModalHeader @maximize="onMaximize" @close="closeModal" />
         </template>

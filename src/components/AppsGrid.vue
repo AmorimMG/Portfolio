@@ -208,9 +208,9 @@ export default {
 .draggableApps {
     margin-bottom: 22vh;
     display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-gap: 10px;
+    grid-template-columns: repeat(10, 100px);
+    grid-template-rows: repeat(7, 100px);
     grid-auto-flow: column;
     /*  grid-auto-flow: row; */
 }
@@ -288,6 +288,7 @@ export default {
     .draggableApps {
         grid-template-columns: repeat(4, 1fr);
         grid-auto-flow: row;
+        grid-gap: 1px;
     }
 
     .container {

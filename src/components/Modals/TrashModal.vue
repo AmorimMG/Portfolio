@@ -1,25 +1,15 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue';
-import sidebarFileSystem from '../sidebarFileSystem.vue';
-import Trash from '../Trash.vue';
-import CustomDialog from './CustomDialog.vue';
+import FileSystemModal from './FileSystemModal.vue';
 
 const props = defineProps({
     visible: Boolean
 });
 
 const emit = defineEmits(['close']);
-const closeModal = () => {
-    emit('close');
-};
 </script>
 
 <template>
-    <CustomDialog class="dialog-terminal" :visible="props.visible" @update:visible="closeModal">
-        <sidebarFileSystem>
-            <Trash />
-        </sidebarFileSystem>
-    </CustomDialog>
+    <FileSystemModal :visible="props.visible" modalType="trash" @close="$emit('close')" />
 </template>
 
 <style scoped>
@@ -64,9 +54,11 @@ const closeModal = () => {
 .close {
     background-color: #ff5f56;
 }
+
 .minimize {
     background-color: #ffbd2e;
 }
+
 .maximize {
     background-color: #27c93f;
 }

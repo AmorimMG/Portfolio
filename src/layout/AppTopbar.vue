@@ -103,28 +103,28 @@ watch(dropdownValue, (newValue, oldValue) => {
                 <div class="relative">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                        type="button"
-                        class="layout-topbar-action layout-topbar-action-highlight"
-                    >
+                        type="button" class="layout-topbar-action layout-topbar-action-highlight">
                         <i class="pi pi-palette"></i>
                     </button>
                     <AppConfigurator />
                 </div>
             </div>
 
-            <button
-                class="layout-topbar-menu-button layout-topbar-action"
-                v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-            >
+            <button class="layout-topbar-menu-button layout-topbar-action"
+                v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }">
                 <i class="pi pi-ellipsis-v"></i>
             </button>
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown flex items-center layout-topbar-action">
+                    <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
+                        class="dropdown flex items-center layout-topbar-action">
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 20px" />
+                                <img loading="lazy" :alt="slotProps.value.label"
+                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                    :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
+                                    style="width: 20px" />
                             </div>
                             <span v-else>
                                 {{ slotProps.placeholder }}
@@ -132,7 +132,10 @@ watch(dropdownValue, (newValue, oldValue) => {
                         </template>
                         <template #option="slotProps">
                             <div class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                                <img loading="lazy" :alt="slotProps.option.label"
+                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
+                                    :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
+                                    style="width: 18px" />
                                 <div>{{ slotProps.option.name }}</div>
                             </div>
                         </template>

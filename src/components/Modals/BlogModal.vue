@@ -16,7 +16,7 @@ const fileSystemOpen = ref(false);
                 </Button>
             </div>
         </CardEffect>
-        <FileSystemModal @close="fileSystemOpen = false" v-model:visible="fileSystemOpen" />
+        <FileSystemModal @close="fileSystemOpen = false" v-model:visible="fileSystemOpen" modalType="documents" />
     </div>
 </template>
 

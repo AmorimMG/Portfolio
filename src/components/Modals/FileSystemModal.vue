@@ -1,23 +1,57 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue';
+import { ref } from 'vue';
 import FileSystem from '../FileSystem.vue';
 import SidebarFileSystem from '../sidebarFileSystem.vue';
+import Trash from '../Trash.vue';
 import CustomDialog from './CustomDialog.vue';
 
 const props = defineProps({
-    visible: Boolean
+    visible: Boolean,
+    modalType: {
+        type: String,
+        default: 'files' // Can be 'trash', 'system', etc.
+    }
 });
 
 const emit = defineEmits(['close']);
 const closeModal = () => {
     emit('close');
 };
+
+const currentPath = ref(props.modalType.charAt(0).toUpperCase() + props.modalType.slice(1));
+const currentView = ref<string>(props.modalType);
+
+const handleFileSelect = (item: any) => {
+    currentPath.value = item.path;
+    if (item.type === 'directory') {
+        currentView.value = item.name.toLowerCase();
+    }
+};
+
+// Map of components for different views
+const viewComponents = {
+    trash: Trash,
+    documents: FileSystem,
+    files: FileSystem,
+    system: 'div'
+};
 </script>
 
 <template>
     <CustomDialog class="dialog-terminal" :visible="props.visible" @update:visible="closeModal">
-        <SidebarFileSystem>
-            <FileSystem />
+        <div class="modal-header">
+            <div class="path-display">
+                {{ currentPath }}
+            </div>
+        </div>
+        <SidebarFileSystem @select="handleFileSelect">
+            <component :is="viewComponents[currentView] || FileSystem">
+                <template v-if="currentView === 'system'">
+                    <div class="system-view">
+                        <h2>System Configuration</h2>
+                    </div>
+                </template>
+            </component>
         </SidebarFileSystem>
     </CustomDialog>
 </template>
@@ -63,9 +97,11 @@ const closeModal = () => {
 .close {
     background-color: #ff5f56;
 }
+
 .minimize {
     background-color: #ffbd2e;
 }
+
 .maximize {
     background-color: #27c93f;
 }
@@ -99,5 +135,19 @@ const closeModal = () => {
     flex-grow: 1;
     overflow-y: auto;
     padding: 20px;
+}
+
+.path-display {
+    background-color: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.system-view {
+    padding: 20px;
+    color: black;
 }
 </style>

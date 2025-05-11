@@ -111,8 +111,7 @@ const renderedContent = computed(() => {
 }
 
 .p-splitter {
-    background-color: transparent;
-    border: none;
+    background-color: white;
 }
 
 .preview-pane {

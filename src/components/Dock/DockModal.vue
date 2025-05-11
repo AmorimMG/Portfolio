@@ -1,7 +1,7 @@
 <script setup>
 import System from './System.vue';
 
-const props = defineProps({
+defineProps({
     visible: Boolean
 });
 
