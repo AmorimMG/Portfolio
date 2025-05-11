@@ -131,9 +131,10 @@ onUnmounted(() => {
         <DockTopbar />
         <div class="dock-window dock-advanced overflow-hidden">
             <transition name="fade" mode="out-in">
-                <div class="w-full h-full absolute inset-0 z-0 bg-cover bg-center" :key="background" :style="{ 'background-image': `url(${background})` }"></div>
+                <div class="w-full h-full absolute inset-0 z-0 bg-cover bg-center" :key="background"
+                    :style="{ 'background-image': `url(${background})` }"></div>
             </transition>
-            <div class="relative z-10 wrapper flex justify-content-between">
+            <div class="relative z-10 wrapper flex justify-between">
                 <div class="apps">
                     <AppsGrid ref="selectRef" />
                 </div>
@@ -164,7 +165,7 @@ onUnmounted(() => {
     user-select: none;
 }
 
-.dock-demo > .dock-window {
+.dock-demo>.dock-window {
     width: 100%;
     height: 100vh;
     position: fixed;

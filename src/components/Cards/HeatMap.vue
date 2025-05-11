@@ -118,10 +118,11 @@ export default {
         <CardEffect>
             <div id="GithubHeatMap" class="card mb-0 center">
                 <div class="calendar-heatmap">
-                    <div class="flex w-full gap-1 justify-content-between">
+                    <div class="flex w-full gap-1 justify-between">
                         <div class="legend-container">
                             <div class="legend">
-                                <div v-for="color in GithubColors" :key="color" class="legend-item" :style="{ backgroundColor: color }"></div>
+                                <div v-for="color in GithubColors" :key="color" class="legend-item"
+                                    :style="{ backgroundColor: color }"></div>
                             </div>
                             <VueNeonLight color="white" size="25px" :flash="false"> Github </VueNeonLight>
                         </div>
@@ -130,7 +131,8 @@ export default {
                         <div v-for="(month, index) in months" :key="index" class="month">
                             <p>{{ month }}</p>
                             <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
-                                <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day" :style="{ backgroundColor: getColor(index, day) }">
+                                <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day"
+                                    :style="{ backgroundColor: getColor(index, day) }">
                                     {{ day }}
                                 </div>
                             </div>
@@ -202,5 +204,6 @@ export default {
     margin: 1px;
     font-size: 10px;
     cursor: pointer;
+    color: black;
 }
 </style>

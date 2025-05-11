@@ -17,7 +17,7 @@ const imagePeakRating = ref([]);
 }); */
 </script>
 <template>
-    <Skeleton class="w-full h-full"></Skeleton>
+    <Skeleton class="Skeleton"></Skeleton>
     <!--     <div class="gap-2">
         <div class="center">
             <p>{{ valorant?.platformInfo?.platformUserHandle }}</p>
@@ -26,10 +26,14 @@ const imagePeakRating = ref([]);
         <div class="card-body">
             <img loading="lazy" width="20px" :src="imageAgent" alt="Valorant" />
             <img loading="lazy" width="20px" :src="imagePeakRating" alt="Valorant" />
-        </div> 
+        </div>
     </div>-->
 </template>
 <style lang="css">
+.Skeleton {
+    height: 100% !important;
+}
+
 .card-body {
     display: flex;
     align-items: center;

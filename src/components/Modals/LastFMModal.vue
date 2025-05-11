@@ -106,17 +106,19 @@ export default {
 
 <template>
     <div class="col-span-12 lg:col-span-12 xl:col-span-12 pb-0">
-        <Button text class="w-full h-full" @click="lastFMVisible = true" style="width: 100%; height: 100%; justify-content: center">
+        <Button text class="w-full h-full" @click="lastFMVisible = true"
+            style="width: 100%; height: 100%; justify-content: center">
             <VueNeonLight size="10px" :flash="false" style="color: white">Last.FM Statics</VueNeonLight>
         </Button>
-        <CustomDialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized">
+        <CustomDialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true"
+            class="p-dialog-maximized">
             <template #header>
                 <div class="inline-flex items-center justify-center gap-2">
                     <h2>{{ $t('LastFM.WeeklyTrackChart') }}</h2>
                 </div>
             </template>
             <div class="border-round border-1 surface-border p-4 surface-card">
-                <div class="flex flex-col md:flex-row items-center justify-content-between gap-3">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-3">
                     <FloatLabel class="w-full md:w-6">
                         <InputText id="username" v-model="user" class="w-full" @keyup.enter="getData(user)" />
                         <label for="username">{{ $t('LastFM.Username') }}</label>
@@ -142,10 +144,13 @@ export default {
                 <TabPanel :header="$t('LastFM.Profile')">
                     <div class="grid p-3">
                         <div class="col-span-12 md:col-span-4 flex flex-col items-center text-center">
-                            <Skeleton v-if="!imageLoaded" class="mb-3 border-circle shadow-2" style="width: 150px; height: 150px" />
-                            <Image v-show="imageLoaded" @load="handleImageLoad" :src="lastFMUserData.image[3]['#text']" alt="Avatar" width="150" preview class="mb-3 border-circle shadow-2" />
+                            <Skeleton v-if="!imageLoaded" class="mb-3 border-circle shadow-2"
+                                style="width: 150px; height: 150px" />
+                            <Image v-show="imageLoaded" @load="handleImageLoad" :src="lastFMUserData.image[3]['#text']"
+                                alt="Avatar" width="150" preview class="mb-3 border-circle shadow-2" />
                             <h2>{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
-                            <a :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline"> @{{ lastFMUserData.name }} </a>
+                            <a :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline"> @{{
+                                lastFMUserData.name }} </a>
                             <Tag severity="info" class="mt-2">{{ lastFMUserData.country }}</Tag>
                         </div>
 
@@ -156,7 +161,8 @@ export default {
                                     <Card>
                                         <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
                                         <template #content>
-                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.track_count }}</h3>
+                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.track_count }}
+                                            </h3>
                                         </template>
                                     </Card>
                                 </div>
@@ -164,7 +170,8 @@ export default {
                                     <Card>
                                         <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
                                         <template #content>
-                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.artist_count }}</h3>
+                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.artist_count
+                                                }}</h3>
                                         </template>
                                     </Card>
                                 </div>
@@ -172,7 +179,8 @@ export default {
                                     <Card>
                                         <template #title>💿 {{ $t('LastFM.Albums') }}</template>
                                         <template #content>
-                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.album_count }}</h3>
+                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.album_count }}
+                                            </h3>
                                         </template>
                                     </Card>
                                 </div>
@@ -180,7 +188,8 @@ export default {
                                     <Card>
                                         <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
                                         <template #content>
-                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.playcount }}</h3>
+                                            <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.playcount }}
+                                            </h3>
                                         </template>
                                     </Card>
                                 </div>

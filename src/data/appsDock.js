@@ -106,6 +106,14 @@ export const apps = [
         rowSpan: 1,
         title: 'Severence',
         icon: WallpaperIcon
+    },
+    {
+        id: 16,
+        name: 'SeverenceModal',
+        colSpan: 1,
+        rowSpan: 1,
+        title: 'Doom',
+        icon: WallpaperIcon
     }
 ];
 

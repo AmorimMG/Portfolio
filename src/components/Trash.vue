@@ -21,8 +21,8 @@ function permanentDelete(app) {
             Nada na lixeira
         </div>
         <ul v-else>
-            <li class="flex flex-row justify-content-between items-center" v-for="app in trashStore.trash" :key="app.id">
-                <div class="flex flex-row justify-content-between items-center">
+            <li class="flex flex-row justify-between items-center" v-for="app in trashStore.trash" :key="app.id">
+                <div class="flex flex-row justify-between items-center">
                     <img loading="lazy" :src="app.icon" width="50px" height="50px" alt="App Icon" />
                     <div class="ml-5">{{ app.title }}</div>
                 </div>

@@ -210,7 +210,8 @@ onBeforeUnmount(() => {
     <div id="Terminal" class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0">
         <CardEffect>
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
-                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
+                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
+                    prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
     </div>
@@ -218,7 +219,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .p-terminal {
     font-size: calc(var(--scale) + 2px) !important;
-    background: var(--surface-card) !important;
+    background: var(--card-background) !important;
 }
 
 .p-terminal .p-terminal-content {
@@ -288,7 +289,7 @@ onBeforeUnmount(() => {
 }
 
 .terminal-card {
-    background: var(--surface-card);
+    background: rgba(155, 89, 182, 0.15);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

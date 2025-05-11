@@ -37,7 +37,6 @@ export function useLayout() {
     const executeDarkModeToggle = () => {
         layoutConfig.darkTheme = !layoutConfig.darkTheme;
         document.documentElement.classList.toggle('app-dark');
-        console.log(layoutConfig.darkTheme);
         setDarkThemeCookie(layoutConfig.darkTheme);
     };
 
