@@ -1,4 +1,5 @@
 <script setup>
+import { terminalConfig } from '@/data/terminalConfig';
 import { useLayout } from '@/layout/composables/layout';
 import AnsiToHtml from 'ansi-to-html';
 import TerminalService from 'primevue/terminalservice';
@@ -17,7 +18,6 @@ const props = defineProps({
     }
 });
 
-// ...existing code...
 const neofetchOutput = () => {
     var logoAnsi = `
 \u001b[0m\u001b \u001b[0m
@@ -111,19 +111,24 @@ const neofetchOutput = () => {
 };
 
 const clearTerminal = () => {
-    // Limpa os comandos mantendo a estrutura do terminal
     const commandList = document.querySelector('.p-terminal-command-list');
     if (!commandList) return;
 
-    // Remove apenas os elementos de comando, preservando a estrutura base
     const commands = commandList.querySelectorAll('[data-pc-section="commands"]');
     commands.forEach((cmd) => cmd.remove());
 
-    // Limpa o input
     const input = document.querySelector('.p-terminal-prompt-value');
     if (input) {
         input.value = '';
     }
+};
+
+const formatTestimonials = () => {
+    return terminalConfig.testimonials.map((t) => `"${t.content}" - ${t.author}, ${t.role} at ${t.company}`).join('\n');
+};
+
+const formatFAQs = () => {
+    return terminalConfig.faqs.map((faq) => `Q: ${faq.question}\nA: ${faq.answer}`).join('\n\n');
 };
 
 const commandHandler = (text) => {
@@ -163,9 +168,8 @@ const commandHandler = (text) => {
             break;
         case 'clear':
             clearTerminal();
-            // Não emite response para evitar nova entrada no histórico
             setTimeout(() => {
-                clearTerminal(); // Garante que tudo foi limpo
+                clearTerminal();
             }, 50);
             return;
         case 'about':
@@ -187,7 +191,11 @@ const commandHandler = (text) => {
             response = computed(() => t('Terminal.Contact'));
             break;
         case 'resume':
-            response = computed(() => t('Terminal.Resume'));
+            response = computed(() =>
+                t('Terminal.Resume', {
+                    resumeLink: terminalConfig.resumeLink
+                })
+            );
             break;
         case 'social':
             response = computed(() => t('Terminal.Social'));
@@ -199,16 +207,33 @@ const commandHandler = (text) => {
             response = computed(() => t('Terminal.Achievements'));
             break;
         case 'blog':
-            response = computed(() => t('Terminal.Blog'));
+            response = computed(() =>
+                t('Terminal.Blog', {
+                    blogLink: terminalConfig.blogLink
+                })
+            );
             break;
         case 'recommendations':
-            response = computed(() => t('Terminal.Recommendations'));
+            response = computed(() =>
+                t('Terminal.Recommendations', {
+                    testimonials: formatTestimonials()
+                })
+            );
             break;
         case 'faq':
-            response = computed(() => t('Terminal.FAQ'));
+            response = computed(() =>
+                t('Terminal.FAQ', {
+                    faqs: formatFAQs()
+                })
+            );
             break;
         case 'stats':
-            response = computed(() => t('Terminal.Stats'));
+            response = computed(() =>
+                t('Terminal.Stats', {
+                    projectsCount: terminalConfig.projectsCount,
+                    yearsOfExperience: terminalConfig.yearsOfExperience
+                })
+            );
             break;
         case 'connect':
             response = computed(() => t('Terminal.Connect'));
