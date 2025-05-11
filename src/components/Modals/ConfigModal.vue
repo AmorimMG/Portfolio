@@ -20,7 +20,6 @@ const configModalStore = useConfigModalStore();
 const selectedBackground = ref(configModalStore.getBackground());
 
 const backgroundImages = ref(Wallpapers);
-const emit = defineEmits(["update:visible, update:modelValue"]);
 const openWallpaper = ref(false);
 
 const loadedImages = ref(new Set<string>());
@@ -29,6 +28,7 @@ const handleImageLoad = (src: string) => {
     loadedImages.value.add(src);
 };
 
+const emit = defineEmits(['update:visible', 'update:modelValue']);
 const closeModal = () => {
     emit("update:visible", false);
     openWallpaper.value = false;

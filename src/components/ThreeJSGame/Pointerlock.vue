@@ -41,6 +41,7 @@ onMounted(() => {
     addScene();
     createRenderer();
     generateFloor();
+    addCameraControls();
     RESTAPI.ProjetoObterTodos()
         .then((response) => {
             createTotems(response.data);
@@ -125,6 +126,8 @@ function generateFloor() {
 }
 
 function addCameraControls() {
+    if (!instructions.value || !blocker.value) return;
+
     console.log('addCameraControls');
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.y = 10;
@@ -135,15 +138,19 @@ function addCameraControls() {
     });
 
     controls.addEventListener('lock', () => {
-        instructions.value.style.display = 'none';
-        blocker.value.style.display = 'none';
-        instructionsVisible.value = false;
+        if (instructions.value && blocker.value) {
+            instructions.value.style.display = 'none';
+            blocker.value.style.display = 'none';
+            instructionsVisible.value = false;
+        }
     });
 
     controls.addEventListener('unlock', () => {
-        blocker.value.style.display = 'block';
-        instructions.value.style.display = '';
-        instructionsVisible.value = true;
+        if (instructions.value && blocker.value) {
+            blocker.value.style.display = 'block';
+            instructions.value.style.display = '';
+            instructionsVisible.value = true;
+        }
     });
 
     scene.add(controls.getObject());
@@ -394,8 +401,6 @@ function onDocumentClick(event) {
 }
 
 function FirstPerson() {
-    addCameraControls();
-
     if (characterModel) {
         /* characterModel.visible = false; */
     }

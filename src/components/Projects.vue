@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import CardEffect from './CardEffect.vue';
 
 const props = defineProps({
@@ -12,9 +12,35 @@ const props = defineProps({
 });
 
 const imageLoaded = ref(false);
-const handleImageLoad = () => {
-    imageLoaded.value = true;
+const imageError = ref(false);
+const preloadedImage = ref(null);
+
+const preloadImage = () => {
+    if (!props.img) return;
+
+    preloadedImage.value = new Image();
+    preloadedImage.value.src = props.img;
+
+    preloadedImage.value.onload = handleImageLoad;
+    preloadedImage.value.onerror = handleImageError;
 };
+
+const handleImageLoad = () => {
+    // Pequeno delay para garantir que a transição seja suave
+    setTimeout(() => {
+        imageLoaded.value = true;
+        imageError.value = false;
+    }, 100);
+};
+
+const handleImageError = () => {
+    imageLoaded.value = false;
+    imageError.value = true;
+};
+
+onMounted(() => {
+    preloadImage();
+});
 </script>
 
 <template>
@@ -22,9 +48,19 @@ const handleImageLoad = () => {
         <div class="rounded-xl overflow-hidden shadow-lg bg-zinc-900 text-white w-[25rem]">
             <!-- Header / Image -->
             <div class="relative w-full h-[200px] overflow-hidden">
-                <div v-if="!imageLoaded" class="absolute inset-0 bg-zinc-700 animate-pulse z-10 rounded-t-xl"></div>
-                <img v-show="imageLoaded" :alt="title" :src="props.img" loading="lazy"
-                    class="absolute inset-0 w-full h-full object-cover z-20" @load="handleImageLoad" />
+                <!-- Loading Skeleton -->
+                <div v-if="!imageLoaded && !imageError"
+                    class="absolute inset-0 bg-zinc-700 animate-pulse z-10 rounded-t-xl"></div>
+
+                <!-- Error Fallback -->
+                <div v-if="imageError"
+                    class="absolute inset-0 bg-zinc-800 flex items-center justify-center z-20 rounded-t-xl">
+                    <span class="text-zinc-400">Failed to load image</span>
+                </div>
+
+                <!-- Image -->
+                <img v-show="imageLoaded" :alt="title" :src="props.img"
+                    class="absolute inset-0 w-full h-full object-cover z-20" />
             </div>
 
             <!-- Title -->
