@@ -8,10 +8,14 @@ const widgets = ref(initialWidgets);
 <template>
     <draggable class="draggableWidgets" v-model="widgets" item-key="id" group="widgets" animation="200">
         <template #item="{ element }">
-            <component class="app-widgets" :is="componentMap[element.name]" :style="{
-                'grid-column': 'span ' + element.colSpan,
-                'grid-row': 'span ' + element.rowSpan
-            }" />
+            <component
+                class="app-widgets"
+                :is="componentMap[element.name]"
+                :style="{
+                    'grid-column': 'span ' + element.colSpan,
+                    'grid-row': 'span ' + element.rowSpan
+                }"
+            />
         </template>
     </draggable>
 </template>
@@ -43,7 +47,7 @@ const widgets = ref(initialWidgets);
     text-align: center;
 }
 
-.app-widgets>.h-full .card {
+.app-widgets > .h-full .card {
     width: 250px;
 }
 

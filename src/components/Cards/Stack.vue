@@ -111,12 +111,10 @@ const onWordCloudLoaded = () => {
             <div class="card">
                 <div class="stack-wrapper" ref="wrapper">
                     <ProgressSpinner v-if="loading" />
-                    <vue-word-cloud :style="wordCloudStyle" :words="words" :color="colorFunction" font-family="Roboto"
-                        :rotation="rotationFunction" :spacing="1" :font-size-ratio="3" @loaded="onWordCloudLoaded">
+                    <vue-word-cloud :style="wordCloudStyle" :words="words" :color="colorFunction" font-family="Roboto" :rotation="rotationFunction" :spacing="1" :font-size-ratio="3" @loaded="onWordCloudLoaded">
                         <template #default="{ text, weight, word }">
                             <div :title="text" style="cursor: pointer" @click="onWordClick(word)">
-                                <VueNeonLight :size="getFontSize(weight)" :flash="false"
-                                    :color="colorFunction(word, weight)">
+                                <VueNeonLight :size="getFontSize(weight)" :flash="false" :color="colorFunction(word, weight)">
                                     {{ text }}
                                 </VueNeonLight>
                             </div>

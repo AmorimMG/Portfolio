@@ -47,19 +47,15 @@ export default {
             </div>
         </CardEffect>
 
-        <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true"
-            class="dialog-terminal p-dialog-maximized">
+        <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="dialog-terminal p-dialog-maximized">
             <template #header>
                 <div class="inline-flex items-center justify-center gap-2">AmorimMG</div>
             </template>
 
             <div class="overflow-x-hidden" style="background: rgba(40, 33, 59, 0.9); backdrop-filter: blur(10px)">
-                <draggable class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-12" v-model="projects"
-                    item-key="id" group="projects" animation="200">
+                <draggable class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-12" v-model="projects" item-key="id" group="projects" animation="200">
                     <template #item="{ element }">
-                        <Projects class="flex justify-center items-center" :languages="element.languages"
-                            :img="element.img" :title="element.title" :subtitle="element.subtitle"
-                            :description="element.description" :link="element.link" />
+                        <Projects class="flex justify-center items-center" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
                     </template>
                 </draggable>
             </div>

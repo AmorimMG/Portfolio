@@ -52,10 +52,8 @@ onMounted(() => {
     /*     generateObjects(); */
     watchEffect(() => {
         if (thirdPerson.value) {
-            console.log('renderizo o ThirdPerson');
             ThirdPerson();
         } else {
-            console.log('renderizo o FirstPerson');
             FirstPerson();
         }
     });

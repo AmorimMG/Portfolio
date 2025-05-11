@@ -1,28 +1,25 @@
 <script setup lang="ts">
-import { defineEmits } from "vue";
+import { defineEmits } from 'vue';
 import sidebarFileSystem from '../sidebarFileSystem.vue';
-import Trash from "../Trash.vue";
-import CustomDialog from "./CustomDialog.vue";
+import Trash from '../Trash.vue';
+import CustomDialog from './CustomDialog.vue';
 
 const props = defineProps({
-	visible: Boolean,
+    visible: Boolean
 });
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close']);
 const closeModal = () => {
-	emit("close");
+    emit('close');
 };
 </script>
 
 <template>
-<CustomDialog class="dialog-terminal" 
-    :visible="props.visible"
-    @update:visible="closeModal"
->
-  <sidebarFileSystem>
-    <Trash />
-  </sidebarFileSystem>
-</CustomDialog>
+    <CustomDialog class="dialog-terminal" :visible="props.visible" @update:visible="closeModal">
+        <sidebarFileSystem>
+            <Trash />
+        </sidebarFileSystem>
+    </CustomDialog>
 </template>
 
 <style scoped>
@@ -34,68 +31,74 @@ const closeModal = () => {
 }
 
 .maximized {
-  transform: scale(1.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
+    transform: scale(1.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
 }
 
 .modal-header {
-  background-color: #e8e8e8;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 0px;
-  padding: 10px;
+    background-color: #e8e8e8;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 0px;
+    padding: 10px;
 }
 
 .window-controls {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  justify-content: start;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    justify-content: start;
 }
 
 .window-controls span {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
 }
 
-.close { background-color: #ff5f56; }
-.minimize { background-color: #ffbd2e; }
-.maximize { background-color: #27c93f; }
+.close {
+    background-color: #ff5f56;
+}
+.minimize {
+    background-color: #ffbd2e;
+}
+.maximize {
+    background-color: #27c93f;
+}
 
 .toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .toolbar button {
-  background-color: #d8d8d8;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 14px;
-  cursor: pointer;
+    background-color: #d8d8d8;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .path-input {
-  flex-grow: 1;
-  background-color: #ffffff;
-  border: 1px solid #d1d1d1;
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-size: 14px;
-  color: black;
+    flex-grow: 1;
+    background-color: #ffffff;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: black;
 }
 
 .modal-body {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
 }
 </style>

@@ -80,8 +80,7 @@ export default {
 </script>
 
 <template>
-    <Dialog v-bind="$props" v-if="visible" :visible="visible" @update:visible="handleVisibilityChange"
-        @hide="closeModal" contentStyle="width: 100%; height: 100%; overflow-y: none;">
+    <Dialog v-bind="$props" v-if="visible" :visible="visible" @update:visible="handleVisibilityChange" @hide="closeModal" contentStyle="width: 100%; height: 100%; overflow-y: none;">
         <template #header>
             <ModalHeader @maximize="onMaximize" @close="closeModal" />
         </template>

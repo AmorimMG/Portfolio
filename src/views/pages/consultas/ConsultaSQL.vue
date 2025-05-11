@@ -291,58 +291,44 @@ watch(length, (newLength, oldLength) => {
                     <Button icon="pi pi-play" severity="help" raised @click="fetchTable()" />
                     <Button icon="pi pi-save" severity="success" raised @click="openSaveConfig()" />
                     <Button icon="pi pi-upload" severity="info" raised @click="openLoadConfig()" />
-                    <Button icon="pi pi-pencil" :disabled="validaHabilitado" severity="secondary" raised
-                        @click="openEditConfig()" />
-                    <Button icon="pi pi-trash" :disabled="validaHabilitado" severity="danger" raised
-                        @click="openDeleteConfig()" />
+                    <Button icon="pi pi-pencil" :disabled="validaHabilitado" severity="secondary" raised @click="openEditConfig()" />
+                    <Button icon="pi pi-trash" :disabled="validaHabilitado" severity="danger" raised @click="openDeleteConfig()" />
                 </div>
             </div>
             <div style="width: 95%">
                 <div class="container-child flex">
                     <Tabs value="0" scrollable class="tab-container">
-                        <Tab v-for="(code, index) in codes" :key="index" class="tab"
-                            :class="{ active: currentTab === index }"
-                            :header="codes[index].nome ?? 'Script ' + (index + 1)" :value="index"
-                            @click="setCurrentTab(index)">
+                        <Tab v-for="(code, index) in codes" :key="index" class="tab" :class="{ active: currentTab === index }" :header="codes[index].nome ?? 'Script ' + (index + 1)" :value="index" @click="setCurrentTab(index)">
                             <span style="width: 60px">{{ codes[index].nome ?? 'Script ' + (index + 1) }}</span>
-                            <Button style="width: 10px; margin-left: 15px" icon="pi pi-times"
-                                class="button-close button-danger" @click.stop="removeTab(index)" />
+                            <Button style="width: 10px; margin-left: 15px" icon="pi pi-times" class="button-close button-danger" @click.stop="removeTab(index)" />
                         </Tab>
                     </Tabs>
                     <div style="display: flex; align-items: center">
-                        <Button style="width: 25px; height: 25px" icon="pi pi-window-maximize" class="mr-2"
-                            severity="primary" @click="openModalScript()" />
-                        <Button style="width: 25px; height: 25px" icon="pi pi-plus" severity="primary" raised
-                            @click="addTab(index)" />
+                        <Button style="width: 25px; height: 25px" icon="pi pi-window-maximize" class="mr-2" severity="primary" @click="openModalScript()" />
+                        <Button style="width: 25px; height: 25px" icon="pi pi-plus" severity="primary" raised @click="addTab(index)" />
                     </div>
                 </div>
                 <splitter style="height: 450px" layout="vertical">
                     <SplitterPanel class="flex items-center justify-center">
-                        <codemirror v-model="codes[currentTab].consulta" :options="cmOptions"
-                            :style="{ height: '100%' }" :autofocus="true" :indent-with-tab="true" :tab-size="2"
-                            :extensions="extensions" />
+                        <codemirror v-model="codes[currentTab].consulta" :options="cmOptions" :style="{ height: '100%' }" :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" />
                     </SplitterPanel>
                     <SplitterPanel class="flex items-center justify-center">
                         <Tab style="width: 100%">
                             <Toolbar>
                                 <template #start>
-                                    <Button icon="pi pi-print" class="mr-2" severity="primary"
-                                        @click="imprimirTela()" />
-                                    <Button icon="pi pi-window-maximize" class="mr-2" severity="primary"
-                                        @click="openModal()" />
+                                    <Button icon="pi pi-print" class="mr-2" severity="primary" @click="imprimirTela()" />
+                                    <Button icon="pi pi-window-maximize" class="mr-2" severity="primary" @click="openModal()" />
                                 </template>
                                 <template #end>
                                     <IconField>
                                         <InputIcon>
                                             <i class="pi pi-search" />
                                         </InputIcon>
-                                        <InputText v-model="filters['global'].value"
-                                            :placeholder="$t('gblPesquisar')" />
+                                        <InputText v-model="filters['global'].value" :placeholder="$t('gblPesquisar')" />
                                     </IconField>
                                 </template>
                             </Toolbar>
-                            <DataTable :value="tableContent" scrollable scrollHeight="150px"
-                                tableStyle="min-width: 50rem" :filters="filters" responsiveLayout="scroll">
+                            <DataTable :value="tableContent" scrollable scrollHeight="150px" tableStyle="min-width: 50rem" :filters="filters" responsiveLayout="scroll">
                                 <Column v-for="col in headers" :field="col.value" :header="col.text" :key="col.value" />
                             </DataTable>
                         </Tab>
@@ -352,12 +338,10 @@ watch(length, (newLength, oldLength) => {
         </div>
     </div>
 
-    <Dialog header="TABLE VIEWER" :visible="maximizable" @update:visible="onHide()" :maximized="true" :modal="true"
-        class="p-dialog-maximized tableViewer">
+    <Dialog header="TABLE VIEWER" :visible="maximizable" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized tableViewer">
         <Toolbar>
             <template #start>
-                <Button label="DOWNLOAD CSV" @click="imprimirTela()" icon="pi pi-file-o"
-                    class="button-primary button-sm" />
+                <Button label="DOWNLOAD CSV" @click="imprimirTela()" icon="pi pi-file-o" class="button-primary button-sm" />
             </template>
 
             <template #end>
@@ -369,24 +353,28 @@ watch(length, (newLength, oldLength) => {
                 </IconField>
             </template>
         </Toolbar>
-        <DataTable :value="tableContent" scrollable scrollHeight="400px" tableStyle="min-width: 50rem"
-            :filters="filters" :paginator="true" :rows="10"
+        <DataTable
+            :value="tableContent"
+            scrollable
+            scrollHeight="400px"
+            tableStyle="min-width: 50rem"
+            :filters="filters"
+            :paginator="true"
+            :rows="10"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[10, 25, 100]"
             :currentPageReportTemplate="`${$t('gblMostrando')} {currentPage} ${$t('gblEm')} {totalPages} ${$t('gblPaginas')} ${$t('gblDe')} {totalRecords} ${$t('gblResultados')}`"
-            responsiveLayout="scroll">
+            responsiveLayout="scroll"
+        >
             <Column v-for="col in headers" :field="col.value" :header="col.text" :key="col.value" />
         </DataTable>
     </Dialog>
 
-    <Dialog header="SQL EDITOR" :visible="scriptmaximizable" @update:visible="onHide()" :maximized="true" :modal="true"
-        class="p-dialog-maximized sqlEditor">
-        <codemirror v-model="codes[currentTab].consulta" :options="cmOptions" :style="{ height: '100%' }"
-            :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" />
+    <Dialog header="SQL EDITOR" :visible="scriptmaximizable" @update:visible="onHide()" :maximized="true" :modal="true" class="p-dialog-maximized sqlEditor">
+        <codemirror v-model="codes[currentTab].consulta" :options="cmOptions" :style="{ height: '100%' }" :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions" />
     </Dialog>
 
-    <Dialog v-model="saveConfigVisible" :visible="saveConfigVisible" @update:visible="onHide()" :modal="true"
-        :closable="true" style="width: 500px">
+    <Dialog v-model="saveConfigVisible" :visible="saveConfigVisible" @update:visible="onHide()" :modal="true" :closable="true" style="width: 500px">
         <template #header>
             {{ $t('gblSaveQueryConfig') }}
         </template>
@@ -414,8 +402,7 @@ watch(length, (newLength, oldLength) => {
         </div>
     </Dialog>
 
-    <Dialog v-model="editConfigVisible" :visible="editConfigVisible" @update:visible="onHide()" :modal="true"
-        :closable="true" style="width: 500px">
+    <Dialog v-model="editConfigVisible" :visible="editConfigVisible" @update:visible="onHide()" :modal="true" :closable="true" style="width: 500px">
         <template #header>
             {{ $t('gblEditQueryConfig') }}
         </template>
@@ -443,8 +430,7 @@ watch(length, (newLength, oldLength) => {
         </div>
     </Dialog>
 
-    <Dialog v-model="deleteConfigVisible" :visible="deleteConfigVisible" @update:visible="onHide()" :modal="true"
-        :closable="true" style="width: 500px">
+    <Dialog v-model="deleteConfigVisible" :visible="deleteConfigVisible" @update:visible="onHide()" :modal="true" :closable="true" style="width: 500px">
         <template #header>
             {{ $t('gblDeleteQueryConfig') }}
         </template>
@@ -456,14 +442,12 @@ watch(length, (newLength, oldLength) => {
         </div>
     </Dialog>
 
-    <Dialog v-model="loadConfigVisible" :visible="loadConfigVisible" @update:visible="onHide()" :modal="true"
-        :closable="true" style="width: 500px">
+    <Dialog v-model="loadConfigVisible" :visible="loadConfigVisible" @update:visible="onHide()" :modal="true" :closable="true" style="width: 500px">
         <template #header>
             {{ $t('gblLoadQueryConfig') }}
         </template>
         <div class="popup-content flex flex-col gap-5">
-            <Select :placeholder="$t('gblSelectFilter')" style="width: 100%" v-model="selectedFilters"
-                :options="filterOptions" optionLabel="nome" />
+            <Select :placeholder="$t('gblSelectFilter')" style="width: 100%" v-model="selectedFilters" :options="filterOptions" optionLabel="nome" />
             <div class="inline-flex align-items-end flex gap-2" style="justify-content: end">
                 <Button class="custom-button" :label="$t('gblLoad')" @click="handleLoadClick" />
             </div>
@@ -472,17 +456,17 @@ watch(length, (newLength, oldLength) => {
 </template>
 
 <style scoped>
-.tableViewer>.p-dialog-header {
+.tableViewer > .p-dialog-header {
     background-color: rgba(104, 159, 56, 0.92);
     color: white;
 }
 
-.sqlEditor>.p-dialog-header {
+.sqlEditor > .p-dialog-header {
     background-color: rgba(104, 159, 56, 0.92);
     color: white;
 }
 
-.sqlEditor>.p-dialog-content {
+.sqlEditor > .p-dialog-content {
     padding: 0;
 }
 

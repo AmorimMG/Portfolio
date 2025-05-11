@@ -49,18 +49,15 @@ onMounted(() => {
             <!-- Header / Image -->
             <div class="relative w-full h-[200px] overflow-hidden">
                 <!-- Loading Skeleton -->
-                <div v-if="!imageLoaded && !imageError"
-                    class="absolute inset-0 bg-zinc-700 animate-pulse z-10 rounded-t-xl"></div>
+                <div v-if="!imageLoaded && !imageError" class="absolute inset-0 bg-zinc-700 animate-pulse z-10 rounded-t-xl"></div>
 
                 <!-- Error Fallback -->
-                <div v-if="imageError"
-                    class="absolute inset-0 bg-zinc-800 flex items-center justify-center z-20 rounded-t-xl">
+                <div v-if="imageError" class="absolute inset-0 bg-zinc-800 flex items-center justify-center z-20 rounded-t-xl">
                     <span class="text-zinc-400">Failed to load image</span>
                 </div>
 
                 <!-- Image -->
-                <img v-show="imageLoaded" :alt="title" :src="props.img"
-                    class="absolute inset-0 w-full h-full object-cover z-20" />
+                <img v-show="imageLoaded" :alt="title" :src="props.img" class="absolute inset-0 w-full h-full object-cover z-20" />
             </div>
 
             <!-- Title -->
@@ -72,8 +69,7 @@ onMounted(() => {
             <div class="px-4 mt-1 flex justify-between items-center flex-wrap gap-2">
                 <span class="text-sm text-zinc-300">{{ props.subtitle }}</span>
                 <div class="flex flex-wrap gap-2 mt-1">
-                    <span v-for="language in languages" :key="language"
-                        class="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                    <span v-for="language in languages" :key="language" class="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
                         {{ language }}
                     </span>
                 </div>
@@ -87,8 +83,7 @@ onMounted(() => {
             <!-- Footer / Button -->
             <div class="px-4 pb-4 mt-2">
                 <a :href="props.link" target="_blank" rel="noopener noreferrer" class="block">
-                    <button
-                        class="w-full bg-transparent border border-white text-white py-2 rounded hover:bg-white hover:text-black transition">Open</button>
+                    <button class="w-full bg-transparent border border-white text-white py-2 rounded hover:bg-white hover:text-black transition">Open</button>
                 </a>
             </div>
         </div>

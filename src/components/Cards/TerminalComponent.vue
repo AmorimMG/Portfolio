@@ -210,8 +210,7 @@ onBeforeUnmount(() => {
     <div id="Terminal" class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0">
         <CardEffect>
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
-                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
-                    prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
+                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'" prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
     </div>

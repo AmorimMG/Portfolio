@@ -34,7 +34,7 @@ export class CharacterControls {
     }
 
     toggleFirstPersonView() {
-/*         this.firstPersonView = !this.firstPersonView;
+        /*         this.firstPersonView = !this.firstPersonView;
         if (this.firstPersonView) {
             this.firstPersonControl.enabled = true;
             this.orbitControl.enabled = false;

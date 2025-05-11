@@ -256,12 +256,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Menubar v-if="!isMobile" style="overflow-y: hidden" :model="!isMobile ? menubarItems : []" :pt="{
-        // fixes https://github.com/primefaces/primevue/issues/6141
-        action: {
-            ariaHidden: false
-        }
-    }">
+    <Menubar
+        v-if="!isMobile"
+        style="overflow-y: hidden"
+        :model="!isMobile ? menubarItems : []"
+        :pt="{
+            // fixes https://github.com/primefaces/primevue/issues/6141
+            action: {
+                ariaHidden: false
+            }
+        }"
+    >
         <template #start>
             <i class="pi pi-apple px-2"></i>
         </template>
@@ -269,9 +274,7 @@ onUnmounted(() => {
             <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name">
                 <template #value="slotProps">
                     <div v-if="slotProps.value" class="flex items-center">
-                        <img loading="lazy" :alt="slotProps.value.label"
-                            src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                            :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 15px" />
+                        <img loading="lazy" :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 15px" />
                     </div>
                     <span v-else>
                         {{ slotProps.placeholder }}
@@ -279,9 +282,7 @@ onUnmounted(() => {
                 </template>
                 <template #option="slotProps">
                     <div class="flex items-center">
-                        <img loading="lazy" :alt="slotProps.option.label"
-                            src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                            :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                        <img loading="lazy" :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
                         <div>{{ slotProps.option.name }}</div>
                     </div>
                 </template>
@@ -300,7 +301,9 @@ onUnmounted(() => {
             </button>
             <button
                 v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                type="button" class="layout-topbar-action layout-topbar-action-highlight">
+                type="button"
+                class="layout-topbar-action layout-topbar-action-highlight"
+            >
                 <i class="pi pi-cog px-2"></i>
             </button>
             <AppConfigurator />
@@ -319,26 +322,28 @@ onUnmounted(() => {
             </Popover>
 
             <CameraModal :isTopbar="true" v-model:visible="cameraModalVisible" />
-            <ConfigModal :isTopbar="true" v-model:visible="configModalVisible"
-                @update:modelValue="$emit('update:modelValue', $event)" />
+            <ConfigModal :isTopbar="true" v-model:visible="configModalVisible" @update:modelValue="$emit('update:modelValue', $event)" />
         </template>
     </Menubar>
 
-    <Menubar v-if="isMobile" class="mobileMenubar" :model="[]" :pt="{
-        // fixes https://github.com/primefaces/primevue/issues/6141
-        action: {
-            ariaHidden: false
-        }
-    }">
+    <Menubar
+        v-if="isMobile"
+        class="mobileMenubar"
+        :model="[]"
+        :pt="{
+            // fixes https://github.com/primefaces/primevue/issues/6141
+            action: {
+                ariaHidden: false
+            }
+        }"
+    >
         <template #start>
             <div class="flex justify-content-evenly items-center">
                 <div>
                     <span>{{ currentTime }}</span>
                 </div>
                 <div class="flex items-center justify-center" style="width: 150px">
-                    <div
-                        style="background-color: black; width: 150px; height: 30px; border-radius: 20px; margin-left: 30px">
-                    </div>
+                    <div style="background-color: black; width: 150px; height: 30px; border-radius: 20px; margin-left: 30px"></div>
                 </div>
                 <div class="flex">
                     <FontAwesomeIcon class="pr-2" :icon="faSignal" />
@@ -371,7 +376,7 @@ onUnmounted(() => {
     border: none;
 }
 
-.mobileMenubar>.p-menubar-start {
+.mobileMenubar > .p-menubar-start {
     width: 100%;
 }
 </style>

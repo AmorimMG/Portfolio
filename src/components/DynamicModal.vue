@@ -97,24 +97,19 @@ export default defineComponent({
     <Dialog v-model:visible="cvVisible" :maximized="true" :modal="true" class="p-dialog-maximized">
         <div class="zoom-controls">
             <div class="flex gap-1" v-if="showButtons">
-                <Button v-tooltip.top="'Sidebar Toggler'" icon="pi pi-bars"
-                    class="p-link layout-menu-button layout-topbar-button" @click="toggleMenu()" />
+                <Button v-tooltip.top="'Sidebar Toggler'" icon="pi pi-bars" class="p-link layout-menu-button layout-topbar-button" @click="toggleMenu()" />
                 <Button v-tooltip.top="'Zoom Out'" icon="pi pi-search-minus" severity="help" @click="zoomOut" />
                 <Button v-tooltip.top="'Zoom In'" icon="pi pi-search-plus" severity="help" @click="zoomIn" />
                 <Button v-tooltip.top="'Close'" icon="pi pi-times" severity="danger" @click="closeModal"></Button>
             </div>
-            <Button v-if="!showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-v"
-                @click="toggleButtons()" />
-            <Button v-if="showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-h"
-                @click="toggleButtons()" />
+            <Button v-if="!showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-v" @click="toggleButtons()" />
+            <Button v-if="showButtons" v-tooltip.top="'Menu Toggler'" icon="pi pi-ellipsis-h" @click="toggleButtons()" />
         </div>
         <div class="flex justify-center items-center">
             <ProgressSpinner class="h-full" v-if="loading" />
         </div>
-        <div class="iframe-container" :class="{ hidden: !cvVisible }"
-            style="width: 100%; height: 100%; overflow: hidden; position: absolute; top: 0; left: 0">
-            <iframe id="iframe" class="iframe" ref="iframe" :src="iframeSrc" scrolling="auto" style="border: none"
-                @load="onIframeLoad"></iframe>
+        <div class="iframe-container" :class="{ hidden: !cvVisible }" style="width: 100%; height: 100%; overflow: hidden; position: absolute; top: 0; left: 0">
+            <iframe id="iframe" class="iframe" ref="iframe" :src="iframeSrc" scrolling="auto" style="border: none" @load="onIframeLoad"></iframe>
         </div>
     </Dialog>
 </template>

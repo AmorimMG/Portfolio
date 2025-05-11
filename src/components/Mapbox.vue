@@ -4,7 +4,6 @@ import CardEffect from './CardEffect.vue';
 import VueNeonLight from './VueNeonLight/vue-neon-light.vue';
 
 const online = ref(false);
-
 </script>
 <template>
     <div class="col-span-4 lg:col-span-4 xl:col-span-3">

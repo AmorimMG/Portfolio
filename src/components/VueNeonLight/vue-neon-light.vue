@@ -2,42 +2,42 @@
 // Mudar Futuramente o nome do componente para ValidaFonte, verifica o tema e muda a fonte para o tema.
 
 export default {
-	name: "vue-neon-light",
-	props: {
-		color: {
-			type: String,
-			default: "#fff",
-		},
-		size: {
-			type: String,
-		},
-		flash: {
-			type: Boolean,
-			default: false,
-		},
-		effect: {
-			type: String,
-			default: "Neon",
-		},
-	},
-	computed: {
-		effectComponent() {
-			return `Vue${this.effect.substring(0, 1).toUpperCase() + this.effect.substring(1)}`;
-		},
-		neonStyle() {
-			return {
-				fontSize: this.size,
-				color: this.color,
-				textShadow: `0 0 5px ${this.color}, 
+    name: 'vue-neon-light',
+    props: {
+        color: {
+            type: String,
+            default: '#fff'
+        },
+        size: {
+            type: String
+        },
+        flash: {
+            type: Boolean,
+            default: false
+        },
+        effect: {
+            type: String,
+            default: 'Neon'
+        }
+    },
+    computed: {
+        effectComponent() {
+            return `Vue${this.effect.substring(0, 1).toUpperCase() + this.effect.substring(1)}`;
+        },
+        neonStyle() {
+            return {
+                fontSize: this.size,
+                color: this.color,
+                textShadow: `0 0 5px ${this.color}, 
                              0 0 10px ${this.color}, 
                              0 0 15px ${this.color}, 
                              0 0 20px ${this.color}, 
                              0 0 25px ${this.color}, 
                              0 0 30px ${this.color}, 
-                             0 0 35px ${this.color}`,
-			};
-		},
-	},
+                             0 0 35px ${this.color}`
+            };
+        }
+    }
 };
 </script>
 

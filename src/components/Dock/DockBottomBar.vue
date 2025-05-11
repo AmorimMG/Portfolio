@@ -181,15 +181,12 @@ const closeModalTerminal = () => {
     <TrashModal @close="TrashOpen = false" v-model:visible="TrashOpen" />
     <VscodeModal @close="vscodeModalOpen = false" v-model:visible="vscodeModalOpen" />
     <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
-    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2"
-        containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false"
-        :showItemNavigators="true">
+    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2" containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false" :showItemNavigators="true">
         <template #item="slotProps">
             <img loading="lazy" :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
         </template>
     </Galleria>
-    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }"
-        :style="{ width: '40vw' }" :maximizable="true">
+    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>
 </template>

@@ -69,6 +69,7 @@ const closeModal = () => {
 .video-container {
     aspect-ratio: 16 / 9;
     width: 100%;
+    height: 100%;
     max-width: 100%;
     background-color: rgba(0, 0, 0, 0.2);
     display: flex;

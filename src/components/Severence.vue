@@ -467,7 +467,6 @@ onMounted(() => {
 
             &.open {
                 .hatch {
-
                     &:before,
                     &:after {
                         transition-delay: 0s;
@@ -544,8 +543,9 @@ onMounted(() => {
 
             @for $i from 1 through 10 {
                 &:nth-of-type(#{$i}) {
-                    transition-delay: #{$i/20 + 2}s,
-                    #{$i/20 + 3}s;
+                    transition-delay:
+                        #{$i/20 + 2}s,
+                        #{$i/20 + 3}s;
 
                     &:before {
                         z-index: 9;

@@ -92,17 +92,13 @@ sessionModule.actions.logout();
     <div class="w-full h-full flex items-center justify-center overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <form class="w-full" @submit.prevent="handleSubmit">
-                <div :style="{ width: '500px' }" class="rounded-[56px]"
-                    style="background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+                <div :style="{ width: '500px' }" class="rounded-[56px]" style="background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                     <div class="w-full py-8 px-8 sm:px-8 rounded-[53px]">
                         <div class="flex justify-end">
-                            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
-                                class="dropdown">
+                            <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name" class="dropdown">
                                 <template #value="slotProps">
                                     <div v-if="slotProps.value" class="flex items-center">
-                                        <img loading="lazy" width="20" :alt="slotProps.value.label"
-                                            src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                            :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" />
+                                        <img loading="lazy" width="20" :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" />
                                     </div>
                                     <span v-else>
                                         {{ slotProps.placeholder }}
@@ -110,9 +106,7 @@ sessionModule.actions.logout();
                                 </template>
                                 <template #option="slotProps">
                                     <div class="flex items-center">
-                                        <img loading="lazy" width="18" :alt="slotProps.option.label"
-                                            src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                            :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" />
+                                        <img loading="lazy" width="18" :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" />
                                         <div>{{ slotProps.option.name }}</div>
                                     </div>
                                 </template>
@@ -120,8 +114,7 @@ sessionModule.actions.logout();
                         </div>
 
                         <div class="mt-5 flex flex-col items-center text-center mb-5">
-                            <img loading="lazy" width="100" height="100" src="@/assets/images/cards/profilePic.png"
-                                alt="Image" />
+                            <img loading="lazy" width="100" height="100" src="@/assets/images/cards/profilePic.png" alt="Image" />
                             <div class="text-gray-900 text-3xl font-medium mb-3">{{ $t('Login.Welcome') }}</div>
                             <span class="text-gray-600 font-medium">{{ $t('Login.SingIn') }}</span>
                         </div>
@@ -130,15 +123,12 @@ sessionModule.actions.logout();
                             <label for="email1" class="block text-gray-900 text-xl font-medium mb-2">
                                 {{ $t('Login.User') }}
                             </label>
-                            <InputText id="email1" v-model="form.login" type="text" :placeholder="$t('Login.User')"
-                                class="w-full md:max-w-[30rem] mb-5 p-4" />
+                            <InputText id="email1" v-model="form.login" type="text" :placeholder="$t('Login.User')" class="w-full md:max-w-[30rem] mb-5 p-4" />
 
                             <label for="password1" class="block text-gray-900 font-medium text-xl mb-2">
                                 {{ $t('Login.Password') }}
                             </label>
-                            <Password id="password1" v-model="form.password" :placeholder="$t('Login.Password')"
-                                :toggleMask="true" class="w-full mb-3" inputClass="w-full"
-                                :inputStyle="{ padding: '1rem' }" />
+                            <Password id="password1" v-model="form.password" :placeholder="$t('Login.Password')" :toggleMask="true" class="w-full mb-3" inputClass="w-full" :inputStyle="{ padding: '1rem' }" />
 
                             <div class="flex items-center justify-between mb-5 gap-5"></div>
 

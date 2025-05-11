@@ -19,7 +19,6 @@ import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import SeverenceModal from '../components/Modals/SeverenceModal.vue';
 import PointerlockModal from '../components/ThreeJSGame/PointerlockModal.vue';
 
-import AmorimIcon from '@/assets/images/cards/profilePic.png';
 import CVIcon from '@/assets/images/dock/CV.svg';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
 import WallpaperIcon from '@/assets/images/dock/Wallpaper.webp';
@@ -67,14 +66,6 @@ export const apps = [
         rowSpan: 1,
         title: 'Projects',
         icon: FolderIcon
-    },
-    {
-        id: 9,
-        name: 'PortfolioModal',
-        colSpan: 1,
-        rowSpan: 1,
-        title: 'Amorim',
-        icon: AmorimIcon
     },
     {
         id: 13,

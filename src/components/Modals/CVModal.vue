@@ -52,17 +52,14 @@ export default {
                 </Button>
             </div>
         </CardEffect>
-        <CustomDialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true"
-            class="dialog-terminal p-dialog-maximized"
-            contentStyle="width: 100%; height: 100%; background-color: black">
+        <CustomDialog :visible="cvVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="dialog-terminal p-dialog-maximized" contentStyle="width: 100%; height: 100%; background-color: black">
             <div class="zoom-controls">
                 <Button @click="zoomIn">Zoom In</Button>
                 <Button @click="zoomOut">Zoom Out</Button>
                 <Button v-tooltip.top="'Close'" icon="pi pi-times" severity="danger" @click="onHide()"></Button>
             </div>
             <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
-                <iframe id="iframe" class="iframe" ref="iframe" src="https://amorim.pro/cv" scrolling="auto"
-                    style="border: none"></iframe>
+                <iframe id="iframe" class="iframe" ref="iframe" src="https://amorim.pro/cv" scrolling="auto" style="border: none"></iframe>
             </div>
         </CustomDialog>
     </div>

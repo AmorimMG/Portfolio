@@ -16,8 +16,7 @@ onMounted(() => {
 <template>
     <div class="gif-container">
         <i class="apple-icon pi pi-apple"></i>
-        <ProgressBar :value="progress" mode="determinate" :showValue="false"
-            style="height: 9px; width: 250px; background: grey" />
+        <ProgressBar :value="progress" mode="determinate" :showValue="false" style="height: 9px; width: 250px; background: grey" />
     </div>
 
     <div class="black-screen"></div>
