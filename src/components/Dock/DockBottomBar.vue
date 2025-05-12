@@ -181,12 +181,15 @@ const closeModalTerminal = () => {
     <TrashModal @close="TrashOpen = false" v-model:visible="TrashOpen" />
     <VscodeModal @close="vscodeModalOpen = false" v-model:visible="vscodeModalOpen" />
     <PortfolioModal @close="portfolioModalOpen = false" v-model:visible="portfolioModalOpen" />
-    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2" containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false" :showItemNavigators="true">
+    <Galleria v-model:visible="displayPhotos" :value="images" :responsiveOptions="responsiveOptions" :numVisible="2"
+        containerStyle="width: 400px" :circular="true" :fullScreen="true" :showThumbnails="false"
+        :showItemNavigators="true">
         <template #item="slotProps">
             <img loading="lazy" :src="slotProps.item.url" :alt="slotProps.item.alt" style="width: 100%" />
         </template>
     </Galleria>
-    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }" :style="{ width: '40vw' }" :maximizable="true">
+    <Dialog v-model:visible="displayFinder" header="Finder" :breakpoints="{ '960px': '50vw' }"
+        :style="{ width: '40vw' }" :maximizable="true">
         <Tree :value="items" />
     </Dialog>
 </template>
@@ -202,5 +205,44 @@ const closeModalTerminal = () => {
 .p-dock-item {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
+}
+
+.p-dock .p-dock-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.p-dock-item-link {
+    transition: all 0.2s ease-out;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.p-dock-item-link img {
+    width: 50px;
+    height: 50px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.p-dock-item-link:hover img {
+    transform: scale(2);
+    margin: 0 1rem;
+}
+
+/* Adjacent items animation */
+.p-dock-item-link:hover+.p-dock-item .p-dock-item-link img {
+    transform: scale(1.5);
+}
+
+/* Previous item animation */
+.p-dock-item:has(+ .p-dock-item .p-dock-item-link:hover) .p-dock-item-link img {
+    transform: scale(1.5);
 }
 </style>
