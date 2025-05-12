@@ -8,21 +8,47 @@ export const useAppsStore = defineStore('apps', () => {
     const { t } = useI18n();
     const trashStore = useTrashStore();
 
-    const GRID_SIZE = 40;
-
     const EMPTY_SLOT = { id: null };
-    const apps = ref(Array(GRID_SIZE).fill(EMPTY_SLOT));
+    const apps = ref([]);
 
-    initialApps.slice(0, GRID_SIZE).forEach((app, index) => {
-        apps.value[index] = {
-            ...app,
-            id: Date.now() + Math.random(),
-            title: t(`apps.${app.title}`)
-        };
-    });
+    function calculateTotalSlots() {
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const slotSize = 110;
+        const columns = Math.floor(viewportWidth / slotSize);
+        const rows = Math.floor((viewportHeight * 0.78) / slotSize);
+        return columns * rows;
+    }
+
+    function updateSlots() {
+        const totalSlots = calculateTotalSlots();
+        const currentApps = apps.value.filter((app) => app.id !== null);
+        apps.value = Array(totalSlots).fill(EMPTY_SLOT);
+
+        currentApps.forEach((app, index) => {
+            if (index < totalSlots) {
+                apps.value[index] = app;
+            }
+        });
+
+        if (currentApps.length === 0) {
+            initialApps.forEach((app, index) => {
+                if (index < totalSlots) {
+                    apps.value[index] = {
+                        ...app,
+                        id: Date.now() + Math.random(),
+                        title: t(`apps.${app.title}`)
+                    };
+                }
+            });
+        }
+    }
+
+    // Inicializa os slots
+    updateSlots();
 
     function addApp(newApp) {
-        const emptyIndex = apps.value.findIndex((slot) => slot.id === null); // Verifique se o slot está vazio
+        const emptyIndex = apps.value.findIndex((slot) => slot.id === null);
         if (emptyIndex === -1) return;
 
         if (!newApp.title) {
@@ -57,6 +83,7 @@ export const useAppsStore = defineStore('apps', () => {
         apps,
         addApp,
         removeApp,
-        restoreApp
+        restoreApp,
+        updateSlots
     };
 });
