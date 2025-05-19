@@ -85,6 +85,9 @@ const neofetchOutput = () => {
     flexContainer.style.display = 'flex';
     flexContainer.style.gap = '25px';
 
+    if (props.isCard) {
+        flexContainer.style.fontSize = '10px';
+    }
     // Criar div para logo
     const logoDiv = document.createElement('div');
     logoDiv.className = 'neofetch-logo';
@@ -279,13 +282,13 @@ onBeforeUnmount(() => {
 
 <template>
     <div id="Terminal" class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0">
-        <CardEffect v-if="props.isCard">
+        <CardEffect class="card-effect" v-if="props.isCard">
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
                 <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
                     prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
-        <div v-else class="terminal-card" style="width: 100%; height: 100%; padding: 0">
+        <div v-else class="terminal-modal" style="width: 100%; height: 100%; padding: 0">
             <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
                 prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
         </div>
@@ -304,7 +307,25 @@ onBeforeUnmount(() => {
     font-size: calc(var(--scale) + 2px) !important;
 }
 
+.card-effect {
+    max-height: 250px;
+}
+
 .terminal-card {
+    background: rgba(155, 89, 182, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.terminal-card>.p-terminal {
+    background: var(--card-background) !important;
+    color: white;
+    border: none;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.terminal-modal {
     background: rgba(155, 89, 182, 0.15);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

@@ -4,7 +4,7 @@ import { useTrashStore } from '@/stores/useTrashStore';
 
 import SelectionArea from '@viselect/vue';
 
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import draggable from 'vuedraggable';
 import { componentMap } from '../data/appsDock';
 
@@ -52,6 +52,15 @@ export default {
         const appsStore = useAppsStore();
         const trashStore = useTrashStore();
         const contextMenuRef = ref(null);
+
+        onMounted(() => {
+            appsStore.updateSlots();
+            window.addEventListener('resize', () => appsStore.updateSlots());
+        });
+
+        onUnmounted(() => {
+            window.removeEventListener('resize', () => appsStore.updateSlots());
+        });
 
         return { appsStore, trashStore, contextMenuRef };
     },
@@ -133,6 +142,9 @@ export default {
 
         range(to, offset = 0) {
             return new Array(to).fill(0).map((_, i) => offset + i);
+        },
+        handleResize() {
+            this.appsStore.updateSlots();
         }
     }
 };
@@ -140,17 +152,16 @@ export default {
 
 <template>
     <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onMove" :on-start="onStart">
-        <draggable v-model="filledGrid" item-key="id" :move="() => true" :component-data="{ tag: 'div', class: 'draggableApps' }" :clone="(original) => ({ ...original, id: Date.now() })">
+        <draggable v-model="filledGrid" item-key="id" :move="() => true"
+            :component-data="{ tag: 'div', class: 'draggableApps' }"
+            :clone="(original) => ({ ...original, id: Date.now() })">
             <template #item="{ element, index }">
-                <div v-if="element && element.id !== null" class="app-container" :class="{ selected: selected.has(element.id) }" @contextmenu="onAppRightClick($event, element)">
-                    <component
-                        class="app-card"
-                        :is="getComponent(element.name)"
-                        :style="{
-                            'grid-column': 'span ' + element.colSpan,
-                            'grid-row': 'span ' + element.rowSpan
-                        }"
-                    />
+                <div v-if="element && element.id !== null" class="app-container"
+                    :class="{ selected: selected.has(element.id) }" @contextmenu="onAppRightClick($event, element)">
+                    <component class="app-card" :is="getComponent(element.name)" :style="{
+                        'grid-column': 'span ' + element.colSpan,
+                        'grid-row': 'span ' + element.rowSpan
+                    }" />
                     <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id">
                         <img loading="lazy" :src="element.icon" width="50px" height="50px" />
                         <div class="app-title">{{ element.title }}</div>
@@ -209,10 +220,15 @@ export default {
     margin-bottom: 22vh;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: repeat(10, 100px);
-    grid-template-rows: repeat(7, 100px);
+    grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-columns: 100px;
     grid-auto-flow: column;
-    /*  grid-auto-flow: row; */
+    width: fit-content;
+    max-width: 80vw;
+    /* Adicione esta linha para limitar a largura a 80% da viewport */
+    height: 78vh;
+    margin-left: 0.5rem;
+    max-width: 80%;
 }
 
 .app-container {
@@ -269,7 +285,7 @@ export default {
     max-width: none;
 }
 
-.container > div {
+.container>div {
     border-radius: 0.25rem;
 }
 
@@ -286,16 +302,20 @@ export default {
 
 @media (max-width: 991px) {
     .draggableApps {
+        max-width: 100%;
+        /* Mantenha largura total em mobile */
+        grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
         grid-template-columns: repeat(4, 1fr);
         grid-auto-flow: row;
         grid-gap: 1px;
+        width: 100%;
     }
 
     .container {
         padding: 0;
     }
 
-    .app-icon-wrapper > img {
+    .app-icon-wrapper>img {
         width: 60px !important;
     }
 }
