@@ -228,6 +228,11 @@ function onKeyDown(event) {
             break;
         case 'KeyR':
             thirdPerson.value = !thirdPerson.value;
+            if (thirdPerson.value) {
+                ThirdPerson();
+            } else {
+                FirstPerson();
+            }
             break;
     }
 }
@@ -399,13 +404,38 @@ function onDocumentClick(event) {
 }
 
 function FirstPerson() {
-    if (characterModel) {
-        /* characterModel.visible = false; */
-    }
+    // Limpar eventos anteriores
+    document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('keyup', onKeyUp);
+
+    // Configurar câmera e controles para primeira pessoa
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.y = 10;
+    controls = new PointerLockControls(camera, document.body);
+
+    // Adicionar eventos de primeira pessoa
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
     document.addEventListener('click', onDocumentClick);
+
+    // Esconder o personagem em primeira pessoa
+    if (characterModel) {
+        characterModel.visible = false;
+    }
+
+    // Adicionar câmera à cena
+    scene.add(controls.getObject());
+
+    // Resetar posição da câmera
+    controls.getObject().position.set(0, 10, 0);
 }
 
 function ThirdPerson() {
+    // Limpar eventos anteriores
+    document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('keyup', onKeyUp);
+    document.removeEventListener('click', onDocumentClick);
+
     // CAMERA
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(-5, 3, -6);
@@ -422,13 +452,28 @@ function ThirdPerson() {
     orbitControls.enableZoom = true;
     orbitControls.zoomSpeed = 0.5;
 
+    // Mostrar o personagem em terceira pessoa
+    if (characterModel) {
+        characterModel.visible = true;
+    }
+
     // CONTROL KEYS
     const keysPressed = {};
     document.addEventListener('keydown', (event) => {
-        keysPressed[event.key.toLowerCase()] = true;
+        if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+            keysPressed['shift'] = true;
+        } else if (event.code === 'KeyR') {
+            thirdPerson.value = false; // Permite voltar para primeira pessoa
+        } else {
+            keysPressed[event.key.toLowerCase()] = true;
+        }
     });
     document.addEventListener('keyup', (event) => {
-        keysPressed[event.key.toLowerCase()] = false;
+        if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+            keysPressed['shift'] = false;
+        } else {
+            keysPressed[event.key.toLowerCase()] = false;
+        }
     });
 
     // MODEL WITH ANIMATIONS
