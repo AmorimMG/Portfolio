@@ -407,11 +407,8 @@ function FirstPerson() {
 
 function ThirdPerson() {
     // CAMERA
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.y = 5;
-    camera.position.z = 5;
-    camera.position.x = 0;
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(-5, 3, -6);
 
     // CONTROLS
     const orbitControls = new OrbitControls(camera, renderer.domElement);
@@ -420,7 +417,19 @@ function ThirdPerson() {
     orbitControls.maxDistance = 15;
     orbitControls.enablePan = false;
     orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
-    orbitControls.update();
+    orbitControls.dampingFactor = 0.05;
+    orbitControls.rotateSpeed = 0.5;
+    orbitControls.enableZoom = true;
+    orbitControls.zoomSpeed = 0.5;
+
+    // CONTROL KEYS
+    const keysPressed = {};
+    document.addEventListener('keydown', (event) => {
+        keysPressed[event.key.toLowerCase()] = true;
+    });
+    document.addEventListener('keyup', (event) => {
+        keysPressed[event.key.toLowerCase()] = false;
+    });
 
     // MODEL WITH ANIMATIONS
     var characterControls;
@@ -430,10 +439,12 @@ function ThirdPerson() {
             model.traverse((object) => {
                 if (object.isMesh) object.castShadow = true;
             });
-            scene.add(model);
-            canRender.value = false;
 
-            characterModel = model; // Store the reference to the character model
+            model.scale.set(2, 2, 2);
+            model.position.set(0, 0, 0);
+            scene.add(model);
+
+            characterModel = model;
             const gltfAnimations = gltf.animations;
             const mixer = new THREE.AnimationMixer(model);
             const animationsMap = new Map();
@@ -444,48 +455,26 @@ function ThirdPerson() {
                 });
 
             characterControls = new CharacterControls(model, mixer, animationsMap, orbitControls, camera, 'Idle');
+
+            // Set initial camera target
+            orbitControls.target.copy(model.position);
+            orbitControls.target.y += 1;
+            orbitControls.update();
+
+            // Start animation loop
+            const clock = new THREE.Clock();
+            function animate() {
+                if (characterControls) {
+                    characterControls.update(clock.getDelta(), keysPressed);
+                }
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
         });
     } else {
         characterModel.visible = true;
     }
-    // CONTROL KEYS
-    const keysPressed = {};
-    document.addEventListener(
-        'keydown',
-        (event) => {
-            /* keyDisplayQueue.down(event.key === ' ' ? 'SPACE' : event.key); */
-            if (event.shiftKey && characterControls) {
-                characterControls.switchRunToggle();
-            } else {
-                keysPressed[event.key.toLowerCase()] = true;
-            }
-        },
-        false
-    );
-
-    document.addEventListener(
-        'keyup',
-        (event) => {
-            /*     keyDisplayQueue.up(event.key === ' ' ? 'SPACE' : event.key); */
-            keysPressed[event.key.toLowerCase()] = false;
-        },
-        false
-    );
-
-    // ANIMATE
-    const clock = new THREE.Clock();
-    function animateThirdPerson() {
-        const mixerUpdateDelta = clock.getDelta();
-        if (characterControls) {
-            characterControls.update(mixerUpdateDelta, keysPressed);
-        } else {
-            orbitControls.update();
-        }
-        renderer.render(scene, camera);
-        requestAnimationFrame(animateThirdPerson);
-    }
-
-    animateThirdPerson();
 }
 </script>
 
