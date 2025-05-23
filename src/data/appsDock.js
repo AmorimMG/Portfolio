@@ -26,6 +26,7 @@ import Camera from '@/assets/images/dock/camera.png';
 import LastFMIcon from '@/assets/images/dock/lastFm.svg';
 import Raspberry from '@/assets/images/dock/raspberry.png';
 import Threejs from '@/assets/images/dock/threejs.png';
+import DoomModal from '../components/Modals/DoomModal.vue';
 
 export const componentMap = {
     ClusterLinks,
@@ -36,6 +37,7 @@ export const componentMap = {
     EmailModal,
     CVModal,
     PiModal,
+    DoomModal,
     SeverenceModal,
     LastFMModal,
     IA,
@@ -108,12 +110,12 @@ export const apps = [
         icon: WallpaperIcon
     },
     {
-        id: 16,
-        name: 'SeverenceModal',
+        id: 17,
+        name: 'DoomModal',
         colSpan: 1,
         rowSpan: 1,
         title: 'Doom',
-        icon: WallpaperIcon
+        icon: FolderIcon
     }
 ];
 

@@ -2,8 +2,17 @@ import { apps as initialApps } from '@/data/appsDock';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { RESTAPI } from '../service/api.js';
 import { useTrashStore } from './useTrashStore';
 
+const getGameIcon = async (gameName) => {
+    try {
+        const response = await RESTAPI.RecebeIconeJogo(gameName);
+        return response.data.imageUrl;
+    } catch (e) {
+        console.log(e);
+    }
+};
 export const useAppsStore = defineStore('apps', () => {
     const { t } = useI18n();
     const trashStore = useTrashStore();
@@ -79,11 +88,17 @@ export const useAppsStore = defineStore('apps', () => {
         trashStore.removeFromTrash(app);
     }
 
+    async function loadIcons() {
+        const doomIcon = await getGameIcon('Doom');
+        this.apps = this.apps.map((app) => (app.name === 'DoomModal' ? { ...app, icon: doomIcon } : app));
+    }
+
     return {
         apps,
         addApp,
         removeApp,
         restoreApp,
-        updateSlots
+        updateSlots,
+        loadIcons
     };
 });

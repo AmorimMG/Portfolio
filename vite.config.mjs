@@ -6,6 +6,9 @@ import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ['js-dos/dist/js-dos']
+    },
     plugins: [
         vue(),
         visualizer({ open: true }),

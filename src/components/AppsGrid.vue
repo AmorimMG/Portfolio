@@ -4,7 +4,7 @@ import { useTrashStore } from '@/stores/useTrashStore';
 
 import SelectionArea from '@viselect/vue';
 
-import { ref, onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 import { componentMap } from '../data/appsDock';
 
@@ -54,6 +54,7 @@ export default {
         const contextMenuRef = ref(null);
 
         onMounted(() => {
+            appsStore.loadIcons();
             appsStore.updateSlots();
             window.addEventListener('resize', () => appsStore.updateSlots());
         });

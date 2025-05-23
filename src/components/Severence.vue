@@ -7,6 +7,7 @@ gsap.registerPlugin(Flip);
 
 onMounted(() => {
     let mouse = { x: 0, y: 0 };
+    let cursorPos = { x: 0, y: 0 };
     let totalCompletion = 0;
 
     const cursor = document.getElementById('cursor');
@@ -14,22 +15,41 @@ onMounted(() => {
     const numbers = document.querySelectorAll('.inner');
     const boxes = document.querySelectorAll('.ready');
 
-    // Cursor tracking
+    // Função de animação suave do cursor
+    function updateCursor() {
+        if (!cursor) return;
+
+        // Interpolação suave entre a posição atual e a posição do mouse
+        cursorPos.x += (mouse.x - cursorPos.x) * 0.2;
+        cursorPos.y += (mouse.y - cursorPos.y) * 0.2;
+
+        // Aplica a transformação com translate3d para melhor performance
+        cursor.style.transform = `translate3d(${cursorPos.x}px, ${cursorPos.y}px, 0)`;
+
+        // Continua a animação
+        requestAnimationFrame(updateCursor);
+    }
+
+    // Inicia o loop de animação
+    requestAnimationFrame(updateCursor);
+
+    // Atualiza apenas as coordenadas do mouse
     window.addEventListener('mousemove', (e) => {
-        mouse = { x: e.pageX, y: e.pageY };
-        gsap.to(cursor, {
-            x: mouse.x,
-            y: mouse.y,
-            duration: 0.2,
-            ease: 'power2.out'
-        });
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
     });
 
-    // Distance calculation for .num elements
-    document.addEventListener('mousemove', () => {
+    // Garante que o cursor está visível desde o início
+    if (cursor) {
+        cursor.style.opacity = '1';
+        cursor.style.transform = 'scale(1)';
+    }
+
+    // Distance calculation atualizado
+    document.addEventListener('mousemove', (e) => {
         numbers.forEach((num) => {
             const rect = num.getBoundingClientRect();
-            const distance = Math.hypot(mouse.x - rect.left, mouse.y - rect.top);
+            const distance = Math.hypot(e.clientX - (rect.left + rect.width / 2), e.clientY - (rect.top + rect.height / 2));
             num.style.setProperty('--distance', parseInt(distance));
             num.parentNode.setAttribute('data-distance', parseInt(distance));
         });
@@ -230,25 +250,24 @@ onMounted(() => {
 
     #cursor {
         pointer-events: none;
-        opacity: 0;
         width: 3vmin;
         height: 3vmin;
-        position: absolute;
+        position: fixed;
+        left: 0;
+        top: 0;
         filter: drop-shadow(0 1px 0 var(--g)) drop-shadow(0 -1px 0 var(--g)) drop-shadow(1px 0 0 var(--g)) drop-shadow(-1px 0 0 var(--g)) blur(0.5px);
-        transition:
-            opacity 0.2s ease-in-out,
-            transform 0.3s ease-in-out 1.5s;
         transform: scale(0);
-        z-index: 10;
+        z-index: 999999; // Garante que está acima de tudo
+        will-change: transform; // Otimiza a performance das transformações
 
         &:before {
             content: '';
-            transition: 0.3s ease-in-out 0.2s;
             position: absolute;
             background: var(--bg);
             clip-path: polygon(1% 0%, 35% 100%, 53% 58%, 100% 48%);
             width: 100%;
             height: 100%;
+            transition: background 0.3s ease-in-out;
         }
     }
 
@@ -467,6 +486,7 @@ onMounted(() => {
 
             &.open {
                 .hatch {
+
                     &:before,
                     &:after {
                         transition-delay: 0s;
@@ -543,9 +563,8 @@ onMounted(() => {
 
             @for $i from 1 through 10 {
                 &:nth-of-type(#{$i}) {
-                    transition-delay:
-                        #{$i/20 + 2}s,
-                        #{$i/20 + 3}s;
+                    transition-delay: #{$i/20 + 2}s,
+                    #{$i/20 + 3}s;
 
                     &:before {
                         z-index: 9;
