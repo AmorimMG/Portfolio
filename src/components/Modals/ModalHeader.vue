@@ -1,6 +1,6 @@
 <script setup>
 import { defineEmits } from 'vue';
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'maximize']);
 const closeModal = () => {
     emit('close');
 };
@@ -45,9 +45,11 @@ const onMaximize = () => {
 .close {
     background-color: #ff5f56;
 }
+
 .minimize {
     background-color: #ffbd2e;
 }
+
 .maximize {
     background-color: #27c93f;
 }

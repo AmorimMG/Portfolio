@@ -15,7 +15,7 @@ export default {
         },
         style: {
             type: Object,
-            default: () => ({ width: '80rem', height: '50rem', overflowY: 'none', backgroundColor: 'white' })
+            default: () => ({ width: '50rem', overflowY: 'none', backgroundColor: 'white' })
         },
         modal: {
             type: Boolean,
