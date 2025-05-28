@@ -114,8 +114,6 @@ watch(dropdownValue, (newValue, oldValue) => {
     }
 });
 
-const appConfigRef = ref(null);
-
 const menubarItems = computed(() => [
     {
         label: t('DockTopBar.Finder'),
@@ -306,15 +304,10 @@ onUnmounted(() => {
                     <i class="pi pi-sign-in"></i>
                 </button>
             </router-link>
-            <!--        <button class="p-btn p-link layout-topbar-button px-2" type="button" @click="onClose">
-                <i class="pi pi-times"></i>
-            </button> -->
             <Popover ref="opWifi"> i'm a wifi </Popover>
-
             <Popover ref="opVolume">
                 <Slider v-model="volumeValue" class="w-[14rem]" />
             </Popover>
-
             <CameraModal :isTopbar="true" v-model:visible="cameraModalVisible" />
             <ConfigModal :isTopbar="true" v-model:visible="configModalVisible"
                 @update:modelValue="$emit('update:modelValue', $event)" />

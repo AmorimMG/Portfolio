@@ -35,7 +35,8 @@ onMounted(() => {
 
 <template>
     <div class="portfolio-root" v-bind="$attrs">
-        <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" aria-label="Toggle menu" @click="toggleMenu()">
+        <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" aria-label="Toggle menu"
+            @click="toggleMenu()">
             <FontAwesomeIcon style="font-size: 20px; color: black" :icon="faBars" />
         </button>
 
@@ -47,49 +48,40 @@ onMounted(() => {
                     <div class="black-screen"></div>
                 </div>
             </transition>
-            <div id="components-container" :class="{ hidden: !isStarted, 'fade-in': isStarted }" class="grid grid-cols-12 gap-4 justify-center">
-                <!-- <app-topbar :applyGlitchEffect="applyGlitchEffect" /> -->
-
-                <div :style="{ display: menuVisible ? 'flex' : 'none' }" id="Introduction" class="col-span-12 lg:col-span-3 xl:col-span-3 p-0">
+            <div id="components-container" :class="{ hidden: !isStarted, 'fade-in': isStarted }"
+                class="grid grid-cols-12 gap-4 justify-center">
+                <div :style="{ display: menuVisible ? 'flex' : 'none' }" id="Introduction"
+                    class="col-span-12 lg:col-span-3 xl:col-span-3 p-0">
                     <Introduction :menuVisible="menuVisible" @update:menuVisible="menuVisible = $event" />
                 </div>
-                <draggable
-                    :style="{ display: !menuVisible ? 'grid' : '' }"
-                    id="draggableCards"
+                <draggable :style="{ display: !menuVisible ? 'grid' : '' }" id="draggableCards"
                     class="draggable col-span-12 lg:col-span-9 xl:col-span-9 grid grid-cols-12 gap-4 overflow-hidden"
-                    v-model="cards"
-                    item-key="id"
-                    group="cards"
-                    animation="200"
-                >
+                    v-model="cards" item-key="id" group="cards" animation="200">
                     <template #item="{ element }">
-                        <div
-                            class="grid"
-                            style="width: 100%; height: 100%"
-                            :style="{
-                                'grid-column': 'span ' + element.colSpan,
-                                'grid-row': 'span ' + element.rowSpan
-                            }"
-                        >
+                        <div class="grid" style="width: 100%; height: 100%" :style="{
+                            'grid-column': 'span ' + element.colSpan,
+                            'grid-row': 'span ' + element.rowSpan
+                        }">
                             <!-- Check if there are two components to stack -->
                             <template v-if="element.firstComponentName && element.secondComponentName">
-                                <div class="col-span-12 lg:col-span-9 xl:col-span-9 w-full" style="display: flex; flex-direction: column; gap: 1rem">
-                                    <component class="w-full max-w-full overflow-hidden p-0" :class="{ 'aspect-ratio-2-1': true }" style="flex: 1" :is="componentMap[element.firstComponentName]" />
-                                    <component class="w-full max-w-full overflow-hidden p-0" :class="{ 'aspect-ratio-2-1': true }" style="flex: 1" :is="componentMap[element.secondComponentName]" />
+                                <div class="col-span-12 lg:col-span-9 xl:col-span-9 w-full"
+                                    style="display: flex; flex-direction: column; gap: 1rem">
+                                    <component class="w-full max-w-full overflow-hidden p-0"
+                                        :class="{ 'aspect-ratio-2-1': true }" style="flex: 1"
+                                        :is="componentMap[element.firstComponentName]" />
+                                    <component class="w-full max-w-full overflow-hidden p-0"
+                                        :class="{ 'aspect-ratio-2-1': true }" style="flex: 1"
+                                        :is="componentMap[element.secondComponentName]" />
                                 </div>
                             </template>
 
                             <!-- Render single component -->
                             <template v-else>
-                                <component
-                                    class="w-full max-w-full overflow-hidden"
-                                    style="width: 100%"
-                                    :is="componentMap[element.name]"
-                                    :style="{
+                                <component class="w-full max-w-full overflow-hidden" style="width: 100%"
+                                    :is="componentMap[element.name]" :style="{
                                         'grid-column': 'span ' + element.colSpan,
                                         'grid-row': 'span ' + element.rowSpan
-                                    }"
-                                />
+                                    }" />
                             </template>
                         </div>
                     </template>
