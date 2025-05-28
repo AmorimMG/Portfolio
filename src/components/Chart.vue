@@ -254,42 +254,48 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="grid p-fluid">
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <h5>Listened Music's</h5>
-                <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
-            </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 p-4 gap-4">
+        <div class="cardChart flex flex-col items-center">
+            <h5>Listened Music's</h5>
+            <Chart type="line" :data="lineData" :options="lineOptions"></Chart>
         </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card">
-                <h5>Bar Chart</h5>
-                <Chart type="bar" :data="barData" :options="barOptions"></Chart>
-            </div>
+        <div class="cardChart flex flex-col items-center">
+            <h5>Bar Chart</h5>
+            <Chart type="bar" :data="barData" :options="barOptions"></Chart>
         </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card flex flex-col items-center">
-                <h5 class="text-left w-full">Pie Chart</h5>
-                <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
-            </div>
+        <div class="cardChart flex flex-col items-center">
+            <h5 class="text-left w-full">Pie Chart</h5>
+            <Chart type="pie" :data="pieData" :options="pieOptions"></Chart>
         </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card flex flex-col items-center">
-                <h5 class="text-left w-full">Doughnut Chart</h5>
-                <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
-            </div>
+        <div class="cardChart flex flex-col items-center">
+            <h5 class="text-left w-full">Doughnut Chart</h5>
+            <Chart type="doughnut" :data="pieData" :options="pieOptions"></Chart>
         </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card flex flex-col items-center">
-                <h5 class="text-left w-full">Polar Area Chart</h5>
-                <Chart type="polarArea" :data="polarData" :options="polarOptions"></Chart>
-            </div>
+        <div class="cardChart flex flex-col items-center">
+            <h5 class="text-left w-full">Polar Area Chart</h5>
+            <Chart type="polarArea" :data="polarData" :options="polarOptions"></Chart>
         </div>
-        <div class="col-span-12 xl:col-span-6">
-            <div class="card flex flex-col items-center">
-                <h5 class="text-left w-full">Radar Chart</h5>
-                <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
-            </div>
+        <div class="cardChart flex flex-col items-center">
+            <h5 class="text-left w-full">Radar Chart</h5>
+            <Chart type="radar" :data="radarData" :options="radarOptions"></Chart>
         </div>
     </div>
 </template>
+<style scoped>
+.cardChart {
+    background: var(--card-background);
+    border: 2px solid var(--surface-border);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+    border-radius: var(--content-border-radius);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(73, 57, 57, 0.18);
+}
+</style>

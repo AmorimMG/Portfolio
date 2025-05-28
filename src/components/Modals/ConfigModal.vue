@@ -3,7 +3,6 @@ import { useConfigModalStore } from '@/stores/configModal';
 import { defineEmits, ref } from "vue";
 import draggable from 'vuedraggable';
 import Wallpapers from '../../data/wallpapers.js';
-import ModalHeader from "./ModalHeader.vue";
 
 defineProps({
     visible: {
@@ -42,12 +41,8 @@ const closeModal = () => {
             style="width: 100%; height: 100%; justify-content: center">
             <VueNeonLight size="15px" :flash="false" style="color: white"></VueNeonLight>
         </Button>
-        <Dialog class="dialog-terminal" :visible="visible || openWallpaper" :closable="false" :unstyled="true"
-            :style="{ width: '80rem', height: '50rem', overflowY: 'auto' }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-            <template #header>
-                <ModalHeader @close="closeModal" />
-            </template>
+        <CustomDialog class="dialog-terminal" :visible="visible || openWallpaper" @update:visible="closeModal()"
+            :style="{ width: '80rem', height: '50rem', overflowY: 'none' }">
             <div style="background-color: rgba(0, 0, 0, 0.2);">
                 <div class="flex justify-center items-center py-6">
                     <h1 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight drop-shadow-md">
@@ -82,7 +77,7 @@ const closeModal = () => {
                     </draggable>
                 </div>
             </div>
-        </Dialog>
+        </CustomDialog>
     </div>
 </template>
 
