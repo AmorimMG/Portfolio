@@ -1,8 +1,8 @@
 <script setup>
 import FileIcon from '@/assets/images/dock/file.png';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
-import { useConfigModalStore } from '@/stores/configModal';
 import { useAppsStore } from '@/stores/useAppsStore';
+import { useWallpaperStore } from '@/stores/wallpaperStore';
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -16,8 +16,8 @@ const appsStore = useAppsStore();
 
 const isMobile = ref(window.innerWidth <= 768);
 
-const configModalStore = useConfigModalStore();
-const background = ref(configModalStore.getBackground());
+const wallpaperStore = useWallpaperStore();
+const background = ref(wallpaperStore.getBackground());
 
 const items = ref([
     {
@@ -104,7 +104,7 @@ const items = ref([
 ]);
 
 watchEffect(() => {
-    background.value = configModalStore.getBackground();
+    background.value = wallpaperStore.getBackground();
 
     const cookieValue = getLanguageCookie();
     locale.value = cookieValue || 'en';

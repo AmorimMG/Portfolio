@@ -1,8 +1,8 @@
 <script>
 import { useToast } from 'primevue/usetoast';
-import { RESTAPI } from '../../service/api.js';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api.js';
+import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 export default {
     components: {
@@ -55,10 +55,12 @@ export default {
             <div class="card page">
                 <div class="album-info" v-if="currentTrack">
                     <a :href="currentTrack.url" target="_blank" rel="noopener noreferrer">
-                        <div class="album-image" :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
+                        <div class="album-image"
+                            :style="{ backgroundImage: 'url(' + currentTrack.images[0].url + ')' }">
                             <div class="overlayy">
                                 <VueNeonLight :flash="false" color="#ff00ff90">{{ currentTrack.name }}</VueNeonLight>
-                                <VueNeonLight :flash="false" style="color: white">{{ currentTrack.artist }} </VueNeonLight>
+                                <VueNeonLight :flash="false" style="color: white">{{ currentTrack.artist }}
+                                </VueNeonLight>
                                 <VueNeonLight :flash="false" color="#ff00ff90">{{ currentTrack.album }}</VueNeonLight>
                             </div>
                         </div>
@@ -77,8 +79,10 @@ export default {
                 </div>
                 <div v-else style="height: 100%">
                     <div class="album-info">
-                        <a href="https://open.spotify.com/intl-pt/track/37IFFBgI7qnLKqGP15mmIu" target="_blank" rel="noopener noreferrer">
-                            <div class="album-image" style="background-image: url('https://media.pitchfork.com/photos/6390cc1e12b41513f51f1700/16:9/w_1280,c_limit/Brakence-%20hypochondriac.jpeg')">
+                        <a href="https://open.spotify.com/intl-pt/track/37IFFBgI7qnLKqGP15mmIu" target="_blank"
+                            rel="noopener noreferrer">
+                            <div class="album-image"
+                                style="background-image: url('https://media.pitchfork.com/photos/6390cc1e12b41513f51f1700/16:9/w_1280,c_limit/Brakence-%20hypochondriac.jpeg')">
                                 <div class="overlayy">
                                     <VueNeonLight :flash="false" color="#ff00ff90">venus fly trap</VueNeonLight>
                                     <VueNeonLight :flash="false" style="color: white">brakence</VueNeonLight>

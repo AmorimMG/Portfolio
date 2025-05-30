@@ -1,9 +1,9 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import VueWordCloud from 'vuewordcloud';
-import { RESTAPI } from '../../service/api';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api';
+import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 const wrapper = ref(null);
 const cloudSize = ref(300);
@@ -111,10 +111,12 @@ const onWordCloudLoaded = () => {
             <div class="card">
                 <div class="stack-wrapper" ref="wrapper">
                     <ProgressSpinner v-if="loading" />
-                    <vue-word-cloud :style="wordCloudStyle" :words="words" :color="colorFunction" font-family="Roboto" :rotation="rotationFunction" :spacing="1" :font-size-ratio="3" @loaded="onWordCloudLoaded">
+                    <vue-word-cloud :style="wordCloudStyle" :words="words" :color="colorFunction" font-family="Roboto"
+                        :rotation="rotationFunction" :spacing="1" :font-size-ratio="3" @loaded="onWordCloudLoaded">
                         <template #default="{ text, weight, word }">
                             <div :title="text" style="cursor: pointer" @click="onWordClick(word)">
-                                <VueNeonLight :size="getFontSize(weight)" :flash="false" :color="colorFunction(word, weight)">
+                                <VueNeonLight :size="getFontSize(weight)" :flash="false"
+                                    :color="colorFunction(word, weight)">
                                     {{ text }}
                                 </VueNeonLight>
                             </div>

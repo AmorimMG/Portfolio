@@ -78,7 +78,6 @@ function handleSubmit() {
                     detail: 'gblUsuarioLogadoSucesso',
                     life: 3000
                 });
-                console.log('levando para cadastros');
                 router.push('/cadastros/dashboard');
             })
             .catch((error) => {

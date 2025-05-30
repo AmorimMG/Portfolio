@@ -13,6 +13,11 @@ import CustomDialog from './components/Modals/CustomDialog.vue';
 import localization from './data/localization.json';
 
 import '@/assets/styles.scss';
+import { getDarkThemeCookie } from './service/session';
+
+if (getDarkThemeCookie()) {
+    document.documentElement.classList.add('app-dark');
+}
 
 const app = createApp(App);
 const pinia = createPinia();

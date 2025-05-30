@@ -24,17 +24,21 @@ export default {
         effectComponent() {
             return `Vue${this.effect.substring(0, 1).toUpperCase() + this.effect.substring(1)}`;
         },
+        resolvedColor() {
+            return this.color || 'var(--code-color)';
+        },
         neonStyle() {
+            const color = this.resolvedColor;
             return {
                 fontSize: this.size,
-                color: this.color,
-                textShadow: `0 0 5px ${this.color}, 
-                             0 0 10px ${this.color}, 
-                             0 0 15px ${this.color}, 
-                             0 0 20px ${this.color}, 
-                             0 0 25px ${this.color}, 
-                             0 0 30px ${this.color}, 
-                             0 0 35px ${this.color}`
+                color: color,
+                textShadow: `0 0 5px ${color},
+                         0 0 10px ${color},
+                         0 0 15px ${color},
+                         0 0 20px ${color},
+                         0 0 25px ${color},
+                         0 0 30px ${color},
+                         0 0 35px ${color}`
             };
         }
     }
@@ -59,6 +63,7 @@ export default {
 
     src: url('/fonts/beon-webfont.ttf') format('truetype');
 }
+
 body {
     background: #000;
     margin: 0 auto;
@@ -80,10 +85,12 @@ body {
 }
 
 @keyframes flash {
+
     0%,
     100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.1;
     }

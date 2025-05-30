@@ -15,7 +15,11 @@ export default {
         },
         style: {
             type: Object,
-            default: () => ({ width: '80rem', height: '50rem', overflowY: 'none', backgroundColor: 'white' })
+            default: () => ({})
+        },
+        contentStyle: {
+            type: Object,
+            default: () => ({})
         },
         modal: {
             type: Boolean,
@@ -58,6 +62,30 @@ export default {
     computed: {
         dialogClass() {
             return this.maximized ? `${this.class} p-dialog-maximized` : this.class;
+        },
+        mergedStyle() {
+            const defaultStyle = {
+                width: '80%',
+                height: '80%',
+                overflowY: 'none',
+                backgroundColor: 'var(--surface-ground)'
+            };
+            return {
+                ...defaultStyle,
+                ...this.style
+            };
+        },
+        mergedContentStyle() {
+            const defaultContentStyle = {
+                width: '100%',
+                height: '100%',
+                overflowY: 'auto'
+            };
+
+            return {
+                ...defaultContentStyle,
+                ...this.contentStyle
+            };
         }
     },
     methods: {
@@ -80,11 +108,13 @@ export default {
 </script>
 
 <template>
-    <Dialog v-bind="$props" v-if="visible" :visible="visible" @update:visible="handleVisibilityChange"
-        @hide="closeModal" contentStyle="width: 100%; height: 100%; overflow-y: auto;">
+    <Dialog v-if="visible" v-bind="$props" :style="mergedStyle" :contentStyle="mergedContentStyle" :visible="visible"
+        @update:visible="handleVisibilityChange" @hide="closeModal">
         <template #header>
             <ModalHeader @maximize="onMaximize" @close="closeModal" />
         </template>
         <slot></slot>
     </Dialog>
 </template>
+
+<style></style>

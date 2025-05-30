@@ -38,7 +38,7 @@ const viewComponents = {
 </script>
 
 <template>
-    <CustomDialog class="dialog-terminal" :visible="props.visible" @update:visible="closeModal">
+    <CustomDialog class="dialog-terminal" :style="{ overflowY: 'hidden' }" :contentStyle="{ overflowY: 'hidden' }" :visible="props.visible" @update:visible="closeModal">
         <div class="modal-header">
             <div class="path-display">
                 {{ currentPath }}
@@ -61,6 +61,7 @@ const viewComponents = {
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
+    overflow-y: hidden;
 }
 
 .maximized {
@@ -133,7 +134,6 @@ const viewComponents = {
 
 .modal-body {
     flex-grow: 1;
-    overflow-y: auto;
     padding: 20px;
 }
 

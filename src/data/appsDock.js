@@ -1,22 +1,22 @@
-import ClusterLinks from '../components/Cards/ClusterLinks.vue';
-import Discord from '../components/Cards/Discord.vue';
-import GithubHeatMap from '../components/Cards/HeatMap.vue';
-import IA from '../components/Cards/IA.vue';
-import Spotify from '../components/Cards/Spotify.vue';
-import Stack from '../components/Cards/Stack.vue';
-import ThreeJSComponent from '../components/Cards/ThreeJS.vue';
-import Weather from '../components/Cards/Weather.vue';
+import ClusterLinks from '../components/AmorimWebsite/Cards/ClusterLinks.vue';
+import Discord from '../components/AmorimWebsite/Cards/Discord.vue';
+import GithubHeatMap from '../components/AmorimWebsite/Cards/HeatMap.vue';
+import IA from '../components/AmorimWebsite/Cards/IA.vue';
+import Spotify from '../components/AmorimWebsite/Cards/Spotify.vue';
+import Stack from '../components/AmorimWebsite/Cards/Stack.vue';
+import ThreeJSComponent from '../components/AmorimWebsite/Cards/ThreeJS.vue';
+import Weather from '../components/AmorimWebsite/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
-/* import Actitivies from '../components/Cards/Activities.vue'; */
+/* import Actitivies from '../components/AmorimWebsite/Cards/Activities.vue'; */
 import CameraModal from '../components/Modals/CameraModal.vue';
-import ConfigModal from '../components/Modals/ConfigModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
 import PiModal from '../components/Modals/PIModal.vue';
 import PortfolioModal from '../components/Modals/PortfolioModal.vue';
 import ProjectsModal from '../components/Modals/ProjectsModal.vue';
 import SeverenceModal from '../components/Modals/SeverenceModal.vue';
+import WallpaperModal from '../components/Modals/WallpaperModal.vue';
 import PointerlockModal from '../components/ThreeJSGame/PointerlockModal.vue';
 
 import CVIcon from '@/assets/images/dock/CV.svg';
@@ -48,7 +48,7 @@ export const componentMap = {
     PortfolioModal,
     PointerlockModal,
     CameraModal,
-    ConfigModal
+    WallpaperModal
 };
 
 export const apps = [
@@ -95,7 +95,7 @@ export const apps = [
     },
     {
         id: 16,
-        name: 'ConfigModal',
+        name: 'WallpaperModal',
         colSpan: 1,
         rowSpan: 1,
         title: 'Wallpaper',

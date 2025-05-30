@@ -1,7 +1,7 @@
-import { useConfigModalStore } from '@/stores/configModal';
+import { useWallpaperStore } from '@/stores/wallpaperStore';
 
-const configModalStore = useConfigModalStore();
-const selectedBackground = configModalStore.getBackground();
+const wallpaperModalStore = useWallpaperStore();
+const selectedBackground = wallpaperModalStore.getBackground();
 
 export const wallpapers = [
     {

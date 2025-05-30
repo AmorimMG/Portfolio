@@ -2,18 +2,18 @@
 import { defineAsyncComponent } from 'vue';
 
 export const componentMap = {
-    ClusterLinks: defineAsyncComponent(() => import('@/components/Cards/ClusterLinks.vue')),
-    Spotify: defineAsyncComponent(() => import('@/components/Cards/Spotify.vue')),
-    ThreeJSComponent: defineAsyncComponent(() => import('@/components/Cards/ThreeJS.vue')),
+    ClusterLinks: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/ClusterLinks.vue')),
+    Spotify: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/Spotify.vue')),
+    ThreeJSComponent: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/ThreeJS.vue')),
     EmailModal: defineAsyncComponent(() => import('@/components/Modals/EmailModal.vue')),
     CVModal: defineAsyncComponent(() => import('@/components/Modals/CVModal.vue')),
-    IA: defineAsyncComponent(() => import('@/components/Cards/IA.vue')),
+    IA: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/IA.vue')),
     Blog: defineAsyncComponent(() => import('@/components/Modals/BlogModal.vue')),
     ProjectsModal: defineAsyncComponent(() => import('@/components/Modals/ProjectsModal.vue')),
-    Terminal: defineAsyncComponent(() => import('@/components/Cards/TerminalComponent.vue')),
-    Stack: defineAsyncComponent(() => import('@/components/Cards/Stack.vue')),
-    DashboardTimeline: defineAsyncComponent(() => import('@/components/Cards/HeatMap.vue')),
-    Photos: defineAsyncComponent(() => import('@/components/Cards/Photos.vue'))
+    Terminal: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/TerminalComponent.vue')),
+    Stack: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/Stack.vue')),
+    DashboardTimeline: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/HeatMap.vue')),
+    Photos: defineAsyncComponent(() => import('@/components/AmorimWebsite/Cards/Photos.vue'))
 };
 
 export const cards = [

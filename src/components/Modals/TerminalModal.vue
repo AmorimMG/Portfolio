@@ -1,5 +1,5 @@
 <script setup>
-import TerminalComponent from '../Cards/TerminalComponent.vue';
+import TerminalComponent from '../AmorimWebsite/Cards/TerminalComponent.vue';
 import CustomDialog from './CustomDialog.vue';
 
 const props = defineProps({

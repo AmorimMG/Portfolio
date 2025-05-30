@@ -1,9 +1,9 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { RESTAPI } from '../../service/api';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api';
+import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 const { t } = useI18n();
 const userInput = ref('');
@@ -72,16 +72,19 @@ const hideOverlay = () => {
         <CardEffect>
             <div class="card chat-container">
                 <div v-if="showOverlay" class="overlay" :class="{ 'fade-out': !overlayVisible }">
-                    <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }} </VueNeonLight>
+                    <VueNeonLight size="15px" :flash="false" style="color: white">{{ $t('IA.IATalkWithMe') }}
+                    </VueNeonLight>
                 </div>
                 <div ref="chatWrapper" class="chat-wrapper">
-                    <div v-for="(message, index) in messages" :key="index" :class="['message', message.role, { 'error-message': message.isError }]">
+                    <div v-for="(message, index) in messages" :key="index"
+                        :class="['message', message.role, { 'error-message': message.isError }]">
                         <p>{{ message.content }}</p>
                     </div>
                 </div>
                 <Skeleton v-if="loading" width="100%" height="50px" class="loading-skeleton"></Skeleton>
                 <div class="input-container">
-                    <InputText class="w-full" v-model="userInput" :placeholder="typeMessage" @keyup.enter="sendMessage" />
+                    <InputText class="w-full" v-model="userInput" :placeholder="typeMessage"
+                        @keyup.enter="sendMessage" />
                     <Button style="color: white" icon="pi pi-send" @click="sendMessage" />
                 </div>
             </div>

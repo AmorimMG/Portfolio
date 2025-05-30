@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import { onMounted, ref } from 'vue';
 import draggable from 'vuedraggable';
-import Background from '../components/Background.vue';
-import Introduction from '../components/Cards/Introduction.vue';
-import { componentMap, cards as initialCards } from '../data/cardsDashboard';
+import Background from '../../components/Background.vue';
+import { componentMap, cards as initialCards } from '../../data/cardsDashboard';
+import Introduction from './Introduction.vue';
 //#endregion
 
 //#region variables
@@ -92,7 +92,7 @@ onMounted(() => {
     </div>
 </template>
 
-<style src="../views/styles.scss"></style>
+<style src="../../views/styles.scss"></style>
 
 <style scoped>
 .black-screen {

@@ -1,14 +1,14 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { useConfigModalStore } from '@/stores/configModal';
 import { faSignal, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faBatteryThreeQuarters } from '@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { } from '@primeuix/themes';
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppConfigurator from '../../layout/AppConfigurator.vue';
 import { getLanguageCookie, setLanguageCookie } from '../../service/session';
-import ConfigModal from '../Modals/ConfigModal.vue';
+import WallpaperModal from '../Modals/WallpaperModal.vue';
 
 const { locale, t } = useI18n();
 const dropdownValues = ref([
@@ -17,11 +17,10 @@ const dropdownValues = ref([
     { name: 'English', code: 'UK', value: 'en' }
 ]);
 const dropdownValue = ref(null);
-const configModalVisible = ref(false);
+const wallpaperModalVisible = ref(false);
 const cameraModalVisible = ref(false);
 const emit = defineEmits(['update:modelValue', 'hide']);
 const { toggleDarkMode, isDarkTheme } = useLayout();
-const configModalStore = useConfigModalStore();
 const currentTime = ref('');
 const timer = ref(null);
 const volumeValue = ref(0);
@@ -31,7 +30,7 @@ const opWifi = ref();
 const opVolume = ref();
 
 const toggleConfig = () => {
-    configModalVisible.value = true;
+    wallpaperModalVisible.value = true;
 };
 
 const toggleWifi = (event) => {
@@ -309,7 +308,7 @@ onUnmounted(() => {
                 <Slider v-model="volumeValue" class="w-[14rem]" />
             </Popover>
             <CameraModal :isTopbar="true" v-model:visible="cameraModalVisible" />
-            <ConfigModal :isTopbar="true" v-model:visible="configModalVisible"
+            <WallpaperModal :isTopbar="true" v-model:visible="wallpaperModalVisible"
                 @update:modelValue="$emit('update:modelValue', $event)" />
         </template>
     </Menubar>
@@ -363,5 +362,12 @@ onUnmounted(() => {
 
 .mobileMenubar>.p-menubar-start {
     width: 100%;
+}
+
+.background-theme {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    border-radius: 0px !important;
+    color: var(--text-color) !important;
 }
 </style>

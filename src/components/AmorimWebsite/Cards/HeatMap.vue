@@ -1,8 +1,8 @@
 <script>
 import { useToast } from 'primevue/usetoast';
-import { RESTAPI } from '../../service/api.js';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api.js';
+import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 export default {
     components: {

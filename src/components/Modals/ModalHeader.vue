@@ -1,5 +1,4 @@
 <script setup>
-import { defineEmits } from 'vue';
 const emit = defineEmits(['close', 'maximize']);
 const closeModal = () => {
     emit('close');
@@ -22,9 +21,7 @@ const onMaximize = () => {
 
 <style scoped>
 .modal-header {
-    background-color: #e8e8e8;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 0px;
+    background-color: var(--surface-ground);
     padding: 10px;
 }
 

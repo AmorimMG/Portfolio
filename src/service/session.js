@@ -5,6 +5,7 @@ import { RESTAPI } from './api';
 const SESSION_COOKIE = 'user';
 const LANGUAGE_COOKIE = 'Language';
 const DARKTHEME_COOKIE = 'DarkTheme';
+const COLORTHEME_COOKIE = 'ColorTheme';
 
 export function getUserCookie() {
     const cookie = cookies.get(SESSION_COOKIE);
@@ -38,6 +39,15 @@ export function setDarkThemeCookie(darktheme) {
 export function getDarkThemeCookie() {
     const cookie = cookies.get(DARKTHEME_COOKIE);
     return cookie ? JSON.parse(cookie) : 'true';
+}
+
+export function setColorThemeCookie(colortheme) {
+    cookies.set(COLORTHEME_COOKIE, JSON.stringify(colortheme));
+}
+
+export function getColorThemeCookie() {
+    const cookie = cookies.get(COLORTHEME_COOKIE);
+    return cookie ? JSON.parse(cookie) : 'violet';
 }
 
 const sessionModule = {

@@ -119,7 +119,6 @@ li {
 
 .main-content {
     background-color: white;
-    overflow-y: auto;
 }
 
 .file-manager {
