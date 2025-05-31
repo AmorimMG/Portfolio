@@ -1,8 +1,17 @@
 <script setup>
+import FileIcon from '@/assets/images/dock/file.png';
+import FolderIcon from '@/assets/images/dock/folder.svg';
+import { setLanguageCookie } from '@/service/session';
+import { useAppsStore } from '@/stores/useAppsStore';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import DockBottomBar from './DockBottomBar.vue';
 import DockContent from './DockContent.vue';
 import DockTopbar from './DockTopBar.vue';
+
+const appsStore = useAppsStore();
+
+const { locale } = useI18n();
 
 const items = ref([
     {

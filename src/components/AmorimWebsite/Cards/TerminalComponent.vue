@@ -8,6 +8,8 @@ import { useI18n } from 'vue-i18n';
 import CardEffect from '../../CardEffect.vue';
 
 const { t } = useI18n();
+const locale = useI18n().locale;
+
 const { isDarkTheme } = useLayout();
 const ansiToHtml = new AnsiToHtml();
 
@@ -18,31 +20,31 @@ const props = defineProps({
     }
 });
 
+const changeLanguage = (lang) => {
+    locale.value = lang;
+};
+
 const neofetchOutput = () => {
     var logoAnsi = `
 \u001b[0m\u001b \u001b[0m
-\u001b[38;5;46m                    'c.
-\u001b[38;5;46m                 ,xNMM.
-\u001b[38;5;46m               .OMMMMo
-\u001b[38;5;46m               OMMM0,
-\u001b[38;5;46m     .;loddo:'  ':olloddol;.
-\u001b[38;5;46m   cKMMMMMMMMMMNWMMMMMMMMMM0:
-\u001b[38;5;220m .KMMMMMMMMMMMMMMMMMMMMMMMWd.
-\u001b[38;5;208m XMMMMMMMMMMMMMMMMMMMMMMMX.
-\u001b[38;5;203m;MMMMMMMMMMMMMMMMMMMMMMMM:
-\u001b[38;5;198m:MMMMMMMMMMMMMMMMMMMMMMMM:
-\u001b[38;5;135m.MMMMMMMMMMMMMMMMMMMMMMMMX.
-\u001b[38;5;99m kMMMMMMMMMMMMMMMMMMMMMMMWd.
-\u001b[38;5;69m .XMMMMMMMMMMMMMMMMMMMMMMMMk
-\u001b[38;5;33m  'XMMMMMMMMMMMMMMMMMMMMMMK.
-\u001b[38;5;27m    kMMMMMMMMWXXWMMMMMMMk.
-\u001b[38;5;27m     ;KMXk;;'  ..';;XMXk'
+\u001b[38;5;196m            ⢱⣆
+\u001b[38;5;197m            ⠈⣿⣷⡀
+\u001b[38;5;198m            ⢸⣿⣿⣷⣧
+\u001b[38;5;199m        ⡀⢠⣿⡟⣿⣿⣿⡇
+\u001b[38;5;200m        ⣳⣼⣿⡏⢸⣿⣿⣿⢀
+\u001b[38;5;201m       ⣰⣿⣿⡿⠁⢸⣿⣿⡟⣼⡆
+\u001b[38;5;93m    ⢰⢀⣾⣿⣿⠟⠀⣾⢿⣿⣿⣿⣿
+\u001b[38;5;99m    ⢸⣿⣿⣿⡏⠀⠀⠃⠸⣿⣿⣿⡿
+\u001b[38;5;63m    ⢳⣿⣿⣿⠀⠀⠀⠀⢹⣿⡿⡁
+\u001b[38;5;33m    ⠹⣿⣿⡄⠀⠀⠀⢠⣿⡞⠁
+\u001b[38;5;39m     ⠈⠛⢿⣄⠀⣠⠞⠋
+\u001b[38;5;45m        ⠉⠀
 \u001b[0m\u001b \u001b[0m`;
 
     var infoAnsi = `
 \u001b[38;5;15mPortfolio@Amorim
 \u001b[38;5;15m------------------
-\u001b[38;5;15mOS:\u001b[0m VueOS 3.0 (Custom)
+\u001b[38;5;15mOS:\u001b[0m FlamorzOS 3.0 (Custom)
 \u001b[38;5;15mHost:\u001b[0m WebPortfolio
 \u001b[38;5;15mKernel:\u001b[0m Tailwind 3.x
 \u001b[38;5;15mUptime:\u001b[0m 42 hours
@@ -162,7 +164,8 @@ const commandHandler = (text) => {
         'feedback',
         'hire',
         'funfact',
-        'neofetch'
+        'neofetch',
+        'languages'
     ];
 
     switch (command) {
@@ -258,6 +261,21 @@ const commandHandler = (text) => {
                 neofetchOutput();
             }, 50);
             return;
+        case 'languages':
+            response = computed(() => t('Terminal.Languages'));
+            break;
+        case 'pt':
+            changeLanguage('pt');
+            response = computed(() => t('Terminal.LanguageChanged', { language: 'Português' }));
+            break;
+        case 'es':
+            changeLanguage('es');
+            response = computed(() => t('Terminal.LanguageChanged', { language: 'Español' }));
+            break;
+        case 'en':
+            changeLanguage('en');
+            response = computed(() => t('Terminal.LanguageChanged', { language: 'English' }));
+            break;
         default:
             response = `Unknown command: ${command}`;
     }
@@ -299,6 +317,11 @@ onBeforeUnmount(() => {
     font-size: calc(var(--scale) + 2px) !important;
     border: none !important;
     border-radius: none !important;
+    white-space: pre-line;
+}
+
+.p-terminal-command {
+    white-space: pre-line;
 }
 
 .p-terminal .p-terminal-content {

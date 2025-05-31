@@ -10,6 +10,7 @@ import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 /* import Actitivies from '../components/AmorimWebsite/Cards/Activities.vue'; */
 import CameraModal from '../components/Modals/CameraModal.vue';
+import DoomModal from '../components/Modals/DoomModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
 import LastFMModal from '../components/Modals/LastFMModal.vue';
 import PiModal from '../components/Modals/PIModal.vue';
@@ -25,8 +26,8 @@ import WallpaperIcon from '@/assets/images/dock/Wallpaper.webp';
 import Camera from '@/assets/images/dock/camera.png';
 import LastFMIcon from '@/assets/images/dock/lastFm.svg';
 import Raspberry from '@/assets/images/dock/raspberry.png';
+import SeverenceIcon from '@/assets/images/dock/severence.png';
 import Threejs from '@/assets/images/dock/threejs.png';
-import DoomModal from '../components/Modals/DoomModal.vue';
 
 export const componentMap = {
     ClusterLinks,
@@ -107,7 +108,7 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Severence',
-        icon: WallpaperIcon
+        icon: SeverenceIcon
     },
     {
         id: 17,

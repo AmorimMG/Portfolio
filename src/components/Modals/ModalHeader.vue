@@ -23,6 +23,8 @@ const onMaximize = () => {
 .modal-header {
     background-color: var(--surface-ground);
     padding: 10px;
+    z-index: 10;
+    position: relative;
 }
 
 .window-controls {

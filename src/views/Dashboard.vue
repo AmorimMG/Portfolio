@@ -2,8 +2,14 @@
 import { onMounted, ref } from 'vue';
 import BootupScreen from '../components/BootupScreen.vue';
 import System from '../components/Dock/System.vue';
+import SystemLoginScreen from './SystemLoginScreen.vue';
 
 const isStarted = ref(true);
+const isLoggedIn = ref(false);
+
+const handleLogin = () => {
+    isLoggedIn.value = true;
+};
 
 onMounted(() => {
     setTimeout(() => {
@@ -16,7 +22,10 @@ onMounted(() => {
     <div v-if="isStarted">
         <BootupScreen />
     </div>
-    <System :class="{ hidden: isStarted, 'fade-in': !isStarted }" />
+    <div v-if="!isStarted && !isLoggedIn">
+        <SystemLoginScreen @login="handleLogin" :class="{ 'fade-in': !isStarted }" />
+    </div>
+    <System v-if="isLoggedIn" :class="{ 'fade-in': isLoggedIn }" />
 </template>
 
 <style scoped></style>

@@ -33,9 +33,11 @@ export default {
                 </Button>
             </div>
         </CardEffect>
-        <CustomDialog :visible="piVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="dialog-terminal p-dialog-maximized" contentStyle="width: 100%; height: 100%;">
+        <CustomDialog :visible="piVisible" @update:visible="onHide()" :maximized="true" :modal="true"
+            class="dialog-terminal p-dialog-maximized">
             <div class="iframe-container" style="width: 100%; height: 100%; overflow: hidden">
-                <iframe id="iframe" class="iframe" ref="iframe" src="https://pi.amorim.pro" scrolling="auto" style="border: none"></iframe>
+                <iframe id="iframe" class="iframe" ref="iframe" src="https://pi.amorim.pro" scrolling="auto"
+                    style="border: none"></iframe>
             </div>
         </CustomDialog>
     </div>

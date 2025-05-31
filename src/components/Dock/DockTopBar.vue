@@ -3,7 +3,6 @@ import { useLayout } from '@/layout/composables/layout';
 import { faSignal, faWifi } from '@fortawesome/free-solid-svg-icons';
 import { faBatteryThreeQuarters } from '@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { } from '@primeuix/themes';
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AppConfigurator from '../../layout/AppConfigurator.vue';
@@ -257,7 +256,7 @@ onUnmounted(() => {
         }
     }">
         <template #start>
-            <i class="pi pi-apple px-2"></i>
+            <img loading="lazy" src="@/assets/images/logo/flamorz.svg" alt="Flamorz Logo" class="w-9 h-9 mr-2" />
         </template>
         <template #end>
             <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name">

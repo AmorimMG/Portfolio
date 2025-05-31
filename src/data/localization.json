@@ -68,7 +68,9 @@
 			"Feedback": "Your feedback is valuable to me. Please feel free to share your thoughts.",
 			"Hire": "I am available for freelance opportunities. Let's discuss how I can help with your project.",
 			"Funfact": "Did you know that I once climbed Mount Everest? (Just kidding!)",
-			"UnknownCommand": "Unknown command: "
+			"UnknownCommand": "Unknown command: ",
+            "Languages": "Available languages:\nType 'en' for English\nType 'es' for Spanish\nType 'pt' for Portuguese",
+            "LanguageChanged": "Language changed to {language}"
 		},
 
 		"apps": {
@@ -192,7 +194,9 @@
 			"Feedback": "Tu opinión es valiosa para mí. Por favor, siéntete libre de compartir tus pensamientos.",
 			"Hire": "Estoy disponible para oportunidades freelance. Hablemos sobre cómo puedo ayudarte con tu proyecto.",
 			"Funfact": "¿Sabías que una vez escalé el Monte Everest? (¡Es una broma!)",
-			"UnknownCommand": "Comando desconocido: "
+			"UnknownCommand": "Comando desconocido: ",
+            "Languages": "Idiomas disponibles:\nDigite 'en' para Inglés\nDigite 'es' para Español\nDigite 'pt' para Portugués",
+            "LanguageChanged": "Idioma cambiado a {language}"
 		},
 
 		"apps": {
@@ -315,7 +319,9 @@
 			"Feedback": "Seu feedback é valioso para mim. Por favor, sinta-se à vontade para compartilhar seus pensamentos.",
 			"Hire": "Estou disponível para oportunidades freelance. Vamos discutir como posso ajudar com seu projeto.",
 			"Funfact": "Você sabia que uma vez escalei o Monte Everest? (Só brincando!)",
-			"UnknownCommand": "Comando desconhecido: "
+			"UnknownCommand": "Comando desconhecido: ",
+            "Languages": "Idiomas disponíveis:\nDigite 'en' para Inglês\nDigite 'es' para Espanhol\nDigite 'pt' para Português",
+            "LanguageChanged": "Idioma alterado para {language}"
 		},
 
 		"apps": {

@@ -1,3 +1,4 @@
+import macOSbackground from '@/assets/images/dock/macOSbackground.jpg';
 import { useWallpaperStore } from '@/stores/wallpaperStore';
 
 const wallpaperModalStore = useWallpaperStore();
@@ -26,7 +27,7 @@ export const wallpapers = [
     },
     {
         label: 'Wallpaper 5',
-        value: 'https://raw.githubusercontent.com/AmorimMG/cdn/main/uploads/wallpaper5.png'
+        value: macOSbackground
     },
     {
         label: 'Wallpaper 6',

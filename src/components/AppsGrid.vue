@@ -164,7 +164,7 @@ export default {
                         'grid-row': 'span ' + element.rowSpan
                     }" />
                     <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id">
-                        <img loading="lazy" :src="element.icon" width="50px" height="50px" />
+                        <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" />
                         <div class="app-title">{{ element.title }}</div>
                     </div>
                 </div>
@@ -178,11 +178,11 @@ export default {
 
 <style>
 .empty-slot {
-    width: 100px;
+    /*     width: 100px;
     height: 100px;
     border: 1px dashed rgba(255, 255, 255, 0.2);
     background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 0.5rem;
+    border-radius: 0.5rem; */
 }
 
 /* Animação de entrada (pop-in) */
@@ -317,7 +317,7 @@ export default {
     }
 
     .app-icon-wrapper>img {
-        width: 60px !important;
+        width: 50px !important;
     }
 }
 </style>
