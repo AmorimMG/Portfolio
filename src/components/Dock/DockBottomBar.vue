@@ -21,13 +21,6 @@ const portfolioModalOpen = ref(false);
 const images = ref();
 const toast = useToast();
 const items = ref([
-    /* 	{
-            label: "Finder",
-            icon: "https://primefaces.org/cdn/primevue//images/dock/finder.svg",
-            command: () => {
-                displayFinder.value = true;
-            },
-        }, */
     {
         label: 'Terminal',
         icon: 'https://primefaces.org/cdn/primevue//images/dock/terminal.svg',
@@ -43,34 +36,8 @@ const items = ref([
         }
     },
     {
-        label: 'App Store',
-        icon: 'https://primefaces.org/cdn/primevue//images/dock/appstore.svg',
-        command: () => {
-            toast.add({
-                severity: 'error',
-                summary: 'An unexpected error occurred while signing in.',
-                detail: 'UNTRUSTED_CERT_TITLE',
-                group: 'tc',
-                life: 3000
-            });
-        }
-    },
-    {
-        label: 'Safari',
-        icon: 'https://primefaces.org/cdn/primevue//images/dock/safari.svg',
-        command: () => {
-            toast.add({
-                severity: 'warn',
-                summary: 'Safari has stopped working',
-                group: 'tc',
-                life: 3000
-            });
-        }
-    },
-    {
         label: 'Vscode',
-        icon2: 'https://carleton.ca/scs/wp-content/uploads/vscode-1.png',
-        icon: 'https://timingapp.com/cdn-cgi/image/format=auto,width=256/img/app-icons/com.microsoft.VSCode/icon_128x128_2x.png',
+        icon: 'https://carleton.ca/scs/wp-content/uploads/vscode-1.png',
         command: () => {
             vscodeModalOpen.value = true;
         }
