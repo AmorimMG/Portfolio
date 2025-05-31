@@ -17,9 +17,12 @@ const closeModal = () => {
 </script>
 
 <template>
-    <CustomDialog class="dialog-terminal p-dialog-maximized"
-        contentStyle="width: 100%; height: 100%; background-color: #000000cc !important; overflow-y: none;"
-        :visible="props.visible" @update:visible="closeModal" :breakpoints="{ '960px': '50vw' }"
+    <CustomDialog class="dialog-terminal p-dialog-maximized" :contentStyle="{
+        backgroundColor: 'black !important',
+        overflowY: 'none',
+        width: '100%',
+        height: '100%'
+    }" :visible="props.visible" @update:visible="closeModal" :breakpoints="{ '960px': '50vw' }"
         :style="{ width: '90vw', height: '90vh' }">
         <Portfolio ref="el" class="layout-main-container" />
     </CustomDialog>

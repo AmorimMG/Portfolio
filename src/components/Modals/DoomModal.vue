@@ -8,7 +8,7 @@ export default {
     components: { CardEffect, VueNeonLight, CustomDialog, DosPlayer },
     data() {
         return {
-            piVisible: false, // Mudado de ref(false) para false
+            piVisible: false,
             iframeKey: 0
         };
     },
@@ -36,7 +36,7 @@ export default {
             </div>
         </CardEffect>
         <CustomDialog :visible="piVisible" @update:visible="onHide()" :maximized="true" :modal="true"
-            class="dialog-terminal p-dialog-maximized" contentStyle="width: 100%; height: calc(100vh - 2rem);">
+            class="dialog-terminal p-dialog-maximized" :contentStyle="{ height: 'calc(100vh - 2rem)' }">
             <div class="iframe-container">
                 <DosPlayer :game="'doom.jsdos'" :visible="isVisible" />
             </div>
@@ -57,7 +57,6 @@ export default {
 .iframe-container {
     width: 100%;
     height: 100%;
-    /* Ajustado para considerar margens/paddings */
     display: flex;
     align-items: center;
     justify-content: center;
