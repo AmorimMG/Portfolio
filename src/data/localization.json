@@ -80,7 +80,8 @@
 			"Servidor": "Server",
 			"Camera": "Camera",
 			"Wallpaper": "Wallpaper",
-            "Severence": "Severance"
+            "Severence": "Severance",
+            "Doom": "Doom"
 		},
 
 		"DockTopBar": {
@@ -203,7 +204,8 @@
 			"Servidor": "Servidor",
 			"Camera": "Cámara",
 			"Wallpaper": "Fondo de pantalla",
-            "Severence": "Severance"
+            "Severence": "Severance",
+            "Doom": "Doom"
 		},
 
 		"DockTopBar": {
@@ -325,7 +327,8 @@
 			"Servidor": "Servidor",
 			"Camera": "Câmera",
 			"Wallpaper": "Papel de Parede",
-            "Severence": "Severance"
+            "Severence": "Severance",
+            "Doom": "Doom"
 		},
 
 		"DockTopBar": {

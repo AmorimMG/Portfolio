@@ -1,8 +1,8 @@
 <script>
 import { useToast } from 'primevue/usetoast';
-import { RESTAPI } from '../../service/api.js';
-import CardEffect from '../CardEffect.vue';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api.js';
+import CardEffect from '../../CardEffect.vue';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 export default {
     components: {
@@ -129,7 +129,7 @@ export default {
                     </div>
                     <div class="calendar">
                         <div v-for="(month, index) in months" :key="index" class="month">
-                            <p>{{ month }}</p>
+                            <p style="color: white; margin-top: 10px">{{ month }}</p>
                             <div class="week" v-for="week in weeksInMonth(year, index)" :key="week">
                                 <div v-for="day in daysInWeek(year, index, week)" :key="day" class="day"
                                     :style="{ backgroundColor: getColor(index, day) }">

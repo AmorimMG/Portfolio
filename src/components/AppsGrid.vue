@@ -4,19 +4,19 @@ import { useTrashStore } from '@/stores/useTrashStore';
 
 import SelectionArea from '@viselect/vue';
 
-import { ref, onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 import { componentMap } from '../data/appsDock';
 
 import { useI18n } from 'vue-i18n';
-import ClusterLinks from '../components/Cards/ClusterLinks.vue';
-import Discord from '../components/Cards/Discord.vue';
-import GithubHeatMap from '../components/Cards/HeatMap.vue';
-import IA from '../components/Cards/IA.vue';
-import Spotify from '../components/Cards/Spotify.vue';
-import Stack from '../components/Cards/Stack.vue';
-import ThreeJSComponent from '../components/Cards/ThreeJS.vue';
-import Weather from '../components/Cards/Weather.vue';
+import ClusterLinks from '../components/AmorimWebsite/Cards/ClusterLinks.vue';
+import Discord from '../components/AmorimWebsite/Cards/Discord.vue';
+import GithubHeatMap from '../components/AmorimWebsite/Cards/HeatMap.vue';
+import IA from '../components/AmorimWebsite/Cards/IA.vue';
+import Spotify from '../components/AmorimWebsite/Cards/Spotify.vue';
+import Stack from '../components/AmorimWebsite/Cards/Stack.vue';
+import ThreeJSComponent from '../components/AmorimWebsite/Cards/ThreeJS.vue';
+import Weather from '../components/AmorimWebsite/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 import CameraModal from '../components/Modals/CameraModal.vue';
@@ -54,6 +54,7 @@ export default {
         const contextMenuRef = ref(null);
 
         onMounted(() => {
+            appsStore.loadIcons();
             appsStore.updateSlots();
             window.addEventListener('resize', () => appsStore.updateSlots());
         });

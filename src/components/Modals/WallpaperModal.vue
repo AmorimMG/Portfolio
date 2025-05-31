@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useConfigModalStore } from '@/stores/configModal';
-import { defineEmits, ref } from "vue";
+import { useWallpaperStore } from '@/stores/wallpaperStore.js';
+import { ref } from "vue";
 import draggable from 'vuedraggable';
 import Wallpapers from '../../data/wallpapers.js';
-import ModalHeader from "./ModalHeader.vue";
+import CustomDialog from '../Modals/CustomDialog.vue';
 
 defineProps({
     visible: {
@@ -15,9 +15,9 @@ defineProps({
         default: false,
     },
 });
-const configModalStore = useConfigModalStore();
+const wallpaperModalStore = useWallpaperStore();
 
-const selectedBackground = ref(configModalStore.getBackground());
+const selectedBackground = ref(wallpaperModalStore.getBackground());
 
 const backgroundImages = ref(Wallpapers);
 const openWallpaper = ref(false);
@@ -42,12 +42,8 @@ const closeModal = () => {
             style="width: 100%; height: 100%; justify-content: center">
             <VueNeonLight size="15px" :flash="false" style="color: white"></VueNeonLight>
         </Button>
-        <Dialog class="dialog-terminal" :visible="visible || openWallpaper" :closable="false" :unstyled="true"
-            :style="{ width: '80rem', height: '50rem', overflowY: 'auto' }"
-            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-            <template #header>
-                <ModalHeader @close="closeModal" />
-            </template>
+        <CustomDialog class="dialog-terminal" :visible="visible || openWallpaper" :maximized="false"
+            @update:visible="closeModal()" :style="{ overflowY: 'none', backgroundColor: 'transparent' }">
             <div style="background-color: rgba(0, 0, 0, 0.2);">
                 <div class="flex justify-center items-center py-6">
                     <h1 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight drop-shadow-md">
@@ -57,8 +53,8 @@ const closeModal = () => {
 
                 <div class="flex flex-col gap-6 px-4 py-6">
                     <div class="flex justify-center">
-                        <img loading="lazy" :src="configModalStore.getBackground()" alt="Selected Background"
-                            class="rounded-xl w-full max-w-[700px] shadow-lg" width="450" height="200" />
+                        <img loading="lazy" :src="wallpaperModalStore.getBackground()" alt="Selected Background"
+                            class="rounded-xl max-w-[700px] shadow-lg" width="450" height="200" />
                     </div>
                     <draggable v-model="backgroundImages" item-key="value"
                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 pb-6">
@@ -72,7 +68,7 @@ const closeModal = () => {
                                         @click="() => {
                                             $emit('update:modelValue', element.value);
                                             selectedBackground = element.value;
-                                            configModalStore.setBackground(element.value);
+                                            wallpaperModalStore.setBackground(element.value);
                                         }" :src="element.value" alt="Background"
                                         class="absolute inset-0 w-full h-full object-cover rounded-xl" />
                                 </div>
@@ -82,8 +78,14 @@ const closeModal = () => {
                     </draggable>
                 </div>
             </div>
-        </Dialog>
+        </CustomDialog>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dialog-terminal {
+    width: 80rem;
+    height: 50rem;
+    overflow-y: none;
+}
+</style>

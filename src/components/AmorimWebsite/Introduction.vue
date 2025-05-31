@@ -80,10 +80,6 @@ const toggleFeedback = (event) => {
     feedback.value.toggle(event);
 };
 
-const showEmailModal = () => {
-    modalEmailVisible.value = true;
-};
-
 const closeEmailModal = () => {
     modalEmailVisible.value = false;
 };
@@ -245,7 +241,7 @@ const sendEmail = async () => {
                 </div>
             </div>
         </div>
-        <div class="sticky-button center mb-9">
+        <div class="sticky-button center mb-12">
             <Button type="button" icon="pi pi-exclamation-triangle" class="neon-button" label="Feedback"
                 @click="toggleFeedback" />
         </div>
@@ -254,20 +250,20 @@ const sendEmail = async () => {
         style="background: rgba(120, 89, 182, 0.65); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(10px); border-radius: 12px; border: 2px solid #4d25b0"
         ref="feedback" appendTo="body">
         <div style="padding: 1rem">
-            <div class="center">
+            <div class="center mb-5">
                 <VueNeonLight color="white" size="25px" :flash="false"> Feedback </VueNeonLight>
             </div>
             <form @submit.prevent="sendEmail">
-                <div class="p-fluid">
+                <div class="flex flex-col gap-2">
                     <div class="p-field col">
                         <FloatLabel>
-                            <InputText id="name" v-model="name" required />
+                            <InputText class="w-full" id="name" v-model="name" required />
                             <label for="name">Name</label>
                         </FloatLabel>
                     </div>
                     <div class="p-field col">
                         <FloatLabel>
-                            <InputText id="email" type="email" v-model="email" required />
+                            <InputText class="w-full" id="email" type="email" v-model="email" required />
                             <label for="email">Email</label>
                         </FloatLabel>
                     </div>
@@ -277,7 +273,7 @@ const sendEmail = async () => {
                             <label for="message">Message</label>
                         </FloatLabel>
                     </div>
-                    <div class="p-field col">
+                    <div class="w-full flex justify-center">
                         <Button type="submit" label="Submit" />
                     </div>
                 </div>
@@ -390,15 +386,21 @@ h5 {
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition:
+        all 0.3s ease,
+        transform 0.3s ease;
     position: relative;
     overflow: hidden;
     box-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
+    transform: translateY(0);
 }
 
 .neon-button:hover {
     background-color: rgba(255, 0, 255, 0.1);
-    box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    box-shadow:
+        0 0 10px #ff00ff,
+        0 0 20px #ff00ff;
+    transform: translateY(-35px);
 }
 
 .neon-button::before {

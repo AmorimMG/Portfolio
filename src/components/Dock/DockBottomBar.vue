@@ -162,14 +162,10 @@ watch(TrashOpen, (newValue) => {
 });
 
 const emit = defineEmits(['close', 'update:visible']);
-
-const closeModalTerminal = () => {
-    displayTerminal.value = false;
-};
 </script>
 
 <template>
-    <Dock style="margin-bottom: 5rem" :model="filteredItems">
+    <Dock style="margin-bottom: 2rem" :model="filteredItems">
         <template #item="{ item }">
             <a v-tooltip.top="item.label" href="#" class="p-dock-item-link" @click="onDockItemClick($event, item)">
                 <img loading="lazy" :alt="item.label" :src="item.icon" style="width: 50px" />
@@ -193,6 +189,7 @@ const closeModalTerminal = () => {
         <Tree :value="items" />
     </Dialog>
 </template>
+
 <style scoped>
 .p-dock {
     z-index: 10;

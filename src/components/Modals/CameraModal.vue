@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, ref } from 'vue';
+import { ref } from 'vue';
 import vueNeonLight from '../VueNeonLight/vue-neon-light.vue';
 import CustomDialog from './CustomDialog.vue';
 

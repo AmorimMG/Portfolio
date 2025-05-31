@@ -5,7 +5,7 @@ import AnsiToHtml from 'ansi-to-html';
 import TerminalService from 'primevue/terminalservice';
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import CardEffect from '../CardEffect.vue';
+import CardEffect from '../../CardEffect.vue';
 
 const { t } = useI18n();
 const { isDarkTheme } = useLayout();
@@ -297,6 +297,8 @@ onBeforeUnmount(() => {
 <style scoped>
 .p-terminal {
     font-size: calc(var(--scale) + 2px) !important;
+    border: none !important;
+    border-radius: none !important;
 }
 
 .p-terminal .p-terminal-content {

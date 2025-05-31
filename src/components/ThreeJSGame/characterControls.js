@@ -18,8 +18,9 @@ export class CharacterControls {
         this.cameraTarget = new THREE.Vector3();
 
         this.fadeDuration = 0.2;
-        this.runVelocity = 5;
+        this.runVelocity = 10; // Aumentado para ficar mais rápido
         this.walkVelocity = 2;
+        this.currentlyRunning = false; // Começa andando
 
         this.animationsMap.forEach((value, key) => {
             if (key === currentAction) {
@@ -30,7 +31,7 @@ export class CharacterControls {
     }
 
     switchRunToggle() {
-        this.toggleRun = !this.toggleRun;
+        this.currentlyRunning = !this.currentlyRunning;
     }
 
     toggleFirstPersonView() {
@@ -45,53 +46,91 @@ export class CharacterControls {
         } */
     }
 
-    update(delta, keysPressed) {
-        const directionPressed = [W, A, S, D].some((key) => keysPressed[key]);
+    directionPressed(keysPressed) {
+        return keysPressed['w'] || keysPressed['a'] || keysPressed['s'] || keysPressed['d'] || keysPressed['shift'];
+    }
 
-        let play = '';
-        if (directionPressed && this.toggleRun) {
-            play = 'Run';
-        } else if (directionPressed) {
-            play = 'Walk';
-        } else {
-            play = 'Idle';
-        }
+    playAnimation(play) {
+        const prevAction = this.animationsMap.get(this.currentAction);
+        const nextAction = this.animationsMap.get(play);
 
-        if (this.currentAction !== play) {
-            const toPlay = this.animationsMap.get(play);
-            const current = this.animationsMap.get(this.currentAction);
-
-            if (current) current.fadeOut(this.fadeDuration);
-            if (toPlay) {
-                toPlay.reset().fadeIn(this.fadeDuration).play();
-            }
-
+        if (prevAction !== nextAction) {
+            prevAction.fadeOut(this.fadeDuration);
+            nextAction.reset().fadeIn(this.fadeDuration).play();
             this.currentAction = play;
         }
+    }
+
+    update(delta, keysPressed) {
+        if (!this.model || !this.mixer) return;
 
         this.mixer.update(delta);
+        const directionPressed = this.directionPressed(keysPressed);
+        
+        // Atualiza o estado de corrida baseado na tecla Shift
+        this.currentlyRunning = keysPressed['shift'];
 
-        if (this.currentAction === 'Run' || this.currentAction === 'Walk') {
-            const angleYCameraDirection = Math.atan2(this.camera.position.x - this.model.position.x, this.camera.position.z - this.model.position.z);
+        // Atualiza o estado da animação
+        let play = 'Idle';
+        if (directionPressed && (keysPressed['w'] || keysPressed['a'] || keysPressed['s'] || keysPressed['d'])) {
+            play = keysPressed['shift'] ? 'Run' : 'Walk';
+        }
 
-            const directionOffset = this.directionOffset(keysPressed);
+        // Garante que a animação seja tocada
+        if (this.currentAction !== play) {
+            const prevAction = this.animationsMap.get(this.currentAction);
+            const nextAction = this.animationsMap.get(play);
 
-            this.rotateQuaternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset);
-            this.model.quaternion.rotateTowards(this.rotateQuaternion, 0.2);
+            if (prevAction && nextAction) {
+                prevAction.fadeOut(this.fadeDuration);
+                nextAction.reset().fadeIn(this.fadeDuration).play();
+                this.currentAction = play;
+            }
+        }
 
-            this.camera.getWorldDirection(this.walkDirection);
-            this.walkDirection.y = 0;
-            this.walkDirection.normalize();
-            this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset);
+        if (directionPressed) {
+            // Get camera direction
+            const cameraDirection = new THREE.Vector3();
+            this.camera.getWorldDirection(cameraDirection);
+            cameraDirection.y = 0;
+            cameraDirection.normalize();
 
-            const velocity = this.currentAction === 'Run' ? this.runVelocity : this.walkVelocity;
+            // Calculate movement direction
+            const moveDirection = new THREE.Vector3();
 
-            const moveX = this.walkDirection.x * velocity * delta;
-            const moveZ = this.walkDirection.z * velocity * delta;
+            if (keysPressed['w']) moveDirection.add(cameraDirection);
+            if (keysPressed['s']) moveDirection.sub(cameraDirection);
+            if (keysPressed['a']) moveDirection.add(cameraDirection.clone().cross(new THREE.Vector3(0, 1, 0)));
+            if (keysPressed['d']) moveDirection.sub(cameraDirection.clone().cross(new THREE.Vector3(0, 1, 0)));
+
+            moveDirection.normalize();
+
+            // Move model - usando currentlyRunning para determinar a velocidade
+            const velocity = this.currentlyRunning ? this.runVelocity : this.walkVelocity;
+            const moveX = moveDirection.x * velocity * delta;
+            const moveZ = moveDirection.z * velocity * delta;
+
             this.model.position.x += moveX;
             this.model.position.z += moveZ;
-            this.updateCameraTarget(moveX, moveZ);
+
+            // Rotate model to face movement direction
+            if (moveDirection.length() > 0) {
+                const targetRotation = Math.atan2(moveDirection.x, moveDirection.z) + Math.PI;
+                const currentRotation = this.model.rotation.y;
+
+                let rotationDiff = targetRotation - currentRotation;
+                while (rotationDiff > Math.PI) rotationDiff -= Math.PI * 2;
+                while (rotationDiff < -Math.PI) rotationDiff += Math.PI * 2;
+
+                this.model.rotation.y += rotationDiff * 0.15;
+            }
+
+            // Update camera target
+            this.orbitControl.target.copy(this.model.position);
+            this.orbitControl.target.y += 1;
         }
+
+        this.orbitControl.update();
     }
 
     handleMouseMove(movementX, movementY) {

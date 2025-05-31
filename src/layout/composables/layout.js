@@ -1,9 +1,9 @@
 import { computed, reactive } from 'vue';
-import { getDarkThemeCookie, setDarkThemeCookie } from '../../service/session.js';
+import { getColorThemeCookie, getDarkThemeCookie, setDarkThemeCookie } from '../../service/session.js';
 
 const layoutConfig = reactive({
     preset: 'Aura',
-    primary: 'purple',
+    primary: getColorThemeCookie() ?? 'violet',
     surface: null,
     darkTheme: getDarkThemeCookie() ?? true,
     menuMode: 'static'

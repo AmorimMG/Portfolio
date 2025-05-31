@@ -1,5 +1,5 @@
 <script setup>
-import { SidebarItems } from '../service/sidebarItems.js';
+import { SidebarItems } from '../data/sidebarItems.js';
 import AppMenuItem from './AppMenuItem.vue';
 </script>
 

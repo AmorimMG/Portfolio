@@ -1,8 +1,8 @@
 <script setup>
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref } from 'vue';
-import { RESTAPI } from '../../service/api.js';
-import VueNeonLight from '../VueNeonLight/vue-neon-light.vue';
+import { RESTAPI } from '../../../service/api.js';
+import VueNeonLight from '../../VueNeonLight/vue-neon-light.vue';
 
 const spotifyData = ref();
 const discordData = ref();
@@ -44,7 +44,8 @@ onMounted(() => {
             <div class="gap-2"><i class="pi pi-discord"></i> Discord</div>
         </div>
         <div class="flex flex-row gap-2">
-            <VueNeonLight color="#ff00ff" :size="computedScale" :flash="false" style="color: white" v-if="online">ONLINE </VueNeonLight>
+            <VueNeonLight color="#ff00ff" :size="computedScale" :flash="false" style="color: white" v-if="online">ONLINE
+            </VueNeonLight>
             <VueNeonLight :size="computedScale" style="color: white" v-else>OFFLINE</VueNeonLight>
             <span class="dot"></span>
         </div>

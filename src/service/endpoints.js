@@ -25,7 +25,8 @@ const Endpoints = (instance) => ({
     LinguagemExcluir: (data) => instance.delete(`linguagens/${data}`),
     LinguagemObterTodos: () => instance.get('linguagens'),
 
-    IA: (data) => instance.post('Chat/send', data)
+    IA: (data) => instance.post('Chat/send', data),
+    RecebeIconeJogo: (data) => instance.get(`igdb/exact-game?name=${data}`)
 });
 
 export default Endpoints;

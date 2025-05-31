@@ -1,8 +1,7 @@
 import { getUserCookie } from '../service/session';
 
-// Function to decode the JWT token
 function decodeJWT(token) {
-    const base64Url = token.split('.')[1]; // Get the payload part
+    const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(
         atob(base64)

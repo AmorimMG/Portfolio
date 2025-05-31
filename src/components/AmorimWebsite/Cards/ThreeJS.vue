@@ -1,7 +1,7 @@
 <script setup>
 import * as THREE from 'three';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
-import CardEffect from '../CardEffect.vue';
+import CardEffect from '../../CardEffect.vue';
 
 const container = ref(null);
 const isLoading = ref(true);

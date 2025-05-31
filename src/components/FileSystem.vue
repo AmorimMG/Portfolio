@@ -89,7 +89,7 @@ const renderedContent = computed(() => {
             </div>
 
         </SplitterPanel>
-        <SplitterPanel v-if="selectedPost" class="flex items-center justify-center" :size="50" :minSize="35">
+        <SplitterPanel v-if="selectedPost" class="flex justify-center" :size="50" :minSize="35">
             <div class="preview-pane">
                 <h2 style="color: black">{{ selectedPost.date }}.{{ selectedPost.type }}</h2>
                 <div class="markdown-content" v-html="renderedContent"></div>
@@ -112,6 +112,12 @@ const renderedContent = computed(() => {
 
 .p-splitter {
     background-color: white;
+    border: none;
+    height: 100%;
+}
+.p-splitterpanel{
+    overflow-y: auto;
+    height: 100%;
 }
 
 .preview-pane {
@@ -134,7 +140,6 @@ const renderedContent = computed(() => {
 .content {
     flex-grow: 1;
     padding: 20px;
-    overflow-y: auto;
 }
 
 table {
