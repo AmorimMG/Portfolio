@@ -15,8 +15,10 @@ onMounted(() => {
 
 <template>
     <div class="gif-container">
-        <i class="apple-icon pi pi-apple"></i>
-        <ProgressBar :value="progress" mode="determinate" :showValue="false" style="height: 9px; width: 250px; background: grey" />
+        <img loading="lazy" class="logo-icon" src="@/assets/images/logo/flamorz.svg" alt="Flamorz Logo" width="250px" />
+        <!--         <i class="apple-icon pi pi-apple"></i> -->
+        <ProgressBar :value="progress" mode="determinate" :showValue="false"
+            style="height: 9px; width: 250px; background: grey; margin-top: -30px" />
     </div>
 
     <div class="black-screen"></div>
@@ -27,9 +29,9 @@ onMounted(() => {
     background: white !important;
 }
 
-.apple-icon {
-    font-size: 100px;
-    color: white;
+.logo-icon {
+    filter: brightness(0) invert(1);
+    mix-blend-mode: normal;
 }
 
 .black-screen {
@@ -50,7 +52,6 @@ onMounted(() => {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 30px;
     justify-content: center;
     align-items: center;
 }

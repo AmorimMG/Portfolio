@@ -44,7 +44,7 @@ onMounted(() => {
             <Background />
             <transition name="fade">
                 <div v-if="!isStarted" id="components-container" class="grid components-container justify-center">
-                    <img loading="lazy" class="gif-container" src="@/assets/images/cards/glitchIntroduction.gif" />
+                    <img loading="lazy" class="gif-container" src="@/assets/images/cards/walking.gif" />
                     <div class="black-screen"></div>
                 </div>
             </transition>

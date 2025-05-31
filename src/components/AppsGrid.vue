@@ -178,11 +178,11 @@ export default {
 
 <style>
 .empty-slot {
-    width: 100px;
+    /*     width: 100px;
     height: 100px;
     border: 1px dashed rgba(255, 255, 255, 0.2);
     background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 0.5rem;
+    border-radius: 0.5rem; */
 }
 
 /* Animação de entrada (pop-in) */
