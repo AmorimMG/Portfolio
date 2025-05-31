@@ -164,7 +164,7 @@ export default {
                         'grid-row': 'span ' + element.rowSpan
                     }" />
                     <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id">
-                        <img loading="lazy" :src="element.icon" width="50px" height="50px" />
+                        <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" />
                         <div class="app-title">{{ element.title }}</div>
                     </div>
                 </div>
@@ -317,7 +317,7 @@ export default {
     }
 
     .app-icon-wrapper>img {
-        width: 60px !important;
+        width: 50px !important;
     }
 }
 </style>
