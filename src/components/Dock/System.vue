@@ -1,6 +1,6 @@
 <script setup>
 import FileIcon from '@/assets/images/dock/file.png';
-import FolderIcon from '@/assets/images/dock/folder.svg';
+import FolderIcon from '@/assets/images/dock/Folder.svg';
 import { setLanguageCookie } from '@/service/session';
 import { useAppsStore } from '@/stores/useAppsStore';
 import { ref } from 'vue';
