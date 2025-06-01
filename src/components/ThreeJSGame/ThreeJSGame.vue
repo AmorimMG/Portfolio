@@ -49,7 +49,7 @@ generateFloor();
 
 // MODEL WITH ANIMATIONS
 var characterControls;
-new GLTFLoader().load('/src/assets/images/threejs/models/Soldier.glb', function (gltf) {
+new GLTFLoader().load('/threejs/models/Soldier.glb', function (gltf) {
     const model = gltf.scene;
     model.traverse(function (object) {
         if (object.isMesh) object.castShadow = true;
@@ -153,10 +153,10 @@ function generateFloor() {
     // TEXTURES
     const textureLoader = new THREE.TextureLoader();
     /*  const placeholder = textureLoader.load('/src/assets/images/threejs/textures/placeholder/placeholder.png'); */
-    const sandBaseColor = textureLoader.load('/src/assets/images/threejs/textures/sand/Sand 002_COLOR.jpg');
-    const sandNormalMap = textureLoader.load('/src/assets/images/threejs/textures/sand/Sand 002_NRM.jpg');
-    const sandHeightMap = textureLoader.load('/src/assets/images/threejs/textures/sand/Sand 002_DISP.jpg');
-    const sandAmbientOcclusion = textureLoader.load('/src/assets/images/threejs/textures/sand/Sand 002_OCC.jpg');
+    const sandBaseColor = textureLoader.load('/threejs/textures/sand/Sand 002_COLOR.jpg');
+    const sandNormalMap = textureLoader.load('/textures/sand/Sand 002_NRM.jpg');
+    const sandHeightMap = textureLoader.load('/textures/sand/Sand 002_DISP.jpg');
+    const sandAmbientOcclusion = textureLoader.load('/textures/sand/Sand 002_OCC.jpg');
 
     const WIDTH = 80;
     const LENGTH = 80;
