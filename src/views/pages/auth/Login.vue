@@ -6,14 +6,13 @@ import { useRouter } from 'vue-router';
 import Background from '../../../components/Background.vue';
 import sessionModule, { getLanguageCookie, setLanguageCookie } from '../../../service/session.js';
 
-const { locale } = useI18n();
+const { locale, t: $t } = useI18n();
 const dropdownValues = ref([
     { name: 'Português', code: 'BR', value: 'pt' },
     { name: 'Español', code: 'ES', value: 'es' },
     { name: 'English', code: 'UK', value: 'en' }
 ]);
 const dropdownValue = ref(null);
-const checked = ref(false);
 const router = useRouter();
 const toast = useToast();
 
@@ -74,8 +73,8 @@ function handleSubmit() {
             .then((res) => {
                 toast.add({
                     severity: 'success',
-                    summary: 'gblSummarioToastSucesso',
-                    detail: 'gblUsuarioLogadoSucesso',
+                    summary: $t('SummarioToastSucesso'),
+                    detail: $t('UserLoggedIn'),
                     life: 3000
                 });
                 router.push('/cadastros/dashboard');
