@@ -23,7 +23,8 @@
 			"SingIn": "Sign in to continue",
 			"User": "User",
 			"Password": "Password",
-			"SignInButton": "Sign in"
+			"SignInButton": "Sign in",
+            "UserLoggedIn": "User logged in successfully"
 		},
 
 		"Contact": {
@@ -149,7 +150,8 @@
 			"SingIn": "Iniciar sesión para continuar",
 			"User": "Usuario",
 			"Password": "Contraseña",
-			"SignInButton": "Iniciar sesión"
+			"SignInButton": "Iniciar sesión",
+            "UserLoggedIn": "Usuario iniciado sesión con éxito"
 		},
 
 		"Contact": {
@@ -275,7 +277,8 @@
 			"SingIn": "Entrar para continuar",
 			"User": "Usuário",
 			"Password": "Senha",
-			"SignInButton": "Entrar"
+			"SignInButton": "Entrar",
+            "UserLoggedIn": "Usuário logado com sucesso"
 		},
 		"Contact": {
 			"title": "Contato",
