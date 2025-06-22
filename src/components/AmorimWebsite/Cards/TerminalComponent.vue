@@ -1,17 +1,14 @@
 <script setup>
 import { terminalConfig } from '@/data/terminalConfig';
-import { useLayout } from '@/layout/composables/layout';
-import AnsiToHtml from 'ansi-to-html';
 import TerminalService from 'primevue/terminalservice';
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CardEffect from '../../CardEffect.vue';
+import { neofetchOutput } from './neofetch';
+import { clearTerminal, currentDir, currentPath, getDirectoryFromPath, listDirectory } from './terminalCommands';
 
 const { t } = useI18n();
 const locale = useI18n().locale;
-
-const { isDarkTheme } = useLayout();
-const ansiToHtml = new AnsiToHtml();
 
 const props = defineProps({
     isCard: {
@@ -22,110 +19,6 @@ const props = defineProps({
 
 const changeLanguage = (lang) => {
     locale.value = lang;
-};
-
-const neofetchOutput = () => {
-    var logoAnsi = `
-\u001b[0m\u001b \u001b[0m
-\u001b[38;5;196m            ⢱⣆
-\u001b[38;5;197m            ⠈⣿⣷⡀
-\u001b[38;5;198m            ⢸⣿⣿⣷⣧
-\u001b[38;5;199m        ⡀⢠⣿⡟⣿⣿⣿⡇
-\u001b[38;5;200m        ⣳⣼⣿⡏⢸⣿⣿⣿⢀
-\u001b[38;5;201m       ⣰⣿⣿⡿⠁⢸⣿⣿⡟⣼⡆
-\u001b[38;5;93m    ⢰⢀⣾⣿⣿⠟⠀⣾⢿⣿⣿⣿⣿
-\u001b[38;5;99m    ⢸⣿⣿⣿⡏⠀⠀⠃⠸⣿⣿⣿⡿
-\u001b[38;5;63m    ⢳⣿⣿⣿⠀⠀⠀⠀⢹⣿⡿⡁
-\u001b[38;5;33m    ⠹⣿⣿⡄⠀⠀⠀⢠⣿⡞⠁
-\u001b[38;5;39m     ⠈⠛⢿⣄⠀⣠⠞⠋
-\u001b[38;5;45m        ⠉⠀
-\u001b[0m\u001b \u001b[0m`;
-
-    var infoAnsi = `
-\u001b[38;5;15mPortfolio@Amorim
-\u001b[38;5;15m------------------
-\u001b[38;5;15mOS:\u001b[0m FlamorzOS 3.0 (Custom)
-\u001b[38;5;15mHost:\u001b[0m WebPortfolio
-\u001b[38;5;15mKernel:\u001b[0m Tailwind 3.x
-\u001b[38;5;15mUptime:\u001b[0m 42 hours
-\u001b[38;5;15mPackages:\u001b[0m Vue + PrimeVue
-\u001b[38;5;15mShell:\u001b[0m PrimeTerminal
-\u001b[38;5;15mResolution:\u001b[0m 100% responsive
-\u001b[38;5;15mFont:\u001b[0m Inherited Sans
-\u001b[38;5;15mCPU:\u001b[0m Human Imagination
-\u001b[38;5;15mGPU:\u001b[0m CSS Renderer
-\u001b[38;5;15mMemory:\u001b[0m Unlimited
-\u001b[38;5;45m███\u001b[38;5;51m███\u001b[38;5;87m███\u001b[38;5;123m███\u001b[38;5;159m███\u001b[38;5;195m███
-\u001b[38;5;45m███\u001b[38;5;51m███\u001b[38;5;87m███\u001b[38;5;123m███\u001b[38;5;159m███\u001b[38;5;195m███`;
-
-    if (isDarkTheme) {
-        logoAnsi = logoAnsi.replace(/\u001b\[38;5;(\d+)m/g, (match, p1) => {
-            return `\u001b[38;5;${parseInt(p1) + 8}m`;
-        });
-        infoAnsi = infoAnsi.replace(/\u001b\[38;5;(\d+)m/g, (match, p1) => {
-            return `\u001b[38;5;${parseInt(p1) + 8}m`;
-        });
-    }
-
-    const terminalContent = document.querySelector('.p-terminal-command-list');
-    if (!terminalContent) {
-        console.error('Terminal content not found');
-        return;
-    }
-
-    const commands = terminalContent.querySelectorAll('[data-pc-section="commands"]');
-    const lastCommandContainer = commands[commands.length - 1];
-
-    if (!lastCommandContainer) return;
-
-    const preElement = document.createElement('pre');
-    preElement.className = 'p-terminal-command neofetch-output';
-
-    // Criar div flexbox container
-    const flexContainer = document.createElement('div');
-    flexContainer.className = 'neofetch-container';
-    flexContainer.style.display = 'flex';
-    flexContainer.style.gap = '25px';
-
-    if (props.isCard) {
-        flexContainer.style.fontSize = '10px';
-    }
-    // Criar div para logo
-    const logoDiv = document.createElement('div');
-    logoDiv.className = 'neofetch-logo';
-    const logoCode = document.createElement('code');
-    logoCode.innerHTML = ansiToHtml.toHtml(logoAnsi);
-    logoDiv.appendChild(logoCode);
-
-    // Criar div para info
-    const infoDiv = document.createElement('div');
-    infoDiv.className = 'neofetch-info';
-    const infoCode = document.createElement('code');
-    infoCode.innerHTML = ansiToHtml.toHtml(infoAnsi);
-    infoDiv.appendChild(infoCode);
-
-    infoDiv.style.display = 'flex';
-    infoDiv.style.alignItems = 'center';
-
-    // Montar estrutura
-    flexContainer.appendChild(logoDiv);
-    flexContainer.appendChild(infoDiv);
-    preElement.appendChild(flexContainer);
-
-    lastCommandContainer.appendChild(preElement);
-};
-
-const clearTerminal = () => {
-    const commandList = document.querySelector('.p-terminal-command-list');
-    if (!commandList) return;
-
-    const commands = commandList.querySelectorAll('[data-pc-section="commands"]');
-    commands.forEach((cmd) => cmd.remove());
-
-    const input = document.querySelector('.p-terminal-prompt-value');
-    if (input) {
-        input.value = '';
-    }
 };
 
 const formatTestimonials = () => {
@@ -141,6 +34,9 @@ const commandHandler = (text) => {
     const lowerCaseText = text.toLowerCase();
     const argsIndex = lowerCaseText.indexOf(' ');
     const command = argsIndex !== -1 ? lowerCaseText.substring(0, argsIndex) : lowerCaseText;
+
+    const args = text.split(' ').filter(arg => arg);
+    const cmd = args[0]?.toLowerCase();
 
     const commandLabels = [
         'help',
@@ -165,10 +61,13 @@ const commandHandler = (text) => {
         'hire',
         'funfact',
         'neofetch',
-        'languages'
+        'languages',
+        'ls',
+        'cd',
+        'pwd'
     ];
 
-    switch (command) {
+    switch (cmd) {
         case 'help':
             response = `Commands are: ${commandLabels.join(', ')}`;
             break;
@@ -275,6 +174,31 @@ const commandHandler = (text) => {
         case 'en':
             changeLanguage('en');
             response = computed(() => t('Terminal.LanguageChanged', { language: 'English' }));
+            break;
+        case 'ls':
+            response = listDirectory(currentDir.value);
+            break;
+        case 'cd':
+            const target = args[1] || '/home';
+            const newDir = getDirectoryFromPath(target);
+            if (newDir && newDir.type === 'dir') {
+                if (target.startsWith('/')) {
+                    currentPath.value = target;
+                } else if (target === '..') {
+                    currentPath.value = currentPath.value.split('/').slice(0, -1).join('/') || '/';
+                } else if (target === '.') {
+                    // Não faz nada, continua no mesmo diretório
+                } else {
+                    currentPath.value = `${currentPath.value}/${target}`.replace(/\/+/g, '/');
+                }
+                currentDir.value = newDir;
+                response = '';
+            } else {
+                response = `cd: ${target}: No such directory`;
+            }
+            break;
+        case 'pwd':
+            response = currentPath.value;
             break;
         default:
             response = `Unknown command: ${command}`;
