@@ -6,7 +6,6 @@ const password = ref('');
 const userName = ref('Amorim');
 
 const handleLogin = () => {
-    console.log('Login com:', password.value);
     emit('login');
 };
 

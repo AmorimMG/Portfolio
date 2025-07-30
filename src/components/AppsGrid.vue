@@ -140,7 +140,51 @@ export default {
             this.extractIds(added).forEach((id) => this.selected.add(id));
             this.extractIds(removed).forEach((id) => this.selected.delete(id));
         },
+        onSelection({
+            store: {
+                changed: { added, removed }
+            }
+        }) {
+            this.extractIds(added).forEach((id) => this.selected.add(id));
+            this.extractIds(removed).forEach((id) => this.selected.delete(id));
+        },
+        onMoveItem({ relatedContext, draggedContext }) {
+            if (!draggedContext || !draggedContext.element) return true;
 
+            const draggedElement = draggedContext.element;
+
+            if (this.selected.size > 0 && this.selected.has(draggedElement.id)) {
+                // Get the current indices of all selected items
+                const selectedIndices = [...this.selected].map((id) => this.filledGrid.findIndex((app) => app.id === id)).sort((a, b) => a - b);
+
+                // Get all selected apps in their original order
+                const selectedApps = selectedIndices.map((index) => this.filledGrid[index]);
+
+                // Create a copy of the grid without the selected items
+                const newGrid = [...this.filledGrid];
+
+                // Remove items from highest index to lowest to maintain correct indices
+                for (let i = selectedIndices.length - 1; i >= 0; i--) {
+                    newGrid.splice(selectedIndices[i], 1);
+                }
+
+                // Calculate the correct insertion index
+                let insertIndex = relatedContext.index;
+                if (insertIndex > draggedContext.index) {
+                    insertIndex -= selectedIndices.filter((index) => index < insertIndex).length;
+                }
+
+                // Insert all selected items at once
+                newGrid.splice(insertIndex, 0, ...selectedApps);
+
+                // Update the grid
+                this.filledGrid = newGrid;
+
+                return false;
+            }
+
+            return true; // Allow default drag behavior for single items
+        },
         range(to, offset = 0) {
             return new Array(to).fill(0).map((_, i) => offset + i);
         },
@@ -152,8 +196,9 @@ export default {
 </script>
 
 <template>
-    <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onMove" :on-start="onStart">
-        <draggable v-model="filledGrid" item-key="id" :move="() => true"
+    <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onSelection"
+        :on-start="onStart">
+        <draggable v-model="filledGrid" item-key="id" :move="onMoveItem"
             :component-data="{ tag: 'div', class: 'draggableApps' }"
             :clone="(original) => ({ ...original, id: Date.now() })">
             <template #item="{ element, index }">
