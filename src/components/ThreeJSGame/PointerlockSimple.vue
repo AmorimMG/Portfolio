@@ -23,7 +23,9 @@
 
 <script setup>
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { nextTick, onMounted, ref } from "vue";
 import { RESTAPI } from "../../service/api";
 import InfoOverlay from "./overlays/InfoOverlay.vue";
@@ -38,6 +40,9 @@ const thirdPerson = ref(false);
 
 // Three.js variables
 let scene, camera, renderer, controls;
+let orbitControls, model, mixer, characterControls;
+let animationsMap = new Map();
+let currentAction = null;
 let moveForward = false,
   moveBackward = false,
   moveLeft = false,
@@ -222,7 +227,26 @@ function setupPointerLock() {
     if (document.pointerLockElement === renderer.domElement) {
       instructionsVisible.value = false;
     } else {
+      // Only show instructions if we're in first person mode
+      if (!thirdPerson.value) {
+        instructionsVisible.value = true;
+        // Re-setup the click listener when pointer lock is lost
+        setTimeout(() => {
+          setupInstructionsClickListener();
+        }, 100);
+      }
+    }
+  };
+
+  const onPointerLockError = () => {
+    console.log("Pointer lock failed");
+    // Only show instructions if we're in first person mode
+    if (!thirdPerson.value) {
       instructionsVisible.value = true;
+      // Re-setup the click listener on error
+      setTimeout(() => {
+        setupInstructionsClickListener();
+      }, 100);
     }
   };
 
@@ -230,22 +254,59 @@ function setupPointerLock() {
   document.addEventListener("mozpointerlockchange", onPointerLockChange);
   document.addEventListener("webkitpointerlockchange", onPointerLockChange);
 
-  // Handle click on instructions
-  const handleInstructionsClick = () => {
-    if (renderer.domElement) {
-      renderer.domElement.requestPointerLock();
-    }
-  };
+  document.addEventListener("pointerlockerror", onPointerLockError);
+  document.addEventListener("mozpointerlockerror", onPointerLockError);
+  document.addEventListener("webkitpointerlockerror", onPointerLockError);
 
-  // Setup instructions click listener
+  // Setup click listener for instructions
+  setupInstructionsClickListener();
+}
+
+function setupInstructionsClickListener() {
+  // Only setup if we're in first person mode
+  if (thirdPerson.value) {
+    return;
+  }
+
+  // Wait for Vue to update the DOM
   setTimeout(() => {
     if (instructionsRef.value && instructionsRef.value.instructions) {
+      // Remove existing listener if any to avoid duplicates
+      instructionsRef.value.instructions.removeEventListener(
+        "click",
+        handleInstructionsClick
+      );
+      // Add new listener
       instructionsRef.value.instructions.addEventListener(
         "click",
         handleInstructionsClick
       );
+      console.log("Instructions click listener setup");
+    } else {
+      // If not ready, try again (but only if still in first person)
+      if (!thirdPerson.value) {
+        setTimeout(() => {
+          setupInstructionsClickListener();
+        }, 100);
+      }
     }
-  }, 100);
+  }, 50);
+}
+
+// Handle click on instructions
+function handleInstructionsClick(event) {
+  console.log("Instructions clicked");
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (
+    renderer.domElement &&
+    !thirdPerson.value &&
+    !document.pointerLockElement
+  ) {
+    console.log("Requesting pointer lock");
+    renderer.domElement.requestPointerLock();
+  }
 }
 
 function setupKeyControls() {
@@ -275,7 +336,17 @@ function setupKeyControls() {
         event.preventDefault();
         break;
       case "ShiftLeft":
-        toggleRun.value = !toggleRun.value;
+        toggleRun.value = true;
+        break;
+      case "Escape":
+        if (document.pointerLockElement === renderer.domElement) {
+          document.exitPointerLock();
+        }
+        event.preventDefault();
+        break;
+      case "KeyR":
+        thirdPerson.value = !thirdPerson.value;
+        toggleCameraMode();
         break;
     }
   };
@@ -297,6 +368,9 @@ function setupKeyControls() {
       case "ArrowRight":
       case "KeyD":
         moveRight = false;
+        break;
+      case "ShiftLeft":
+        toggleRun.value = false;
         break;
     }
   };
@@ -332,12 +406,34 @@ function onDocumentClick(event) {
   }
 }
 
+function playAnimation(animationName) {
+  if (!animationsMap.has(animationName) || currentAction === animationName) {
+    return;
+  }
+
+  const newAction = animationsMap.get(animationName);
+  
+  if (currentAction && animationsMap.has(currentAction)) {
+    const currentActionObj = animationsMap.get(currentAction);
+    currentActionObj.fadeOut(0.2);
+  }
+
+  newAction.reset().fadeIn(0.2).play();
+  currentAction = animationName;
+}
+
 function animate() {
   requestAnimationFrame(animate);
 
   const time = performance.now();
   const delta = (time - prevTime) / 1000;
 
+  // Update mixer for character animations
+  if (mixer && thirdPerson.value) {
+    mixer.update(delta);
+  }
+
+  // Movement logic (works for both modes)
   velocity.x -= velocity.x * 10.0 * delta;
   velocity.z -= velocity.z * 10.0 * delta;
   velocity.y -= 9.8 * 100.0 * delta;
@@ -346,25 +442,170 @@ function animate() {
   direction.x = Number(moveRight) - Number(moveLeft);
   direction.normalize();
 
-  const speed = toggleRun.value ? 2000.0 : 800.0;
+  const speed = toggleRun.value ? 3000.0 : 1000.0;
 
   if (moveForward || moveBackward) velocity.z -= direction.z * speed * delta;
   if (moveLeft || moveRight) velocity.x -= direction.x * speed * delta;
 
-  if (controls.isLocked) {
-    controls.moveRight(-velocity.x * delta);
-    controls.moveForward(-velocity.z * delta);
+  if (thirdPerson.value) {
+    // Third person mode - move the model
+    if (model) {
+      const isMoving = moveForward || moveBackward || moveLeft || moveRight;
+      
+      if (isMoving) {
+        // Play walk animation
+        const animationName = toggleRun.value ? "Run" : "Walk";
+        playAnimation(animationName);
+        
+        const moveVector = new THREE.Vector3();
 
-    controls.getObject().position.y += velocity.y * delta;
-    if (controls.getObject().position.y < 10) {
-      velocity.y = 0;
-      controls.getObject().position.y = 10;
-      canJump = true;
+        // Calculate movement relative to camera direction
+        camera.getWorldDirection(moveVector);
+        moveVector.y = 0;
+        moveVector.normalize();
+
+        const rightVector = new THREE.Vector3();
+        rightVector.crossVectors(camera.up, moveVector).normalize();
+
+        const movement = new THREE.Vector3();
+        movement.addScaledVector(moveVector, -velocity.z * delta);
+        movement.addScaledVector(rightVector, -velocity.x * delta);
+
+        model.position.add(movement);
+
+        // Keep model on the ground
+        model.position.y = 0;
+
+        // Make model face movement direction (corrected rotation)
+        if (movement.length() > 0) {
+          // Calculate the direction the model should face
+          const targetDirection = movement.clone().normalize();
+          const targetPosition = new THREE.Vector3();
+          targetPosition.addVectors(model.position, targetDirection);
+
+          // Make the model look in the direction it's moving
+          model.lookAt(targetPosition);
+
+          // Add 180 degrees rotation to face the correct direction
+          model.rotateY(Math.PI);
+        }
+      } else {
+        // Play idle animation when not moving
+        playAnimation("Idle");
+      }
+    }
+
+    // Update orbit controls
+    if (orbitControls) {
+      if (model) {
+        orbitControls.target.copy(model.position);
+      }
+      orbitControls.update();
+    }
+  } else {
+    // First person mode - use pointer lock controls
+    if (controls.isLocked) {
+      controls.moveRight(-velocity.x * delta);
+      controls.moveForward(-velocity.z * delta);
+
+      controls.getObject().position.y += velocity.y * delta;
+      if (controls.getObject().position.y < 10) {
+        velocity.y = 0;
+        controls.getObject().position.y = 10;
+        canJump = true;
+      }
     }
   }
 
   prevTime = time;
   renderer.render(scene, camera);
+}
+
+function toggleCameraMode() {
+  if (thirdPerson.value) {
+    setupThirdPersonMode();
+  } else {
+    setupFirstPersonMode();
+  }
+}
+
+function setupThirdPersonMode() {
+  // Exit pointer lock
+  if (document.pointerLockElement) {
+    document.exitPointerLock();
+  }
+
+  // Create orbit controls if they don't exist
+  if (!orbitControls) {
+    orbitControls = new OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+    orbitControls.minDistance = 15; // Increased for larger character
+    orbitControls.maxDistance = 30; // Increased for larger character
+    orbitControls.enablePan = false;
+    orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+  }
+
+  // Load character model if not loaded
+  if (!model) {
+    const loader = new GLTFLoader();
+    loader.load("/threejs/models/Soldier.glb", (gltf) => {
+      model = gltf.scene;
+      model.traverse((object) => {
+        if (object.isMesh) object.castShadow = true;
+      });
+
+      // Increase model size
+      model.scale.set(7, 7, 7);
+
+      // Position model at current camera position but on the ground
+      const cameraPosition = controls.getObject().position;
+      model.position.set(cameraPosition.x, 0, cameraPosition.z); // Y = 0 to place on ground
+      scene.add(model);
+
+      // Setup animations
+      const gltfAnimations = gltf.animations;
+      mixer = new THREE.AnimationMixer(model);
+      animationsMap.clear(); // Clear previous animations
+      
+      gltfAnimations
+        .filter((a) => a.name !== "TPose")
+        .forEach((a) => {
+          const action = mixer.clipAction(a);
+          animationsMap.set(a.name, action);
+        });
+
+      // Start idle animation
+      if (animationsMap.has("Idle")) {
+        playAnimation("Idle");
+      }
+      
+      console.log("Available animations:", Array.from(animationsMap.keys()));
+    });
+  } else {
+    // Model already loaded, just add it back to scene
+    if (!scene.children.includes(model)) {
+      scene.add(model);
+    }
+  }
+
+  // Hide instructions
+  instructionsVisible.value = false;
+}
+
+function setupFirstPersonMode() {
+  // Remove model from scene
+  if (model && scene.children.includes(model)) {
+    scene.remove(model);
+  }
+
+  // Show instructions to click for pointer lock only if pointer lock is not active
+  if (!document.pointerLockElement) {
+    instructionsVisible.value = true;
+    // Re-setup the click listener after a delay to ensure DOM is ready
+    setupInstructionsClickListener();
+  } else {
+    instructionsVisible.value = false;
+  }
 }
 </script>
 
