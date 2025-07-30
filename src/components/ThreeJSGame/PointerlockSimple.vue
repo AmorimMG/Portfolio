@@ -412,7 +412,7 @@ function playAnimation(animationName) {
   }
 
   const newAction = animationsMap.get(animationName);
-  
+
   if (currentAction && animationsMap.has(currentAction)) {
     const currentActionObj = animationsMap.get(currentAction);
     currentActionObj.fadeOut(0.2);
@@ -451,12 +451,12 @@ function animate() {
     // Third person mode - move the model
     if (model) {
       const isMoving = moveForward || moveBackward || moveLeft || moveRight;
-      
+
       if (isMoving) {
         // Play walk animation
         const animationName = toggleRun.value ? "Run" : "Walk";
         playAnimation(animationName);
-        
+
         const moveVector = new THREE.Vector3();
 
         // Calculate movement relative to camera direction
@@ -498,7 +498,10 @@ function animate() {
     // Update orbit controls
     if (orbitControls) {
       if (model) {
-        orbitControls.target.copy(model.position);
+        // Set target position slightly above the model
+        const targetPosition = model.position.clone();
+        targetPosition.y = 10; // Keep camera target higher
+        orbitControls.target.copy(targetPosition);
       }
       orbitControls.update();
     }
@@ -566,7 +569,7 @@ function setupThirdPersonMode() {
       const gltfAnimations = gltf.animations;
       mixer = new THREE.AnimationMixer(model);
       animationsMap.clear(); // Clear previous animations
-      
+
       gltfAnimations
         .filter((a) => a.name !== "TPose")
         .forEach((a) => {
@@ -578,7 +581,7 @@ function setupThirdPersonMode() {
       if (animationsMap.has("Idle")) {
         playAnimation("Idle");
       }
-      
+
       console.log("Available animations:", Array.from(animationsMap.keys()));
     });
   } else {
