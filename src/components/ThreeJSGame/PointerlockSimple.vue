@@ -126,7 +126,10 @@ function initThreeJS() {
   // Controls
   controls = new PointerLockControls(camera, renderer.domElement);
   scene.add(controls.getObject());
-  controls.getObject().position.set(0, 10, 0);
+  controls.getObject().position.set(0, 10, 30); // Position to look at totems
+
+  // Set initial camera rotation 
+  controls.getObject().rotation.y = 0; // Look forward toward totems
 
   // Lights - Space-themed lighting
   const hemisphereLight = new THREE.HemisphereLight(0x0077be, 0x000033, 0.8);
@@ -232,6 +235,9 @@ function addSpaceEnvironment() {
 function addSkyPlanets() {
   const planetColors = [0x8b4513, 0xff6347, 0x4169e1, 0x32cd32, 0xff69b4];
   const planetNames = ["Mars", "Jupiter", "Neptune", "Earth-like", "Pink Moon"];
+  
+  // Create texture loader
+  const textureLoader = new THREE.TextureLoader();
 
   for (let i = 0; i < 5; i++) {
     const planetGeometry = new THREE.SphereGeometry(
@@ -239,8 +245,70 @@ function addSkyPlanets() {
       32,
       32
     );
+    
+    // Create canvas texture for each planet
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    
+    // Create different planet textures based on type
+    ctx.fillStyle = `#${planetColors[i].toString(16).padStart(6, '0')}`;
+    ctx.fillRect(0, 0, 512, 512);
+    
+    // Add surface details based on planet type
+    switch(i) {
+      case 0: // Mars - red with darker spots
+        for (let j = 0; j < 50; j++) {
+          ctx.fillStyle = '#5d2d0c';
+          ctx.beginPath();
+          ctx.arc(Math.random() * 512, Math.random() * 512, Math.random() * 20 + 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        break;
+      case 1: // Jupiter - bands
+        for (let y = 0; y < 512; y += 40) {
+          ctx.fillStyle = y % 80 === 0 ? '#cc4125' : '#e55039';
+          ctx.fillRect(0, y, 512, 20);
+        }
+        break;
+      case 2: // Neptune - blue with swirls
+        ctx.fillStyle = '#2e5db8';
+        ctx.fillRect(0, 0, 512, 512);
+        for (let j = 0; j < 30; j++) {
+          ctx.strokeStyle = '#1e3d88';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(Math.random() * 512, Math.random() * 512, Math.random() * 40 + 20, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        break;
+      case 3: // Earth-like - green with blue patches
+        for (let j = 0; j < 20; j++) {
+          ctx.fillStyle = '#4169e1';
+          ctx.beginPath();
+          ctx.arc(Math.random() * 512, Math.random() * 512, Math.random() * 40 + 20, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        break;
+      case 4: // Pink Moon - craters
+        for (let j = 0; j < 30; j++) {
+          ctx.fillStyle = '#d63384';
+          ctx.beginPath();
+          ctx.arc(Math.random() * 512, Math.random() * 512, Math.random() * 15 + 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        break;
+    }
+    
+    // Create texture from canvas
+    const planetTexture = new THREE.CanvasTexture(canvas);
+    planetTexture.wrapS = THREE.RepeatWrapping;
+    planetTexture.wrapT = THREE.RepeatWrapping;
+    
     const planetMaterial = new THREE.MeshPhongMaterial({
-      color: planetColors[i],
+      map: planetTexture,
+      color: 0xffffff, // Use white to let texture show through
       shininess: 30,
       transparent: true,
       opacity: 0.8,
@@ -377,15 +445,15 @@ function addInteractiveElements() {
 }
 
 function addSpaceParkour() {
-  // Create isolated spiral parkour tower
+  // Create isolated spiral parkour tower with doubled dimensions and proper proportions
   const centerX = -200; // Positioned away from spawn
   const centerZ = -200;
-  const maxHeight = 80;
-  const spiralRadius = 20;
-  const totalPlatforms = 16;
+  const maxHeight = 240; // Doubled height (was 120)
+  const spiralRadius = 50; // Doubled radius (was 25) for proper proportion
+  const totalPlatforms = 20; // Keep same number of platforms for good spacing
 
-  // Create base platform
-  const baseGeometry = new THREE.CylinderGeometry(8, 10, 2, 16);
+  // Create base platform (also doubled)
+  const baseGeometry = new THREE.CylinderGeometry(16, 20, 4, 16); // Doubled from 8,10,2
   const baseMaterial = new THREE.MeshPhongMaterial({
     color: 0x4a2c7a,
     emissive: 0x2d1650,
@@ -393,7 +461,7 @@ function addSpaceParkour() {
   });
 
   const basePlatform = new THREE.Mesh(baseGeometry, baseMaterial);
-  basePlatform.position.set(centerX, 1, centerZ);
+  basePlatform.position.set(centerX, 2, centerZ); // Doubled height
 
   basePlatform.userData.info = {
     title: "Spiral Tower Base",
@@ -404,18 +472,18 @@ function addSpaceParkour() {
 
   scene.add(basePlatform);
 
-  // Create spiral platforms
+  // Create spiral platforms with doubled proportions
   for (let i = 0; i < totalPlatforms; i++) {
     const progress = i / (totalPlatforms - 1);
-    const angle = progress * Math.PI * 4; // 4 full rotations
-    const height = 5 + progress * maxHeight;
-    const radius = spiralRadius - progress * 5; // Slightly decreasing radius
+    const angle = progress * Math.PI * 5; // Keep 5 full rotations
+    const height = 10 + progress * maxHeight; // Doubled base height (was 5)
+    const radius = spiralRadius - progress * 16; // Doubled radius decrease (was 8)
 
     const x = centerX + Math.cos(angle) * radius;
     const z = centerZ + Math.sin(angle) * radius;
 
-    // Platform
-    const platformGeometry = new THREE.CylinderGeometry(3, 3.5, 1, 8);
+    // Platform (doubled dimensions)
+    const platformGeometry = new THREE.CylinderGeometry(6, 7, 2, 8); // Doubled from 3,3.5,1
     const platformMaterial = new THREE.MeshPhongMaterial({
       color: 0x6642a6,
       emissive: 0x4a2c7a,
@@ -425,8 +493,8 @@ function addSpaceParkour() {
     const platform = new THREE.Mesh(platformGeometry, platformMaterial);
     platform.position.set(x, height, z);
 
-    // Add glowing rings around platforms
-    const ringGeometry = new THREE.TorusGeometry(3.8, 0.2, 8, 16);
+    // Add glowing rings around platforms (doubled dimensions)
+    const ringGeometry = new THREE.TorusGeometry(7.6, 0.4, 8, 16); // Doubled from 3.8,0.2
     const ringMaterial = new THREE.MeshPhongMaterial({
       color: 0xcc99ff,
       emissive: 0x9966ff,
@@ -434,7 +502,7 @@ function addSpaceParkour() {
     });
 
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.set(x, height + 0.8, z);
+    ring.position.set(x, height + 1.6, z); // Doubled offset from 0.8
     ring.userData.floatSpeed = 0.02 + i * 0.001;
 
     platform.userData.info = {
@@ -444,23 +512,23 @@ function addSpaceParkour() {
       type: "spiral-platform",
     };
 
-    // Add connecting beam to next platform (visual guide)
+    // Add connecting beam to next platform (visual guide) with proper proportions
     if (i < totalPlatforms - 1) {
       const nextProgress = (i + 1) / (totalPlatforms - 1);
-      const nextAngle = nextProgress * Math.PI * 4;
-      const nextHeight = 5 + nextProgress * maxHeight;
-      const nextRadius = spiralRadius - nextProgress * 5;
+      const nextAngle = nextProgress * Math.PI * 5; // Keep same rotation pattern
+      const nextHeight = 10 + nextProgress * maxHeight; // Doubled base height
+      const nextRadius = spiralRadius - nextProgress * 16; // Doubled radius decrease
       const nextX = centerX + Math.cos(nextAngle) * nextRadius;
       const nextZ = centerZ + Math.sin(nextAngle) * nextRadius;
 
-      // Create connecting beam
+      // Create connecting beam with doubled thickness
       const beamLength = Math.sqrt(
         Math.pow(nextX - x, 2) +
           Math.pow(nextHeight - height, 2) +
           Math.pow(nextZ - z, 2)
       );
 
-      const beamGeometry = new THREE.CylinderGeometry(0.1, 0.1, beamLength, 8);
+      const beamGeometry = new THREE.CylinderGeometry(0.2, 0.2, beamLength, 8); // Doubled thickness from 0.1
       const beamMaterial = new THREE.MeshPhongMaterial({
         color: 0x9966ff,
         emissive: 0x6633ff,
@@ -488,8 +556,8 @@ function addSpaceParkour() {
     scene.add(ring);
   }
 
-  // Add final reward platform at the top
-  const rewardGeometry = new THREE.CylinderGeometry(6, 6, 2, 16);
+  // Add final reward platform at the top with doubled dimensions
+  const rewardGeometry = new THREE.CylinderGeometry(12, 12, 4, 16); // Doubled from 6,6,2
   const rewardMaterial = new THREE.MeshPhongMaterial({
     color: 0x9966ff,
     emissive: 0x6633ff,
@@ -510,7 +578,7 @@ function addSpaceParkour() {
   });
 
   const rewardCrystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
-  rewardCrystal.position.set(centerX, maxHeight + 12, centerZ);
+  rewardCrystal.position.set(centerX, maxHeight + 24, centerZ); // Doubled height offset
   rewardCrystal.userData.type = "reward-crystal";
 
   rewardPlatform.userData.info = {
@@ -533,18 +601,18 @@ function addSpaceParkour() {
 }
 
 function addPersonalPlaque() {
-  // Create ornate plaque base
-  const plaqueBase = new THREE.BoxGeometry(12, 8, 0.5);
+  // Create large ornate plaque base
+  const plaqueBase = new THREE.BoxGeometry(20, 12, 0.5);
   const plaqueMaterial = new THREE.MeshPhongMaterial({
     color: 0x8b4513,
     shininess: 50,
   });
 
   const plaque = new THREE.Mesh(plaqueBase, plaqueMaterial);
-  plaque.position.set(0, 10, 20); // In front of spawn
+  plaque.position.set(0, 8, -50); // Moved back and larger
 
   // Add golden frame
-  const frameGeometry = new THREE.BoxGeometry(13, 9, 0.3);
+  const frameGeometry = new THREE.BoxGeometry(21, 13, 0.3);
   const frameMaterial = new THREE.MeshPhongMaterial({
     color: 0xffd700,
     shininess: 100,
@@ -554,11 +622,11 @@ function addPersonalPlaque() {
   frame.position.copy(plaque.position);
   frame.position.z -= 0.1;
 
-  // Create canvas for text and image
+  // Create canvas for text and image - larger canvas
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = 800;
+  canvas.height = 600;
 
   // Background
   context.fillStyle = "#2C1810";
@@ -566,23 +634,46 @@ function addPersonalPlaque() {
 
   // Border
   context.strokeStyle = "#FFD700";
-  context.lineWidth = 8;
-  context.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+  context.lineWidth = 12;
+  context.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
 
-  // Title
+  // Title - much larger
   context.fillStyle = "#FFD700";
-  context.font = "bold 32px Arial";
+  context.font = "bold 48px Arial";
   context.textAlign = "center";
-  context.fillText("ASTRONAUT EXPLORER", canvas.width / 2, 60);
+  context.fillText("WELCOME EXPLORER!", canvas.width / 2, 80);
 
-  // Subtitle
+  // Subtitle - larger
   context.fillStyle = "#FFFFFF";
-  context.font = "24px Arial";
-  context.fillText("Space Pioneer & Developer", canvas.width / 2, 100);
+  context.font = "32px Arial";
+  context.fillText("Space Pioneer & Developer", canvas.width / 2, 130);
 
-  // Profile area placeholder
+  // Description - larger and more readable
+  context.fillStyle = "#CCCCCC";
+  context.font = "24px Arial";
+  context.fillText("Your cosmic adventure begins here", canvas.width / 2, 180);
+  context.fillText("Explore the universe of possibilities", canvas.width / 2, 220);
+
+  // Mission briefing
+  context.fillStyle = "#FFD700";
+  context.font = "28px Arial";
+  context.fillText("MISSION BRIEFING", canvas.width / 2, 280);
+  
+  context.fillStyle = "#FFFFFF";
+  context.font = "20px Arial";
+  context.fillText("• Collect 15 cosmic crystals", canvas.width / 2, 320);
+  context.fillText("• Explore the parkour tower", canvas.width / 2, 350);
+  context.fillText("• Discover interactive totems", canvas.width / 2, 380);
+  context.fillText("• Master both camera modes (R key)", canvas.width / 2, 410);
+
+  // Controls
+  context.fillStyle = "#88AAFF";
+  context.font = "18px Arial";
+  context.fillText("WASD: Move | Mouse: Look | Space: Jump | R: Switch View", canvas.width / 2, 460);
+
+  // Profile area placeholder - larger
   context.fillStyle = "#444444";
-  context.fillRect(180, 130, 150, 150);
+  context.fillRect(canvas.width/2 - 75, 480, 150, 80);
   context.fillStyle = "#FFFFFF";
   context.font = "16px Arial";
   context.fillText("YOUR PHOTO", canvas.width / 2, 210);
@@ -609,7 +700,7 @@ function addPersonalPlaque() {
   const texture = new THREE.CanvasTexture(canvas);
   const textMaterial = new THREE.MeshPhongMaterial({ map: texture });
 
-  const textPlane = new THREE.PlaneGeometry(10, 10);
+  const textPlane = new THREE.PlaneGeometry(19, 11); // Larger plane to match plaque
   const textMesh = new THREE.Mesh(textPlane, textMaterial);
   textMesh.position.copy(plaque.position);
   textMesh.position.z += 0.3;
@@ -734,13 +825,15 @@ function createTotems(data) {
   }
 
   data.forEach((item, index) => {
-    // Create futuristic totem base
-    const baseGeometry = new THREE.CylinderGeometry(4, 5, 2, 8);
+    // Create modern holographic totem base
+    const baseGeometry = new THREE.CylinderGeometry(5, 6, 1, 8);
     const baseMaterial = new THREE.MeshPhongMaterial({
-      color: 0x333333,
-      shininess: 100,
-      emissive: 0x001122,
+      color: 0x4a0080,
+      emissive: 0x4a0080,
       emissiveIntensity: 0.3,
+      transparent: true,
+      opacity: 0.8,
+      shininess: 100,
     });
     const base = new THREE.Mesh(baseGeometry, baseMaterial);
 
@@ -943,8 +1036,11 @@ function createTotems(data) {
     totemGroup.add(pillarGroup);
     totemGroup.add(orbGroup);
 
-    // Position the entire totem
-    totemGroup.position.set(index * 40 - 40, 1, 50);
+    // Position the entire totem (centered around origin)
+    const totalTotems = data.length;
+    const spacing = 40;
+    const offset = (totalTotems - 1) * spacing / 2;
+    totemGroup.position.set(index * spacing - offset, 1, -30); // Centered and in front
 
     // Add user data for interaction
     totemGroup.userData.link = item.link;
@@ -1286,6 +1382,23 @@ function animateSpaceElements(time) {
       }
     }
 
+    // Animate totem elements
+    if (child.userData.crystalGroup) {
+      child.userData.crystalGroup.children.forEach((crystal) => {
+        // Floating motion
+        crystal.position.y = crystal.userData.originalY + Math.sin(time * crystal.userData.floatSpeed) * 0.8;
+        // Rotation
+        crystal.rotation.x += crystal.userData.rotationSpeed;
+        crystal.rotation.y += crystal.userData.rotationSpeed * 0.7;
+      });
+    }
+
+    if (child.userData.ringGroup) {
+      child.userData.ringGroup.children.forEach((ring) => {
+        ring.rotation.z += ring.userData.rotationSpeed;
+      });
+    }
+
     // Animate reward crystal (golden crystal at summit)
     if (child.userData.type === "reward-crystal") {
       child.rotation.y += 0.03;
@@ -1326,20 +1439,38 @@ function checkCrystalCollection() {
     playerPosition = model.position.clone();
     playerPosition.y += 2; // Check at character height
   } else {
-    playerPosition = controls.getObject().position.clone();
+    // For first-person, get camera position directly
+    playerPosition = camera.position.clone();
   }
 
-  // Check each crystal for proximity
-  scene.children.forEach((child) => {
+  // Check each crystal for proximity (search through all objects)
+  const crystalsToCheck = [];
+  scene.traverse((child) => {
     if (
       child.userData.info &&
       child.userData.info.type === "ground-crystal" &&
       !child.userData.collected
     ) {
-      const distance = playerPosition.distanceTo(child.position);
+      crystalsToCheck.push(child);
+    }
+  });
 
-      // Collect crystal if player is close enough (within 3 units)
-      if (distance < 3) {
+  crystalsToCheck.forEach((child) => {
+    const distance = playerPosition.distanceTo(child.position);
+
+    // Debug logging for first-person mode
+    if (!thirdPerson.value) {
+      console.log("First-person crystal check:", {
+        playerPos: playerPosition,
+        crystalPos: child.position,
+        distance: distance,
+        threshold: 8
+      });
+    }
+
+    // Collect crystal if player is close enough (larger detection radius for first-person)
+    const detectionRadius = thirdPerson.value ? 5 : 8;
+    if (distance < detectionRadius) {
         // Collect crystal
         child.userData.collected = true;
         crystalCounter.value++;
@@ -1358,7 +1489,7 @@ function checkCrystalCollection() {
         }, 500);
 
         // Update description for remaining crystals
-        scene.children.forEach((otherChild) => {
+        scene.traverse((otherChild) => {
           if (
             otherChild.userData.info &&
             otherChild.userData.info.type === "ground-crystal"
@@ -1393,7 +1524,6 @@ function checkCrystalCollection() {
           }
         }, 2000);
       }
-    }
   });
 }
 
@@ -1502,13 +1632,13 @@ function checkPlatformCollisions() {
             Math.pow(playerPosition.z - platformPos.z, 2)
         );
 
-        // Determine platform radius based on geometry
-        let platformRadius = 4; // default
-        if (objectType === "parkour-base") platformRadius = 10;
-        else if (objectType === "summit") platformRadius = 8;
-        else if (objectType === "ledge") platformRadius = 4;
-        else if (objectType === "spiral-platform") platformRadius = 4;
-        else if (objectType === "connecting-beam") platformRadius = 2;
+        // Determine platform radius based on geometry (doubled to match visual size)
+        let platformRadius = 8; // default (doubled from 4)
+        if (objectType === "parkour-base") platformRadius = 20; // doubled from 10
+        else if (objectType === "summit") platformRadius = 16; // doubled from 8
+        else if (objectType === "ledge") platformRadius = 8; // doubled from 4
+        else if (objectType === "spiral-platform") platformRadius = 8; // doubled from 4 to match visual radius of 6-7
+        else if (objectType === "connecting-beam") platformRadius = 4; // doubled from 2
 
         // If player is within platform bounds horizontally
         if (distanceXZ <= platformRadius) {
@@ -1523,12 +1653,12 @@ function checkPlatformCollisions() {
               : playerPosition.y - 10; // Account for camera height offset
 
           // Player is on platform if they're close to the platform height
-          // Use a more tolerant range for stability
+          // Use a more tolerant range for stability and easier parkour
           const heightDifference = playerBottom - platformTop;
 
           if (
-            heightDifference >= -3 && // Player can be slightly below platform (landing tolerance)
-            heightDifference <= 1 && // Player can be slightly above platform
+            heightDifference >= -5 && // Player can be more below platform (increased landing tolerance)
+            heightDifference <= 2 && // Player can be slightly above platform
             platformTop > highestPlatform
           ) {
             highestPlatform = platformTop;
@@ -1816,19 +1946,29 @@ function animate() {
 
         model.position.add(movement);
 
+        // Apply gravity and jumping for third person
+        model.position.y += velocity.y * delta;
+
         // Check platform collisions
         const collision = updatePlatformState();
 
         if (collision.onPlatform) {
-          // Set model to platform height
-          model.position.y = collision.platformHeight;
+          // Set model to platform height and enable jumping
+          if (model.position.y <= collision.platformHeight) {
+            model.position.y = collision.platformHeight;
+            velocity.y = 0;
+            canJump = true;
+          }
         } else {
           // Apply gravity when not on platform
-          model.position.y -= 9.8 * delta * 5; // Gravity
-
+          
           // Keep model on the ground (minimum)
           if (model.position.y < collision.groundLevel) {
             model.position.y = collision.groundLevel;
+            velocity.y = 0;
+            canJump = true;
+          } else {
+            canJump = false; // Can't jump while in air
           }
         }
 
@@ -1854,12 +1994,14 @@ function animate() {
     // Update orbit controls
     if (orbitControls) {
       if (model) {
-        // Set target position slightly above the model
+        // Set target position to follow model including vertical movement
         const targetPosition = model.position.clone();
-        targetPosition.y = 10; // Keep camera target higher
+        targetPosition.y += 5; // Offset slightly above model center
         orbitControls.target.copy(targetPosition);
+        
+        // Smooth camera position update to follow jumping
+        orbitControls.update();
       }
-      orbitControls.update();
     }
   } else {
     // First person mode - use pointer lock controls
