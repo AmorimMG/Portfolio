@@ -18,8 +18,20 @@
       <i class="pi pi-user" v-if="!thirdPerson"></i>
     </div>
     <div class="crystal-counter">
-      <i class="pi pi-circle-fill" style="color: #00ffff"></i>
+      <i class="pi pi-circle-fill" style="color: #cc99ff"></i>
       <span>{{ crystalCounter }}/15</span>
+    </div>
+    <div v-if="hoveredObject" class="object-info-overlay">
+      <h4>{{ hoveredObject.title }}</h4>
+      <p class="subtitle">{{ hoveredObject.subtitle }}</p>
+      <p class="description">{{ hoveredObject.description }}</p>
+    </div>
+    <div v-if="achievementMessage" class="achievement-overlay">
+      <div class="achievement-content">
+        <i class="pi pi-star-fill"></i>
+        <h3>{{ achievementMessage.title }}</h3>
+        <p>{{ achievementMessage.description }}</p>
+      </div>
     </div>
     <InfoOverlay v-if="selectedTotem" :totem="selectedTotem" />
   </div>
@@ -42,6 +54,8 @@ const selectedTotem = ref(null);
 const toggleRun = ref(false);
 const thirdPerson = ref(false);
 const crystalCounter = ref(0);
+const hoveredObject = ref(null);
+const achievementMessage = ref(null);
 
 // Three.js variables
 let scene, camera, renderer, controls;
@@ -53,6 +67,8 @@ let moveForward = false,
   moveLeft = false,
   moveRight = false,
   canJump = false;
+let onPlatform = false; // Track if player is on a platform
+let currentPlatformHeight = 0; // Current platform height
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
 let prevTime = performance.now();
@@ -78,7 +94,10 @@ onMounted(async () => {
 function initThreeJS() {
   // Scene
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000011); // Dark blue for stars visibility
+
+  // Create purple galaxy skybox
+  createGalaxySkybox();
+
   scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
   // Camera
@@ -328,45 +347,8 @@ function addGroundCrystals() {
 }
 
 function addInteractiveElements() {
-  // Add teleporter pads
-  for (let i = 0; i < 3; i++) {
-    const padGeometry = new THREE.CylinderGeometry(3, 3, 0.3, 16);
-    const padMaterial = new THREE.MeshPhongMaterial({
-      color: 0x00aaff,
-      emissive: 0x002244,
-      emissiveIntensity: 0.5,
-    });
-
-    const pad = new THREE.Mesh(padGeometry, padMaterial);
-    pad.position.set(
-      (Math.random() - 0.5) * 200 + i * 100,
-      0.15,
-      (Math.random() - 0.5) * 200
-    );
-
-    // Add energy rings
-    const ringGeometry = new THREE.TorusGeometry(3.5, 0.2, 8, 16);
-    const ringMaterial = new THREE.MeshPhongMaterial({
-      color: 0x00ffff,
-      emissive: 0x004444,
-      emissiveIntensity: 0.8,
-    });
-
-    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.copy(pad.position);
-    ring.position.y = 2;
-
-    pad.userData.info = {
-      title: "Teleporter Pad",
-      subtitle: "Transport Device",
-      description: "Step on to activate teleportation sequence",
-      type: "teleporter",
-    };
-
-    pad.userData.ring = ring;
-    scene.add(pad);
-    scene.add(ring);
-  }
+  // Add space parkour elements
+  addSpaceParkour();
 
   // Add mysterious monoliths
   for (let i = 0; i < 4; i++) {
@@ -392,6 +374,162 @@ function addInteractiveElements() {
 
     scene.add(monolith);
   }
+}
+
+function addSpaceParkour() {
+  // Create isolated spiral parkour tower
+  const centerX = -200; // Positioned away from spawn
+  const centerZ = -200;
+  const maxHeight = 80;
+  const spiralRadius = 20;
+  const totalPlatforms = 16;
+
+  // Create base platform
+  const baseGeometry = new THREE.CylinderGeometry(8, 10, 2, 16);
+  const baseMaterial = new THREE.MeshPhongMaterial({
+    color: 0x4a2c7a,
+    emissive: 0x2d1650,
+    emissiveIntensity: 0.3,
+  });
+
+  const basePlatform = new THREE.Mesh(baseGeometry, baseMaterial);
+  basePlatform.position.set(centerX, 1, centerZ);
+
+  basePlatform.userData.info = {
+    title: "Spiral Tower Base",
+    subtitle: "Parkour Challenge Start",
+    description: "Begin your ascent to the cosmic summit!",
+    type: "parkour-base",
+  };
+
+  scene.add(basePlatform);
+
+  // Create spiral platforms
+  for (let i = 0; i < totalPlatforms; i++) {
+    const progress = i / (totalPlatforms - 1);
+    const angle = progress * Math.PI * 4; // 4 full rotations
+    const height = 5 + progress * maxHeight;
+    const radius = spiralRadius - progress * 5; // Slightly decreasing radius
+
+    const x = centerX + Math.cos(angle) * radius;
+    const z = centerZ + Math.sin(angle) * radius;
+
+    // Platform
+    const platformGeometry = new THREE.CylinderGeometry(3, 3.5, 1, 8);
+    const platformMaterial = new THREE.MeshPhongMaterial({
+      color: 0x6642a6,
+      emissive: 0x4a2c7a,
+      emissiveIntensity: 0.4,
+    });
+
+    const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+    platform.position.set(x, height, z);
+
+    // Add glowing rings around platforms
+    const ringGeometry = new THREE.TorusGeometry(3.8, 0.2, 8, 16);
+    const ringMaterial = new THREE.MeshPhongMaterial({
+      color: 0xcc99ff,
+      emissive: 0x9966ff,
+      emissiveIntensity: 0.8,
+    });
+
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.position.set(x, height + 0.8, z);
+    ring.userData.floatSpeed = 0.02 + i * 0.001;
+
+    platform.userData.info = {
+      title: `Spiral Platform ${i + 1}`,
+      subtitle: "Parkour Step",
+      description: `Platform ${i + 1} of ${totalPlatforms} - Height: ${Math.round(height)}m`,
+      type: "spiral-platform",
+    };
+
+    // Add connecting beam to next platform (visual guide)
+    if (i < totalPlatforms - 1) {
+      const nextProgress = (i + 1) / (totalPlatforms - 1);
+      const nextAngle = nextProgress * Math.PI * 4;
+      const nextHeight = 5 + nextProgress * maxHeight;
+      const nextRadius = spiralRadius - nextProgress * 5;
+      const nextX = centerX + Math.cos(nextAngle) * nextRadius;
+      const nextZ = centerZ + Math.sin(nextAngle) * nextRadius;
+
+      // Create connecting beam
+      const beamLength = Math.sqrt(
+        Math.pow(nextX - x, 2) +
+          Math.pow(nextHeight - height, 2) +
+          Math.pow(nextZ - z, 2)
+      );
+
+      const beamGeometry = new THREE.CylinderGeometry(0.1, 0.1, beamLength, 8);
+      const beamMaterial = new THREE.MeshPhongMaterial({
+        color: 0x9966ff,
+        emissive: 0x6633ff,
+        emissiveIntensity: 0.6,
+        transparent: true,
+        opacity: 0.7,
+      });
+
+      const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+
+      // Position and rotate beam to connect platforms
+      beam.position.set(
+        (x + nextX) / 2,
+        (height + nextHeight) / 2,
+        (z + nextZ) / 2
+      );
+
+      beam.lookAt(nextX, nextHeight, nextZ);
+      beam.rotateX(Math.PI / 2);
+
+      scene.add(beam);
+    }
+
+    scene.add(platform);
+    scene.add(ring);
+  }
+
+  // Add final reward platform at the top
+  const rewardGeometry = new THREE.CylinderGeometry(6, 6, 2, 16);
+  const rewardMaterial = new THREE.MeshPhongMaterial({
+    color: 0x9966ff,
+    emissive: 0x6633ff,
+    emissiveIntensity: 0.6,
+  });
+
+  const rewardPlatform = new THREE.Mesh(rewardGeometry, rewardMaterial);
+  rewardPlatform.position.set(centerX, maxHeight + 8, centerZ);
+
+  // Add spinning crystal on top
+  const crystalGeometry = new THREE.OctahedronGeometry(2);
+  const crystalMaterial = new THREE.MeshPhongMaterial({
+    color: 0xffdd44,
+    emissive: 0xffaa00,
+    emissiveIntensity: 0.8,
+    transparent: true,
+    opacity: 0.9,
+  });
+
+  const rewardCrystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
+  rewardCrystal.position.set(centerX, maxHeight + 12, centerZ);
+  rewardCrystal.userData.type = "reward-crystal";
+
+  rewardPlatform.userData.info = {
+    title: "Summit Platform",
+    subtitle: "Parkour Complete!",
+    description: "Congratulations! You've reached the cosmic summit!",
+    type: "summit",
+  };
+
+  rewardCrystal.userData.info = {
+    title: "Golden Cosmic Crystal",
+    subtitle: "Ultimate Reward",
+    description:
+      "A legendary crystal that only the most skilled explorers can reach!",
+    type: "golden-crystal",
+  };
+
+  scene.add(rewardPlatform);
+  scene.add(rewardCrystal);
 }
 
 function addPersonalPlaque() {
@@ -940,8 +1078,9 @@ function setupKeyControls() {
         moveRight = true;
         break;
       case "Space":
-        if (canJump) {
-          velocity.y += 350;
+        // Only allow jump if on ground or platform (not flying)
+        if (canJump || onPlatform) {
+          velocity.y = 350;
           canJump = false;
         }
         event.preventDefault();
@@ -1118,16 +1257,46 @@ function animateSpaceElements(time) {
         child.rotation.y += 0.02;
       }
 
-      // Animate teleporter rings
-      if (objectType === "teleporter" && child.userData.ring) {
-        child.userData.ring.rotation.y += 0.05;
-        child.userData.ring.position.y = 2 + Math.sin(time * 0.003) * 0.5;
+      // Animate floating stepping stones
+      if (objectType === "stepping-stone") {
+        child.position.y =
+          child.userData.originalY +
+          Math.sin(time * child.userData.floatSpeed) * 1.5;
+        child.rotation.x += 0.01;
+        child.rotation.z += 0.005;
+      }
+
+      // Animate platform edges
+      if (objectType === "platform") {
+        // Find associated edge (next sibling)
+        const edgeIndex = scene.children.indexOf(child) + 1;
+        if (edgeIndex < scene.children.length) {
+          const edge = scene.children[edgeIndex];
+          if (edge.geometry && edge.geometry.type === "TorusGeometry") {
+            edge.rotation.y += 0.02;
+            edge.material.emissiveIntensity =
+              0.8 + Math.sin(time * 0.005) * 0.3;
+          }
+        }
       }
 
       // Rotate monoliths slowly
       if (objectType === "monolith") {
         child.rotation.y += 0.001;
       }
+    }
+
+    // Animate reward crystal (golden crystal at summit)
+    if (child.userData.type === "reward-crystal") {
+      child.rotation.y += 0.03;
+      child.rotation.x += 0.01;
+      child.position.y = child.position.y + Math.sin(time * 0.002) * 0.3;
+    }
+
+    // Animate spiral platform rings
+    if (child.userData.floatSpeed) {
+      child.rotation.y += child.userData.floatSpeed;
+      child.material.emissiveIntensity = 0.8 + Math.sin(time * 0.003) * 0.2;
     }
 
     // Animate totems (floating orbs and energy pillars)
@@ -1206,6 +1375,14 @@ function checkCrystalCollection() {
           type: "collection",
         };
 
+        // Check if all crystals collected
+        if (crystalCounter.value === 15) {
+          showAchievement(
+            "🏆 CRYSTAL MASTER!",
+            "Congratulations! You've collected all 15 energy crystals! The cosmic energy flows through you!"
+          );
+        }
+
         // Auto-hide message after 2 seconds
         setTimeout(() => {
           if (
@@ -1263,6 +1440,303 @@ function createCollectionEffect(position) {
   return particles;
 }
 
+function checkObjectHover() {
+  // Create raycaster from camera center (where player is looking)
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+
+  const intersects = raycaster.intersectObjects(scene.children, true);
+
+  if (intersects.length > 0) {
+    const intersect = intersects[0];
+    if (intersect.object.userData.info && intersect.distance < 50) {
+      // Show info for object being looked at
+      hoveredObject.value = intersect.object.userData.info;
+    } else {
+      hoveredObject.value = null;
+    }
+  } else {
+    hoveredObject.value = null;
+  }
+}
+
+function showAchievement(title, description, duration = 5000) {
+  achievementMessage.value = { title, description };
+  setTimeout(() => {
+    achievementMessage.value = null;
+  }, duration);
+}
+
+function checkPlatformCollisions() {
+  // Get player position
+  let playerPosition;
+  if (thirdPerson.value && model) {
+    playerPosition = model.position.clone();
+  } else {
+    playerPosition = controls.getObject().position.clone();
+  }
+
+  let highestPlatform = -1; // -1 means no platform found
+  let onPlatform = false;
+
+  // Check all platforms and objects for collision
+  scene.children.forEach((child) => {
+    if (child.userData.info) {
+      const objectType = child.userData.info.type;
+
+      // Check if player is on a platform or structure
+      if (
+        objectType === "spiral-platform" ||
+        objectType === "platform" ||
+        objectType === "parkour-base" ||
+        objectType === "summit" ||
+        objectType === "ledge" ||
+        objectType === "connecting-beam"
+      ) {
+        const platform = child;
+        const platformPos = platform.position;
+
+        // Calculate distance on XZ plane
+        const distanceXZ = Math.sqrt(
+          Math.pow(playerPosition.x - platformPos.x, 2) +
+            Math.pow(playerPosition.z - platformPos.z, 2)
+        );
+
+        // Determine platform radius based on geometry
+        let platformRadius = 4; // default
+        if (objectType === "parkour-base") platformRadius = 10;
+        else if (objectType === "summit") platformRadius = 8;
+        else if (objectType === "ledge") platformRadius = 4;
+        else if (objectType === "spiral-platform") platformRadius = 4;
+        else if (objectType === "connecting-beam") platformRadius = 2;
+
+        // If player is within platform bounds horizontally
+        if (distanceXZ <= platformRadius) {
+          // Get platform top height
+          const platformTop =
+            platformPos.y + (platform.geometry.parameters?.height || 1);
+
+          // Check if player is at the right height to be "on" the platform
+          const playerBottom =
+            thirdPerson.value && model
+              ? playerPosition.y
+              : playerPosition.y - 10; // Account for camera height offset
+
+          // Player is on platform if they're close to the platform height
+          // Use a more tolerant range for stability
+          const heightDifference = playerBottom - platformTop;
+
+          if (
+            heightDifference >= -3 && // Player can be slightly below platform (landing tolerance)
+            heightDifference <= 1 && // Player can be slightly above platform
+            platformTop > highestPlatform
+          ) {
+            highestPlatform = platformTop;
+            onPlatform = true;
+          }
+        }
+      }
+    }
+  });
+
+  // Return collision info
+  return {
+    onPlatform: onPlatform,
+    platformHeight: highestPlatform,
+    groundLevel: 0, // Default ground level
+  };
+}
+
+function updatePlatformState() {
+  const collision = checkPlatformCollisions();
+  onPlatform = collision.onPlatform;
+  currentPlatformHeight = collision.platformHeight;
+  return collision;
+}
+
+function createGalaxySkybox() {
+  // Create a large sphere for the skybox
+  const skyGeometry = new THREE.SphereGeometry(500, 64, 64);
+
+  // Create shader material for galaxy effect
+  const skyMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      time: { value: 0 },
+      resolution: {
+        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+      },
+    },
+    vertexShader: `
+      varying vec3 vWorldPosition;
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float time;
+      uniform vec2 resolution;
+      varying vec3 vWorldPosition;
+      varying vec2 vUv;
+      
+      // Improved noise functions
+      vec3 random3(vec3 c) {
+        float j = 4096.0 * sin(dot(c, vec3(17.0, 59.4, 15.0)));
+        vec3 r;
+        r.z = fract(512.0 * j);
+        j *= .125;
+        r.x = fract(512.0 * j);
+        j *= .125;
+        r.y = fract(512.0 * j);
+        return r - 0.5;
+      }
+      
+      float simplex3d(vec3 p) {
+        const float F3 = 0.3333333;
+        const float G3 = 0.1666667;
+        
+        vec3 s = floor(p + dot(p, vec3(F3)));
+        vec3 x = p - s + dot(s, vec3(G3));
+        
+        vec3 e = step(vec3(0.0), x - x.yzx);
+        vec3 i1 = e * (1.0 - e.zxy);
+        vec3 i2 = 1.0 - e.zxy * (1.0 - e);
+        
+        vec3 x1 = x - i1 + G3;
+        vec3 x2 = x - i2 + 2.0 * G3;
+        vec3 x3 = x - 1.0 + 3.0 * G3;
+        
+        vec4 w, d;
+        
+        w.x = dot(x, x);
+        w.y = dot(x1, x1);
+        w.z = dot(x2, x2);
+        w.w = dot(x3, x3);
+        
+        w = max(0.6 - w, 0.0);
+        
+        d.x = dot(random3(s), x);
+        d.y = dot(random3(s + i1), x1);
+        d.z = dot(random3(s + i2), x2);
+        d.w = dot(random3(s + 1.0), x3);
+        
+        w *= w;
+        w *= w;
+        d *= w;
+        
+        return dot(d, vec4(52.0));
+      }
+      
+      float fbm(vec3 p) {
+        float f = 0.0;
+        f += 0.5000 * simplex3d(p); p *= 2.01;
+        f += 0.2500 * simplex3d(p); p *= 2.02;
+        f += 0.1250 * simplex3d(p); p *= 2.03;
+        f += 0.0625 * simplex3d(p);
+        return f;
+      }
+      
+      void main() {
+        vec3 direction = normalize(vWorldPosition);
+        
+        // Create base galaxy colors
+        vec3 deepSpace = vec3(0.02, 0.0, 0.08);
+        vec3 purpleNebula = vec3(0.4, 0.1, 0.8);
+        vec3 pinkNebula = vec3(0.8, 0.2, 0.6);
+        vec3 blueNebula = vec3(0.1, 0.3, 0.9);
+        vec3 starColor = vec3(1.0, 0.9, 0.8);
+        
+        // Base gradient from horizon to zenith
+        float horizonGradient = abs(direction.y);
+        vec3 baseColor = mix(deepSpace, purpleNebula * 0.3, smoothstep(0.0, 1.0, horizonGradient));
+        
+        // Create galaxy disk using cylindrical coordinates
+        float radius = length(vec2(direction.x, direction.z));
+        float angle = atan(direction.z, direction.x);
+        
+        // Galaxy spiral arms
+        float spiralTime = time * 0.01;
+        float spiral1 = sin(angle * 2.0 - radius * 8.0 + spiralTime) * 0.5 + 0.5;
+        float spiral2 = sin(angle * 2.0 - radius * 8.0 + spiralTime + 3.14159) * 0.5 + 0.5;
+        
+        // Combine spirals
+        float spiralPattern = max(spiral1, spiral2);
+        spiralPattern = pow(spiralPattern, 3.0);
+        
+        // Galaxy brightness falloff
+        float galaxyMask = exp(-radius * 2.0) * (1.0 - abs(direction.y) * 2.0);
+        galaxyMask = max(0.0, galaxyMask);
+        
+        // Nebula clouds using fractal noise
+        vec3 noisePos = direction * 3.0 + vec3(time * 0.01, time * 0.005, time * 0.008);
+        float nebula = fbm(noisePos);
+        nebula = smoothstep(-0.2, 0.8, nebula);
+        
+        // Different nebula layers
+        float nebula2 = fbm(direction * 5.0 + vec3(time * 0.02));
+        nebula2 = smoothstep(0.0, 0.6, nebula2);
+        
+        // Color the nebulae
+        vec3 nebulaColor = mix(purpleNebula, pinkNebula, nebula2);
+        nebulaColor = mix(nebulaColor, blueNebula, sin(time * 0.1) * 0.5 + 0.5);
+        
+        // Apply nebula to base color
+        baseColor = mix(baseColor, nebulaColor, nebula * 0.7 * galaxyMask);
+        
+        // Add spiral arms
+        vec3 spiralColor = mix(pinkNebula, purpleNebula, sin(time * 0.05 + angle) * 0.5 + 0.5);
+        baseColor = mix(baseColor, spiralColor, spiralPattern * galaxyMask * 0.8);
+        
+        // Generate stars
+        vec3 starPos = direction * 50.0;
+        float stars = 0.0;
+        
+        // Multiple star layers for depth
+        for(int i = 0; i < 4; i++) {
+          vec3 layer = starPos * (1.0 + float(i) * 0.5);
+          float noise = fbm(layer);
+          float starMask = smoothstep(0.7, 0.9, noise);
+          stars += starMask * (1.0 - float(i) * 0.2);
+        }
+        
+        // Twinkling effect
+        float twinkle = sin(time * 2.0 + stars * 100.0) * 0.3 + 0.7;
+        stars *= twinkle;
+        
+        // Add stars to the scene
+        baseColor = mix(baseColor, starColor, stars * 0.8);
+        
+        // Add some bright stars
+        float brightStars = fbm(direction * 20.0);
+        brightStars = smoothstep(0.85, 1.0, brightStars);
+        baseColor += starColor * brightStars * 2.0 * twinkle;
+        
+        // Galaxy center glow
+        float centerGlow = exp(-length(vec2(direction.x, direction.z)) * 5.0);
+        centerGlow *= (1.0 - abs(direction.y));
+        vec3 centerColor = mix(purpleNebula, vec3(1.0, 0.8, 0.4), 0.5);
+        baseColor = mix(baseColor, centerColor, centerGlow * 0.3);
+        
+        // Final color enhancement
+        baseColor = pow(baseColor, vec3(0.8)); // Gamma correction
+        baseColor *= 1.2; // Brightness boost
+        
+        gl_FragColor = vec4(baseColor, 1.0);
+      }
+    `,
+    side: THREE.BackSide,
+  });
+
+  const skybox = new THREE.Mesh(skyGeometry, skyMaterial);
+  scene.add(skybox);
+
+  // Store reference for animation
+  window.galaxyMaterial = skyMaterial;
+}
+
 function playAnimation(animationName) {
   if (!animationsMap.has(animationName) || currentAction === animationName) {
     return;
@@ -1295,6 +1769,12 @@ function animate() {
 
   // Check for crystal collection by proximity
   checkCrystalCollection();
+
+  // Check for object hover (looking at objects)
+  checkObjectHover();
+
+  // Check platform collisions
+  checkPlatformCollisions();
 
   // Movement logic (works for both modes)
   velocity.x -= velocity.x * 10.0 * delta;
@@ -1336,8 +1816,21 @@ function animate() {
 
         model.position.add(movement);
 
-        // Keep model on the ground
-        model.position.y = 0;
+        // Check platform collisions
+        const collision = updatePlatformState();
+
+        if (collision.onPlatform) {
+          // Set model to platform height
+          model.position.y = collision.platformHeight;
+        } else {
+          // Apply gravity when not on platform
+          model.position.y -= 9.8 * delta * 5; // Gravity
+
+          // Keep model on the ground (minimum)
+          if (model.position.y < collision.groundLevel) {
+            model.position.y = collision.groundLevel;
+          }
+        }
 
         // Make model face movement direction (corrected rotation)
         if (movement.length() > 0) {
@@ -1374,13 +1867,40 @@ function animate() {
       controls.moveRight(-velocity.x * delta);
       controls.moveForward(-velocity.z * delta);
 
+      // Always apply gravity first
       controls.getObject().position.y += velocity.y * delta;
-      if (controls.getObject().position.y < 10) {
-        velocity.y = 0;
-        controls.getObject().position.y = 10;
-        canJump = true;
+
+      // Check platform collisions after movement
+      const collision = updatePlatformState();
+
+      if (collision.onPlatform) {
+        // Player is on a platform - adjust position and allow jumping
+        const targetHeight = collision.platformHeight + 10;
+        if (controls.getObject().position.y <= targetHeight) {
+          controls.getObject().position.y = targetHeight;
+          velocity.y = 0;
+          canJump = true; // Can jump from platform
+        }
+      } else {
+        // Ground collision (minimum height)
+        if (controls.getObject().position.y < 10) {
+          velocity.y = 0;
+          controls.getObject().position.y = 10;
+          canJump = true; // Can jump from ground
+        } else {
+          canJump = false; // Can't jump while in air
+        }
       }
     }
+  }
+
+  // Update galaxy skybox animation
+  if (window.galaxyMaterial) {
+    window.galaxyMaterial.uniforms.time.value = time * 0.001;
+    window.galaxyMaterial.uniforms.resolution.value.set(
+      window.innerWidth,
+      window.innerHeight
+    );
   }
 
   prevTime = time;
@@ -1494,7 +2014,7 @@ function setupFirstPersonMode() {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(45, 22, 80, 0.9);
   color: white;
   padding: 15px 20px;
   border-radius: 10px;
@@ -1503,14 +2023,120 @@ function setupFirstPersonMode() {
   gap: 10px;
   font-size: 1.5rem;
   font-weight: bold;
-  border: 2px solid #00ffff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  border: 2px solid #cc99ff;
+  box-shadow: 0 0 15px rgba(204, 153, 255, 0.3);
   z-index: 100;
 }
 
 .crystal-counter i {
   font-size: 1.2rem;
   animation: crystal-pulse 2s infinite;
+}
+
+.object-info-overlay {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(45, 22, 80, 0.95),
+    rgba(61, 26, 120, 0.95)
+  );
+  color: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 2px solid #cc99ff;
+  box-shadow: 0 0 20px rgba(204, 153, 255, 0.4);
+  max-width: 300px;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.object-info-overlay h4 {
+  margin: 0 0 5px 0;
+  color: #cc99ff;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(204, 153, 255, 0.6);
+}
+
+.object-info-overlay .subtitle {
+  margin: 0 0 8px 0;
+  color: #bb99ff;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.object-info-overlay .description {
+  margin: 0;
+  color: #ddccff;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.achievement-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(
+    135deg,
+    rgba(45, 22, 80, 0.98),
+    rgba(74, 44, 122, 0.98)
+  );
+  color: white;
+  padding: 30px 40px;
+  border-radius: 20px;
+  border: 3px solid #cc99ff;
+  box-shadow: 0 0 40px rgba(204, 153, 255, 0.6);
+  text-align: center;
+  z-index: 1000;
+  backdrop-filter: blur(15px);
+  animation: achievementAppear 0.5s ease-out;
+}
+
+@keyframes achievementAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.achievement-content i {
+  font-size: 3rem;
+  color: #ffdd44;
+  margin-bottom: 15px;
+  display: block;
+  animation: achievementStar 2s ease-in-out infinite;
+}
+
+@keyframes achievementStar {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.achievement-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.8rem;
+  color: #cc99ff;
+  text-shadow: 0 0 15px rgba(204, 153, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.achievement-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #ddccff;
+  line-height: 1.5;
 }
 
 @keyframes crystal-pulse {

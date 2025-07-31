@@ -39,7 +39,8 @@ let scene, camera, renderer, controls;
 let moveForward = false,
   moveBackward = false,
   moveLeft = false,
-  moveRight = false;
+  moveRight = false,
+  canJump = false;
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
 let prevTime = performance.now();
@@ -124,6 +125,13 @@ function onKeyDown(event) {
     case "KeyD":
       moveRight = true;
       break;
+    case "Space":
+      if (canJump) {
+        velocity.y = 350;
+        canJump = false;
+      }
+      event.preventDefault();
+      break;
   }
 }
 
@@ -164,6 +172,7 @@ function animate() {
 
   velocity.x -= velocity.x * 10.0 * delta;
   velocity.z -= velocity.z * 10.0 * delta;
+  velocity.y -= 9.8 * 100.0 * delta; // Add gravity
 
   direction.z = Number(moveForward) - Number(moveBackward);
   direction.x = Number(moveRight) - Number(moveLeft);
@@ -175,6 +184,18 @@ function animate() {
   if (controls.isLocked) {
     controls.moveRight(-velocity.x * delta);
     controls.moveForward(-velocity.z * delta);
+
+    // Apply gravity and jumping
+    controls.getObject().position.y += velocity.y * delta;
+
+    // Ground collision
+    if (controls.getObject().position.y < 10) {
+      velocity.y = 0;
+      controls.getObject().position.y = 10;
+      canJump = true;
+    } else {
+      canJump = false; // Can't jump while in air
+    }
   }
 
   prevTime = time;
