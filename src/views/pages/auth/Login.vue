@@ -3,7 +3,6 @@ import { useToast } from "primevue/usetoast";
 import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import LoginBackground from "../../../assets/images/wallpapers/login_background";
 import Background from "../../../components/Background.vue";
 import sessionModule, {
   getLanguageCookie,
@@ -34,7 +33,7 @@ onMounted(() => {
   }
 
   // Salva o background original
-  const originalBackground = LoginBackground;
+  const originalBackground = document.body.style.backgroundColor;
   // Define o novo background
   document.body.style.backgroundColor = "#0f0026";
 
