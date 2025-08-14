@@ -1,13 +1,13 @@
 <script>
 import { ref } from "vue";
 import CustomDialog from "../Modals/CustomDialog.vue";
-import PointerlockSimple from "../ThreeJSGame/PointerlockSimple.vue";
 import VueNeonLight from "../VueNeonLight/vue-neon-light.vue";
+import Pointerlock from "./Pointerlock.vue";
 
 export default {
   components: {
     VueNeonLight,
-    PointerlockSimple,
+    Pointerlock,
     CustomDialog,
   },
   data() {
@@ -50,7 +50,7 @@ export default {
       style="z-index: 10"
       :contentStyle="{ overflowY: 'hidden' }"
     >
-      <PointerlockSimple />
+      <Pointerlock />
     </CustomDialog>
   </div>
 </template>
