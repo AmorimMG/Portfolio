@@ -63,8 +63,6 @@ function setupScrollAnimation() {
             end: '+=2000',
             scrub: 1,
             pin: true,
-            markers: true, // debug, remove depois
-            // 🔑 aqui mudou: onLeave em vez de onComplete
             onLeave: (self) => {
                 gsap.to(containerRef.value, {
                     opacity: 0,
