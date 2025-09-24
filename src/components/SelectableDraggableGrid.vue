@@ -257,7 +257,6 @@ function moveItems(targetIndex) {
     .sort((a, b) => a - b);
   
   if (selectedIndices.length === 0) {
-    console.log('No items to move');
     return;
   }
   
@@ -265,7 +264,6 @@ function moveItems(targetIndex) {
   
   // Verifica se estamos tentando mover para a mesma posição
   if (selectedIndices.length === 1 && selectedIndices[0] === targetIndex) {
-    console.log('Same position, skipping');
     return;
   }
   
@@ -273,55 +271,117 @@ function moveItems(targetIndex) {
   const targetItem = targetIndex < newItems.length ? newItems[targetIndex] : null;
   const isTargetEmpty = isEmptySlot(targetItem);
   
-  console.log('Target is empty slot:', isTargetEmpty, 'Target item:', targetItem);
-  
-  // LÓGICA SIMPLIFICADA:
-  // 1. Substitui itens selecionados por slots vazios nas posições originais
+  // LÓGICA CORRIGIDA PARA EVITAR PERDA DE APPS:
   const EMPTY_SLOT = { id: null }; // Consistente com useAppsStore
-  for (let i = selectedIndices.length - 1; i >= 0; i--) {
-    newItems[selectedIndices[i]] = EMPTY_SLOT;
-  }
   
-  // 2. Como não removemos itens, o índice target não precisa ser ajustado
-  let adjustedTargetIndex = targetIndex;
-  
-  console.log('Adjusted target index after removals:', adjustedTargetIndex);
-  console.log('Array length after removals:', newItems.length);
-  
-  // 3. Coloca os itens movidos nas posições target
   if (isTargetEmpty) {
-    // Para slot vazio, coloca os itens sequencialmente a partir do target
-    console.log('Placing', itemsToMove.length, 'items starting at index:', adjustedTargetIndex);
+    // CASO 1: DROP EM SLOT VAZIO
+    // Substitui itens selecionados por slots vazios nas posições originais
+    for (let i = selectedIndices.length - 1; i >= 0; i--) {
+      newItems[selectedIndices[i]] = EMPTY_SLOT;
+    }
     
+    // Coloca os itens sequencialmente a partir do target
     for (let i = 0; i < itemsToMove.length; i++) {
-      const targetIndexForItem = adjustedTargetIndex + i;
+      const targetIndexForItem = targetIndex + i;
       if (targetIndexForItem < newItems.length) {
-        console.log('Placing item', itemsToMove[i][props.itemKey], 'at index:', targetIndexForItem);
         newItems[targetIndexForItem] = itemsToMove[i];
       }
     }
   } else {
-    // Para swap com item existente, só funciona com 1 item por vez
+    // CASO 2: DROP EM SLOT OCUPADO
     if (itemsToMove.length === 1) {
-      console.log('Swapping items - Target has item:', newItems[adjustedTargetIndex][props.itemKey]);
-      const targetItemToSwap = newItems[adjustedTargetIndex];
-      newItems[adjustedTargetIndex] = itemsToMove[0];
-      // Coloca o item do target na primeira posição vazia dos slots originais
-      const firstEmptyOriginalIndex = selectedIndices.find(idx => newItems[idx][props.itemKey] === null);
-      if (firstEmptyOriginalIndex !== undefined) {
-        newItems[firstEmptyOriginalIndex] = targetItemToSwap;
-      }
+      // Swap simples com um item
+      const targetItemToSwap = newItems[targetIndex];
+      newItems[targetIndex] = itemsToMove[0];
+      newItems[selectedIndices[0]] = targetItemToSwap;
     } else {
-      console.log('Cannot swap multiple items with occupied slot, skipping');
-      // Restaura os itens às posições originais
-      for (let i = 0; i < selectedIndices.length; i++) {
-        newItems[selectedIndices[i]] = itemsToMove[i];
+      // Para múltiplos itens em slot ocupado: encontra slots vazios próximos
+      
+      // Coleta todos os slots vazios disponíveis (excluindo target e slots selecionados)
+      const emptySlots = [];
+      for (let i = 0; i < newItems.length; i++) {
+        if (isEmptySlot(newItems[i]) && !selectedIndices.includes(i) && i !== targetIndex) {
+          emptySlots.push(i);
+        }
       }
-      return;
+      
+      // Se não há slots vazios suficientes, cancela a movimentação
+      if (emptySlots.length < itemsToMove.length - 1) {
+        return;
+      }
+      
+      // Substitui os itens selecionados por slots vazios
+      for (let i = selectedIndices.length - 1; i >= 0; i--) {
+        newItems[selectedIndices[i]] = EMPTY_SLOT;
+      }
+      
+      // Coloca o primeiro item no target (empurrando o item que estava lá)
+      const displacedItem = newItems[targetIndex];
+      newItems[targetIndex] = itemsToMove[0];
+      
+      // Coloca os outros itens nos primeiros slots vazios disponíveis
+      for (let i = 1; i < itemsToMove.length; i++) {
+        const emptySlotIndex = emptySlots[i - 1];
+        newItems[emptySlotIndex] = itemsToMove[i];
+      }
+      
+      // Coloca o item deslocado no primeiro slot vazio restante ou em um dos slots originais vazados
+      const remainingEmptySlots = emptySlots.slice(itemsToMove.length - 1);
+      let displacedItemPlaced = false;
+      
+      if (remainingEmptySlots.length > 0) {
+        // Usa um dos slots vazios restantes
+        newItems[remainingEmptySlots[0]] = displacedItem;
+        displacedItemPlaced = true;
+      } else {
+        // Procura um slot original que agora está vazio
+        for (const originalIndex of selectedIndices) {
+          if (newItems[originalIndex] && newItems[originalIndex][props.itemKey] === null) {
+            newItems[originalIndex] = displacedItem;
+            displacedItemPlaced = true;
+            break;
+          }
+        }
+      }
+      
+      if (!displacedItemPlaced) {
+        console.error('Could not place displaced item - canceling move');
+        // Em caso de erro, cancela a movimentação
+        for (let i = 0; i < selectedIndices.length; i++) {
+          newItems[selectedIndices[i]] = itemsToMove[i];
+        }
+        return;
+      }
     }
   }
   
-  console.log('Move completed. Final result:', newItems.map((item, i) => `${i}: ${item && item[props.itemKey] !== null ? item[props.itemKey] : 'EMPTY'}`));
+  // Validação para garantir que nenhum app foi perdido
+  const originalNonEmptyCount = internalList.value.filter(item => !isEmptySlot(item)).length;
+  const newNonEmptyCount = newItems.filter(item => !isEmptySlot(item)).length;
+  
+  // Validação adicional: verifica se não há duplicatas
+  const newItemIds = newItems.filter(item => !isEmptySlot(item)).map(item => item[props.itemKey]);
+  const uniqueIds = new Set(newItemIds);
+  
+  if (originalNonEmptyCount !== newNonEmptyCount || newItemIds.length !== uniqueIds.size) {
+    console.error('BUG DETECTED: Data integrity violation!', {
+      originalCount: originalNonEmptyCount,
+      newCount: newNonEmptyCount,
+      totalItems: newItemIds.length,
+      uniqueItems: uniqueIds.size,
+      hasDuplicates: newItemIds.length !== uniqueIds.size
+    });
+    console.error('Original items:', internalList.value.map((item, i) => `${i}: ${item && item[props.itemKey] !== null ? item[props.itemKey] : 'EMPTY'}`));
+    console.error('New items:', newItems.map((item, i) => `${i}: ${item && item[props.itemKey] !== null ? item[props.itemKey] : 'EMPTY'}`));
+    console.error('Selected indices:', selectedIndices);
+    console.error('Target index:', targetIndex);
+    console.error('Items to move:', itemsToMove.map(item => item[props.itemKey]));
+    // Em caso de bug, não aplica a mudança
+    return;
+  }
+  
+  console.log('Move completed successfully');
   
   internalList.value = newItems;
   emit("update:modelValue", newItems);
@@ -349,6 +409,12 @@ function handleMouseDown(event) {
   
   isSelecting.value = true;
   event.preventDefault();
+}
+
+function handleDragStart(event) {
+  // Previne o drag padrão do navegador (especialmente para imagens)
+  event.preventDefault();
+  return false;
 }
 
 function handleMouseMove(event) {
@@ -387,8 +453,8 @@ function handleItemMouseDown(event, item, index) {
     return;
   }
   
-  // NÃO impede propagação imediatamente - permite que handleMouseDown do container seja chamado
-  // para iniciar seleção por área se necessário
+  // Previne comportamento padrão para interceptar drag de imagens
+  event.preventDefault();
   
   if (props.dragEnabled && event.button === 0) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -520,23 +586,48 @@ function refreshList() {
   emitSelectionChange();
 }
 
+// DEBUG METHOD
+function debugGridState() {
+  console.log('=== GRID DEBUG STATE ===');
+  console.log('Total items:', internalList.value.length);
+  console.log('Non-empty items:', internalList.value.filter(item => !isEmptySlot(item)).length);
+  console.log('Selected items:', Array.from(selected.value));
+  console.log('Grid contents:', internalList.value.map((item, i) => 
+    `${i}: ${item && item[props.itemKey] !== null ? item[props.itemKey] : 'EMPTY'}`
+  ));
+  console.log('========================');
+}
+
+
+
 // Expõe métodos públicos
 defineExpose({
   refreshList,
   clearSelection,
   setSelection,
-  getSelection: () => Array.from(selected.value)
+  getSelection: () => Array.from(selected.value),
+  debugGridState
 });
 
 // 9. LIFECYCLE
 onMounted(() => {
   document.addEventListener('mousemove', handleMouseMove);
   document.addEventListener('mouseup', handleMouseUp);
+  
+  // Adiciona listener para prevenir dragstart em todo o container
+  if (gridContainer.value) {
+    gridContainer.value.addEventListener('dragstart', handleDragStart, { capture: true });
+  }
 });
 
 onUnmounted(() => {
   document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mouseup', handleMouseUp);
+  
+  // Remove listener do dragstart
+  if (gridContainer.value) {
+    gridContainer.value.removeEventListener('dragstart', handleDragStart, { capture: true });
+  }
 });
 </script>
 
@@ -545,6 +636,7 @@ onUnmounted(() => {
     ref="gridContainer"
     class="selectable-draggable-grid"
     @mousedown="handleMouseDown"
+    @dragstart="handleDragStart"
   >
     <div 
       class="grid-content"
@@ -601,6 +693,25 @@ onUnmounted(() => {
   height: 100%;
   user-select: none;
   overflow: hidden;
+}
+
+.selectable-draggable-grid * {
+  /* Previne drag nativo de qualquer elemento */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Garante que imagens especificamente não sejam arrastáveis */
+.selectable-draggable-grid img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
 .grid-content {

@@ -260,7 +260,7 @@ export default {
                     <div class="app-icon-wrapper" 
                         :title="element.locked ? (isUserLoggedIn ? 'App desbloqueado - Clique para abrir' : 'App bloqueado - Clique para fazer login') : ''">
                         <div class="app-icon-container">
-                            <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" />
+                             <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" draggable="false" />
                             <div v-if="element.locked" class="lock-overlay" :class="{ 'unlocked': isUserLoggedIn }">
                                 <i class="lock-icon pi" :class="isUserLoggedIn ? 'pi-unlock' : 'pi-lock'"></i>
                             </div>
