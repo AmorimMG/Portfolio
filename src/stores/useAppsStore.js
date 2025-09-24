@@ -93,12 +93,17 @@ export const useAppsStore = defineStore('apps', () => {
         this.apps = this.apps.map((app) => (app.name === 'DoomModal' ? { ...app, icon: doomIcon } : app));
     }
 
+    function isEmptySlot(app) {
+        return !app || app.id === null;
+    }
+
     return {
         apps,
         addApp,
         removeApp,
         restoreApp,
         updateSlots,
-        loadIcons
+        loadIcons,
+        isEmptySlot
     };
 });

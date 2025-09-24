@@ -16,22 +16,31 @@ const onMaximize = () => {
             <span class="minimize" @click="closeModal"></span>
             <span class="maximize" @click="onMaximize"></span>
         </div>
+        <div class="header-content">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .modal-header {
     background-color: var(--surface-ground);
-    padding: 10px;
+    padding: 15px;
     z-index: 10;
     position: relative;
+    display: flex;
 }
 
 .window-controls {
     display: flex;
     gap: 8px;
-    margin-bottom: 10px;
     justify-content: start;
+    align-items: center;
+}
+
+.header-content {
+    margin-left: 10px;
+    width: 100%;
 }
 
 .window-controls span {

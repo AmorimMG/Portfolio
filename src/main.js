@@ -15,6 +15,7 @@ import localization from './data/localization.json';
 import '@/assets/styles.scss';
 import { getDarkThemeCookie } from './service/session';
 
+// Verifica o tema pelo cookie
 if (getDarkThemeCookie()) {
     document.documentElement.classList.add('app-dark');
 }
@@ -24,7 +25,7 @@ const pinia = createPinia();
 
 const messages = localization;
 const i18n = new createI18n({
-    locale: 'en', // Default locale
+    locale: 'en', // Linguagem Padrão
     fallbackLocale: 'en',
     legacy: false,
     messages
@@ -40,7 +41,6 @@ app.use(PrimeVue, {
     }
 });
 
-// Adicionado por mim
 app.use(pinia);
 app.use(i18n);
 

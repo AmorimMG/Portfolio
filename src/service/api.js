@@ -9,7 +9,7 @@ const isLocalhost = () => {
     return false;
 };
 
-const localhost = false//isLocalhost();
+const localhost = false //isLocalhost();
 const baseURL = localhost ? 'http://localhost:4000' : 'https://api.amorim.pro';
 
 const instance = axios.create({

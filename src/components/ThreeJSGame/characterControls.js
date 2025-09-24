@@ -1,173 +1,138 @@
 import * as THREE from 'three';
-import { A, D, S, W } from './keys';
 
-export class CharacterControls {
-    constructor(model, mixer, animationsMap, orbitControl, camera, currentAction) {
+export class CharacterControls {    constructor(model, mixer, animationsMap, orbitControls, camera, currentAction, speed) {
         this.model = model;
         this.mixer = mixer;
         this.animationsMap = animationsMap;
         this.currentAction = currentAction;
-        this.orbitControl = orbitControl;
+        this.orbitControls = orbitControls;
         this.camera = camera;
+        this.speed = speed;
 
-        this.toggleRun = true;
-        this.firstPersonView = false;
         this.walkDirection = new THREE.Vector3();
         this.rotateAngle = new THREE.Vector3(0, 1, 0);
-        this.rotateQuaternion = new THREE.Quaternion();
-        this.cameraTarget = new THREE.Vector3();
-
-        this.fadeDuration = 0.2;
-        this.runVelocity = 10; // Aumentado para ficar mais rápido
-        this.walkVelocity = 2;
-        this.currentlyRunning = false; // Começa andando
-
-        this.animationsMap.forEach((value, key) => {
-            if (key === currentAction) {
-                value.play();
-            }
-        });
-        this.updateCameraTarget(0, 0);
-    }
-
-    switchRunToggle() {
-        this.currentlyRunning = !this.currentlyRunning;
-    }
-
-    toggleFirstPersonView() {
-        /*         this.firstPersonView = !this.firstPersonView;
-        if (this.firstPersonView) {
-            this.firstPersonControl.enabled = true;
-            this.orbitControl.enabled = false;
-        } else {
-            this.firstPersonControl.enabled = false;
-            this.orbitControl.enabled = true;
-            document.exitPointerLock();
-        } */
-    }
-
-    directionPressed(keysPressed) {
-        return keysPressed['w'] || keysPressed['a'] || keysPressed['s'] || keysPressed['d'] || keysPressed['shift'];
-    }
-
-    playAnimation(play) {
-        const prevAction = this.animationsMap.get(this.currentAction);
-        const nextAction = this.animationsMap.get(play);
-
-        if (prevAction !== nextAction) {
-            prevAction.fadeOut(this.fadeDuration);
-            nextAction.reset().fadeIn(this.fadeDuration).play();
-            this.currentAction = play;
-        }
-    }
-
-    update(delta, keysPressed) {
-        if (!this.model || !this.mixer) return;
-
-        this.mixer.update(delta);
-        const directionPressed = this.directionPressed(keysPressed);
+        this.rotateQuarternion = new THREE.Quaternion();
+        this.isRunning = false;
         
-        // Atualiza o estado de corrida baseado na tecla Shift
-        this.currentlyRunning = keysPressed['shift'];
+        // Adicionar variáveis para pulo e gravidade
+        this.velocity = new THREE.Vector3();
+        this.canJump = true;
+        this.jumpForce = 350;
+        this.gravity = 9.8 * 100.0;
 
-        // Atualiza o estado da animação
-        let play = 'Idle';
-        if (directionPressed && (keysPressed['w'] || keysPressed['a'] || keysPressed['s'] || keysPressed['d'])) {
-            play = keysPressed['shift'] ? 'Run' : 'Walk';
+        // Configurar a câmera para ser mais livre
+        this.orbitControls.maxDistance = Infinity;
+        this.orbitControls.minDistance = 0;
+        this.orbitControls.maxPolarAngle = Math.PI; // Permite rotação completa
+
+        // Starting animation
+        this.fadeToAction(this.currentAction);
+    }
+
+    fadeToAction(actionName) {
+        const previousAction = this.animationsMap.get(this.currentAction);
+        const newAction = this.animationsMap.get(actionName);
+
+        if (previousAction !== newAction) {
+            previousAction?.fadeOut(0.2);
+            newAction?.reset().fadeIn(0.2).play();
+            this.currentAction = actionName;
+        }
+    }    update(delta, keysPressed) {
+        const directionPressed = ['w', 'a', 's', 'd'].some((key) => keysPressed[key]);
+
+        // Atualizar física do pulo
+        this.velocity.y -= this.gravity * delta;
+        this.model.position.y += this.velocity.y * delta;
+
+        // Verificar colisão com o chão
+        if (this.model.position.y < 0) {
+            this.velocity.y = 0;
+            this.model.position.y = 0;
+            this.canJump = true;
         }
 
-        // Garante que a animação seja tocada
-        if (this.currentAction !== play) {
-            const prevAction = this.animationsMap.get(this.currentAction);
-            const nextAction = this.animationsMap.get(play);
-
-            if (prevAction && nextAction) {
-                prevAction.fadeOut(this.fadeDuration);
-                nextAction.reset().fadeIn(this.fadeDuration).play();
-                this.currentAction = play;
-            }
+        // Processar pulo
+        if (keysPressed[' '] && this.canJump) {
+            this.velocity.y = this.jumpForce;
+            this.canJump = false;
         }
+
+        // Atualizar animação
+        let play = '';
+        if (directionPressed) {
+            play = this.isRunning ? 'Run' : 'Walk';
+        } else {
+            play = 'Idle';
+        }
+        this.fadeToAction(play);
 
         if (directionPressed) {
-            // Get camera direction
-            const cameraDirection = new THREE.Vector3();
-            this.camera.getWorldDirection(cameraDirection);
-            cameraDirection.y = 0;
-            cameraDirection.normalize();
-
             // Calculate movement direction
-            const moveDirection = new THREE.Vector3();
+            this.walkDirection.x = (keysPressed['a'] ? 1 : 0) + (keysPressed['d'] ? -1 : 0);
+            this.walkDirection.z = (keysPressed['w'] ? 1 : 0) + (keysPressed['s'] ? -1 : 0);
+            this.walkDirection.normalize();
 
-            if (keysPressed['w']) moveDirection.add(cameraDirection);
-            if (keysPressed['s']) moveDirection.sub(cameraDirection);
-            if (keysPressed['a']) moveDirection.add(cameraDirection.clone().cross(new THREE.Vector3(0, 1, 0)));
-            if (keysPressed['d']) moveDirection.sub(cameraDirection.clone().cross(new THREE.Vector3(0, 1, 0)));
-
-            moveDirection.normalize();
-
-            // Move model - usando currentlyRunning para determinar a velocidade
-            const velocity = this.currentlyRunning ? this.runVelocity : this.walkVelocity;
-            const moveX = moveDirection.x * velocity * delta;
-            const moveZ = moveDirection.z * velocity * delta;
-
+            // Rotate model
+            const angleYCameraDirection = Math.atan2(this.camera.position.x - this.model.position.x, this.camera.position.z - this.model.position.z);
+            const newDirectionOffset = this.directionOffset(keysPressed);
+            this.rotateQuarternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + newDirectionOffset);
+            this.model.quaternion.rotateTowards(this.rotateQuarternion, 0.2);            // Move model
+            const baseSpeed = this.speed?.value || 1200.0; // Use global speed or fallback to default
+            const currentSpeed = this.isRunning ? baseSpeed * 10 : baseSpeed;
+            const moveX = this.walkDirection.x * currentSpeed * delta * 0.01; // Ajuste do fator de escala
+            const moveZ = this.walkDirection.z * currentSpeed * delta * 0.01;
             this.model.position.x += moveX;
-            this.model.position.z += moveZ;
+            this.model.position.z += moveZ;            // Update camera target and position
+            const targetY = this.model.position.y + 15;
+            const smoothFactor = 0.1;
 
-            // Rotate model to face movement direction
-            if (moveDirection.length() > 0) {
-                const targetRotation = Math.atan2(moveDirection.x, moveDirection.z) + Math.PI;
-                const currentRotation = this.model.rotation.y;
+            // Atualizar posição do alvo da câmera
+            this.orbitControls.target.lerp(new THREE.Vector3(
+                this.model.position.x,
+                targetY,
+                this.model.position.z
+            ), smoothFactor);
 
-                let rotationDiff = targetRotation - currentRotation;
-                while (rotationDiff > Math.PI) rotationDiff -= Math.PI * 2;
-                while (rotationDiff < -Math.PI) rotationDiff += Math.PI * 2;
+            // Calcular a posição desejada da câmera baseada na posição atual do personagem
+            const cameraOffset = new THREE.Vector3(
+                this.camera.position.x - this.orbitControls.target.x,
+                this.camera.position.y - this.orbitControls.target.y,
+                this.camera.position.z - this.orbitControls.target.z
+            );
 
-                this.model.rotation.y += rotationDiff * 0.15;
-            }
+            // Aplicar o offset à nova posição do personagem
+            const newCameraPosition = new THREE.Vector3(
+                this.model.position.x + cameraOffset.x,
+                targetY + cameraOffset.y,
+                this.model.position.z + cameraOffset.z
+            );
 
-            // Update camera target
-            this.orbitControl.target.copy(this.model.position);
-            this.orbitControl.target.y += 1;
+            // Mover a câmera suavemente para a nova posição
+            this.camera.position.lerp(newCameraPosition, smoothFactor);
         }
 
-        this.orbitControl.update();
+        this.mixer.update(delta);
     }
 
-    handleMouseMove(movementX, movementY) {
-        /* this.updateCameraTarget(movementX, movementY); */
-    }
-
-    updateCameraTarget(moveX, moveZ) {
-        this.camera.position.x += moveX;
-        this.camera.position.z += moveZ;
-
-        this.cameraTarget.x = this.model.position.x;
-        this.cameraTarget.y = this.model.position.y + 1;
-        this.cameraTarget.z = this.model.position.z;
-        this.orbitControl.target = this.cameraTarget;
+    toggleRun(running) {
+        this.isRunning = running;
     }
 
     directionOffset(keysPressed) {
-        let directionOffset = 0; // w
+        let directionOffset = 0;
 
-        if (keysPressed[W]) {
-            if (keysPressed[A]) {
-                directionOffset = Math.PI / 4; // w+a
-            } else if (keysPressed[D]) {
-                directionOffset = -Math.PI / 4; // w+d
-            }
-        } else if (keysPressed[S]) {
-            if (keysPressed[A]) {
-                directionOffset = Math.PI / 4 + Math.PI / 2; // s+a
-            } else if (keysPressed[D]) {
-                directionOffset = -Math.PI / 4 - Math.PI / 2; // s+d
-            } else {
-                directionOffset = Math.PI; // s
-            }
-        } else if (keysPressed[A]) {
-            directionOffset = Math.PI / 2; // a
-        } else if (keysPressed[D]) {
-            directionOffset = -Math.PI / 2; // d
+        if (keysPressed['w']) {
+            if (keysPressed['a']) directionOffset = Math.PI / 4;
+            else if (keysPressed['d']) directionOffset = -Math.PI / 4;
+        } else if (keysPressed['s']) {
+            if (keysPressed['a']) directionOffset = Math.PI / 4 + Math.PI / 2;
+            else if (keysPressed['d']) directionOffset = -Math.PI / 4 - Math.PI / 2;
+            else directionOffset = Math.PI;
+        } else if (keysPressed['a']) {
+            directionOffset = Math.PI / 2;
+        } else if (keysPressed['d']) {
+            directionOffset = -Math.PI / 2;
         }
 
         return directionOffset;
