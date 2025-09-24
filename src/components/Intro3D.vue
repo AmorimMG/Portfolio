@@ -79,7 +79,7 @@ function setupScrollAnimation() {
     scrollTriggerInstance = tl.scrollTrigger;
 
     tl.to(camera.position, {
-        x: -0.5,
+        x: -0.475,
         y: 0.1,
         z: 0.2,
         duration: 2,
