@@ -14,15 +14,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="gif-container">
-        <img loading="lazy" class="logo-icon" src="@/assets/images/logo/flamorz.svg" alt="Flamorz Logo" width="250px" />
-        <!--         <i class="apple-icon pi pi-apple"></i> -->
-        <ProgressBar :value="progress" mode="determinate" :showValue="false"
-            style="height: 9px; width: 250px; background: grey; margin-top: -30px" />
-    </div>
+    <div class="bootup-wrapper">
+        <div class="gif-container">
+            <img loading="lazy" class="logo-icon" src="@/assets/images/logo/flamorz.svg" alt="Flamorz Logo"
+                width="250px" />
+            <ProgressBar :value="progress" mode="determinate" :showValue="false"
+                style="height: 9px; width: 250px; background: grey; margin-top: -30px" />
+        </div>
 
-    <div class="black-screen"></div>
+        <div class="black-screen"></div>
+    </div>
 </template>
+
 
 <style scoped>
 :deep(.p-progressbar-value) {
