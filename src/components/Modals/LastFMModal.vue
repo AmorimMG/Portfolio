@@ -108,11 +108,6 @@ export default {
         </Button>
         <CustomDialog :visible="lastFMVisible" @update:visible="onHide()" :maximized="true" :modal="true"
             class="p-dialog-maximized">
-            <template #header>
-                <div class="inline-flex items-center justify-center gap-2">
-                    <h2>{{ $t('LastFM.WeeklyTrackChart') }}</h2>
-                </div>
-            </template>
             <div class="h-full">
                 <div class="LastFMheader">
                     <div class="flex flex-col md:flex-row items-center justify-between mt-5 p-4 gap-3">

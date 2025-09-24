@@ -60,7 +60,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'LastFM',
-        icon: LastFMIcon
+        icon: LastFMIcon,
+        locked: false
     },
     {
         id: 7,
@@ -68,7 +69,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Projects',
-        icon: FolderIcon
+        icon: FolderIcon,
+        locked: false
     },
     {
         id: 13,
@@ -76,7 +78,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'JOGO',
-        icon: Threejs
+        icon: Threejs,
+        locked: false
     },
     {
         id: 14,
@@ -84,7 +87,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Servidor',
-        icon: Raspberry
+        icon: Raspberry,
+        locked: true
     },
     {
         id: 15,
@@ -92,7 +96,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Camera',
-        icon: Camera
+        icon: Camera,
+        locked: false
     },
     {
         id: 16,
@@ -100,7 +105,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Wallpaper',
-        icon: WallpaperIcon
+        icon: WallpaperIcon,
+        locked: false
     },
     {
         id: 16,
@@ -108,7 +114,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Severence',
-        icon: SeverenceIcon
+        icon: SeverenceIcon,
+        locked: false
     },
     {
         id: 17,
@@ -116,7 +123,8 @@ export const apps = [
         colSpan: 1,
         rowSpan: 1,
         title: 'Doom',
-        icon: FolderIcon
+        icon: FolderIcon,
+        locked: false
     }
 ];
 
