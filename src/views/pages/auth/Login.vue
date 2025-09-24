@@ -7,6 +7,7 @@ import Background from "../../../components/Background.vue";
 import sessionModule, {
   getLanguageCookie,
   setLanguageCookie,
+  getUserCookie,
 } from "../../../service/session.js";
 
 const { locale, t: $t } = useI18n();
@@ -20,6 +21,16 @@ const router = useRouter();
 const toast = useToast();
 
 onMounted(() => {
+  const userSession = getUserCookie();
+  if (userSession) {
+    console.log('Usuário já está logado, redirecionando para dashboard...');
+    router.push("/cadastros/dashboard");
+    return;
+  }
+  else{
+    console.log('Nenhum usuário logado, permanecendo na página de login.');
+  }
+
   if (getLanguageCookie()) {
     dropdownValue.value = dropdownValues.value.find(
       (option) => option.value === getLanguageCookie()
@@ -106,7 +117,6 @@ function handleSubmit() {
       });
   }
 }
-sessionModule.actions.logout();
 </script>
 
 <template>
