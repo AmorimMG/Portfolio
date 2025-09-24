@@ -90,12 +90,10 @@ export default {
 
 <style scoped>
 .zoom-controls {
-  right: 10px;
-  z-index: 1000;
   display: flex;
   gap: 10px;
   height: 30px;
-  place-self: flex-end;
+  justify-content: end;
 }
 
 .iframe-container {

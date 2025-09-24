@@ -42,7 +42,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { nextTick, onMounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
 import { RESTAPI } from "../../service/api";
 import InstructionsOverlay from "./overlays/InstructionsOverlay.vue";
 
@@ -72,8 +72,34 @@ let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
 let prevTime = performance.now();
 
+// Control variables for cleanup
+let isComponentMounted = true;
+let animationFrameId = null;
+let eventListeners = [];
+let activeTimeouts = [];
+
+// Helper function to track timeouts
+function createTimeout(callback, delay) {
+  if (!isComponentMounted) return;
+
+  const timeoutId = setTimeout(() => {
+    if (isComponentMounted) {
+      callback();
+    }
+    // Remove from active timeouts array
+    const index = activeTimeouts.indexOf(timeoutId);
+    if (index > -1) {
+      activeTimeouts.splice(index, 1);
+    }
+  }, delay);
+
+  activeTimeouts.push(timeoutId);
+  return timeoutId;
+}
+
 onMounted(async () => {
   console.log("Pointerlock component mounted");
+  isComponentMounted = true;
 
   await nextTick();
 
@@ -88,6 +114,123 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error loading projects:", error);
   }
+});
+
+onUnmounted(() => {
+  console.log("Pointerlock component unmounting - cleaning up...");
+
+  // Stop animation loop
+  isComponentMounted = false;
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+
+  // Clean up Three.js resources
+  if (scene) {
+    // Dispose geometries and materials
+    scene.traverse((child) => {
+      if (child.geometry) {
+        child.geometry.dispose();
+      }
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((material) => {
+            if (material.map) material.map.dispose();
+            if (material.normalMap) material.normalMap.dispose();
+            if (material.roughnessMap) material.roughnessMap.dispose();
+            if (material.metalnessMap) material.metalnessMap.dispose();
+            material.dispose();
+          });
+        } else {
+          if (child.material.map) child.material.map.dispose();
+          if (child.material.normalMap) child.material.normalMap.dispose();
+          if (child.material.roughnessMap) child.material.roughnessMap.dispose();
+          if (child.material.metalnessMap) child.material.metalnessMap.dispose();
+          child.material.dispose();
+        }
+      }
+    });
+    scene.clear();
+  }
+
+  // Dispose renderer
+  if (renderer) {
+    if (renderer.domElement && renderer.domElement.parentNode) {
+      renderer.domElement.parentNode.removeChild(renderer.domElement);
+    }
+    renderer.dispose();
+    renderer.forceContextLoss();
+    renderer = null;
+  }
+
+  // Clean up controls
+  if (controls) {
+    controls.dispose();
+    controls = null;
+  }
+
+  if (orbitControls) {
+    orbitControls.dispose();
+    orbitControls = null;
+  }
+
+  // Clean up mixer
+  if (mixer) {
+    mixer.stopAllAction();
+    mixer = null;
+  }
+
+  // Clear all active timeouts
+  activeTimeouts.forEach(timeoutId => {
+    clearTimeout(timeoutId);
+  });
+  activeTimeouts = [];
+  
+  // Remove all event listeners
+  eventListeners.forEach(({ element, event, handler }) => {
+    try {
+      element.removeEventListener(event, handler);
+    } catch (error) {
+      console.warn("Error removing event listener:", error);
+    }
+  });
+  eventListeners = [];
+
+  // Exit pointer lock
+  if (document.pointerLockElement) {
+    document.exitPointerLock();
+  }
+
+  // Reset all variables
+  scene = null;
+  camera = null;
+  model = null;
+  mixer = null;
+  currentAction = null;
+  characterControls = null;
+  animationsMap.clear();
+
+  // Reset movement variables
+  moveForward = false;
+  moveBackward = false;
+  moveLeft = false;
+  moveRight = false;
+  canJump = false;
+  onPlatform = false;
+  currentPlatformHeight = 0;
+
+  // Reset reactive variables
+  crystalCounter.value = 0;
+  hoveredObject.value = null;
+  achievementMessage.value = null;
+  selectedTotem.value = null;
+
+  // Clean up timeouts
+  activeTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+  activeTimeouts = [];
+
+  console.log("Pointerlock component cleanup completed");
 });
 
 function initThreeJS() {
@@ -167,7 +310,9 @@ function initThreeJS() {
   // Start render loop
   animate();
 
-  console.log("Three.js initialized");
+  if (isComponentMounted) {
+    console.log("Three.js initialized");
+  }
 }
 
 function generateFloor() {
@@ -1107,7 +1252,7 @@ function setupPointerLock() {
       if (!thirdPerson.value) {
         instructionsVisible.value = true;
         // Re-setup the click listener when pointer lock is lost
-        setTimeout(() => {
+        createTimeout(() => {
           setupInstructionsClickListener();
         }, 100);
       }
@@ -1115,12 +1260,14 @@ function setupPointerLock() {
   };
 
   const onPointerLockError = () => {
-    console.log("Pointer lock failed");
+    if (isComponentMounted) {
+      console.log("Pointer lock failed");
+    }
     // Only show instructions if we're in first person mode
     if (!thirdPerson.value) {
       instructionsVisible.value = true;
       // Re-setup the click listener on error
-      setTimeout(() => {
+      createTimeout(() => {
         setupInstructionsClickListener();
       }, 100);
     }
@@ -1134,6 +1281,16 @@ function setupPointerLock() {
   document.addEventListener("mozpointerlockerror", onPointerLockError);
   document.addEventListener("webkitpointerlockerror", onPointerLockError);
 
+  // Track event listeners for cleanup
+  eventListeners.push(
+    { element: document, event: "pointerlockchange", handler: onPointerLockChange },
+    { element: document, event: "mozpointerlockchange", handler: onPointerLockChange },
+    { element: document, event: "webkitpointerlockchange", handler: onPointerLockChange },
+    { element: document, event: "pointerlockerror", handler: onPointerLockError },
+    { element: document, event: "mozpointerlockerror", handler: onPointerLockError },
+    { element: document, event: "webkitpointerlockerror", handler: onPointerLockError }
+  );
+
   // Setup click listener for instructions
   setupInstructionsClickListener();
 }
@@ -1145,7 +1302,7 @@ function setupInstructionsClickListener() {
   }
 
   // Wait for Vue to update the DOM
-  setTimeout(() => {
+  createTimeout(() => {
     if (instructionsRef.value && instructionsRef.value.instructions) {
       // Remove existing listener if any to avoid duplicates
       instructionsRef.value.instructions.removeEventListener(
@@ -1157,11 +1314,13 @@ function setupInstructionsClickListener() {
         "click",
         handleInstructionsClick
       );
-      console.log("Instructions click listener setup");
+      if (isComponentMounted) {
+        console.log("Instructions click listener setup");
+      }
     } else {
       // If not ready, try again (but only if still in first person)
       if (!thirdPerson.value) {
-        setTimeout(() => {
+        createTimeout(() => {
           setupInstructionsClickListener();
         }, 100);
       }
@@ -1171,7 +1330,9 @@ function setupInstructionsClickListener() {
 
 // Handle click on instructions
 function handleInstructionsClick(event) {
-  console.log("Instructions clicked");
+  if (isComponentMounted) {
+    console.log("Instructions clicked");
+  }
   event.preventDefault();
   event.stopPropagation();
 
@@ -1180,7 +1341,9 @@ function handleInstructionsClick(event) {
     !thirdPerson.value &&
     !document.pointerLockElement
   ) {
-    console.log("Requesting pointer lock");
+    if (isComponentMounted) {
+      console.log("Requesting pointer lock");
+    }
     renderer.domElement.requestPointerLock();
   }
 }
@@ -1254,10 +1417,19 @@ function setupKeyControls() {
 
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("keyup", onKeyUp);
+
+  // Track event listeners for cleanup
+  eventListeners.push(
+    { element: document, event: "keydown", handler: onKeyDown },
+    { element: document, event: "keyup", handler: onKeyUp }
+  );
 }
 
 function setupMouseClick() {
   document.addEventListener("click", onDocumentClick);
+
+  // Track event listener for cleanup
+  eventListeners.push({ element: document, event: "click", handler: onDocumentClick });
 }
 
 function onDocumentClick(event) {
@@ -1492,7 +1664,7 @@ function checkCrystalCollection() {
     const distance = playerPosition.distanceTo(child.position);
 
     // Debug logging for first-person mode
-    if (!thirdPerson.value) {
+    if (!thirdPerson.value && isComponentMounted) {
       console.log("First-person crystal check:", {
         playerPos: playerPosition,
         crystalPos: child.position,
@@ -1516,9 +1688,11 @@ function checkCrystalCollection() {
       const particles = createCollectionEffect(child.position);
       scene.add(particles);
 
-      setTimeout(() => {
-        scene.remove(child);
-        scene.remove(particles);
+      createTimeout(() => {
+        if (scene && isComponentMounted) {
+          scene.remove(child);
+          scene.remove(particles);
+        }
       }, 500);
 
       // Update description for remaining crystals
@@ -1548,8 +1722,8 @@ function checkCrystalCollection() {
       }
 
       // Auto-hide message after 2 seconds
-      setTimeout(() => {
-        if (selectedTotem.value && selectedTotem.value.type === "collection") {
+      createTimeout(() => {
+        if (selectedTotem.value && selectedTotem.value.type === "collection" && isComponentMounted) {
           selectedTotem.value = null;
         }
       }, 2000);
@@ -1622,8 +1796,10 @@ function checkObjectHover() {
 
 function showAchievement(title, description, duration = 5000) {
   achievementMessage.value = { title, description };
-  setTimeout(() => {
-    achievementMessage.value = null;
+  createTimeout(() => {
+    if (isComponentMounted) {
+      achievementMessage.value = null;
+    }
   }, duration);
 }
 
@@ -1918,7 +2094,11 @@ function playAnimation(animationName) {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
+  if (!isComponentMounted) {
+    return; // Stop animation if component is unmounted
+  }
+
+  animationFrameId = requestAnimationFrame(animate);
 
   const time = performance.now();
   const delta = (time - prevTime) / 1000;
@@ -2141,7 +2321,9 @@ function setupThirdPersonMode() {
         playAnimation("Idle");
       }
 
-      console.log("Available animations:", Array.from(animationsMap.keys()));
+      if (isComponentMounted) {
+        console.log("Available animations:", Array.from(animationsMap.keys()));
+      }
     });
   } else {
     // Model already loaded, just add it back to scene

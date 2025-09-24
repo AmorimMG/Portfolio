@@ -61,7 +61,7 @@ export const apps = [
         rowSpan: 1,
         title: 'LastFM',
         icon: LastFMIcon,
-        locked: true
+        locked: false
     },
     {
         id: 7,
@@ -88,7 +88,7 @@ export const apps = [
         rowSpan: 1,
         title: 'Servidor',
         icon: Raspberry,
-        locked: false
+        locked: true
     },
     {
         id: 15,

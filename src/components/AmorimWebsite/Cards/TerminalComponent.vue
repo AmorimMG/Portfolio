@@ -242,6 +242,8 @@ onBeforeUnmount(() => {
     border: none !important;
     border-radius: none !important;
     white-space: pre-line;
+    overflow: hidden !important;
+    height: 100% !important;
 }
 
 .p-terminal-command {
@@ -249,7 +251,10 @@ onBeforeUnmount(() => {
 }
 
 .p-terminal .p-terminal-content {
-    height: 100%;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
 }
 
 .p-terminal .p-terminal-input {
@@ -257,13 +262,19 @@ onBeforeUnmount(() => {
 }
 
 .card-effect {
-    max-height: 250px;
+    aspect-ratio: 2/1;
+    width: 100%;
+    height: auto;
 }
 
 .terminal-card {
     background: rgba(155, 89, 182, 0.15);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .terminal-card>.p-terminal {
@@ -271,7 +282,10 @@ onBeforeUnmount(() => {
     color: white;
     border: none;
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .terminal-modal {

@@ -14,11 +14,16 @@ export default {
     return {
       pointerlockVisible: ref(false),
       immersive: ref(false),
+      gameKey: 0, // Key para forçar recriação do componente
     };
   },
   methods: {
     onHide() {
       this.pointerlockVisible = false;
+      // Incrementa a chave para forçar recriação do componente na próxima abertura
+      this.$nextTick(() => {
+        this.gameKey++;
+      });
     },
   },
 };
@@ -50,7 +55,7 @@ export default {
       style="z-index: 10"
       :contentStyle="{ overflowY: 'hidden' }"
     >
-      <Pointerlock />
+      <Pointerlock :key="`game-${gameKey}`" />
     </CustomDialog>
   </div>
 </template>

@@ -2,10 +2,9 @@
 import { useAppsStore } from '@/stores/useAppsStore';
 import { useTrashStore } from '@/stores/useTrashStore';
 
-import SelectionArea from '@viselect/vue';
+import SelectableDraggableGrid from './SelectableDraggableGrid.vue';
 
 import { onMounted, onUnmounted, ref } from 'vue';
-import draggable from 'vuedraggable';
 import { componentMap } from '../data/appsDock';
 
 import { useI18n } from 'vue-i18n';
@@ -15,8 +14,7 @@ import { getUserCookie } from '../service/session.js';
 
 export default {
     components: {
-        SelectionArea,
-        draggable,
+        SelectableDraggableGrid,
         LoginToast,
         ContextMenu,
         ...componentMap
@@ -68,9 +66,9 @@ export default {
         });
 
         return { appsStore, trashStore, contextMenuRef, loginToastRef, userLoggedIn, canAccessApp };
-    },        data() {
+    },
+    data() {
         return {
-            selected: new Set(),
             contextApp: null,
             trash: [],
             pendingLockedApp: null,
@@ -105,8 +103,20 @@ export default {
             return this.userLoggedIn;
         }
     },
+    watch: {
+        'appsStore.apps': {
+            handler(newApps) {
+                // Atualiza a grid quando a store muda
+                this.$nextTick(() => {
+                    this.refreshGrid();
+                });
+            },
+            deep: true,
+            immediate: false
+        }
+    },
     methods: {
-        onAppRightClick(event, app) {
+        onContextMenu(event, app) {
             event.preventDefault();
             this.contextApp = app;
             this.$refs.contextMenuRef.show(event);
@@ -115,23 +125,6 @@ export default {
             if (!app) return;
             const newName = prompt('Novo nome:', app.title);
             if (newName) app.title = newName;
-        },
-        extractIds(els) {
-            return els
-                .filter((v) => v && v.getAttribute && v.getAttribute('data-key'))
-                .map((v) => v.getAttribute('data-key'))
-                .filter(Boolean)
-                .map(Number)
-                .filter((id) => {
-                    const app = this.filledGrid.find(app => app.id === id);
-                    return app && !this.appsStore.isEmptySlot(app);
-                });
-        },
-        onStart({ event, selection }) {
-            if (!event?.ctrlKey && !event?.metaKey) {
-                selection.clearSelection();
-                this.selected.clear();
-            }
         },
         restoreApp(app) {
             if (!app) return;
@@ -142,79 +135,32 @@ export default {
             if (!app) return;
             this.trash = this.trash.filter((a) => a && a.id !== app.id);
         },
-        onMove({
-            store: {
-                changed: { added, removed }
-            }
-        }) {
-            this.extractIds(added).forEach((id) => this.selected.add(id));
-            this.extractIds(removed).forEach((id) => this.selected.delete(id));
+        onSelectionChange({ selectedIds, selectedItems }) {
+            // Pode ser usado para feedback visual ou outras funcionalidades
+            console.log('Seleção alterada:', selectedIds, selectedItems);
         },
-        onSelection({
-            store: {
-                changed: { added, removed }
-            }
-        }) {
-            this.extractIds(added).forEach((id) => this.selected.add(id));
-            this.extractIds(removed).forEach((id) => this.selected.delete(id));
+        onItemsUpdated(newItems) {
+            console.log('📝 AppsGrid: Updating store with new items');
+            this.appsStore.apps = newItems;
+            // Força atualização dos slots se necessário
+            // TEMPORARIAMENTE COMENTADO PARA TESTE
+            // this.$nextTick(() => {
+            //     this.appsStore.updateSlots();
+            // });
         },
-        onMoveItem({ relatedContext, draggedContext }) {
-            if (!draggedContext || !draggedContext.element) return true;
-
-            const draggedElement = draggedContext.element;
-
-            if (this.appsStore.isEmptySlot(draggedElement)) {
-                return false;
+        onItemClick({ event, item: app, index }) {
+            // Se não estiver usando modificadores para seleção múltipla, abre o app
+            if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+                setTimeout(() => {
+                    if (!this.canAccessApp(app)) {
+                        this.pendingLockedApp = app;
+                        this.$refs.loginToastRef.show();
+                        return;
+                    }
+                    
+                    this.openAppNormally(app);
+                }, 200); // Pequeno delay para permitir duplo clique
             }
-
-            if (this.selected.size > 0 && this.selected.has(draggedElement.id)) {
-                const selectedIndices = [...this.selected].map((id) => this.filledGrid.findIndex((app) => app.id === id)).sort((a, b) => a - b);
-
-                const selectedApps = selectedIndices.map((index) => this.filledGrid[index]);
-
-                const newGrid = [...this.filledGrid];
-
-                for (let i = selectedIndices.length - 1; i >= 0; i--) {
-                    newGrid.splice(selectedIndices[i], 1);
-                }
-
-                let insertIndex = relatedContext.index;
-                if (insertIndex > draggedContext.index) {
-                    insertIndex -= selectedIndices.filter((index) => index < insertIndex).length;
-                }
-
-                newGrid.splice(insertIndex, 0, ...selectedApps);
-
-                this.filledGrid = newGrid;
-
-                return false;
-            }
-
-            return true;
-        },
-        onDragStart(evt) {
-            const draggedElement = this.filledGrid[evt.oldIndex];
-            if (this.appsStore.isEmptySlot(draggedElement)) {
-                evt.preventDefault();
-                return false;
-            }
-            return true;
-        },
-        onAppClick(app) {
-            if (!this.canAccessApp(app)) {
-                this.pendingLockedApp = app;
-                this.$refs.loginToastRef.show();
-                return;
-            }
-            
-            this.openAppNormally(app);
-        },
-        
-        onAppContainerClick(event, app) {
-            event.preventDefault();
-            event.stopPropagation();
-          
-            this.onAppClick(app);
         },
         
         openAppNormally(app) {
@@ -259,6 +205,12 @@ export default {
                 this.pendingLockedApp = null;
             }
         },
+        refreshGrid() {
+            // Método para forçar atualização da grid
+            if (this.$refs.selectableDraggableGrid) {
+                this.$refs.selectableDraggableGrid.refreshList();
+            }
+        },
 
         range(to, offset = 0) {
             return new Array(to).fill(0).map((_, i) => offset + i);
@@ -271,22 +223,25 @@ export default {
 </script>
 
 <template>
-    <SelectionArea class="container" :options="{ selectables: '.selectable' }" :on-move="onSelection"
-        :on-start="onStart">
-        <draggable v-model="filledGrid" item-key="id" :move="onMoveItem"
-            :component-data="{ tag: 'div', class: 'draggableApps' }"
-            :clone="(original) => ({ ...original, id: Date.now() })"
-            :disabled="false"
-            :item-key-path="'id'"
-            @start="onDragStart">
-            <template #item="{ element, index }">
+    <div class="container">
+        <SelectableDraggableGrid
+            ref="selectableDraggableGrid"
+            v-model="filledGrid"
+            item-key="id"
+            selectable-class="selectable"
+            :multi-select="true"
+            :drag-enabled="true"
+            @selection-change="onSelectionChange"
+            @item-click="onItemClick"
+            @contextmenu="onContextMenu"
+            @update:model-value="onItemsUpdated"
+        >
+            <template #item="{ element, selected }">
                 <div v-if="element && element.id !== null" class="app-container"
                     :class="{ 
-                        selected: selected.has(element.id),
+                        selected: selected,
                         'locked-app': element.locked && !isUserLoggedIn 
-                    }" 
-                    @contextmenu="onAppRightClick($event, element)"
-                    @click="onAppContainerClick($event, element)">
+                    }">
                     
                     <component 
                         class="app-card" 
@@ -299,11 +254,10 @@ export default {
                         @click.stop.prevent="element.locked && !isUserLoggedIn ? null : null" />
                     
                     <div v-if="element.locked && !isUserLoggedIn" 
-                         class="security-overlay"
-                         @click.stop.prevent="onAppClick(element)">
+                         class="security-overlay">
                     </div>
                     
-                    <div class="app-icon-wrapper selectable" :key="element.id" :data-key="element.id"
+                    <div class="app-icon-wrapper" 
                         :title="element.locked ? (isUserLoggedIn ? 'App desbloqueado - Clique para abrir' : 'App bloqueado - Clique para fazer login') : ''">
                         <div class="app-icon-container">
                             <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" />
@@ -314,77 +268,16 @@ export default {
                         <div class="app-title">{{ element.title }}</div>
                     </div>
                 </div>
-                <div v-else class="empty-slot" :data-index="index"></div>
             </template>
-        </draggable>
+        </SelectableDraggableGrid>
 
         <ContextMenu ref="contextMenuRef" :model="contextItems" />
         <LoginToast ref="loginToastRef" @login-success="onLoginSuccess" />
-    </SelectionArea>
+    </div>
 </template>
 
 <style>
-.empty-slot {
-    width: 100px;
-    height: 100px;
-    user-select: none;
-    cursor: default;
-
-    /* Opcional: mostrar visualmente que é um slot vazio */
-    /* 
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    background-color: rgba(255, 255, 255, 0.02);
-    border-radius: 0.5rem; 
-    */
-}
-
-.empty-slot:hover {
-    outline: none !important;
-    background-color: transparent !important;
-}
-
-.app-enter-active {
-    transition: all 0.3s ease;
-}
-
-.app-enter-from {
-    opacity: 0;
-    transform: scale(0.8);
-}
-
-.app-enter-to {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.app-leave-active {
-    transition: all 0.3s ease;
-    position: absolute;
-}
-
-.app-leave-from {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.app-leave-to {
-    opacity: 0;
-    transform: scale(0.8);
-}
-
-.draggableApps {
-    margin-bottom: 22vh;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-rows: repeat(auto-fill, 100px);
-    grid-auto-columns: 100px;
-    grid-auto-flow: column;
-    width: fit-content;
-    max-width: 80vw;
-    height: 78vh;
-    margin-left: 0.5rem;
-    max-width: 80%;
-}
+/* Estilos removidos - agora controlados pelo SelectableDraggableGrid */
 
 .app-container {
     display: flex;
@@ -399,11 +292,7 @@ export default {
     cursor: pointer;
 }
 
-.app-container:hover {
-    outline: 1px solid #007ad9;
-    outline-offset: -2px;
-    background-color: rgba(0, 0, 0, 0.2);
-}
+/* Hover agora é controlado pelo SelectableDraggableGrid */
 
 .app-title {
     color: white;
@@ -540,9 +429,6 @@ export default {
 
 .container {
     padding: 0.5rem;
-    display: grid;
-    grid-gap: 0.5rem;
-    flex-wrap: wrap;
     width: 100vw;
     height: 100vh;
     border-radius: 0.5rem;
@@ -550,31 +436,9 @@ export default {
     max-width: none;
 }
 
-.container>div {
-    border-radius: 0.25rem;
-}
-
-.selected {
-    background-color: #4f90f2;
-    height: 100px;
-    width: 100px;
-}
-
-.selection-area {
-    background: #4f90f22d;
-    border: 1px solid #4f90f2;
-}
+/* Seleção agora é controlada pelo SelectableDraggableGrid */
 
 @media (max-width: 991px) {
-    .draggableApps {
-        max-width: 100%;
-        grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
-        grid-template-columns: repeat(4, 1fr);
-        grid-auto-flow: row;
-        grid-gap: 1px;
-        width: 100%;
-    }
-
     .container {
         padding: 0;
     }
