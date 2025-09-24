@@ -7,10 +7,10 @@ import SelectableDraggableGrid from './SelectableDraggableGrid.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { componentMap } from '../data/appsDock';
 
-import { useI18n } from 'vue-i18n';
-import LoginToast from './LoginToast.vue';
 import ContextMenu from 'primevue/contextmenu';
+import { useI18n } from 'vue-i18n';
 import { getUserCookie } from '../service/session.js';
+import LoginToast from './LoginToast.vue';
 
 export default {
     components: {
@@ -137,7 +137,7 @@ export default {
         },
         onSelectionChange({ selectedIds, selectedItems }) {
             // Pode ser usado para feedback visual ou outras funcionalidades
-            console.log('Seleção alterada:', selectedIds, selectedItems);
+            // console.log('Seleção alterada:', selectedIds, selectedItems);
         },
         onItemsUpdated(newItems) {
             console.log('📝 AppsGrid: Updating store with new items');
