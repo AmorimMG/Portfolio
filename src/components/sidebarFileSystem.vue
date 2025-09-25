@@ -1,79 +1,117 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import Trash from './Trash.vue'
+<script setup>
+import { useFileSystemStore } from '@/stores/useFileSystemStore';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import FileManager from './FileManager.vue';
+import Trash from './Trash.vue';
 
-interface FileItem {
-    name: string
-    type: 'file' | 'directory'
-    icon: string
-    path: string
-    children?: FileItem[]
-    component?: any
-}
+const fileSystemStore = useFileSystemStore();
+const selectedItem = ref(null);
+const currentComponent = ref(null);
 
-const currentPath = ref('')
-const selectedItem = ref<FileItem | null>(null)
-const currentComponent = ref<any>(null)
+const emit = defineEmits(['select']);
 
-const emit = defineEmits(['select'])
-
-const handleItemClick = (item: FileItem) => {
-    selectedItem.value = item
-    currentPath.value = item.path
-    currentComponent.value = item.component || null
-    emit('select', item)
-}
-
-// Add more file system items
-const fileSystem = ref<FileItem[]>([
+// Estrutura de favoritos e dispositivos baseada na store real
+const deviceItems = computed(() => [
     {
-        name: 'System',
+        name: 'Computer',
         type: 'directory',
         icon: '💻',
-        path: '/system',
-        children: [
-            {
-                name: 'Config',
-                type: 'file',
-                icon: '⚙️',
-                path: '/system/config'
-            },
-            {
-                name: 'Settings',
-                type: 'file',
-                icon: '🔧',
-                path: '/system/settings'
-            }
-        ]
+        path: '/',
+        isDevice: true
+    },
+    {
+        name: 'Home',
+        type: 'directory', 
+        icon: '🏠',
+        path: '/home/amorim',
+        isDevice: true
+    }
+]);
+
+const favoriteItems = computed(() => [
+    {
+        name: 'Desktop',
+        type: 'directory',
+        icon: '🖥️',
+        path: '/home/amorim/Desktop'
     },
     {
         name: 'Documents',
         type: 'directory',
         icon: '📄',
-        path: '/documents',
-        children: [
-            {
-                name: 'Projects',
-                type: 'directory',
-                icon: '📁',
-                path: '/documents/projects'
-            },
-            {
-                name: 'Resume.pdf',
-                type: 'file',
-                icon: '📄',
-                path: '/documents/resume.pdf'
-            }
-        ]
+        path: '/home/amorim/Documents'
     },
+    {
+        name: 'Downloads',
+        type: 'directory',
+        icon: '⬇️',
+        path: '/home/amorim/Downloads'
+    },
+    {
+        name: 'Pictures',
+        type: 'directory',
+        icon: '�️',
+        path: '/home/amorim/Pictures'
+    },
+    {
+        name: 'Music',
+        type: 'directory',
+        icon: '🎵',
+        path: '/home/amorim/Music'
+    },
+    {
+        name: 'Videos',
+        type: 'directory',
+        icon: '🎬',
+        path: '/home/amorim/Videos'
+    }
+]);
+
+const systemItems = computed(() => [
     {
         name: 'Trash',
         type: 'directory',
-        icon: '🗑️',
+        icon: '�️',
         path: '/system/trash',
-        component: Trash
+        component: Trash,
+        isSystem: true
     }
-])
+]);
+
+const handleItemClick = (item) => {
+    selectedItem.value = item;
+    
+    if (item.component) {
+        currentComponent.value = item.component;
+    } else if (item.isSystem) {
+        // Para itens do sistema, usar componente específico
+        currentComponent.value = item.component || null;
+    } else {
+        // Para itens do sistema de arquivos, navegar na store e usar FileManager
+        fileSystemStore.changeDirectory(item.path);
+        currentComponent.value = FileManager;
+    }
+    
+    emit('select', item);
+};
+
+// Escutar mudanças no sistema de arquivos
+const unsubscribe = fileSystemStore.onFileSystemChange((event) => {
+    // Reativo automaticamente devido aos computeds
+    console.log('File system updated in sidebar:', event);
+});
+
+onMounted(() => {
+    // Selecionar Desktop por padrão
+    const desktop = favoriteItems.value.find(item => item.name === 'Desktop');
+    if (desktop) {
+        handleItemClick(desktop);
+    }
+});
+
+onUnmounted(() => {
+    unsubscribe();
+});
 </script>
 
 <template>
@@ -82,26 +120,30 @@ const fileSystem = ref<FileItem[]>([
             <div class="section">
                 <h3>🖥️ Devices</h3>
                 <ul>
-                    <li v-for="item in fileSystem" :key="item.path" @click="handleItemClick(item)"
+                    <li v-for="item in deviceItems" :key="item.path" @click="handleItemClick(item)"
                         :class="{ active: selectedItem?.path === item.path }">
                         {{ item.icon }} {{ item.name }}
-                        <ul v-if="item.children && selectedItem?.path === item.path">
-                            <li v-for="child in item.children" :key="child.path" @click.stop="handleItemClick(child)"
-                                :class="{ active: selectedItem?.path === child.path }">
-                                {{ child.icon }} {{ child.name }}
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>
+            
             <div class="section">
                 <h3>⭐ Favorites</h3>
                 <ul>
-                    <li>📦 Applications</li>
-                    <li>🖥️ Desktop</li>
-                    <li>📄 Documents</li>
-                    <li>⬇️ Downloads</li>
-                    <li>🖼️ Pictures</li>
+                    <li v-for="item in favoriteItems" :key="item.path" @click="handleItemClick(item)"
+                        :class="{ active: selectedItem?.path === item.path }">
+                        {{ item.icon }} {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h3>🔧 System</h3>
+                <ul>
+                    <li v-for="item in systemItems" :key="item.path" @click="handleItemClick(item)"
+                        :class="{ active: selectedItem?.path === item.path }">
+                        {{ item.icon }} {{ item.name }}
+                    </li>
                 </ul>
             </div>
         </div>

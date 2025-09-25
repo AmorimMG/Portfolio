@@ -11,6 +11,7 @@ const emit = defineEmits(['animation-complete']);
 
 const canvas = ref(null);
 const containerRef = ref(null);
+const showScrollInstruction = ref(false);
 
 let scene, camera, renderer, model, scrollTriggerInstance;
 
@@ -51,11 +52,35 @@ function init() {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Garantir que o canvas não ultrapasse os limites
+    canvas.value.style.maxWidth = '100vw';
+    canvas.value.style.maxHeight = '100vh';
 
     animate();
 }
 
 function setupScrollAnimation() {
+    // Mostrar instrução de scroll após o modelo carregar
+    setTimeout(() => {
+        showScrollInstruction.value = true;
+        
+        // Animar a instrução para chamar atenção
+        gsap.fromTo('.scroll-instruction', 
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+        );
+        
+        // Fazer a instrução pulsar suavemente
+        gsap.to('.scroll-instruction', {
+            scale: 1.1,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'power2.inOut'
+        });
+    }, 1500);
+
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: containerRef.value,
@@ -63,6 +88,10 @@ function setupScrollAnimation() {
             end: '+=2000',
             scrub: 1,
             pin: true,
+            onStart: () => {
+                // Esconder instrução quando começar a scrollar
+                showScrollInstruction.value = false;
+            },
             onLeave: (self) => {
                 gsap.to(containerRef.value, {
                     opacity: 0,
@@ -102,9 +131,16 @@ function animate() {
 }
 
 function handleResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
+    
+    // Garantir que o canvas mantenha as dimensões corretas
+    canvas.value.style.maxWidth = '100vw';
+    canvas.value.style.maxHeight = '100vh';
 }
 
 onMounted(() => {
@@ -117,7 +153,7 @@ onUnmounted(() => {
     if (scrollTriggerInstance) {
         scrollTriggerInstance.kill();
     }
-    gsap.killTweensOf([camera.position, camera.rotation, containerRef.value]);
+    gsap.killTweensOf([camera.position, camera.rotation, containerRef.value, '.scroll-instruction']);
 
     if (renderer) {
         renderer.dispose();
@@ -134,6 +170,19 @@ onUnmounted(() => {
 <template>
     <div class="intro-container" ref="containerRef">
         <canvas ref="canvas"></canvas>
+        
+        <!-- Instrução de scroll -->
+        <div 
+            v-if="showScrollInstruction" 
+            class="scroll-instruction"
+        >
+            <div class="scroll-text">
+                <p>Role para baixo para explorar</p>
+                <div class="scroll-icon">
+                    <div class="scroll-indicator"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -141,12 +190,97 @@ onUnmounted(() => {
 .intro-container {
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
+    position: relative;
 }
 
 canvas {
     position: fixed;
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
     outline: none;
+    display: block;
+}
+
+/* Prevenir scroll horizontal */
+.intro-container * {
+    box-sizing: border-box;
+}
+
+.scroll-instruction {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    color: white;
+    text-align: center;
+    pointer-events: none;
+}
+
+.scroll-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.scroll-text p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 300;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.scroll-icon {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.scroll-indicator {
+    width: 4px;
+    height: 8px;
+    background: white;
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollBounce 2s infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 20% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+    }
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .scroll-instruction {
+        bottom: 30px;
+    }
+    
+    .scroll-text p {
+        font-size: 1rem;
+    }
+    
+    .scroll-icon {
+        width: 25px;
+        height: 40px;
+    }
 }
 </style>

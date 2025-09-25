@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
 // 1. DEFINIR PROPS E EMITS (A "API" DO NOSSO COMPONENTE)
 const props = defineProps({
@@ -93,7 +93,6 @@ const gridStyles = computed(() => ({
   gridTemplateRows: props.gridRows,
   gap: props.gap,
   width: '100%',
-  height: '100%'
 }));
 
 // Função para verificar se um slot está vazio (consistente com useAppsStore.isEmptySlot)

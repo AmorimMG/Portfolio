@@ -1,10 +1,11 @@
 <script>
 import { useAppsStore } from '@/stores/useAppsStore';
+import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import { useTrashStore } from '@/stores/useTrashStore';
 
 import SelectableDraggableGrid from './SelectableDraggableGrid.vue';
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { componentMap } from '../data/appsDock';
 
 import ContextMenu from 'primevue/contextmenu';
@@ -23,6 +24,7 @@ export default {
         const { t } = useI18n();
         const appsStore = useAppsStore();
         const trashStore = useTrashStore();
+        const fileSystemStore = useFileSystemStore();
         const contextMenuRef = ref(null);
         const loginToastRef = ref(null);
         const userLoggedIn = ref(!!getUserCookie());
@@ -37,9 +39,49 @@ export default {
             return !!userSession && userLoggedIn.value;
         };
 
+        // Computed para integrar apps da store com arquivos do desktop
+        const desktopApps = computed(() => {
+            const desktop = fileSystemStore.getItemAtPath('/home/amorim/Desktop');
+            const desktopFiles = desktop.success ? desktop.item.contents || {} : {};
+            
+            // Pegar apps tradicionais da store
+            const storeApps = appsStore.apps.filter(app => app.id !== null);
+            
+            // Pegar arquivos .app do desktop
+            const fileApps = Object.entries(desktopFiles)
+                .filter(([name, file]) => name.endsWith('.app') && file.type === 'file')
+                .map(([name, file]) => {
+                    try {
+                        const appData = JSON.parse(file.content || '{}');
+                        return {
+                            id: `desktop-${name}`,
+                            title: appData.title || name.replace('.app', ''),
+                            icon: appData.icon || '/favicon.ico',
+                            name: appData.component || 'DefaultApp',
+                            locked: appData.locked || false,
+                            colSpan: appData.colSpan || 1,
+                            rowSpan: appData.rowSpan || 1,
+                            isDesktopFile: true,
+                            filePath: `/home/amorim/Desktop/${name}`
+                        };
+                    } catch (error) {
+                        console.error('Error parsing app file:', name, error);
+                        return null;
+                    }
+                })
+                .filter(app => app !== null);
+            
+            // Combinar apps tradicionais com apps do desktop
+            return [...storeApps, ...fileApps];
+        });
+
         onMounted(() => {
             appsStore.loadIcons();
             appsStore.updateSlots();
+            
+            // Sincronizar apps com o sistema de arquivos
+            appsStore.syncWithFileSystem();
+            
             window.addEventListener('resize', () => appsStore.updateSlots());
             
             const loginCheckInterval = setInterval(checkLoginStatus, 1000);
@@ -58,14 +100,32 @@ export default {
             
             document.addEventListener('appOpen', interceptAppEvents, true);
             
+            // Escutar mudanças no sistema de arquivos do desktop
+            const unsubscribeFileSystem = fileSystemStore.onFileSystemChange((event) => {
+                if (event.path.startsWith('/home/amorim/Desktop')) {
+                    console.log('Desktop file system changed:', event);
+                    // O computed desktopApps será automaticamente atualizado
+                }
+            });
+            
             onUnmounted(() => {
                 window.removeEventListener('resize', () => appsStore.updateSlots());
                 document.removeEventListener('appOpen', interceptAppEvents, true);
                 clearInterval(loginCheckInterval);
+                unsubscribeFileSystem?.();
             });
         });
 
-        return { appsStore, trashStore, contextMenuRef, loginToastRef, userLoggedIn, canAccessApp };
+        return { 
+            appsStore, 
+            trashStore, 
+            fileSystemStore,
+            contextMenuRef, 
+            loginToastRef, 
+            userLoggedIn, 
+            canAccessApp,
+            desktopApps
+        };
     },
     data() {
         return {
@@ -82,17 +142,22 @@ export default {
                     label: 'Remover',
                     icon: 'pi pi-trash',
                     command: () => {
-                        if (this.contextApp) this.appsStore.removeApp(this.contextApp);
+                        if (this.contextApp) this.removeApp(this.contextApp);
                     }
                 }
             ]
         };
-    },        computed: {
+    },
+    
+    computed: {
         filledGrid: {
             get() {
+                // Usar os apps da store (que já inclui a lógica de slots vazios)
                 return this.appsStore.apps;
             },
             set(val) {
+                // Atualizar apenas apps da store tradicionais (não arquivos do desktop)
+                const storeApps = val.filter(app => app.id !== null && !app.isDesktopFile);
                 this.appsStore.apps = val;
             }
         },
@@ -124,7 +189,32 @@ export default {
         renameApp(app) {
             if (!app) return;
             const newName = prompt('Novo nome:', app.title);
-            if (newName) app.title = newName;
+            if (newName && newName !== app.title) {
+                if (app.isDesktopFile) {
+                    // Renomear arquivo do desktop
+                    const oldPath = app.filePath;
+                    const newPath = oldPath.replace(/\/[^/]+\.app$/, `/${newName}.app`);
+                    
+                    // Ler conteúdo atual
+                    const fileContent = this.fileSystemStore.readFile(oldPath);
+                    if (fileContent.success) {
+                        try {
+                            const appData = JSON.parse(fileContent.content);
+                            appData.title = newName;
+                            
+                            // Criar novo arquivo com nome atualizado
+                            this.fileSystemStore.createFile(newPath.split('/').pop(), JSON.stringify(appData, null, 2), '/home/amorim/Desktop');
+                            // Remover arquivo antigo
+                            this.fileSystemStore.removeItem(oldPath.split('/').pop(), '/home/amorim/Desktop');
+                        } catch (error) {
+                            console.error('Error updating app file:', error);
+                        }
+                    }
+                } else {
+                    // App tradicional da store
+                    app.title = newName;
+                }
+            }
         },
         restoreApp(app) {
             if (!app) return;
@@ -205,6 +295,20 @@ export default {
                 this.pendingLockedApp = null;
             }
         },
+        
+        removeApp(app) {
+            if (!app) return;
+            
+            if (app.isDesktopFile) {
+                // Remover arquivo do desktop
+                const fileName = app.filePath.split('/').pop();
+                this.fileSystemStore.removeItem(fileName, '/home/amorim/Desktop');
+            } else {
+                // App tradicional da store
+                this.appsStore.removeApp(app);
+            }
+        },
+        
         refreshGrid() {
             // Método para forçar atualização da grid
             if (this.$refs.selectableDraggableGrid) {
@@ -215,6 +319,16 @@ export default {
         range(to, offset = 0) {
             return new Array(to).fill(0).map((_, i) => offset + i);
         },
+        
+        calculateTotalSlots() {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const slotSize = 110;
+            const columns = Math.floor(viewportWidth / slotSize);
+            const rows = Math.floor((viewportHeight * 0.78) / slotSize);
+            return columns * rows;
+        },
+        
         handleResize() {
             this.appsStore.updateSlots();
         }
