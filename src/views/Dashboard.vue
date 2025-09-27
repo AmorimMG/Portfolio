@@ -14,7 +14,6 @@ const handleLogin = () => {
 };
 
 const onIntroComplete = () => {
-    console.log("Dashboard recebeu 'animation-complete'. Mudando estado para 'booting'.");
     systemState.value = 'booting';
     setTimeout(() => {
         systemState.value = 'login';

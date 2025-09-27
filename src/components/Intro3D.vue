@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,23 +64,26 @@ function setupScrollAnimation() {
     // Mostrar instrução de scroll após o modelo carregar
     setTimeout(() => {
         showScrollInstruction.value = true;
-        
-        // Animar a instrução para chamar atenção
-        gsap.fromTo('.scroll-instruction', 
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
-        );
-        
-        // Fazer a instrução pulsar suavemente
-        gsap.to('.scroll-instruction', {
-            scale: 1.1,
-            duration: 1.5,
-            repeat: -1,
-            yoyo: true,
-            ease: 'power2.inOut'
-        });
-    }, 1500);
 
+        // --- MUDANÇA PRINCIPAL AQUI ---
+        nextTick(() => {
+            // Agora o elemento .scroll-instruction com certeza existe!
+            gsap.fromTo('.scroll-instruction', 
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }
+            );
+            
+            gsap.to('.scroll-instruction', {
+                scale: 1.1,
+                duration: 1.5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power2.inOut'
+            });
+        });
+
+    }, 1500);
+    
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: containerRef.value,

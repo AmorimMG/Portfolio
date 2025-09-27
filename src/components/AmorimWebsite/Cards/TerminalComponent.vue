@@ -4,7 +4,7 @@ import {
     clearTerminal,
     commands,
     executeCommand
-} from '@/services/TerminalCommandsService';
+} from '@/service/TerminalCommandsService';
 import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import TerminalService from 'primevue/terminalservice';
 import { computed, onBeforeUnmount, onMounted } from 'vue';

@@ -50,7 +50,7 @@ const favoriteItems = computed(() => [
     {
         name: 'Pictures',
         type: 'directory',
-        icon: '�️',
+        icon: '🖼️',
         path: '/home/amorim/Pictures'
     },
     {
@@ -71,7 +71,7 @@ const systemItems = computed(() => [
     {
         name: 'Trash',
         type: 'directory',
-        icon: '�️',
+        icon: '🗑️',
         path: '/system/trash',
         component: Trash,
         isSystem: true

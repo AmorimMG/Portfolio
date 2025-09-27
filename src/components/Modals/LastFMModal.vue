@@ -141,14 +141,13 @@ export default {
                                 <div class="col-span-12 md:col-span-4 flex flex-col items-center text-center">
                                     <Skeleton v-if="!imageLoaded" class="mb-3 border-circle shadow-2"
                                         style="width: 150px; height: 150px" />
-                                    <Image v-show="imageLoaded" @load="handleImageLoad"
-                                        :src="lastFMUserData.image[3]['#text']" alt="Avatar" width="150" preview
+                                    <Image v-show="imageLoaded && lastFMUserData.image && lastFMUserData.image[3]" @load="handleImageLoad"
+                                        :src="lastFMUserData.image && lastFMUserData.image[3] ? lastFMUserData.image[3]['#text'] : ''" alt="Avatar" width="150" preview
                                         class="mb-3 border-circle shadow-2" />
-                                    <h2>{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
-                                    <a :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline">
-                                        @{{
-                                        lastFMUserData.name }} </a>
-                                    <Tag severity="info" class="mt-2">{{ lastFMUserData.country }}</Tag>
+                                    <h2 v-if="lastFMUserData.realname || lastFMUserData.name">{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
+                                    <a v-if="lastFMUserData.url && lastFMUserData.name" :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline">
+                                        @{{ lastFMUserData.name }} </a>
+                                    <Tag v-if="lastFMUserData.country" severity="info" class="mt-2">{{ lastFMUserData.country }}</Tag>
                                 </div>
 
                                 <!-- Estatísticas -->
@@ -159,7 +158,7 @@ export default {
                                                 <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
                                                 <template #content>
                                                     <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.track_count }}</h3>
+                                                        lastFMUserData.track_count || 0 }}</h3>
                                                 </template>
                                             </Card>
                                         </div>
@@ -168,7 +167,7 @@ export default {
                                                 <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
                                                 <template #content>
                                                     <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.artist_count }}</h3>
+                                                        lastFMUserData.artist_count || 0 }}</h3>
                                                 </template>
                                             </Card>
                                         </div>
@@ -177,7 +176,7 @@ export default {
                                                 <template #title>💿 {{ $t('LastFM.Albums') }}</template>
                                                 <template #content>
                                                     <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.album_count }}</h3>
+                                                        lastFMUserData.album_count || 0 }}</h3>
                                                 </template>
                                             </Card>
                                         </div>
@@ -186,7 +185,7 @@ export default {
                                                 <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
                                                 <template #content>
                                                     <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.playcount }}</h3>
+                                                        lastFMUserData.playcount || 0 }}</h3>
                                                 </template>
                                             </Card>
                                         </div>
@@ -195,7 +194,7 @@ export default {
                                                 <template #title>📅 {{ $t('LastFM.Registered') }}</template>
                                                 <template #content>
                                                     <h3 class="text-lg">
-                                                        {{ formatDate(lastFMUserData.registered.unixtime) }}
+                                                        {{ lastFMUserData.registered ? formatDate(lastFMUserData.registered.unixtime) : '-' }}
                                                     </h3>
                                                 </template>
                                             </Card>

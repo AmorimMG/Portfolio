@@ -1,8 +1,11 @@
 <script setup>
+import { componentMap } from '@/data/appsDock';
 import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import { useTrashStore } from '@/stores/useTrashStore';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+// Registrar componentes dinamicamente
 
 const { t } = useI18n();
 const fileSystemStore = useFileSystemStore();
@@ -17,6 +20,12 @@ const createItemType = ref('file');
 const newItemName = ref('');
 const searchQuery = ref('');
 const viewMode = ref('grid'); // 'grid' | 'list'
+
+// Estados para controle de componentes de apps
+const currentAppComponent = ref(null);
+const currentAppData = ref(null);
+const appModalVisible = ref(false);
+const appComponentRef = ref(null);
 
 // Computeds
 const currentDirectoryContents = computed(() => {
@@ -98,7 +107,87 @@ const handleDoubleClick = (item) => {
 };
 
 const openFile = (item) => {
-    // Implementar abertura de arquivos baseada no tipo
+    // Se for um arquivo .app, abrir o componente correspondente
+    if (item.name.endsWith('.app') && item.content) {
+        try {
+            const appData = JSON.parse(item.content);
+            const componentName = appData.component || appData.name;
+            
+            if (componentName && componentMap[componentName]) {
+                // Definir o componente e dados
+                currentAppComponent.value = componentName;
+                currentAppData.value = appData;
+                appModalVisible.value = true;
+                
+                console.log('Opening app component:', componentName, appData);
+                
+                // Aguardar o próximo tick para o componente ser renderizado
+                nextTick(() => {
+                    // Tentar diferentes abordagens para abrir o modal
+                    if (appComponentRef.value) {
+                        const componentElement = appComponentRef.value.$el || appComponentRef.value;
+                        
+                        if (componentElement) {
+                            // Tentar encontrar e clicar no botão principal
+                            const buttons = componentElement.querySelectorAll('button');
+                            
+                            // Priorizar botões com texto específico ou classes específicas
+                            let targetButton = null;
+                            
+                            for (const button of buttons) {
+                                const buttonText = button.textContent?.toLowerCase() || '';
+                                
+                                // Pular botões de fechar/minimizar
+                                if (buttonText.includes('close') || 
+                                    buttonText.includes('×') || 
+                                    button.querySelector('.pi-times') ||
+                                    button.classList.contains('p-dialog-header-close')) {
+                                    continue;
+                                }
+                                
+                                // Encontrar o primeiro botão válido
+                                if (button.offsetParent !== null) { // Botão visível
+                                    targetButton = button;
+                                    break;
+                                }
+                            }
+                            
+                            if (targetButton) {
+                                console.log('Auto-clicking button to open modal for:', componentName);
+                                targetButton.click();
+                            } else {
+                                // Se não encontrou botão, tentar definir propriedades internas
+                                const componentInstance = appComponentRef.value;
+                                if (componentInstance) {
+                                    // Tentar diferentes propriedades comuns baseadas no nome do componente
+                                    if (componentName === 'LastFMModal' && typeof componentInstance.lastFMVisible !== 'undefined') {
+                                        componentInstance.lastFMVisible = true;
+                                    } else if (componentName === 'PiModal' && typeof componentInstance.piVisible !== 'undefined') {
+                                        componentInstance.piVisible = true;
+                                    } else if (componentName === 'CVModal' && typeof componentInstance.cvVisible !== 'undefined') {
+                                        componentInstance.cvVisible = true;
+                                    } else if (componentName === 'ProjectsModal' && typeof componentInstance.projectsVisible !== 'undefined') {
+                                        componentInstance.projectsVisible = true;
+                                    } else if (componentName === 'DoomModal' && typeof componentInstance.doomVisible !== 'undefined') {
+                                        componentInstance.doomVisible = true;
+                                    } else if (componentName === 'SeverenceModal' && typeof componentInstance.severenceVisible !== 'undefined') {
+                                        componentInstance.severenceVisible = true;
+                                    }
+                                    
+                                    console.log('Trying to set internal modal state for:', componentName);
+                                }
+                            }
+                        }
+                    }
+                });
+                return;
+            }
+        } catch (error) {
+            console.error('Error parsing app file:', error);
+        }
+    }
+    
+    // Implementar abertura de outros tipos de arquivos
     if (item.name.endsWith('.txt') || item.name.endsWith('.md')) {
         // Abrir em editor de texto
         console.log('Opening text file:', item.name);
@@ -191,6 +280,19 @@ const getFileIcon = (item) => {
     if (item.type === 'dir') return '📁';
     
     const ext = item.name.split('.').pop()?.toLowerCase();
+    
+    // Se for um arquivo .app, tentar extrair o ícone do conteúdo JSON
+    if (ext === 'app' && item.content) {
+        try {
+            const appData = JSON.parse(item.content);
+            if (appData.icon) {
+                return appData.icon;
+            }
+        } catch (error) {
+            console.warn('Error parsing app file content:', error);
+        }
+    }
+    
     const iconMap = {
         'txt': '📄',
         'md': '📝',
@@ -203,10 +305,24 @@ const getFileIcon = (item) => {
         'gif': '🖼️',
         'mp3': '🎵',
         'mp4': '🎬',
-        'zip': '📦'
+        'zip': '📦',
+        'app': '📱' // Ícone padrão para apps
     };
     
     return iconMap[ext] || '📄';
+};
+
+const isImageIcon = (icon) => {
+    if (!icon || typeof icon !== 'string') return false;
+    // Verificar se é uma URL (começa com http, https, ou /)
+    return icon.startsWith('http') || icon.startsWith('/') || icon.includes('.');
+};
+
+// Função para fechar modal do app
+const closeAppModal = () => {
+    appModalVisible.value = false;
+    currentAppComponent.value = null;
+    currentAppData.value = null;
 };
 
 // Lifecycle
@@ -318,7 +434,14 @@ onUnmounted(() => {
                 @dblclick="handleDoubleClick(item)"
                 @contextmenu="showContextMenu($event, item)"
             >
-                <div class="file-icon">{{ getFileIcon(item) }}</div>
+                <div class="file-icon">
+                    <img v-if="isImageIcon(getFileIcon(item))" 
+                         :src="getFileIcon(item)" 
+                         :alt="item.name"
+                         class="file-icon-image"
+                         loading="lazy" />
+                    <span v-else>{{ getFileIcon(item) }}</span>
+                </div>
                 <div class="file-info">
                     <div class="file-name">{{ item.name }}</div>
                     <div v-if="viewMode === 'list'" class="file-details">
@@ -417,6 +540,20 @@ onUnmounted(() => {
             <span v-if="selectedItems.length > 0">{{ selectedItems.length }} selected</span>
             <span>{{ fileSystemStore.currentPath }}</span>
         </div>
+        
+        <!-- App Component Modal -->
+        <div v-if="appModalVisible && currentAppComponent && componentMap[currentAppComponent]" class="app-modal-container">
+            <component 
+                :is="componentMap[currentAppComponent]"
+                ref="appComponentRef"
+                :visible="appModalVisible"
+                :isTopbar="true"
+                @update:visible="(value) => { if (!value) closeAppModal() }"
+                @hide="closeAppModal"
+                @close="closeAppModal"
+                v-bind="currentAppData"
+            />
+        </div>
     </div>
 </template>
 
@@ -449,6 +586,7 @@ onUnmounted(() => {
     align-items: center;
     flex: 1;
     min-width: 0;
+    color: black;
 }
 
 .breadcrumb {
@@ -482,8 +620,10 @@ onUnmounted(() => {
 
 .file-content.grid-view {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, 120px);
     gap: 1rem;
+    justify-content: start;
+    align-content: start;
 }
 
 .file-content.list-view {
@@ -501,10 +641,12 @@ onUnmounted(() => {
     cursor: pointer;
     user-select: none;
     transition: all 0.2s;
+    color: black;
 }
 
 .grid-view .file-item {
-    text-align: center;
+    height: 120px;
+    justify-content: center;
 }
 
 .list-view .file-item {
@@ -526,11 +668,25 @@ onUnmounted(() => {
 .file-icon {
     font-size: 2rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-icon-image {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
 }
 
 .list-view .file-icon {
     margin-bottom: 0;
     font-size: 1.5rem;
+}
+
+.list-view .file-icon-image {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .file-info {
@@ -556,8 +712,10 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 200px;
+    height: 100%;
+    width: 100%;
     color: #999;
+    grid-column: 1 / -1;
 }
 
 .context-menu {
@@ -585,6 +743,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin: 0 20px 20px;    
 }
 
 .field {
@@ -602,5 +761,19 @@ onUnmounted(() => {
     border-top: 1px solid #e9ecef;
     font-size: 0.875rem;
     color: #666;
+}
+
+.app-modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.app-modal-container > * {
+    pointer-events: auto;
 }
 </style>
