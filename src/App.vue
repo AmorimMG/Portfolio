@@ -1,13 +1,11 @@
 <script>
-import { useToast } from 'primevue/usetoast';
 import DynamicModal from './components/DynamicModal.vue';
+import FullscreenButton from './components/FullscreenButton.vue';
 
 export default {
     components: {
-        DynamicModal
-    },
-    mounted() {
-        useToast().add({ severity: 'info', summary: 'Info Message', detail: 'This Project is in Development' });
+        DynamicModal,
+        FullscreenButton
     }
 };
 </script>
@@ -16,6 +14,7 @@ export default {
     <Toast />
     <router-view />
     <DynamicModal />
+    <FullscreenButton />
 </template>
 
 <style>

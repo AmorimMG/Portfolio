@@ -14,7 +14,6 @@ const handleLogin = () => {
 };
 
 const onIntroComplete = () => {
-    console.log("Dashboard recebeu 'animation-complete'. Mudando estado para 'booting'.");
     systemState.value = 'booting';
     setTimeout(() => {
         systemState.value = 'login';
@@ -24,7 +23,7 @@ const onIntroComplete = () => {
 
 <template>
     <Transition name="fade" mode="out-in">
-        <div v-if="systemState === 'intro'" key="intro">
+        <div class="overflow-y-hidden" v-if="systemState === 'intro'" key="intro">
             <Intro3D @animation-complete="onIntroComplete" />
         </div>
 

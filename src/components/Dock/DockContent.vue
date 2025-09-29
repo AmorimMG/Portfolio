@@ -131,7 +131,7 @@ onUnmounted(() => {
         </transition>
         <div class="relative z-10 wrapper flex justify-between">
             <div class="apps">
-                <AppsGrid ref="selectRef" />
+                <Desktop ref="selectRef" />
             </div>
             <div class="widgets mr-8">
                 <Widgets />

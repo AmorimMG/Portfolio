@@ -9,6 +9,7 @@ import Weather from '../components/AmorimWebsite/Cards/Weather.vue';
 import MapboxMap from '../components/Mapbox.vue';
 import CVModal from '../components/Modals/CVModal.vue';
 /* import Actitivies from '../components/AmorimWebsite/Cards/Activities.vue'; */
+import FileItem from '../components/FileItem/FileItem.vue';
 import CameraModal from '../components/Modals/CameraModal.vue';
 import DoomModal from '../components/Modals/DoomModal.vue';
 import EmailModal from '../components/Modals/EmailModal.vue';
@@ -49,7 +50,8 @@ export const componentMap = {
     PortfolioModal,
     PointerlockModal,
     CameraModal,
-    WallpaperModal
+    WallpaperModal,
+    FileItem
 };
 
 export const apps = [

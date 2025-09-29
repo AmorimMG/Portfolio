@@ -1,20 +1,33 @@
 <script setup>
 import { terminalConfig } from '@/data/terminalConfig';
+import {
+    clearTerminal,
+    commands,
+    executeCommand
+} from '@/service/TerminalCommandsService';
+import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import TerminalService from 'primevue/terminalservice';
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CardEffect from '../../CardEffect.vue';
 import { neofetchOutput } from './neofetch';
-import { clearTerminal, currentDir, currentPath, getDirectoryFromPath, listDirectory } from './terminalCommands';
 
 const { t } = useI18n();
 const locale = useI18n().locale;
+const fileSystemStore = useFileSystemStore();
 
 const props = defineProps({
     isCard: {
         type: Boolean,
         default: true
     }
+});
+
+// Prompt dinâmico que mostra o diretório atual
+const terminalPrompt = computed(() => {
+    const currentPath = fileSystemStore.currentPath;
+    const shortPath = currentPath.replace('/home/amorim', '~');
+    return `portfolio@amorim:${shortPath}$ `;
 });
 
 const changeLanguage = (lang) => {
@@ -38,38 +51,31 @@ const commandHandler = (text) => {
     const args = text.split(' ').filter(arg => arg);
     const cmd = args[0]?.toLowerCase();
 
-    const commandLabels = [
-        'help',
-        'clear',
-        'about',
-        'skills',
-        'projects',
-        'education',
-        'experience',
-        'contact',
-        'resume',
-        'social',
-        'interests',
-        'achievements',
-        'blog',
-        'recommendations',
-        'FAQ',
-        'stats',
-        'connect',
-        'portfolio',
-        'feedback',
-        'hire',
-        'funfact',
-        'neofetch',
-        'languages',
-        'ls',
-        'cd',
-        'pwd'
+    // Comandos do sistema (Unix-like)
+    const systemCommands = Object.keys(commands);
+    
+    // Comandos do portfólio
+    const portfolioCommands = [
+        'help', 'about', 'skills', 'projects', 'education', 'experience',
+        'contact', 'resume', 'social', 'interests', 'achievements', 'blog',
+        'recommendations', 'FAQ', 'stats', 'connect', 'portfolio', 'feedback',
+        'hire', 'funfact', 'neofetch', 'languages', 'pt', 'es', 'en'
     ];
+    
+    const commandLabels = [...systemCommands, ...portfolioCommands];
 
     switch (cmd) {
         case 'help':
-            response = `Commands are: ${commandLabels.join(', ')}`;
+            response = `Available commands:
+
+System Commands (Unix-like):
+${systemCommands.join(', ')}
+
+Portfolio Commands:
+${portfolioCommands.join(', ')}
+
+Try 'ls' to list files, 'cd' to navigate, or 'cat filename' to read files.
+Use 'tree' to see directory structure.`;
             break;
         case 'clear':
             clearTerminal();
@@ -175,30 +181,19 @@ const commandHandler = (text) => {
             changeLanguage('en');
             response = computed(() => t('Terminal.LanguageChanged', { language: 'English' }));
             break;
+        // Comandos do sistema de arquivos
         case 'ls':
-            response = listDirectory(currentDir.value);
-            break;
         case 'cd':
-            const target = args[1] || '/home';
-            const newDir = getDirectoryFromPath(target);
-            if (newDir && newDir.type === 'dir') {
-                if (target.startsWith('/')) {
-                    currentPath.value = target;
-                } else if (target === '..') {
-                    currentPath.value = currentPath.value.split('/').slice(0, -1).join('/') || '/';
-                } else if (target === '.') {
-                    // Não faz nada, continua no mesmo diretório
-                } else {
-                    currentPath.value = `${currentPath.value}/${target}`.replace(/\/+/g, '/');
-                }
-                currentDir.value = newDir;
-                response = '';
-            } else {
-                response = `cd: ${target}: No such directory`;
-            }
-            break;
         case 'pwd':
-            response = currentPath.value;
+        case 'cat':
+        case 'mkdir':
+        case 'touch':
+        case 'rm':
+        case 'find':
+        case 'file':
+        case 'wc':
+        case 'tree':
+            response = executeCommand(text);
             break;
         default:
             response = `Unknown command: ${command}`;
@@ -226,13 +221,13 @@ onBeforeUnmount(() => {
     <div id="Terminal" class="col-span-4 lg:col-span-4 xl:col-span-4 pb-0">
         <CardEffect class="card-effect" v-if="props.isCard">
             <div class="terminal-card" style="width: 100%; height: 100%; padding: 0">
-                <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
-                    prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
+                <Terminal :welcomeMessage="'Welcome to Amorim Terminal. ' + 'Type \'help\' for portfolio commands or try Unix commands like \'ls\', \'cd\', \'cat\''"
+                    :prompt="terminalPrompt" aria-label="PrimeVue Terminal Service" />
             </div>
         </CardEffect>
         <div v-else class="terminal-modal" style="width: 100%; height: 100%; padding: 0">
-            <Terminal :welcomeMessage="'Welcome to Amorim. ' + 'Type \'help\' for commands'"
-                prompt="portfolio@amorim:~$" aria-label="PrimeVue Terminal Service" />
+            <Terminal :welcomeMessage="'Welcome to Amorim Terminal. ' + 'Type \'help\' for portfolio commands or try Unix commands like \'ls\', \'cd\', \'cat\''"
+                :prompt="terminalPrompt" aria-label="PrimeVue Terminal Service" />
         </div>
     </div>
 </template>
