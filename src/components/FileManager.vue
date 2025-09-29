@@ -2,14 +2,20 @@
 import { componentMap } from '@/data/appsDock';
 import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import { useTrashStore } from '@/stores/useTrashStore';
+import { useFileOpener } from '@/composables/useFileOpener';
+import { useNotifications } from '@/composables/useNotifications';
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import FileViewerModal from './FileViewerModal.vue';
+import NotificationToast from './NotificationToast.vue';
 
 // Registrar componentes dinamicamente
 
 const { t } = useI18n();
 const fileSystemStore = useFileSystemStore();
 const trashStore = useTrashStore();
+const { isViewerOpen, currentFileData, openFile: openFileViewer, canOpen } = useFileOpener();
+const { notifySuccess, notifyError } = useNotifications();
 
 // Estados locais
 const selectedItems = ref([]);
@@ -20,6 +26,8 @@ const createItemType = ref('file');
 const newItemName = ref('');
 const searchQuery = ref('');
 const viewMode = ref('grid'); // 'grid' | 'list'
+const renamingItem = ref(null);
+const renameInputValue = ref('');
 
 // Estados para controle de componentes de apps
 const currentAppComponent = ref(null);
@@ -87,12 +95,39 @@ const goBack = () => {
 };
 
 // Métodos de seleção
+const handleItemClick = (item, event) => {
+    if (event.ctrlKey || event.metaKey) {
+        // Ctrl+click: toggle selection
+        toggleSelection(item);
+    } else if (event.shiftKey && selectedItems.value.length > 0) {
+        // Shift+click: select range
+        selectRange(item);
+    } else {
+        // Click normal: select only this item
+        selectedItems.value = [item];
+    }
+};
+
 const toggleSelection = (item) => {
     const index = selectedItems.value.findIndex(selected => selected.path === item.path);
     if (index === -1) {
         selectedItems.value.push(item);
     } else {
         selectedItems.value.splice(index, 1);
+    }
+};
+
+const selectRange = (item) => {
+    const allItems = currentDirectoryContents.value;
+    const lastSelected = selectedItems.value[selectedItems.value.length - 1];
+    const lastIndex = allItems.findIndex(i => i.path === lastSelected.path);
+    const currentIndex = allItems.findIndex(i => i.path === item.path);
+    
+    if (lastIndex !== -1 && currentIndex !== -1) {
+        const start = Math.min(lastIndex, currentIndex);
+        const end = Math.max(lastIndex, currentIndex);
+        
+        selectedItems.value = allItems.slice(start, end + 1);
     }
 };
 
@@ -109,12 +144,12 @@ const isSelected = (item) => {
 };
 
 // Métodos de arquivo/diretório
-const handleDoubleClick = (item) => {
+const handleDoubleClick = async (item) => {
     if (item.type === 'dir') {
         navigateToPath(item.path);
     } else {
-        // Abrir arquivo (implementar conforme necessário)
-        openFile(item);
+        // Usar o sistema de abertura de arquivos
+        await openFileViewer(item.path);
     }
 };
 
@@ -229,16 +264,116 @@ const createNewItem = () => {
 const deleteSelected = () => {
     if (selectedItems.value.length === 0) return;
     
-    if (confirm(`Delete ${selectedItems.value.length} item(s)?`)) {
+    const itemCount = selectedItems.value.length;
+    const confirmMessage = itemCount === 1 
+        ? `Tem certeza que deseja excluir "${selectedItems.value[0].name}"?`
+        : `Tem certeza que deseja excluir ${itemCount} itens?`;
+        
+    if (confirm(confirmMessage)) {
+        let successCount = 0;
+        
         selectedItems.value.forEach(item => {
             const pathParts = item.path.split('/');
             const itemName = pathParts.pop();
             const parentPath = pathParts.join('/') || '/';
             
-            fileSystemStore.removeItem(itemName, parentPath);
+            const result = fileSystemStore.removeItem(itemName, parentPath);
+            if (result.success) {
+                successCount++;
+            }
         });
         
+        if (successCount > 0) {
+            notifySuccess(
+                'Itens excluídos',
+                `${successCount} ${successCount === 1 ? 'item foi excluído' : 'itens foram excluídos'}`
+            );
+        }
+        
         clearSelection();
+    }
+};
+
+const startRename = (item) => {
+    renamingItem.value = item;
+    renameInputValue.value = item.name;
+    clearSelection();
+    
+    nextTick(() => {
+        const input = document.querySelector('.rename-input');
+        if (input) {
+            input.focus();
+            input.select();
+        }
+    });
+};
+
+const finishRename = () => {
+    if (!renamingItem.value || !renameInputValue.value.trim()) {
+        cancelRename();
+        return;
+    }
+    
+    const newName = renameInputValue.value.trim();
+    const oldName = renamingItem.value.name;
+    
+    if (newName === oldName) {
+        cancelRename();
+        return;
+    }
+    
+    // Implementar lógica de renomeação
+    const pathParts = renamingItem.value.path.split('/');
+    const parentPath = pathParts.slice(0, -1).join('/') || '/';
+    
+    // Ler conteúdo do item atual
+    const currentItem = fileSystemStore.getItemAtPath(renamingItem.value.path);
+    
+    if (currentItem) {
+        // Remover item antigo
+        const removeResult = fileSystemStore.removeItem(oldName, parentPath);
+        
+        if (removeResult.success) {
+            // Criar item com novo nome
+            let createResult;
+            
+            if (currentItem.type === 'dir') {
+                createResult = fileSystemStore.createDirectory(newName, parentPath);
+                // TODO: Mover conteúdo do diretório se necessário
+            } else {
+                createResult = fileSystemStore.createFile(newName, currentItem.content || '', parentPath);
+            }
+            
+            if (createResult.success) {
+                notifySuccess('Item renomeado', `"${oldName}" foi renomeado para "${newName}"`);
+            } else {
+                notifyError('Erro ao renomear', createResult.error);
+                // Restaurar item original se falhou
+                if (currentItem.type === 'dir') {
+                    fileSystemStore.createDirectory(oldName, parentPath);
+                } else {
+                    fileSystemStore.createFile(oldName, currentItem.content || '', parentPath);
+                }
+            }
+        } else {
+            notifyError('Erro ao renomear', removeResult.error);
+        }
+    }
+    
+    cancelRename();
+};
+
+const cancelRename = () => {
+    renamingItem.value = null;
+    renameInputValue.value = '';
+};
+
+const handleOpenFile = async (item) => {
+    hideContextMenu();
+    if (item.type === 'dir') {
+        navigateToPath(item.path);
+    } else {
+        await openFileViewer(item.path);
     }
 };
 
@@ -483,7 +618,17 @@ defineExpose({
                     <span v-else>{{ getFileIcon(item) }}</span>
                 </div>
                 <div class="file-info">
-                    <div class="file-name">{{ item.name }}</div>
+                    <div class="file-name">
+                        <input
+                            v-if="renamingItem && renamingItem.path === item.path"
+                            v-model="renameInputValue"
+                            class="rename-input"
+                            @keyup.enter="finishRename"
+                            @keyup.escape="cancelRename"
+                            @blur="finishRename"
+                        />
+                        <span v-else>{{ item.name }}</span>
+                    </div>
                     <div v-if="viewMode === 'list'" class="file-details">
                         <span class="file-size">{{ formatFileSize(item.size || 0) }}</span>
                         <span class="file-date">{{ formatDate(item.modified) }}</span>
@@ -516,13 +661,31 @@ defineExpose({
             </template>
             <template #default>
                 <div class="context-menu">
+                    <div 
+                        v-if="selectedItems.length === 1"
+                        class="context-menu-item" 
+                        @click="handleOpenFile(selectedItems[0])"
+                    >
+                        <i class="pi pi-external-link"></i>
+                        <span>Abrir</span>
+                    </div>
+                    <div 
+                        v-if="selectedItems.length === 1"
+                        class="context-menu-item" 
+                        @click="startRename(selectedItems[0]); hideContextMenu();"
+                    >
+                        <i class="pi pi-pencil"></i>
+                        <span>Renomear</span>
+                    </div>
+                    <div class="context-menu-separator"></div>
                     <div class="context-menu-item" @click="copyToDesktop">
                         <i class="pi pi-copy"></i>
-                        <span>Copy to Desktop</span>
+                        <span>Copiar para Desktop</span>
                     </div>
-                    <div class="context-menu-item" @click="deleteSelected">
+                    <div class="context-menu-separator"></div>
+                    <div class="context-menu-item danger" @click="deleteSelected">
                         <i class="pi pi-trash"></i>
-                        <span>Delete</span>
+                        <span>Excluir {{ selectedItems.length > 1 ? `(${selectedItems.length})` : '' }}</span>
                     </div>
                 </div>
             </template>
@@ -594,6 +757,15 @@ defineExpose({
                 v-bind="currentAppData"
             />
         </div>
+
+        <!-- File Viewer Modal -->
+        <FileViewerModal 
+            v-model:visible="isViewerOpen" 
+            :file-data="currentFileData" 
+        />
+
+        <!-- Notifications -->
+        <NotificationToast />
     </div>
 </template>
 
@@ -682,11 +854,21 @@ defineExpose({
     user-select: none;
     transition: all 0.2s;
     color: black;
+    position: relative;
 }
 
 .grid-view .file-item {
     height: 120px;
     justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
 }
 
 .list-view .file-item {
@@ -694,6 +876,14 @@ defineExpose({
     text-align: left;
     align-items: center;
     gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .file-item:hover {
@@ -701,8 +891,14 @@ defineExpose({
 }
 
 .file-item.selected {
-    background: #e3f2fd;
-    border: 1px solid #2196f3;
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    outline: 2px solid #2196f3;
+    outline-offset: -2px;
+}
+
+.file-item:hover:not(.selected) {
+    background-color: #f5f5f5;
 }
 
 .file-icon {
@@ -714,19 +910,20 @@ defineExpose({
 }
 
 .file-icon-image {
-    width: 2rem;
-    height: 2rem;
-    object-fit: contain;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
-.list-view .file-icon {
-    margin-bottom: 0;
-    font-size: 1.5rem;
+.grid-view .file-icon-image {
+    width: 56px;
+    height: 56px;
 }
 
 .list-view .file-icon-image {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 32px;
+    height: 32px;
 }
 
 .file-info {
@@ -758,40 +955,60 @@ defineExpose({
     grid-column: 1 / -1;
 }
 
+/* Context Menu Styles */
 .context-menu {
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 4px 0;
+    min-width: 160px;
 }
 
 .context-menu-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: 8px;
+    padding: 8px 12px;
     cursor: pointer;
-    transition: background 0.2s;
+    font-size: 14px;
+    transition: background-color 0.2s;
 }
 
 .context-menu-item:hover {
-    background: #f8f9fa;
+    background-color: #f8f9fa;
 }
 
-.create-dialog {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 0 20px 20px;    
+.context-menu-item.danger {
+    color: #dc3545;
 }
 
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.context-menu-item.danger:hover {
+    background-color: #fee;
 }
 
+.context-menu-separator {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 4px 0;
+}
+
+/* Rename Input Styles */
+.rename-input {
+    background: white;
+    border: 2px solid #007bff;
+    border-radius: 3px;
+    padding: 2px 4px;
+    font-size: inherit;
+    font-family: inherit;
+    width: 100%;
+    outline: none;
+}
+
+.rename-input:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
 .status-bar {
     display: flex;
     align-items: center;

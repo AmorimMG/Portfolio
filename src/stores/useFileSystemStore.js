@@ -24,6 +24,16 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
     const trashStore = useTrashStore();
     
     /**
+     * Sistema de registro de arquivos dinâmico
+     */
+    const registeredFiles = ref({
+        images: new Set(),
+        videos: new Set(),
+        documents: new Set(),  
+        music: new Set()
+    });
+    
+    /**
      * Cria a estrutura inicial do sistema de arquivos
      */
     function createInitialFileSystem() {
@@ -479,7 +489,7 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
     /**
      * Operações de leitura/escrita
      */
-    function readFile(path) {
+    async function readFile(path) {
         const item = getItemAtPath(path);
         
         if (!item) {
@@ -489,8 +499,19 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
         if (item.type !== 'file') {
             return { success: false, error: `cat: ${path}: Is a directory` };
         }
+
+        // Se o arquivo tem um caminho real, carregar o conteúdo
+        if (item.realPath && !item.content) {
+            try {
+                const content = await loadRealFileContent(item.realPath);
+                item.content = content;
+                item.size = content.length;
+            } catch (error) {
+                console.error('Erro ao carregar arquivo real:', error);
+            }
+        }
         
-        return { success: true, content: item.content || '' };
+        return { success: true, content: item.content || '', realPath: item.realPath };
     }
 
     function writeFile(path, content) {
@@ -597,6 +618,140 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
     }
 
     /**
+     * Integração com arquivos reais
+     */
+    async function loadRealFiles() {
+        try {
+            const categories = ['images', 'videos', 'documents', 'music'];
+            
+            for (const category of categories) {
+                await loadRealFilesForCategory(category);
+            }
+            
+            console.log('Arquivos reais carregados automaticamente');
+        } catch (error) {
+            console.error('Erro ao carregar arquivos reais:', error);
+        }
+    }
+
+    function loadRealFilesFromList(category, files) {
+        processFilesForCategory(category, files);
+        console.log(`Carregados ${files.length} arquivos de ${category} via JSON`);
+    }
+
+    async function loadRealFilesForCategory(category) {
+        // Primeiro tentar detectar automaticamente
+        const files = await detectFilesInCategory(category);
+        
+        // Usar a função comum para processar
+        processFilesForCategory(category, files);
+        
+        console.log(`Detectados ${files.length} arquivos para ${category}`);
+    }
+
+    function processFilesForCategory(category, files) {
+        const categoryMap = {
+            'images': '/home/amorim/Pictures',
+            'videos': '/home/amorim/Videos', 
+            'documents': '/home/amorim/Documents',
+            'music': '/home/amorim/Music'
+        };
+
+        const targetPath = categoryMap[category];
+        const targetItem = getItemAtPath(targetPath);
+
+        if (!targetItem) return;
+
+        // Limpar arquivos existentes da categoria para evitar duplicatas
+        Object.keys(targetItem.contents).forEach(key => {
+            if (targetItem.contents[key].realPath) {
+                delete targetItem.contents[key];
+            }
+        });
+
+        // Adicionar todos os arquivos
+        files.forEach(file => {
+            const extension = file.extension || file.name.split('.').pop().toLowerCase();
+            const fileType = getFileType(extension);
+
+            targetItem.contents[file.name] = {
+                type: 'file',
+                permissions: '-rw-r--r--',
+                owner: 'amorim',
+                group: 'amorim',
+                size: file.size || 0,
+                modified: new Date(file.modified || new Date()),
+                content: '', // Será carregado quando necessário
+                realPath: file.url || `/user-files/${category}/${file.name}`,
+                fileType: fileType,
+                extension: extension,
+                isRealFile: true
+            };
+        });
+    }
+
+    async function loadRealFileContent(realPath) {
+        try {
+            const response = await fetch(realPath);
+            if (response.ok) {
+                return await response.text();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar conteúdo do arquivo:', error);
+        }
+        return '';
+    }
+
+    function addRealFile(name, category, realPath) {
+        const categoryMap = {
+            'images': '/home/amorim/Pictures',
+            'videos': '/home/amorim/Videos',
+            'documents': '/home/amorim/Documents', 
+            'music': '/home/amorim/Music'
+        };
+
+        const targetPath = categoryMap[category];
+        const targetItem = getItemAtPath(targetPath);
+
+        if (!targetItem || targetItem.type !== 'dir') {
+            return { success: false, error: `Categoria ${category} não encontrada` };
+        }
+
+        // Detectar tipo de arquivo
+        const extension = name.split('.').pop().toLowerCase();
+        const fileType = getFileType(extension);
+
+        targetItem.contents[name] = {
+            type: 'file',
+            permissions: '-rw-r--r--',
+            owner: 'amorim', 
+            group: 'amorim',
+            size: 0, // Será atualizado quando carregado
+            modified: new Date(),
+            content: '', // Será carregado quando necessário
+            realPath: realPath,
+            fileType: fileType,
+            extension: extension
+        };
+
+        emitFileSystemChange('create', 'file', joinPath(targetPath, name));
+        return { success: true };
+    }
+
+    function getFileType(extension) {
+        const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'];
+        const videoExts = ['mp4', 'webm', 'ogg', 'avi', 'mov'];
+        const audioExts = ['mp3', 'wav', 'ogg', 'm4a', 'flac'];
+        const docExts = ['txt', 'md', 'pdf', 'doc', 'docx'];
+
+        if (imageExts.includes(extension)) return 'image';
+        if (videoExts.includes(extension)) return 'video';
+        if (audioExts.includes(extension)) return 'audio';
+        if (docExts.includes(extension)) return 'document';
+        return 'file';
+    }
+
+    /**
      * Sistema de eventos para sincronização
      */
     const eventListeners = ref(new Set());
@@ -642,6 +797,245 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
         }
     }, { deep: true });
 
+    // Carregar arquivos reais na inicialização
+    loadRealFiles();
+
+    /**
+     * Sistema de abertura de arquivos
+     */
+    async function openFile(path, options = {}) {
+        const item = getItemAtPath(path);
+        
+        if (!item) {
+            return { 
+                success: false, 
+                error: `Arquivo não encontrado: ${path}`,
+                shouldNotify: true,
+                notificationType: 'error'
+            };
+        }
+        
+        if (item.type !== 'file') {
+            return { 
+                success: false, 
+                error: `${path} é um diretório, não um arquivo`,
+                shouldNotify: true,
+                notificationType: 'warning'
+            };
+        }
+
+        // Determinar como abrir o arquivo baseado no tipo
+        const extension = item.extension || path.split('.').pop().toLowerCase();
+        const fileType = item.fileType || getFileType(extension);
+        
+        // Carregar conteúdo se necessário
+        let content = item.content;
+        if (item.realPath && !content) {
+            try {
+                content = await loadRealFileContent(item.realPath);
+                item.content = content;
+            } catch (error) {
+                return {
+                    success: false,
+                    error: `Erro ao carregar arquivo: ${error.message}`,
+                    shouldNotify: true,
+                    notificationType: 'error'
+                };
+            }
+        }
+
+        // Preparar dados para visualização
+        const fileData = {
+            name: path.split('/').pop(),
+            path: path,
+            type: fileType,
+            extension: extension,
+            content: content,
+            url: item.realPath || null,
+            size: item.size,
+            modified: item.modified
+        };
+
+        // Verificar se o tipo de arquivo é suportado
+        const supportedTypes = ['image', 'video', 'audio', 'document'];
+        const supportedExtensions = [
+            'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', // images
+            'mp4', 'webm', 'ogg', 'avi', 'mov', // videos
+            'mp3', 'wav', 'ogg', 'm4a', 'flac', // audio
+            'txt', 'md', 'pdf', 'doc', 'docx', 'json', 'js', 'css', 'html' // documents
+        ];
+
+        if (!supportedTypes.includes(fileType) && !supportedExtensions.includes(extension)) {
+            return {
+                success: false,
+                error: `Tipo de arquivo não suportado: ${extension.toUpperCase()}`,
+                shouldNotify: true,
+                notificationType: 'warning',
+                suggestion: 'Tente baixar o arquivo para abrir com um programa externo'
+            };
+        }
+
+        return {
+            success: true,
+            fileData: fileData,
+            viewerComponent: getViewerComponent(fileType, extension)
+        };
+    }
+
+    function getViewerComponent(fileType, extension) {
+        // Retorna o componente apropriado para visualização
+        if (fileType === 'image') return 'ImageViewer';
+        if (fileType === 'video') return 'VideoViewer';
+        if (fileType === 'audio') return 'AudioViewer';
+        if (fileType === 'document') {
+            if (['txt', 'md', 'json', 'js', 'css', 'html'].includes(extension)) {
+                return 'TextViewer';
+            }
+            if (extension === 'pdf') return 'PDFViewer';
+            return 'DocumentViewer';
+        }
+        return 'GenericViewer';
+    }
+
+    function canOpenFile(path) {
+        const item = getItemAtPath(path);
+        if (!item || item.type !== 'file') return false;
+        
+        const extension = item.extension || path.split('.').pop().toLowerCase();
+        const supportedExtensions = [
+            'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp',
+            'mp4', 'webm', 'ogg', 'avi', 'mov',
+            'mp3', 'wav', 'ogg', 'm4a', 'flac',
+            'txt', 'md', 'pdf', 'doc', 'docx', 'json', 'js', 'css', 'html'
+        ];
+        
+        return supportedExtensions.includes(extension);
+    }
+
+    // Carregar arquivos registrados do localStorage
+    function loadRegisteredFiles() {
+        try {
+            const saved = localStorage.getItem('registeredFiles');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                Object.keys(registeredFiles.value).forEach(category => {
+                    if (parsed[category]) {
+                        registeredFiles.value[category] = new Set(parsed[category]);
+                    }
+                });
+            }
+        } catch (error) {
+            console.log('Erro ao carregar arquivos registrados:', error);
+        }
+    }
+
+    // Salvar arquivos registrados no localStorage
+    function saveRegisteredFiles() {
+        try {
+            const toSave = {};
+            Object.keys(registeredFiles.value).forEach(category => {
+                toSave[category] = Array.from(registeredFiles.value[category]);
+            });
+            localStorage.setItem('registeredFiles', JSON.stringify(toSave));
+        } catch (error) {
+            console.log('Erro ao salvar arquivos registrados:', error);
+        }
+    }
+
+    // Registrar um novo arquivo
+    function registerFile(category, fileName) {
+        if (registeredFiles.value[category]) {
+            registeredFiles.value[category].add(fileName);
+            saveRegisteredFiles();
+            console.log(`Arquivo registrado: ${fileName} em ${category}`);
+            
+            // Recarregar arquivos da categoria
+            loadRealFilesForCategory(category);
+        }
+    }
+
+    // Desregistrar um arquivo
+    function unregisterFile(category, fileName) {  
+        if (registeredFiles.value[category]) {
+            registeredFiles.value[category].delete(fileName);
+            saveRegisteredFiles();
+            console.log(`Arquivo removido do registro: ${fileName} de ${category}`);
+        }
+    }
+
+    // Atualizar a função de detecção para usar arquivos registrados
+    async function detectFilesInCategory(category) {
+        // Carregar registros salvos
+        loadRegisteredFiles();
+        
+        // Combinar arquivos conhecidos com registrados
+        const knownFiles = {
+            images: [
+                'WhatsApp Image 2025-09-16 at 15.33.03.jpeg',
+                'WhatsApp Image 2025-09-16 at 15.33.21.jpeg', 
+                'WhatsApp Image 2025-09-16 at 15.33.40.jpeg'
+            ],
+            videos: [
+                'WhatsApp Video 2025-09-18 at 20.59.02.mp4'
+            ],
+            documents: [
+                'exemplo.txt',
+                'portfolio-info.md'
+            ],
+            music: []
+        };
+
+        const allFiles = [
+            ...(knownFiles[category] || []),
+            ...Array.from(registeredFiles.value[category] || [])
+        ];
+
+        const files = [];
+        const uniqueFiles = [...new Set(allFiles)]; // Remover duplicatas
+        
+        // Verificar cada arquivo se existe
+        for (const fileName of uniqueFiles) {
+            try {
+                const url = `/user-files/${category}/${fileName}`;
+                const response = await fetch(url, { method: 'HEAD' });
+                
+                if (response.ok) {
+                    const extension = fileName.split('.').pop().toLowerCase();
+                    const contentLength = response.headers.get('content-length');
+                    const lastModified = response.headers.get('last-modified');
+
+                    files.push({
+                        name: fileName,
+                        url: url,
+                        extension: extension,
+                        size: contentLength ? parseInt(contentLength) : 0,
+                        modified: lastModified ? new Date(lastModified) : new Date()
+                    });
+                }
+            } catch (error) {
+                console.log(`Arquivo ${fileName} não encontrado em ${category}`);
+                // Remover do registro se não existe mais
+                unregisterFile(category, fileName);
+            }
+        }
+
+        return files;
+    }
+
+    // Função helper para adicionar arquivo facilmente
+    function addFileToCategory(category, fileName) {
+        // Primeiro registrar o arquivo
+        registerFile(category, fileName);
+        
+        // Depois tentar carregá-lo
+        return new Promise((resolve) => {
+            setTimeout(async () => {
+                await loadRealFilesForCategory(category);
+                resolve(true);
+            }, 100);
+        });
+    }
+
     return {
         // Estado
         currentPath,
@@ -677,6 +1071,20 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
         // Desktop
         addToDesktop,
         
+        // Arquivos reais
+        loadRealFiles,
+        addRealFile,
+        loadRealFileContent,
+        getFileType,
+        registerFile,
+        unregisterFile,
+        addFileToCategory,
+        
+        // Abertura de arquivos
+        openFile,
+        canOpenFile,
+        getViewerComponent,
+        
         // Utilitários
         getItemAtPath,
         normalizePath,
@@ -684,6 +1092,20 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
         
         // Eventos
         onFileSystemChange,
-        emitFileSystemChange
+        emitFileSystemChange,
+
+        // Integração com arquivos reais
+        loadRealFiles,
+        loadRealFileContent,
+        addRealFile,
+
+        // Abertura de arquivos
+        openFile,
+        canOpenFile,
+
+        // Registro de arquivos
+        registerFile,
+        unregisterFile,
+        addFileToCategory
     };
 });
