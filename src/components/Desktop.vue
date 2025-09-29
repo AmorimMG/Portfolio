@@ -20,6 +20,7 @@ export default {
         ContextMenu,
         ...componentMap
     },
+    emits: ['open-file-manager'],
     setup() {
         const { t } = useI18n();
         const appsStore = useAppsStore();
@@ -39,7 +40,7 @@ export default {
             return !!userSession && userLoggedIn.value;
         };
 
-        // Computed para integrar apps da store com arquivos do desktop
+        // Computed para integrar apps da store com todos os arquivos do desktop
         const desktopApps = computed(() => {
             const desktop = fileSystemStore.getItemAtPath('/home/amorim/Desktop');
             const desktopFiles = desktop.success ? desktop.item.contents || {} : {};
@@ -47,32 +48,75 @@ export default {
             // Pegar apps tradicionais da store
             const storeApps = appsStore.apps.filter(app => app.id !== null);
             
-            // Pegar arquivos .app do desktop
-            const fileApps = Object.entries(desktopFiles)
-                .filter(([name, file]) => name.endsWith('.app') && file.type === 'file')
+            // Função para obter ícone baseado no tipo de arquivo
+            const getFileIcon = (name, file) => {
+                const ext = name.split('.').pop()?.toLowerCase();
+                const iconMap = {
+                    'txt': '📄',
+                    'md': '📝',
+                    'js': '📜',
+                    'json': '📋',
+                    'pdf': '📕',
+                    'jpg': '🖼️',
+                    'jpeg': '🖼️',
+                    'png': '🖼️',
+                    'gif': '🖼️',
+                    'mp3': '🎵',
+                    'mp4': '🎬',
+                    'zip': '📦',
+                    'dir': '📁'
+                };
+                
+                if (file.type === 'dir') return '📁';
+                return iconMap[ext] || '📄';
+            };
+            
+            // Pegar todos os arquivos e pastas do desktop
+            const desktopItems = Object.entries(desktopFiles)
                 .map(([name, file]) => {
-                    try {
-                        const appData = JSON.parse(file.content || '{}');
+                    // Se for um arquivo .app, tratar como app
+                    if (name.endsWith('.app') && file.type === 'file') {
+                        try {
+                            const appData = JSON.parse(file.content || '{}');
+                            return {
+                                id: `desktop-app-${name}`,
+                                title: appData.title || name.replace('.app', ''),
+                                icon: appData.icon || '/favicon.ico',
+                                name: appData.component || 'DefaultApp',
+                                locked: appData.locked || false,
+                                colSpan: appData.colSpan || 1,
+                                rowSpan: appData.rowSpan || 1,
+                                isDesktopFile: true,
+                                isApp: true,
+                                filePath: `/home/amorim/Desktop/${name}`,
+                                fileType: 'app'
+                            };
+                        } catch (error) {
+                            console.error('Error parsing app file:', name, error);
+                            return null;
+                        }
+                    } else {
+                        // Arquivo ou pasta comum
                         return {
-                            id: `desktop-${name}`,
-                            title: appData.title || name.replace('.app', ''),
-                            icon: appData.icon || '/favicon.ico',
-                            name: appData.component || 'DefaultApp',
-                            locked: appData.locked || false,
-                            colSpan: appData.colSpan || 1,
-                            rowSpan: appData.rowSpan || 1,
+                            id: `desktop-file-${name}`,
+                            title: name,
+                            icon: getFileIcon(name, file),
+                            name: 'FileItem', // Componente genérico para arquivos
+                            locked: false,
+                            colSpan: 1,
+                            rowSpan: 1,
                             isDesktopFile: true,
-                            filePath: `/home/amorim/Desktop/${name}`
+                            isApp: false,
+                            filePath: `/home/amorim/Desktop/${name}`,
+                            fileType: file.type,
+                            originalFile: file
                         };
-                    } catch (error) {
-                        console.error('Error parsing app file:', name, error);
-                        return null;
                     }
                 })
-                .filter(app => app !== null);
+                .filter(item => item !== null);
             
-            // Combinar apps tradicionais com apps do desktop
-            return [...storeApps, ...fileApps];
+            // Combinar apps tradicionais com itens do desktop
+            return [...storeApps, ...desktopItems];
         });
 
         onMounted(() => {
@@ -132,20 +176,8 @@ export default {
             contextApp: null,
             trash: [],
             pendingLockedApp: null,
-            contextItems: [
-                {
-                    label: 'Renomear',
-                    icon: 'pi pi-pencil',
-                    command: () => this.renameApp(this.contextApp)
-                },
-                {
-                    label: 'Remover',
-                    icon: 'pi pi-trash',
-                    command: () => {
-                        if (this.contextApp) this.removeApp(this.contextApp);
-                    }
-                }
-            ]
+            selectedApps: [],
+            contextItems: []
         };
     },
     
@@ -166,6 +198,35 @@ export default {
         },
         isUserLoggedIn() {
             return this.userLoggedIn;
+        },
+        // Computed para o menu de contexto baseado na seleção
+        dynamicContextItems() {
+            if (this.selectedApps.length > 1) {
+                // Múltiplos itens selecionados - apenas remover
+                return [
+                    {
+                        label: `Remover ${this.selectedApps.length} itens`,
+                        icon: 'pi pi-trash',
+                        command: () => this.removeMultipleApps(this.selectedApps)
+                    }
+                ];
+            } else {
+                // Um item selecionado - renomear e remover
+                return [
+                    {
+                        label: 'Renomear',
+                        icon: 'pi pi-pencil',
+                        command: () => this.renameApp(this.contextApp)
+                    },
+                    {
+                        label: 'Remover',
+                        icon: 'pi pi-trash',
+                        command: () => {
+                            if (this.contextApp) this.removeApp(this.contextApp);
+                        }
+                    }
+                ];
+            }
         }
     },
     watch: {
@@ -184,6 +245,8 @@ export default {
         onContextMenu(event, app) {
             event.preventDefault();
             this.contextApp = app;
+            // Atualiza o menu de contexto baseado na seleção atual
+            this.contextItems = this.dynamicContextItems;
             this.$refs.contextMenuRef.show(event);
         },
         renameApp(app) {
@@ -191,23 +254,45 @@ export default {
             const newName = prompt('Novo nome:', app.title);
             if (newName && newName !== app.title) {
                 if (app.isDesktopFile) {
-                    // Renomear arquivo do desktop
-                    const oldPath = app.filePath;
-                    const newPath = oldPath.replace(/\/[^/]+\.app$/, `/${newName}.app`);
-                    
-                    // Ler conteúdo atual
-                    const fileContent = this.fileSystemStore.readFile(oldPath);
-                    if (fileContent.success) {
-                        try {
-                            const appData = JSON.parse(fileContent.content);
-                            appData.title = newName;
-                            
-                            // Criar novo arquivo com nome atualizado
-                            this.fileSystemStore.createFile(newPath.split('/').pop(), JSON.stringify(appData, null, 2), '/home/amorim/Desktop');
-                            // Remover arquivo antigo
-                            this.fileSystemStore.removeItem(oldPath.split('/').pop(), '/home/amorim/Desktop');
-                        } catch (error) {
-                            console.error('Error updating app file:', error);
+                    if (app.isApp) {
+                        // Renomear arquivo .app do desktop
+                        const oldPath = app.filePath;
+                        const newPath = oldPath.replace(/\/[^/]+\.app$/, `/${newName}.app`);
+                        
+                        // Ler conteúdo atual
+                        const fileContent = this.fileSystemStore.readFile(oldPath);
+                        if (fileContent.success) {
+                            try {
+                                const appData = JSON.parse(fileContent.content);
+                                appData.title = newName;
+                                
+                                // Criar novo arquivo com nome atualizado
+                                this.fileSystemStore.createFile(newPath.split('/').pop(), JSON.stringify(appData, null, 2), '/home/amorim/Desktop');
+                                // Remover arquivo antigo
+                                this.fileSystemStore.removeItem(oldPath.split('/').pop(), '/home/amorim/Desktop');
+                            } catch (error) {
+                                console.error('Error updating app file:', error);
+                            }
+                        }
+                    } else {
+                        // Renomear arquivo/pasta comum do desktop
+                        const oldFileName = app.filePath.split('/').pop();
+                        const fileContent = this.fileSystemStore.readFile(app.filePath);
+                        
+                        if (app.fileType === 'dir') {
+                            // Renomear diretório
+                            const dirContents = this.fileSystemStore.getItemAtPath(app.filePath);
+                            if (dirContents && dirContents.contents) {
+                                this.fileSystemStore.createDirectory(newName, '/home/amorim/Desktop');
+                                // Copiar conteúdo se necessário (implementação simplificada)
+                                this.fileSystemStore.removeItem(oldFileName, '/home/amorim/Desktop');
+                            }
+                        } else {
+                            // Renomear arquivo
+                            if (fileContent.success) {
+                                this.fileSystemStore.createFile(newName, fileContent.content, '/home/amorim/Desktop');
+                                this.fileSystemStore.removeItem(oldFileName, '/home/amorim/Desktop');
+                            }
                         }
                     }
                 } else {
@@ -226,8 +311,8 @@ export default {
             this.trash = this.trash.filter((a) => a && a.id !== app.id);
         },
         onSelectionChange({ selectedIds, selectedItems }) {
-            // Pode ser usado para feedback visual ou outras funcionalidades
-            // console.log('Seleção alterada:', selectedIds, selectedItems);
+            // Atualiza a lista de apps selecionados para o menu de contexto
+            this.selectedApps = selectedItems;
         },
         onItemsUpdated(newItems) {
             console.log('📝 AppsGrid: Updating store with new items');
@@ -239,18 +324,26 @@ export default {
             // });
         },
         onItemClick({ event, item: app, index }) {
-            // Se não estiver usando modificadores para seleção múltipla, abre o app
-            if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
-                setTimeout(() => {
-                    if (!this.canAccessApp(app)) {
-                        this.pendingLockedApp = app;
-                        this.$refs.loginToastRef.show();
-                        return;
-                    }
-                    
-                    this.openAppNormally(app);
-                }, 200); // Pequeno delay para permitir duplo clique
+            // Clique simples agora apenas seleciona o item
+            // A abertura será feita apenas no duplo clique
+        },
+        
+        onItemDoubleClick({ event, item: app, index }) {
+            // Duplo clique - abre o item
+            // Se for um arquivo/pasta comum do desktop, emitir evento para abrir no FileManager
+            if (app.isDesktopFile && !app.isApp) {
+                this.openDesktopFile(app);
+                return;
             }
+            
+            // Para apps, verificar permissões
+            if (!this.canAccessApp(app)) {
+                this.pendingLockedApp = app;
+                this.$refs.loginToastRef.show();
+                return;
+            }
+            
+            this.openAppNormally(app);
         },
         
         openAppNormally(app) {
@@ -267,26 +360,42 @@ export default {
             }
             
             this.$nextTick(() => {
-                const appElement = document.querySelector(`[data-key="${app.id}"]`);
+                const appElement = document.querySelector(`[data-id="${app.id}"]`);
                 if (appElement) {
-                    const appCard = appElement.closest('.app-container').querySelector('.app-card');
-                    if (appCard) {
-                        const button = appCard.querySelector('button');
-                        if (button) {
-                            if (app.locked && !this.canAccessApp(app)) {
-                                console.warn('Bloqueio final ativado:', app.name);
+                    // Tenta encontrar o container do app dentro da grid
+                    const appContainer = appElement.querySelector('.app-container');
+                    if (appContainer) {
+                        const appCard = appContainer.querySelector('.app-card');
+                        if (appCard) {
+                            const button = appCard.querySelector('button');
+                            if (button) {
+                                if (app.locked && !this.canAccessApp(app)) {
+                                    console.warn('Bloqueio final ativado:', app.name);
+                                    return;
+                                }
+                                button.click();
                                 return;
                             }
-                            button.click();
-                            return;
                         }
                     }
                     
+                    // Se não encontrou a estrutura esperada, despacha evento customizado
                     const event = new CustomEvent('appOpen', { detail: { app } });
                     appElement.dispatchEvent(event);
                 }
             });
         },
+        
+        openDesktopFile(fileItem) {
+            // Emitir evento para que o componente pai (AppLayout) possa abrir o FileManager
+            // navegando para o Desktop e selecionando o arquivo
+            this.$emit('open-file-manager', {
+                path: '/home/amorim/Desktop',
+                selectedFile: fileItem.title,
+                fileType: fileItem.fileType
+            });
+        },
+        
         onLoginSuccess() {
             this.userLoggedIn = true;
             if (this.pendingLockedApp) {
@@ -300,12 +409,37 @@ export default {
             if (!app) return;
             
             if (app.isDesktopFile) {
-                // Remover arquivo do desktop
+                // Remover arquivo/pasta do desktop
                 const fileName = app.filePath.split('/').pop();
                 this.fileSystemStore.removeItem(fileName, '/home/amorim/Desktop');
             } else {
                 // App tradicional da store
                 this.appsStore.removeApp(app);
+            }
+        },
+        
+        removeMultipleApps(apps) {
+            if (!apps || apps.length === 0) return;
+            
+            // Confirmar remoção múltipla
+            const confirmed = confirm(`Tem certeza que deseja remover ${apps.length} ${apps.length === 1 ? 'item' : 'itens'}?`);
+            if (!confirmed) return;
+            
+            // Remover cada app
+            apps.forEach(app => {
+                if (app.isDesktopFile) {
+                    // Remover arquivo/pasta do desktop
+                    const fileName = app.filePath.split('/').pop();
+                    this.fileSystemStore.removeItem(fileName, '/home/amorim/Desktop');
+                } else {
+                    // App tradicional da store
+                    this.appsStore.removeApp(app);
+                }
+            });
+            
+            // Limpar seleção após remoção
+            if (this.$refs.selectableDraggableGrid) {
+                this.$refs.selectableDraggableGrid.clearSelection();
             }
         },
         
@@ -347,6 +481,7 @@ export default {
             :drag-enabled="true"
             @selection-change="onSelectionChange"
             @item-click="onItemClick"
+            @item-double-click="onItemDoubleClick"
             @contextmenu="onContextMenu"
             @update:model-value="onItemsUpdated"
         >
@@ -372,9 +507,14 @@ export default {
                     </div>
                     
                     <div class="app-icon-wrapper" 
-                        :title="element.locked ? (isUserLoggedIn ? 'App desbloqueado - Clique para abrir' : 'App bloqueado - Clique para fazer login') : ''">
+                        :title="element.locked ? (isUserLoggedIn ? 'App desbloqueado - Duplo clique para abrir' : 'App bloqueado - Duplo clique para fazer login') : (element.isDesktopFile && !element.isApp ? `${element.fileType === 'dir' ? 'Pasta' : 'Arquivo'}: ${element.title} - Duplo clique para abrir` : `${element.title} - Duplo clique para abrir`)">
                         <div class="app-icon-container">
-                             <img loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" draggable="false" />
+                            <!-- Para arquivos que têm URL de imagem -->
+                            <img v-if="element.icon && (element.icon.startsWith('http') || element.icon.startsWith('/') || element.icon.includes('.'))" 
+                                 loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" draggable="false" />
+                            <!-- Para arquivos com ícone emoji/unicode -->
+                            <span v-else class="file-icon-emoji" style="font-size: 50px;">{{ element.icon }}</span>
+                            
                             <div v-if="element.locked" class="lock-overlay" :class="{ 'unlocked': isUserLoggedIn }">
                                 <i class="lock-icon pi" :class="isUserLoggedIn ? 'pi-unlock' : 'pi-lock'"></i>
                             </div>
@@ -385,7 +525,7 @@ export default {
             </template>
         </SelectableDraggableGrid>
 
-        <ContextMenu ref="contextMenuRef" :model="contextItems" />
+        <ContextMenu ref="contextMenuRef" :model="dynamicContextItems" />
         <LoginToast ref="loginToastRef" @login-success="onLoginSuccess" />
     </div>
 </template>
@@ -539,6 +679,15 @@ export default {
     bottom: 0;
     z-index: 5;
     pointer-events: none;
+}
+
+.file-icon-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    line-height: 1;
 }
 
 .container {

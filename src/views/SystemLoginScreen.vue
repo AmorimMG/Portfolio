@@ -1,10 +1,10 @@
 <script setup>
-import AmorimIcon from "@/assets/images/cards/profilePic.png";
+import AmorimIcon from "@/assets/images/cards/login.jpg";
 import LoginBackground from "@/assets/images/wallpapers/login_background.png";
 import { ref } from "vue";
 
 const password = ref("");
-const userName = ref("Amorim");
+const userName = ref(" Gabriel Amorim");
 
 const handleLogin = () => {
   emit("login");

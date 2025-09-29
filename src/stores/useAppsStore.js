@@ -201,7 +201,6 @@ export const useAppsStore = defineStore('apps', () => {
 
                 if (result.success) {
                     app.desktopFile = fileName;
-                    console.log(`Created desktop file for app: ${app.title}`);
                 }
             }
         });

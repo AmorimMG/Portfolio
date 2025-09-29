@@ -59,7 +59,36 @@ export const useFileSystemStore = defineStore('fileSystem', () => {
                                         group: 'amorim',
                                         size: 4096,
                                         modified: new Date(),
-                                        contents: {}
+                                        contents: {
+                                            'README.txt': {
+                                                type: 'file',
+                                                permissions: '-rw-r--r--',
+                                                owner: 'amorim',
+                                                group: 'amorim',
+                                                size: 245,
+                                                modified: new Date(),
+                                                content: 'Bem-vindo ao Desktop!\n\nEste é um arquivo de exemplo que demonstra a sincronização entre o Desktop e o FileManager.\n\nVocê pode:\n- Criar novos arquivos e pastas\n- Renomear itens\n- Excluir itens\n- Navegar entre pastas\n\nTudo sincronizado em tempo real!'
+                                            },
+                                            'Projetos': {
+                                                type: 'dir',
+                                                permissions: 'drwxr-xr-x',
+                                                owner: 'amorim',
+                                                group: 'amorim',
+                                                size: 4096,
+                                                modified: new Date(),
+                                                contents: {
+                                                    'portfolio.json': {
+                                                        type: 'file',
+                                                        permissions: '-rw-r--r--',
+                                                        owner: 'amorim',
+                                                        group: 'amorim',
+                                                        size: 156,
+                                                        modified: new Date(),
+                                                        content: '{\n  "name": "Portfolio Vue.js",\n  "version": "1.0.0",\n  "description": "Meu portfólio pessoal",\n  "technologies": ["Vue.js", "JavaScript", "CSS"]\n}'
+                                                    }
+                                                }
+                                            }
+                                        }
                                     },
                                     'Documents': {
                                         type: 'dir',
