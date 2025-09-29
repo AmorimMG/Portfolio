@@ -46,6 +46,7 @@ const emit = defineEmits([
   "contextmenu", 
   "selection-change", 
   "item-click",
+  "item-double-click",
   "drag-start",
   "drag-end"
 ]);
@@ -68,6 +69,18 @@ const dragOverIndex = ref(-1);
 const draggedItem = ref(null);
 const dragOffset = ref({ x: 0, y: 0 });
 const mousePos = ref({ x: 0, y: 0 });
+
+// Estados para controlar quando iniciar o drag
+const dragTimeout = ref(null);
+const dragStartPos = ref({ x: 0, y: 0 });
+const isDragReady = ref(false);
+const DRAG_THRESHOLD = 5; // pixels para considerar como drag
+const DRAG_DELAY = 150; // delay em ms para iniciar drag
+
+// Estados para controlar duplo clique
+const lastClickTime = ref(0);
+const lastClickedItem = ref(null);
+const DOUBLE_CLICK_DELAY = 300; // delay máximo entre cliques para considerar duplo clique
 
 // Sincroniza a lista interna se a prop externa mudar
 watch(
@@ -419,6 +432,16 @@ function handleDragStart(event) {
 function handleMouseMove(event) {
   mousePos.value = { x: event.clientX, y: event.clientY };
   
+  // Se está preparado para drag, verifica se o usuário moveu o mouse o suficiente
+  if (isDragReady.value && !isDragging.value && dragStartIndex.value >= 0) {
+    const deltaX = Math.abs(event.clientX - dragStartPos.value.x);
+    const deltaY = Math.abs(event.clientY - dragStartPos.value.y);
+    
+    if (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) {
+      startDrag();
+    }
+  }
+  
   if (isSelecting.value && !isDragging.value) {
     const rect = gridContainer.value.getBoundingClientRect();
     selectionRect.value = {
@@ -435,6 +458,15 @@ function handleMouseMove(event) {
 }
 
 function handleMouseUp() {
+  // Limpa timeout de drag se ainda estiver ativo
+  if (dragTimeout.value) {
+    clearTimeout(dragTimeout.value);
+    dragTimeout.value = null;
+  }
+  
+  // Reset drag ready state
+  isDragReady.value = false;
+  
   if (isSelecting.value) {
     isSelecting.value = false;
     selectionRect.value = null;
@@ -442,6 +474,10 @@ function handleMouseUp() {
   
   if (isDragging.value) {
     completeDrag();
+  } else if (dragStartIndex.value >= 0) {
+    // Se não estava realmente arrastando, apenas limpa o estado
+    dragStartIndex.value = -1;
+    draggedItem.value = null;
   }
 }
 
@@ -452,8 +488,10 @@ function handleItemMouseDown(event, item, index) {
     return;
   }
   
-  // Previne comportamento padrão para interceptar drag de imagens
-  event.preventDefault();
+  // Só previne comportamento padrão se for uma imagem sendo arrastada
+  if (event.target.tagName === 'IMG') {
+    event.preventDefault();
+  }
   
   if (props.dragEnabled && event.button === 0) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -464,6 +502,15 @@ function handleItemMouseDown(event, item, index) {
     
     dragStartIndex.value = index;
     draggedItem.value = item;
+    isDragReady.value = false;
+    
+    // Guarda posição inicial para detectar movimento
+    dragStartPos.value = { x: event.clientX, y: event.clientY };
+    
+    // Limpa timeout anterior se existir
+    if (dragTimeout.value) {
+      clearTimeout(dragTimeout.value);
+    }
     
     if (!selected.value.has(item[props.itemKey])) {
       if (event.ctrlKey || event.metaKey) {
@@ -480,12 +527,10 @@ function handleItemMouseDown(event, item, index) {
       event.stopPropagation();
     }
     
-    // Start drag after a small delay
-    setTimeout(() => {
-      if (dragStartIndex.value === index) {
-        startDrag();
-      }
-    }, 100);
+    // Prepara para possível drag, mas não inicia imediatamente
+    dragTimeout.value = setTimeout(() => {
+      isDragReady.value = true;
+    }, DRAG_DELAY);
   }
 }
 
@@ -498,15 +543,31 @@ function handleItemClick(event, item, index) {
   
   event.stopPropagation();
   
-  if (props.multiSelect && (event.ctrlKey || event.metaKey)) {
-    toggleSelection(item[props.itemKey]);
-  } else if (props.multiSelect && event.shiftKey && selected.value.size > 0) {
-    selectRange(index);
-  } else {
-    setSelection([item[props.itemKey]]);
-  }
+  const currentTime = Date.now();
+  const timeSinceLastClick = currentTime - lastClickTime.value;
+  const isDoubleClick = timeSinceLastClick < DOUBLE_CLICK_DELAY && 
+                       lastClickedItem.value && 
+                       lastClickedItem.value[props.itemKey] === item[props.itemKey];
   
-  emit('item-click', { event, item, index });
+  // Atualiza informações do último clique
+  lastClickTime.value = currentTime;
+  lastClickedItem.value = item;
+  
+  if (isDoubleClick) {
+    // Duplo clique - emite evento para abrir o item
+    emit('item-double-click', { event, item, index });
+  } else {
+    // Clique simples - lógica de seleção
+    if (props.multiSelect && (event.ctrlKey || event.metaKey)) {
+      toggleSelection(item[props.itemKey]);
+    } else if (props.multiSelect && event.shiftKey && selected.value.size > 0) {
+      selectRange(index);
+    } else {
+      setSelection([item[props.itemKey]]);
+    }
+    
+    emit('item-click', { event, item, index });
+  }
 }
 
 function handleContextMenu(event, item) {
@@ -623,6 +684,11 @@ onUnmounted(() => {
   document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mouseup', handleMouseUp);
   
+  // Limpa timeout se ainda estiver ativo
+  if (dragTimeout.value) {
+    clearTimeout(dragTimeout.value);
+  }
+  
   // Remove listener do dragstart
   if (gridContainer.value) {
     gridContainer.value.removeEventListener('dragstart', handleDragStart, { capture: true });
@@ -700,17 +766,14 @@ onUnmounted(() => {
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
 }
 
 /* Garante que imagens especificamente não sejam arrastáveis */
 .selectable-draggable-grid img {
-  pointer-events: none;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
 }
 
 .grid-content {

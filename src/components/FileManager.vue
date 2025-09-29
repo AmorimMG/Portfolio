@@ -27,6 +27,18 @@ const currentAppData = ref(null);
 const appModalVisible = ref(false);
 const appComponentRef = ref(null);
 
+// Props para navegação externa
+const props = defineProps({
+    initialPath: {
+        type: String,
+        default: null
+    },
+    selectedFile: {
+        type: String,
+        default: null
+    }
+});
+
 // Computeds
 const currentDirectoryContents = computed(() => {
     let items = fileSystemStore.currentDirectoryContents;
@@ -325,9 +337,31 @@ const closeAppModal = () => {
     currentAppData.value = null;
 };
 
+// Função para navegar para um caminho específico e selecionar um arquivo
+const navigateToFileLocation = (path, fileName) => {
+    if (path) {
+        fileSystemStore.changeDirectory(path);
+    }
+    
+    if (fileName) {
+        // Aguardar o próximo tick para garantir que o diretório foi carregado
+        nextTick(() => {
+            const targetFile = currentDirectoryContents.value.find(item => item.name === fileName);
+            if (targetFile) {
+                selectedItems.value = [targetFile];
+            }
+        });
+    }
+};
+
 // Lifecycle
 onMounted(() => {
     document.addEventListener('click', hideContextMenu);
+    
+    // Navegar para caminho inicial se fornecido
+    if (props.initialPath) {
+        navigateToFileLocation(props.initialPath, props.selectedFile);
+    }
 });
 
 onUnmounted(() => {
@@ -342,6 +376,12 @@ const unsubscribe = fileSystemStore.onFileSystemChange((event) => {
 
 onUnmounted(() => {
     unsubscribe();
+});
+
+// Expor funções para uso externo
+defineExpose({
+    navigateToFileLocation,
+    navigateToPath
 });
 </script>
 
