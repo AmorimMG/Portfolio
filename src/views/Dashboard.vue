@@ -23,7 +23,7 @@ const onIntroComplete = () => {
 
 <template>
     <Transition name="fade" mode="out-in">
-        <div v-if="systemState === 'intro'" key="intro">
+        <div class="overflow-y-hidden" v-if="systemState === 'intro'" key="intro">
             <Intro3D @animation-complete="onIntroComplete" />
         </div>
 
