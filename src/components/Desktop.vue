@@ -510,7 +510,7 @@ export default {
                         :title="element.locked ? (isUserLoggedIn ? 'App desbloqueado - Duplo clique para abrir' : 'App bloqueado - Duplo clique para fazer login') : (element.isDesktopFile && !element.isApp ? `${element.fileType === 'dir' ? 'Pasta' : 'Arquivo'}: ${element.title} - Duplo clique para abrir` : `${element.title} - Duplo clique para abrir`)">
                         <div class="app-icon-container">
                             <!-- Para arquivos que têm URL de imagem -->
-                            <img v-if="element.icon && (element.icon.startsWith('http') || element.icon.startsWith('/') || element.icon.includes('.'))" 
+                            <img v-if="element.icon && (element.icon.startsWith('http') || element.icon.startsWith('/') || element.icon.startsWith('data:') || (element.icon.includes('.') && !element.icon.match(/^[\u{1F000}-\u{1F9FF}]/u)))" 
                                  loading="lazy" :src="element.icon" width="50px" height="50px" style="height: 50px" draggable="false" />
                             <!-- Para arquivos com ícone emoji/unicode -->
                             <span v-else class="file-icon-emoji" style="font-size: 50px;">{{ element.icon }}</span>

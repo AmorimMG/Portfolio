@@ -1,9 +1,9 @@
 <script setup>
+import { useFileOpener } from '@/composables/useFileOpener';
+import { useNotifications } from '@/composables/useNotifications';
 import { componentMap } from '@/data/appsDock';
 import { useFileSystemStore } from '@/stores/useFileSystemStore';
 import { useTrashStore } from '@/stores/useTrashStore';
-import { useFileOpener } from '@/composables/useFileOpener';
-import { useNotifications } from '@/composables/useNotifications';
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FileViewerModal from './FileViewerModal.vue';
@@ -461,8 +461,9 @@ const getFileIcon = (item) => {
 
 const isImageIcon = (icon) => {
     if (!icon || typeof icon !== 'string') return false;
-    // Verificar se é uma URL (começa com http, https, ou /)
-    return icon.startsWith('http') || icon.startsWith('/') || icon.includes('.');
+    // Verificar se é uma URL (começa com http, https, data:, ou /) e não é um emoji
+    return icon.startsWith('http') || icon.startsWith('/') || icon.startsWith('data:') || 
+           (icon.includes('.') && !icon.match(/^[\u{1F000}-\u{1F9FF}]/u));
 };
 
 // Função para fechar modal do app
