@@ -15,43 +15,28 @@ export default {
       editaDialog: ref(false),
       toast: useToast(),
       product: {},
-      projeto: ref({
-        img: "",
-        imageUrl: "",
-        title: "",
-        subtitle: "",
-        link: "",
-        description: "",
-        languages: [],
-      }),
-      editProject: "",
-      dataUsers: [],
-      selectedUser: [],
-      languages: ref([]),
+      imagem: ref({}),
+      editImage: "",
+      dataImages: [],
+      selectedImages: [],
       file: ref(),
-      imageUploadType: ref("file"), // 'file' ou 'url'
-      imageUrlDebounceTimer: null, // Timer para debounce da URL
-      isProcessingImageUrl: false, // Estado de processamento da URL
-      submitted: false, // Para validação de formulário
-      selectedLanguageNames: computed(() => {
-        return this.projeto.languages.map((language) => language.nome);
-      }),
+      uploadType: ref("file"), // 'file' ou 'url'
+      urlDebounceTimer: null, // Timer para debounce da URL
+      isProcessingUrl: false, // Estado de processamento da URL
       gridColumns: computed(() => [
-        { field: "languages", caption: "Linguas" },
-        { field: "title", caption: "Titulo" },
-        { field: "subtitle", caption: "Subtitulo" },
+        { field: "name", caption: "Nome" },
+        { field: "url", caption: "URL" },
+        { field: "type", caption: "Tipo" },
+        { field: "extension", caption: "Extensão" },
         { field: "description", caption: "Descrição" },
-        { field: "img", caption: "Imagem" },
-        { field: "link", caption: "Link" },
       ]),
     };
   },
   created() {
-    this.getUsers();
-    this.getLanguages();
+    this.getImages();
   },
   beforeUnmount() {
-    this.clearImageUrlDebounce();
+    this.clearUrlDebounce();
   },
   methods: {
     formatMessage(data) {
@@ -61,30 +46,21 @@ export default {
       this.product = edit;
       this.deleteDialog = true;
     },
-    editaProjeto(edit) {
-      this.editProject = edit;
+    editaImagem(edit) {
+      this.editImage = edit;
       this.editaDialog = true;
     },
     openNew() {
-      this.projeto = {
-        title: "",
-        subtitle: "",
-        link: "",
-        description: "",
-        languages: [],
-        img: "",
-        imageUrl: "",
-      };
+      this.imagem = { name: "", description: "", extension: "", url: "" };
       this.file = null;
-      this.imageUploadType = "file";
-      this.submitted = false;
-      this.clearImageUrlDebounce();
+      this.uploadType = "file";
+      this.clearUrlDebounce();
       this.criarDialog = true;
     },
-    getUsers() {
-      RESTAPI.ProjetoObterTodos()
+    getImages() {
+      RESTAPI.ImagemObterTodos()
         .then((response) => {
-          this.dataUsers = response.data;
+          this.dataImages = response.data;
         })
         .catch(() => {
           this.toast.add({
@@ -95,41 +71,19 @@ export default {
           });
         });
     },
-    getLanguages() {
-      RESTAPI.LinguagemObterTodos()
-        .then((response) => {
-          this.languages = response.data;
-        })
-        .catch(() => {
-          this.toast.add({
-            severity: "error",
-            summary: $t("SummarioToastError"),
-            detail: $t("ErroObterDadosGenerico"),
-            life: 3000,
-          });
-        });
-    },
-    getCancelUser() {
+    getCancelImage() {
       this.editaDialog = false;
-      this.getUsers();
+      this.getImages();
     },
     handleExportCSV() {
-      exportCSV(this.dataUsers);
+      exportCSV(this.dataImages);
     },
-    editUser(user) {
-      this.editProject = user.login;
-    },
-    SalvaProjeto() {
-      this.submitted = true;
-
+    SalvaImagem() {
       // Validação
       if (
-        !this.projeto.title ||
-        !this.projeto.subtitle ||
-        !this.projeto.link ||
-        !this.projeto.description ||
-        !this.projeto.languages ||
-        this.projeto.languages.length === 0
+        !this.imagem.name ||
+        !this.imagem.description ||
+        !this.imagem.extension
       ) {
         this.toast.add({
           severity: "warn",
@@ -140,17 +94,17 @@ export default {
         return;
       }
 
-      if (this.imageUploadType === "file" && !this.file) {
+      if (this.uploadType === "file" && !this.file) {
         this.toast.add({
           severity: "warn",
-          summary: "Imagem Necessária",
-          detail: "Selecione uma imagem para upload ou use uma URL",
+          summary: "Arquivo Necessário",
+          detail: "Selecione um arquivo para upload",
           life: 3000,
         });
         return;
       }
 
-      if (this.imageUploadType === "url" && !this.projeto.imageUrl) {
+      if (this.uploadType === "url" && !this.imagem.url) {
         this.toast.add({
           severity: "warn",
           summary: "URL Necessária",
@@ -161,71 +115,58 @@ export default {
       }
 
       const formData = new FormData();
-      formData.append("title", this.projeto.title);
-      formData.append("subtitle", this.projeto.subtitle);
-      formData.append("link", this.projeto.link);
-      formData.append("description", this.projeto.description);
-      formData.append("languages", JSON.stringify(this.selectedLanguageNames));
+      formData.append("name", this.imagem.name);
+      formData.append("description", this.imagem.description);
+      formData.append("type", "image");
+      formData.append("extension", this.imagem.extension);
 
       // Se é upload de arquivo
-      if (this.imageUploadType === "file" && this.file) {
+      if (this.uploadType === "file" && this.file) {
         formData.append("file", this.file);
       }
 
       // Se é URL externa
-      if (this.imageUploadType === "url" && this.projeto.imageUrl) {
-        formData.append("imageUrl", this.projeto.imageUrl);
+      if (this.uploadType === "url" && this.imagem.url) {
+        formData.append("url", this.imagem.url);
       }
 
-      RESTAPI.ProjetoCriar(formData)
+      RESTAPI.ImagemCriar(formData)
         .then(() => {
-          this.getUsers();
+          this.getImages();
           this.toast.add({
             severity: "success",
             summary: $t("SummarioToastSucesso"),
-            detail: $t("ProjetoToastCreate"),
+            detail: $t("ImagemToastCreate"),
             life: 3000,
           });
+          this.imagem = {};
         })
         .catch(() => {
           this.toast.add({
             severity: "error",
             summary: $t("SummarioToastError"),
-            detail: $t("ProjetoToastCreateError"),
+            detail: $t("ImagemToastCreateError"),
             life: 3000,
           });
         })
         .finally(() => {
-          this.projeto = {
-            title: "",
-            subtitle: "",
-            link: "",
-            description: "",
-            languages: [],
-            img: "",
-            imageUrl: "",
-          };
+          this.imagem = { name: "", description: "", extension: "", url: "" };
           this.file = null;
-          this.imageUploadType = "file";
-          this.submitted = false;
-          this.clearImageUrlDebounce();
+          this.uploadType = "file";
+          this.clearUrlDebounce();
           this.criarDialog = false;
         });
     },
-
-    EditaProjeto() {
-      const dataToSend = {
-        ...this.editProject,
-        languages: this.selectedLanguageNames,
-      };
-      RESTAPI.ProjetoEditar(dataToSend)
+    EditaImagem() {
+      const dataToSend = { ...this.editImage };
+      RESTAPI.ImagemEditar(dataToSend)
         .then(() => {
-          this.getUsers();
+          this.getImages();
           this.editaDialog = false;
           this.toast.add({
             severity: "success",
             summary: $t("SummarioToastSucesso"),
-            detail: $t("ProjetoToastEdit"),
+            detail: $t("ImagemToastEdit"),
             life: 3000,
           });
         })
@@ -233,22 +174,22 @@ export default {
           this.toast.add({
             severity: "error",
             summary: $t("SummarioToastError"),
-            detail: $t("ProjetoToastEditError"),
+            detail: $t("ImagemToastEditError"),
             life: 3000,
           });
         });
     },
-    deleteUser() {
-      RESTAPI.ProjetoExcluir(this.product._id)
+    deleteImage() {
+      RESTAPI.ImagemExcluir(this.product._id)
         .then(() => {
-          this.dataUsers = this.dataUsers.filter(
+          this.dataImages = this.dataImages.filter(
             (u) => u._id !== this.product._id
           );
           this.deleteDialog = false;
           this.toast.add({
             severity: "success",
             summary: $t("SummarioToastSucesso"),
-            detail: $t("ProjetoToastDelete"),
+            detail: $t("ImagemToastDelete"),
             life: 3000,
           });
         })
@@ -256,7 +197,7 @@ export default {
           this.toast.add({
             severity: "error",
             summary: $t("SummarioToastError"),
-            detail: $t("ProjetoToastDeleteError"),
+            detail: $t("ImagemToastDeleteError"),
             life: 3000,
           });
         });
@@ -266,7 +207,7 @@ export default {
       this.deleteAllDialog = true;
     },
     deleteAll() {
-      if (this.selectedUser.length === 0) {
+      if (this.selectedImages.length === 0) {
         this.toast.add({
           severity: "warn",
           summary: $t("SummarioToastWarn"),
@@ -276,14 +217,16 @@ export default {
         return;
       }
 
-      this.selectedUser.forEach((user) => {
-        RESTAPI.ProjetoExcluir(user._id)
+      this.selectedImages.forEach((image) => {
+        RESTAPI.ImagemExcluir(image._id)
           .then(() => {
-            this.dataUsers = this.dataUsers.filter((u) => u._id !== user._id);
+            this.dataImages = this.dataImages.filter(
+              (u) => u._id !== image._id
+            );
             this.toast.add({
               severity: "success",
               summary: $t("SummarioToastSucesso"),
-              detail: $t("ProjetoToastDelete"),
+              detail: $t("ImagemToastDelete"),
               life: 3000,
             });
           })
@@ -291,51 +234,69 @@ export default {
             this.toast.add({
               severity: "error",
               summary: $t("SummarioToastError"),
-              detail: $t("ProjetoToastDeleteError"),
+              detail: $t("ImagemToastDeleteError"),
               life: 3000,
             });
           });
       });
       this.deleteAllDialog = false;
-      this.selectedUser = [];
+      this.selectedImages = [];
     },
     onFileSelect(event) {
       const file = event.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = async (e) => {
-          const binaryData = e.target.result; // This is already a Base64 string
+          const binaryData = e.target.result;
           const blob = new Blob([binaryData], { type: file.type });
-          console.log(blob);
           this.file = blob;
+
+          // Auto preencher nome e extensão baseado no arquivo
+          this.imagem.name = file.name;
+          this.imagem.extension = file.name.split(".").pop().toLowerCase();
         };
         reader.readAsArrayBuffer(file);
       }
     },
-    onImageUrlChange() {
+    onUrlChange() {
       // Limpar timer anterior se existir
-      if (this.imageUrlDebounceTimer) {
-        clearTimeout(this.imageUrlDebounceTimer);
+      if (this.urlDebounceTimer) {
+        clearTimeout(this.urlDebounceTimer);
       }
 
       // Se URL está vazia, limpar campos
-      if (!this.projeto.imageUrl) {
-        this.isProcessingImageUrl = false;
+      if (!this.imagem.url) {
+        this.isProcessingUrl = false;
         return;
       }
 
       // Mostrar estado de processamento
-      this.isProcessingImageUrl = true;
+      this.isProcessingUrl = true;
 
       // Criar novo timer com delay de 500ms
-      this.imageUrlDebounceTimer = setTimeout(() => {
-        this.isProcessingImageUrl = false;
+      this.urlDebounceTimer = setTimeout(() => {
+        if (this.imagem.url) {
+          // Extrair nome do arquivo da URL
+          const urlParts = this.imagem.url.split("/");
+          const fileName = urlParts[urlParts.length - 1];
+
+          if (fileName && fileName.includes(".")) {
+            // Decodificar URL se necessário
+            const decodedFileName = decodeURIComponent(fileName);
+            this.imagem.name = decodedFileName;
+            this.imagem.extension = decodedFileName
+              .split(".")
+              .pop()
+              .toLowerCase();
+          }
+        }
+        this.isProcessingUrl = false;
       }, 500); // 500ms de delay
     },
-    clearImageUrlDebounce() {
-      if (this.imageUrlDebounceTimer) {
-        clearTimeout(this.imageUrlDebounceTimer);
-        this.imageUrlDebounceTimer = null;
+    clearUrlDebounce() {
+      if (this.urlDebounceTimer) {
+        clearTimeout(this.urlDebounceTimer);
+        this.urlDebounceTimer = null;
       }
     },
     close() {
@@ -347,15 +308,15 @@ export default {
 
 <template>
   <div class="card">
-    <h5 class="p-card-title">Projetos</h5>
+    <h5 class="p-card-title">Imagens CDN</h5>
     <div id="data-grid-demo">
-      <div v-if="dataUsers.length < 0">Carregando...</div>
+      <div v-if="dataImages.length < 0">Carregando...</div>
       <div v-else>
         <Toolbar class="mb-4">
           <template v-slot:start>
             <div class="my-2">
               <Button
-                label="Novo"
+                label="Nova"
                 icon="pi pi-plus"
                 class="p-button-success mr-2"
                 @click="openNew"
@@ -365,7 +326,7 @@ export default {
                 icon="pi pi-trash"
                 class="p-button-danger"
                 @click="confirmDeleteAll"
-                :disabled="selectedUser.length === 0"
+                :disabled="!selectedImages || !selectedImages.length"
               />
             </div>
           </template>
@@ -381,8 +342,8 @@ export default {
         </Toolbar>
         <DataTable
           ref="dt"
-          v-model:selection="selectedUser"
-          :value="dataUsers"
+          v-model:selection="selectedImages"
+          :value="dataImages"
           dataKey="_id"
           :paginator="true"
           :rows="10"
@@ -404,14 +365,19 @@ export default {
             headerStyle="width:14%; min-width:10rem;"
           >
             <template #body="slotProps">
-              <template
-                v-if="column.field === 'ativo' || column.field === 'admin'"
-              >
-                <i v-if="slotProps.data[column.field]" class="pi pi-check"></i>
-                <i v-else class="pi pi-times"></i>
+              <template v-if="column.field === 'url'">
+                <img
+                  v-if="slotProps.data.url"
+                  :src="slotProps.data.url"
+                  class="w-16 h-16 object-cover rounded shadow-2"
+                  :alt="slotProps.data.name"
+                />
+                <span v-else>{{ slotProps.data[column.field] }}</span>
               </template>
               <template v-else>
-                {{ slotProps.data[column.field] }}
+                <span class="font-bold">{{
+                  slotProps.data[column.field]
+                }}</span>
               </template>
             </template>
           </Column>
@@ -421,12 +387,12 @@ export default {
                 v-tooltip="'Editar'"
                 icon="pi pi-pencil"
                 class="p-button-rounded p-button-success mr-2"
-                @click="editaProjeto(slotProps.data)"
+                @click="editaImagem(slotProps.data)"
               />
               <Button
                 v-tooltip="'Excluir'"
                 icon="pi pi-trash"
-                class="p-button-rounded p-button-danger mt-2"
+                class="p-button-rounded p-button-warning"
                 @click="confirmDelete(slotProps.data)"
               />
             </template>
@@ -443,7 +409,7 @@ export default {
           <div class="flex items-center">
             <i class="pi pi-exclamation-triangle mr-3 p-large" />
             <span v-if="product"
-              >{{ $t("Excluir") }} <b>{{ product.title }}</b
+              >{{ $t("Excluir") }} <b>{{ product.name }}</b
               >?</span
             >
           </div>
@@ -458,7 +424,7 @@ export default {
               :label="$t('Sim')"
               icon="pi pi-check"
               class="p-button-text"
-              @click="deleteUser"
+              @click="deleteImage"
             />
           </template>
         </Dialog>
@@ -473,7 +439,7 @@ export default {
             <i class="pi pi-exclamation-triangle mr-3 p-large" />
             <span v-if="product"
               >{{ $t("Excluir") }}
-              <b>{{ this.selectedUser.length }} {{ $t("Projetos") }}</b
+              <b>{{ this.selectedImages.length }} {{ $t("Imagens") }}</b
               >?</span
             >
           </div>
@@ -495,91 +461,64 @@ export default {
 
         <Dialog
           v-model:visible="criarDialog"
-          :style="{ width: '700px' }"
+          :style="{ width: '600px' }"
           :header="$t('Criar')"
           :modal="true"
-          class="p-fluid create-project-dialog"
+          class="p-fluid create-image-dialog"
         >
           <!-- Informações Básicas -->
           <div class="field-group mb-4">
             <h6 class="field-group-title mb-3">
               <i class="pi pi-info-circle mr-2"></i>
-              Informações do Projeto
+              Informações Básicas
             </h6>
 
             <div class="grid formgrid">
-              <div class="col-12 md:col-6 mb-3">
-                <label for="titulo" class="form-label">Título *</label>
+              <div class="col-12 md:col-8 mb-3">
+                <label for="name" class="form-label">Nome *</label>
                 <InputText
-                  id="titulo"
-                  v-model.trim="projeto.title"
-                  placeholder="Nome do projeto"
+                  id="name"
+                  v-model.trim="imagem.name"
+                  placeholder="Nome do arquivo ou imagem"
                   required="true"
                   autofocus
                   class="w-full"
-                  :class="{ 'p-invalid': submitted && !projeto.title }"
+                  :class="{ 'p-invalid': submitted && !imagem.name }"
                 />
               </div>
 
-              <div class="col-12 md:col-6 mb-3">
-                <label for="subtitulo" class="form-label">Subtítulo *</label>
+              <div class="col-12 md:col-4 mb-3">
+                <label for="extension" class="form-label">Extensão *</label>
                 <InputText
-                  id="subtitulo"
-                  v-model="projeto.subtitle"
-                  placeholder="Breve descrição"
+                  id="extension"
+                  v-model.trim="imagem.extension"
+                  placeholder="jpg, png, gif..."
                   required="true"
                   class="w-full"
-                  :class="{ 'p-invalid': submitted && !projeto.subtitle }"
-                />
-              </div>
-
-              <div class="col-12 md:col-6 mb-3">
-                <label for="link" class="form-label">Link do Projeto *</label>
-                <InputText
-                  id="link"
-                  v-model="projeto.link"
-                  placeholder="https://exemplo.com"
-                  required="true"
-                  class="w-full"
-                  :class="{ 'p-invalid': submitted && !projeto.link }"
-                />
-              </div>
-
-              <div class="col-12 md:col-6 mb-3">
-                <label for="languages" class="form-label">Tecnologias *</label>
-                <MultiSelect
-                  v-model="projeto.languages"
-                  :options="languages"
-                  filter
-                  optionLabel="nome"
-                  placeholder="Selecione as tecnologias"
-                  :maxSelectedLabels="3"
-                  class="w-full"
-                  required="true"
-                  :class="{ 'p-invalid': submitted && !projeto.languages }"
+                  :class="{ 'p-invalid': submitted && !imagem.extension }"
                 />
               </div>
 
               <div class="col-12 mb-3">
-                <label for="descricao" class="form-label">Descrição *</label>
+                <label for="description" class="form-label">Descrição *</label>
                 <Textarea
-                  id="descricao"
-                  v-model="projeto.description"
-                  placeholder="Descreva o projeto..."
+                  id="description"
+                  v-model="imagem.description"
+                  placeholder="Descreva a imagem..."
                   required="true"
                   rows="3"
                   class="w-full"
-                  :class="{ 'p-invalid': submitted && !projeto.description }"
+                  :class="{ 'p-invalid': submitted && !imagem.description }"
                 />
               </div>
             </div>
           </div>
 
-          <!-- Tipo de Imagem -->
+          <!-- Tipo de Upload -->
           <div class="field-group mb-4">
             <h6 class="field-group-title mb-3">
-              <i class="pi pi-image mr-2"></i>
-              Imagem do Projeto
+              <i class="pi pi-cloud-upload mr-2"></i>
+              Origem da Imagem
             </h6>
 
             <div
@@ -588,12 +527,12 @@ export default {
               <div class="flex gap-4">
                 <div class="flex align-items-center">
                   <RadioButton
-                    id="imageFile"
-                    v-model="imageUploadType"
-                    name="imageUploadType"
+                    id="uploadFile"
+                    v-model="uploadType"
+                    name="uploadType"
                     value="file"
                   />
-                  <label for="imageFile" class="ml-2 font-medium">
+                  <label for="uploadFile" class="ml-2 font-medium">
                     <i class="pi pi-file mr-1"></i>
                     Upload de Arquivo
                   </label>
@@ -601,12 +540,12 @@ export default {
 
                 <div class="flex align-items-center">
                   <RadioButton
-                    id="imageUrl"
-                    v-model="imageUploadType"
-                    name="imageUploadType"
+                    id="uploadUrl"
+                    v-model="uploadType"
+                    name="uploadType"
                     value="url"
                   />
-                  <label for="imageUrl" class="ml-2 font-medium">
+                  <label for="uploadUrl" class="ml-2 font-medium">
                     <i class="pi pi-link mr-1"></i>
                     Link/URL Externa
                   </label>
@@ -616,10 +555,10 @@ export default {
           </div>
 
           <!-- Upload de Arquivo -->
-          <div class="field-group mb-4" v-if="imageUploadType === 'file'">
+          <div class="field-group mb-4" v-if="uploadType === 'file'">
             <h6 class="field-group-title mb-3">
               <i class="pi pi-upload mr-2"></i>
-              Selecionar Imagem
+              Selecionar Arquivo
             </h6>
 
             <div
@@ -629,7 +568,7 @@ export default {
                 mode="basic"
                 name="demo[]"
                 :auto="false"
-                :choose-label="'📁 Escolher Imagem'"
+                :choose-label="'📁 Escolher Arquivo'"
                 accept="image/*"
                 :maxFileSize="5000000"
                 @select="onFileSelect"
@@ -643,7 +582,7 @@ export default {
           </div>
 
           <!-- URL Externa -->
-          <div class="field-group mb-4" v-if="imageUploadType === 'url'">
+          <div class="field-group mb-4" v-if="uploadType === 'url'">
             <h6 class="field-group-title mb-3">
               <i class="pi pi-external-link mr-2"></i>
               URL da Imagem
@@ -652,33 +591,32 @@ export default {
             <div class="url-input-container">
               <div class="p-inputgroup">
                 <InputText
-                  id="imageUrlInput"
-                  v-model.trim="projeto.imageUrl"
+                  id="imageUrl"
+                  v-model.trim="imagem.url"
                   placeholder="https://exemplo.com/imagem.jpg"
-                  @input="onImageUrlChange"
+                  @input="onUrlChange"
                   class="w-full"
                   :class="{
                     'p-invalid':
-                      submitted &&
-                      imageUploadType === 'url' &&
-                      !projeto.imageUrl,
+                      submitted && uploadType === 'url' && !imagem.url,
                   }"
                 />
-                <span v-if="isProcessingImageUrl" class="p-inputgroup-addon">
+                <span v-if="isProcessingUrl" class="p-inputgroup-addon">
                   <i class="pi pi-spin pi-spinner"></i>
                 </span>
               </div>
               <small class="text-color-secondary mt-2 block">
                 <i class="pi pi-info-circle mr-1"></i>
-                <span v-if="isProcessingImageUrl"> Processando URL... </span>
+                <span v-if="isProcessingUrl"> Processando URL... </span>
                 <span v-else>
-                  Cole aqui o link direto para a imagem do projeto
+                  Cole aqui o link direto para a imagem (deve terminar com .jpg,
+                  .png, etc.)
                 </span>
               </small>
 
               <!-- Preview da URL -->
               <div
-                v-if="projeto.imageUrl"
+                v-if="imagem.url"
                 class="image-preview mt-4 p-3 border-round surface-ground"
               >
                 <div
@@ -691,9 +629,9 @@ export default {
                 </div>
                 <div class="preview-container text-center">
                   <img
-                    :src="projeto.imageUrl"
+                    :src="imagem.url"
                     class="preview-image border-round shadow-2"
-                    :alt="projeto.title || 'Preview'"
+                    :alt="imagem.name || 'Preview'"
                     @error="$event.target.style.display = 'none'"
                     @load="$event.target.style.display = 'block'"
                     style="
@@ -718,137 +656,75 @@ export default {
               :label="$t('Salvar')"
               icon="pi pi-check"
               class="p-button-text"
-              @click="SalvaProjeto"
+              @click="SalvaImagem"
             />
           </template>
         </Dialog>
 
         <Dialog
           v-model:visible="editaDialog"
-          :style="{ width: '600px' }"
+          :style="{ width: '450px' }"
           :header="$t('Editar')"
           :modal="true"
-          class="p-fluid create-project-dialog"
-          @update:visible="getCancelUser"
+          class="p-fluid"
+          @update:visible="getCancelImage"
         >
-          <!-- Informações do Projeto -->
-          <div class="field-group mb-4">
-            <h6 class="field-group-title mb-3">
-              <i class="pi pi-pencil mr-2"></i>
-              Editar Informações do Projeto
-            </h6>
-
-            <div class="grid formgrid">
-              <div class="col-12 md:col-6 mb-3">
-                <label for="editTitulo" class="form-label">Título *</label>
-                <InputText
-                  id="editTitulo"
-                  v-model.trim="editProject.title"
-                  required="true"
-                  class="w-full"
-                />
-              </div>
-
-              <div class="col-12 md:col-6 mb-3">
-                <label for="editSubtitulo" class="form-label"
-                  >Subtítulo *</label
-                >
-                <InputText
-                  id="editSubtitulo"
-                  v-model="editProject.subtitle"
-                  required="true"
-                  class="w-full"
-                />
-              </div>
-
-              <div class="col-12 md:col-6 mb-3">
-                <label for="editLink" class="form-label"
-                  >Link do Projeto *</label
-                >
-                <InputText
-                  id="editLink"
-                  v-model="editProject.link"
-                  required="true"
-                  class="w-full"
-                />
-              </div>
-
-              <div class="col-12 md:col-6 mb-3">
-                <label for="editImagem" class="form-label">URL da Imagem</label>
-                <InputText
-                  id="editImagem"
-                  v-model="editProject.img"
-                  placeholder="https://exemplo.com/imagem.jpg"
-                  class="w-full"
-                />
-              </div>
-
-              <div class="col-12 mb-3">
-                <label for="editLanguages" class="form-label"
-                  >Tecnologias *</label
-                >
-                <MultiSelect
-                  id="editLanguages"
-                  v-model="editProject.languages"
-                  :options="languages"
-                  filter
-                  optionLabel="nome"
-                  placeholder="Selecione as tecnologias"
-                  :maxSelectedLabels="3"
-                  class="w-full"
-                  required="true"
-                />
-              </div>
-
-              <div class="col-12 mb-3">
-                <label for="editDescricao" class="form-label"
-                  >Descrição *</label
-                >
-                <Textarea
-                  id="editDescricao"
-                  v-model="editProject.description"
-                  required="true"
-                  rows="3"
-                  class="w-full"
-                  placeholder="Descreva o projeto..."
-                />
-              </div>
+          <div class="row flex">
+            <div class="field col">
+              <label for="editName">Nome</label>
+              <InputText
+                id="editName"
+                v-model.trim="editImage.name"
+                required="true"
+                autofocus
+                :class="{ 'p-invalid': submitted && !editImage.name }"
+              />
             </div>
-
-            <!-- Preview da imagem atual se existir -->
-            <div
-              v-if="editProject.img"
-              class="image-preview mt-4 p-3 border-round surface-ground"
-            >
-              <div class="flex align-items-center justify-content-between mb-2">
-                <span class="font-medium text-color">
-                  <i class="pi pi-eye mr-1"></i>
-                  Imagem Atual
-                </span>
-              </div>
-              <div class="preview-container text-center">
-                <img
-                  :src="editProject.img"
-                  class="preview-image border-round shadow-2"
-                  :alt="editProject.title || 'Preview do projeto'"
-                  style="max-width: 200px; max-height: 200px; object-fit: cover"
-                />
-              </div>
+            <div class="field col">
+              <label for="editExtension">Extensão</label>
+              <InputText
+                id="editExtension"
+                v-model.trim="editImage.extension"
+                required="true"
+                :class="{ 'p-invalid': submitted && !editImage.extension }"
+              />
             </div>
           </div>
-
+          <div class="row flex">
+            <div class="field col">
+              <label for="editDescription">Descrição</label>
+              <Textarea
+                id="editDescription"
+                v-model="editImage.description"
+                required="true"
+                rows="3"
+                cols="20"
+                :class="{ 'p-invalid': submitted && !editImage.description }"
+              />
+            </div>
+          </div>
+          <div class="row flex" v-if="editImage.url">
+            <div class="field col">
+              <label>Preview Atual</label>
+              <img
+                :src="editImage.url"
+                class="w-32 h-32 object-cover rounded shadow-2 mt-2"
+                :alt="editImage.name"
+              />
+            </div>
+          </div>
           <template #footer>
             <Button
               :label="$t('Cancelar')"
               icon="pi pi-times"
               class="p-button-secondary p-button-text"
-              @click="getCancelUser"
+              @click="getCancelImage"
             />
             <Button
               :label="$t('Salvar')"
               icon="pi pi-check"
               class="p-button-text"
-              @click="EditaProjeto"
+              @click="EditaImagem"
             />
           </template>
         </Dialog>
@@ -870,8 +746,8 @@ export default {
   }
 }
 
-/* Melhorias no Modal de Criação de Projetos */
-.create-project-dialog :deep(.p-dialog-content) {
+/* Melhorias no Modal de Criação */
+.create-image-dialog :deep(.p-dialog-content) {
   padding: 1.5rem;
 }
 
@@ -1022,49 +898,15 @@ export default {
 }
 
 /* Botões do footer melhorados */
-.create-project-dialog :deep(.p-dialog-footer) {
+.create-image-dialog :deep(.p-dialog-footer) {
   padding: 1rem 1.5rem;
   background: var(--surface-ground);
   border-top: 1px solid var(--surface-border);
   gap: 0.75rem;
 }
 
-.create-project-dialog :deep(.p-dialog-footer .p-button) {
+.create-image-dialog :deep(.p-dialog-footer .p-button) {
   padding: 0.75rem 1.5rem;
   font-weight: 500;
-}
-
-/* Estilos específicos para MultiSelect */
-.create-project-dialog :deep(.p-multiselect) {
-  border-radius: 6px;
-}
-
-.create-project-dialog :deep(.p-multiselect:not(.p-disabled):hover) {
-  border-color: var(--primary-color);
-}
-
-.create-project-dialog :deep(.p-multiselect:not(.p-disabled).p-focus) {
-  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
-  border-color: var(--primary-color);
-}
-
-/* Melhorias no Textarea */
-.create-project-dialog :deep(.p-inputtextarea) {
-  border-radius: 6px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* Melhorias gerais no diálogo */
-.create-project-dialog :deep(.p-dialog-header) {
-  background: var(--surface-card);
-  border-bottom: 1px solid var(--surface-border);
-  padding: 1.25rem 1.5rem;
-}
-
-.create-project-dialog :deep(.p-dialog-title) {
-  font-weight: 600;
-  color: var(--text-color);
 }
 </style>
