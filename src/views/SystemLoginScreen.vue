@@ -1,119 +1,160 @@
 <script setup>
 import AmorimIcon from "@/assets/images/cards/login.jpg";
 import LoginBackground from "@/assets/images/wallpapers/login_background.png";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
+const showClock = ref(true);
 const password = ref("");
-const userName = ref(" Gabriel Amorim");
+const userName = ref("Gabriel Amorim");
+
+const emit = defineEmits(["login"]);
 
 const handleLogin = () => {
   emit("login");
 };
 
-const emit = defineEmits(["login"]);
+// Data/Hora
+const now = ref(new Date());
+onMounted(() => {
+  setInterval(() => {
+    now.value = new Date();
+  }, 1000);
+});
 </script>
 
 <template>
   <div
-    class="min-h-screen bg-[#2d2d2d] flex items-center justify-center bg-cover bg-center"
+    class="min-h-screen flex items-center justify-center bg-cover bg-center relative"
     :style="{ backgroundImage: `url(${LoginBackground})` }"
+    :class="showClock ? 'cursor-pointer' : ''"
+    @click="showClock && (showClock = false)"
   >
-    <!-- Adicione um wallpaper do macOS -->
-    <div class="w-full max-w-sm text-center">
-      <!-- Círculo da foto do usuário -->
-      <div class="mb-8">
-        <div
-          class="w-24 h-24 mx-auto rounded-full border-4 border-white/20 overflow-hidden"
-        >
-          <img
-            :src="AmorimIcon"
-            alt="User"
-            class="w-full h-full object-cover"
-            onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png'"
-          />
-        </div>
-        <h2 class="mt-4 text-2xl text-white font-light">{{ userName }}</h2>
+    <!-- Overlay escuro -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+    <!-- Transição entre tela clock e tela login -->
+    <transition name="fade-scale" mode="out-in">
+      <!-- Tela de hora/data -->
+      <div
+        v-if="showClock"
+        key="clock"
+        class="relative z-10 text-center text-white"
+      >
+        <h1 class="text-6xl font-light animate-fadeIn">
+          {{
+            now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          }}
+        </h1>
+        <p class="text-xl mt-2 animate-fadeIn">
+          {{
+            now.toLocaleDateString("pt-BR", {
+              weekday: "long",
+              day: "2-digit",
+              month: "long",
+            })
+          }}
+        </p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="space-y-4">
-        <div class="relative">
-          <!-- <input type="password" v-model="password" placeholder="Digite sua senha"
-                        class="w-full px-4 py-3 bg-white/10 backdrop-blur-md rounded-lg border border-white/10 text-white placeholder-white/50 focus:outline-none focus:border-white/30 transition-all duration-300" /> -->
+      <!-- Tela de login -->
+      <div
+        v-else
+        key="login"
+        class="relative z-10 w-full max-w-sm p-8 rounded-2xl bg-black/30 backdrop-blur-md shadow-xl animate-fadeIn"
+      >
+        <!-- Avatar -->
+        <div class="flex flex-col items-center mb-6">
+          <div
+            class="w-28 h-28 rounded-full border-4 border-white/30 overflow-hidden shadow-lg animate-scaleIn"
+          >
+            <img
+              :src="AmorimIcon"
+              alt="User"
+              class="w-full h-full object-cover"
+              onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png'"
+            />
+          </div>
+          <h2 class="mt-4 text-2xl text-white font-light tracking-wide">
+            {{ userName }}
+          </h2>
         </div>
 
-        <div class="flex justify-center mt-4">
+        <!-- Form -->
+        <form @submit.prevent="handleLogin" class="space-y-4">
+          <!--           <input
+            type="password"
+            v-model="password"
+            placeholder="Digite sua senha"
+            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition-all duration-300"
+          /> -->
+
           <button
             type="submit"
-            class="px-8 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 transition-all duration-300"
+            class="w-full py-3 rounded-lg bg-white/20 text-white font-medium hover:bg-white/30 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
           >
-            <span>→</span>
+            Entrar
+            <span class="animate-horizontal">→</span>
           </button>
-        </div>
-      </form>
-
-      <!-- Ícones inferiores -->
-      <div class="fixed bottom-8 flex justify-center w-full gap-8">
-        <button class="text-white/70 hover:text-white">
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"
-            />
-          </svg>
-        </button>
-        <button class="text-white/70 hover:text-white">
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-            />
-          </svg>
-        </button>
-        <button class="text-white/70 hover:text-white">
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </button>
-        <button class="text-white/70 hover:text-white">
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
-          </svg>
-        </button>
+        </form>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
+
+<style>
+/* Fade + scale para transição clock -> login */
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: all 0.6s ease;
+}
+.fade-scale-enter-from {
+  opacity: 0;
+  transform: scale(1.05);
+}
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Animações custom extra */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes horizontal {
+  0%,
+  100% {
+    transform: translateX(-15%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(15%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease forwards;
+}
+.animate-scaleIn {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+.animate-horizontal {
+  animation: horizontal 1s infinite;
+}
+</style>
