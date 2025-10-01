@@ -778,6 +778,7 @@ onUnmounted(() => {
 
 .grid-content {
   /* Mantém os estilos originais do .draggableApps */
+  margin-top: 20px;
   margin-bottom: 22vh;
   display: grid;
   grid-gap: 10px;

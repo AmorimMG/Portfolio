@@ -6,8 +6,8 @@ import { useRouter } from "vue-router";
 import Background from "../../../components/Background.vue";
 import sessionModule, {
   getLanguageCookie,
-  setLanguageCookie,
   getUserCookie,
+  setLanguageCookie,
 } from "../../../service/session.js";
 
 const { locale, t: $t } = useI18n();
@@ -23,12 +23,8 @@ const toast = useToast();
 onMounted(() => {
   const userSession = getUserCookie();
   if (userSession) {
-    console.log('Usuário já está logado, redirecionando para dashboard...');
     router.push("/cadastros/dashboard");
     return;
-  }
-  else{
-    console.log('Nenhum usuário logado, permanecendo na página de login.');
   }
 
   if (getLanguageCookie()) {
@@ -208,16 +204,17 @@ function handleSubmit() {
                 <!-- Login field -->
                 <label
                   for="login-input"
-                  class="block text-white text-xl font-medium mb-2"
+                  class="block text-white text-xl font-medium mb-3"
                 >
                   {{ $t("Login.User") }}
                 </label>
                 <InputText
                   id="login-input"
                   v-model="form.login"
+                  placeholder="E-mail"
                   type="text"
-                  :placeholder="$t('Login.User')"
                   class="w-full mb-5 p-4"
+                  :inputStyle="{ padding: '1rem' }"
                 />
 
                 <!-- Password field -->
@@ -230,14 +227,13 @@ function handleSubmit() {
                 <Password
                   id="password-input"
                   v-model="form.password"
-                  :placeholder="$t('Login.Password')"
                   :toggleMask="true"
+                  placeholder="********"
                   class="w-full mb-3"
                   :pt="{
                     input: { id: 'password-input' },
                   }"
                   inputClass="w-full"
-                  :inputStyle="{ padding: '1rem' }"
                 />
 
                 <div class="flex items-center justify-between mb-5 gap-5"></div>

@@ -771,6 +771,20 @@ defineExpose({
 </template>
 
 <style scoped>
+
+.create-dialog{
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.field{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .file-manager {
     display: flex;
     flex-direction: column;

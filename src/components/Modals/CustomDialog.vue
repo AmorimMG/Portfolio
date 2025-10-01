@@ -66,9 +66,11 @@ export default {
   },
   mounted() {
     window.addEventListener("resize", this.checkMobile);
+    window.addEventListener("keydown", this.handleKeyDown);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.checkMobile);
+    window.removeEventListener("keydown", this.handleKeyDown);
   },
   computed: {
     dialogClass() {
@@ -118,6 +120,12 @@ export default {
     },
     closeModal() {
       this.$emit("update:visible", false);
+    },
+    handleKeyDown(event) {
+      // Fecha o modal com ESC mesmo quando closable é false
+      if (event.key === "Escape" && this.visible) {
+        this.closeModal();
+      }
     },
   },
 };

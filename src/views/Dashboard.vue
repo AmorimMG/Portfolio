@@ -1,48 +1,55 @@
 <script setup>
-import { ref } from 'vue';
-import BootupScreen from '../components/BootupScreen.vue';
-import System from '../components/Dock/System.vue';
-import Intro3D from '../components/Intro3D.vue';
-import SystemLoginScreen from './SystemLoginScreen.vue';
+import { ref } from "vue";
+import BootupScreen from "../components/BootupScreen.vue";
+import System from "../components/Dock/System.vue";
+import Intro3D from "../components/Intro3D.vue";
+import SystemLoginScreen from "./SystemLoginScreen.vue";
 
-const systemState = ref('intro');
+const systemState = ref("intro");
 const isLoggedIn = ref(false);
 
 const handleLogin = () => {
-    isLoggedIn.value = true;
-    systemState.value = 'system';
+  isLoggedIn.value = true;
+  systemState.value = "system";
 };
 
 const onIntroComplete = () => {
-    systemState.value = 'booting';
-    setTimeout(() => {
-        systemState.value = 'login';
-    }, 3000);
+  systemState.value = "booting";
+  setTimeout(() => {
+    systemState.value = "login";
+  }, 3000);
 };
 </script>
 
 <template>
-    <Transition name="fade" mode="out-in">
-        <div class="overflow-y-hidden" v-if="systemState === 'intro'" key="intro">
-            <Intro3D @animation-complete="onIntroComplete" />
-        </div>
+  <Transition name="fade" mode="out-in">
+    <div
+      class="overflow-y-hidden overflow-x-hidden"
+      v-if="systemState === 'intro'"
+      key="intro"
+    >
+      <Intro3D @animation-complete="onIntroComplete" />
+    </div>
 
-        <BootupScreen v-else-if="systemState === 'booting'" key="booting" />
+    <BootupScreen v-else-if="systemState === 'booting'" key="booting" />
 
-        <SystemLoginScreen v-else-if="systemState === 'login'" @login="handleLogin" />
+    <SystemLoginScreen
+      v-else-if="systemState === 'login'"
+      @login="handleLogin"
+    />
 
-        <System v-else-if="systemState === 'system' && isLoggedIn" key="system" />
-    </Transition>
+    <System v-else-if="systemState === 'system' && isLoggedIn" key="system" />
+  </Transition>
 </template>
 
 <style>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 </style>

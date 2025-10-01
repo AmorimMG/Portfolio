@@ -51,7 +51,10 @@ const viewComponents = {
         {{ currentPath }}
       </div>
     </template>
-    <SidebarFileSystem @select="handleFileSelect">
+    <SidebarFileSystem
+      :initialView="props.modalType"
+      @select="handleFileSelect"
+    >
       <component :is="viewComponents[currentView] || Blog">
         <template v-if="currentView === 'system'">
           <div class="system-view">

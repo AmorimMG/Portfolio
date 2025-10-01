@@ -6,6 +6,7 @@ import {
     executeCommand
 } from '@/service/TerminalCommandsService';
 import { useFileSystemStore } from '@/stores/useFileSystemStore';
+import AnsiToHtml from 'ansi-to-html';
 import TerminalService from 'primevue/terminalservice';
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -15,6 +16,39 @@ import { neofetchOutput } from './neofetch';
 const { t } = useI18n();
 const locale = useI18n().locale;
 const fileSystemStore = useFileSystemStore();
+
+// Configurar ansi-to-html para processar códigos ANSI
+const ansiToHtml = new AnsiToHtml({ 
+    escapeXML: false,
+    stream: false
+});
+
+// Função para processar respostas com códigos ANSI
+const processAnsiResponse = (response) => {
+    if (typeof response === 'string' && response.includes('\u001b[')) {
+        // Se a resposta contém códigos ANSI, vamos processá-la
+        setTimeout(() => {
+            const terminalContent = document.querySelector('.p-terminal-command-list');
+            if (terminalContent) {
+                const commands = terminalContent.querySelectorAll('[data-pc-section="commands"]');
+                const lastCommandContainer = commands[commands.length - 1];
+                if (lastCommandContainer) {
+                    // Aguarda um pouco mais para garantir que o elemento foi criado
+                    setTimeout(() => {
+                        const responseElement = lastCommandContainer.querySelector('[data-pc-section="response"]');
+                        if (responseElement) {
+                            responseElement.innerHTML = ansiToHtml.toHtml(response);
+                        }
+                    }, 50);
+                }
+            }
+        }, 100);
+        
+        // Retorna a string limpa para evitar exibição dupla
+        return response.replace(/\u001b\[[0-9;]*m/g, '');
+    }
+    return response;
+};
 
 const props = defineProps({
     isCard: {
@@ -200,7 +234,8 @@ Use 'tree' to see directory structure.`;
     }
 
     if (response) {
-        TerminalService.emit('response', response);
+        const processedResponse = processAnsiResponse(response);
+        TerminalService.emit('response', processedResponse);
     }
 };
 
@@ -287,5 +322,22 @@ onBeforeUnmount(() => {
     background: rgba(155, 89, 182, 0.15);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para suporte a cores ANSI */
+.p-terminal [data-pc-section="response"] {
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+/* Cores ANSI para diretórios (azul) */
+.p-terminal [data-pc-section="response"] .ansi-blue {
+    color: #5555ff;
+    font-weight: bold;
+}
+
+/* Garantir que o HTML seja renderizado */
+.p-terminal [data-pc-section="response"] * {
+    color: inherit;
 }
 </style>

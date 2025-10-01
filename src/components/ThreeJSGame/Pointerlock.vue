@@ -1665,12 +1665,12 @@ function checkCrystalCollection() {
 
     // Debug logging for first-person mode
     if (!thirdPerson.value && isComponentMounted) {
-      console.log("First-person crystal check:", {
+/*       console.log("First-person crystal check:", {
         playerPos: playerPosition,
         crystalPos: child.position,
         distance: distance,
         threshold: 8,
-      });
+      }); */
     }
 
     // Collect crystal if player is close enough (larger detection radius for first-person)
