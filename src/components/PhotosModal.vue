@@ -137,7 +137,6 @@ const onModalClose = () => {
   >
     <template #header>
       <div class="photos-header">
-        <h3>📷 Photos</h3>
         <div class="header-controls">
           <button
             @click="loadImages"
@@ -252,7 +251,7 @@ const onModalClose = () => {
 
 .photos-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   width: 100%;
 }
