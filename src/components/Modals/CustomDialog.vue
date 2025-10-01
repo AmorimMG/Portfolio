@@ -27,7 +27,7 @@ export default {
     },
     closable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     showHeader: {
       type: Boolean,
@@ -66,11 +66,11 @@ export default {
   },
   mounted() {
     window.addEventListener("resize", this.checkMobile);
-    window.addEventListener("keydown", this.handleKeyPress);
+    window.addEventListener("keydown", this.handleKeyDown);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.checkMobile);
-    window.removeEventListener("keydown", this.handleKeyPress);
+    window.removeEventListener("keydown", this.handleKeyDown);
   },
   computed: {
     dialogClass() {
@@ -121,16 +121,10 @@ export default {
     closeModal() {
       this.$emit("update:visible", false);
     },
-    handleKeyPress(event) {
-      // Só processa as teclas se o modal estiver visível
-      if (!this.visible) return;
-
-      switch (event.key) {
-        case "Escape":
-          if (this.closable !== false) {
-            this.closeModal();
-          }
-          break;
+    handleKeyDown(event) {
+      // Fecha o modal com ESC mesmo quando closable é false
+      if (event.key === "Escape" && this.visible) {
+        this.closeModal();
       }
     },
   },
