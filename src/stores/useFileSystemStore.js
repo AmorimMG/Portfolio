@@ -488,12 +488,69 @@ export const useFileSystemStore = defineStore("fileSystem", () => {
 
     // Mover para lixeira se disponível
     if (trashStore) {
+      // Extrair ícone baseado no tipo de arquivo
+      let icon = "📄"; // Ícone padrão
+
+      if (item.type === "dir") {
+        icon = "📁";
+      } else if (name.endsWith(".app") && item.content) {
+        // Para arquivos .app, tentar extrair o ícone do conteúdo JSON
+        try {
+          const appData = JSON.parse(item.content);
+          icon = appData.icon || "📱";
+        } catch (error) {
+          icon = "📱"; // Ícone padrão para apps
+        }
+      } else {
+        // Ícones baseados na extensão
+        const ext = name.split(".").pop()?.toLowerCase();
+        const iconMap = {
+          txt: "📄",
+          md: "📝",
+          js: "📜",
+          json: "📋",
+          pdf: "📕",
+          jpg: "🖼️",
+          jpeg: "🖼️",
+          png: "🖼️",
+          gif: "🖼️",
+          mp3: "🎵",
+          mp4: "🎬",
+          zip: "📦",
+        };
+        icon = iconMap[ext] || "📄";
+      }
+
+      // Determinar o título e dados do app
+      let title = name;
+      let appData = null;
+
+      if (name.endsWith(".app") && item.content) {
+        try {
+          appData = JSON.parse(item.content);
+          title = appData.title || name.replace(".app", "");
+        } catch (error) {
+          title = name.replace(".app", "");
+        }
+      }
+
       trashStore.addToTrash({
+        id: Date.now() + Math.random(), // Adicionar ID único
         name,
+        title: title, // Usar título do app se disponível
         path: fullPath,
         type: item.type,
+        icon: icon, // Adicionar ícone
         originalPath: fullPath,
         deletedAt: new Date(),
+        // Propriedades específicas para apps
+        ...(appData && {
+          component: appData.component || appData.name,
+          locked: appData.locked || false,
+          colSpan: appData.colSpan || 1,
+          rowSpan: appData.rowSpan || 1,
+          originalContent: item.content, // Salvar conteúdo original
+        }),
       });
     }
 
