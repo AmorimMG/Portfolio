@@ -27,7 +27,7 @@ export default {
     },
     closable: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     showHeader: {
       type: Boolean,
@@ -66,9 +66,11 @@ export default {
   },
   mounted() {
     window.addEventListener("resize", this.checkMobile);
+    window.addEventListener("keydown", this.handleKeyPress);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.checkMobile);
+    window.removeEventListener("keydown", this.handleKeyPress);
   },
   computed: {
     dialogClass() {
@@ -118,6 +120,18 @@ export default {
     },
     closeModal() {
       this.$emit("update:visible", false);
+    },
+    handleKeyPress(event) {
+      // Só processa as teclas se o modal estiver visível
+      if (!this.visible) return;
+
+      switch (event.key) {
+        case "Escape":
+          if (this.closable !== false) {
+            this.closeModal();
+          }
+          break;
+      }
     },
   },
 };

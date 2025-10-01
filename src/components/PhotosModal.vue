@@ -57,11 +57,32 @@ const loadImages = async () => {
   try {
     await fileSystemStore.loadCdnImagesData();
     const cdnImages = fileSystemStore.getCdnImages();
-    images.value = cdnImages;
+    images.value = cdnImages.map((img) => ({
+      ...img,
+      hasError: false,
+      isLoaded: false,
+    }));
   } catch (error) {
     images.value = [];
   } finally {
     isLoading.value = false;
+  }
+};
+
+const handleImageError = (event) => {
+  const imgSrc = event.target.src;
+  const imageIndex = images.value.findIndex((img) => img.src === imgSrc);
+  if (imageIndex !== -1) {
+    images.value[imageIndex].hasError = true;
+  }
+};
+
+const handleImageLoad = (event) => {
+  const imgSrc = event.target.src;
+  const imageIndex = images.value.findIndex((img) => img.src === imgSrc);
+  if (imageIndex !== -1) {
+    images.value[imageIndex].isLoaded = true;
+    images.value[imageIndex].hasError = false;
   }
 };
 
@@ -155,8 +176,22 @@ const onModalClose = () => {
           class="image-thumbnail"
           @click="selectImage(index)"
         >
-          <img :src="image.src" :alt="image.alt" loading="lazy" />
-          <div class="image-overlay">
+          <div class="image-loading" v-if="!image.isLoaded && !image.hasError">
+            <i class="pi pi-spin pi-spinner"></i>
+          </div>
+          <img
+            :src="image.src"
+            :alt="image.alt"
+            loading="lazy"
+            @error="handleImageError"
+            @load="handleImageLoad"
+            :style="{ opacity: image.isLoaded ? 1 : 0 }"
+          />
+          <div class="image-placeholder" v-if="image.hasError">
+            <i class="pi pi-image"></i>
+            <span>Erro ao carregar</span>
+          </div>
+          <div class="image-overlay" v-if="image.isLoaded && !image.hasError">
             <i class="pi pi-search-plus"></i>
           </div>
         </div>
@@ -306,26 +341,81 @@ const onModalClose = () => {
   padding: 20px;
   overflow-y: auto;
   height: 100%;
+  align-items: start;
+  grid-auto-rows: min-content;
 }
 
 .image-thumbnail {
   position: relative;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 200px;
+  min-height: 200px;
+  max-height: 200px;
   overflow: hidden;
   border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+  display: block;
+  z-index: 1;
 }
 
 .image-thumbnail:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  z-index: 100;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .image-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  background-color: #f8f9fa;
+  transition: opacity 0.3s ease;
+}
+
+.image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.image-placeholder i {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  z-index: 1;
+}
+
+.image-loading i {
+  font-size: 1.5rem;
 }
 
 .image-overlay {
@@ -425,11 +515,30 @@ const onModalClose = () => {
 }
 
 /* Responsivo */
+@media (max-width: 1200px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+
+  .image-thumbnail {
+    height: 180px;
+    min-height: 180px;
+    max-height: 180px;
+  }
+}
+
 @media (max-width: 768px) {
   .gallery-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
     padding: 16px;
+  }
+
+  .image-thumbnail {
+    height: 150px;
+    min-height: 150px;
+    max-height: 150px;
   }
 
   .nav-button {
@@ -455,9 +564,33 @@ const onModalClose = () => {
     padding: 12px;
   }
 
+  .image-thumbnail {
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
+  }
+
   .nav-button {
     padding: 12px;
     margin: 0 8px;
+  }
+
+  .image-thumbnail:hover {
+    transform: scale(1.02);
+  }
+}
+
+@media (max-width: 320px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .image-thumbnail {
+    height: 100px;
+    min-height: 100px;
+    max-height: 100px;
   }
 }
 </style>
