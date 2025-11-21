@@ -45,6 +45,10 @@ const props = defineProps({
     selectedFile: {
         type: String,
         default: null
+    },
+    sidebarToggle: {
+        type: Function,
+        default: null
     }
 });
 
@@ -534,6 +538,16 @@ defineExpose({
     <div class="file-manager">
         <!-- Toolbar -->
         <div class="toolbar">
+            <!-- Sidebar Toggle Button (Mobile only) -->
+            <Button 
+                v-if="sidebarToggle"
+                icon="pi pi-bars" 
+                @click="sidebarToggle"
+                class="sidebar-toggle-btn mobile-only"
+                size="small"
+                outlined
+            />
+            
             <div class="navigation-buttons">
                 <Button 
                     icon="pi pi-arrow-left" 
@@ -1151,6 +1165,18 @@ defineExpose({
         display: none;
     }
 
+    .sidebar-toggle-btn {
+        min-width: 32px !important;
+        width: 32px;
+        height: 32px;
+        padding: 0.25rem !important;
+        flex-shrink: 0;
+    }
+
+    .sidebar-toggle-btn .pi {
+        font-size: 0.875rem;
+    }
+
     .navigation-buttons {
         display: flex;
         gap: 0.25rem;
@@ -1216,7 +1242,7 @@ defineExpose({
     }
 
     .file-content.grid-view {
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 0.5rem;
     }
 
@@ -1318,6 +1344,17 @@ defineExpose({
         padding: 0.35rem;
     }
 
+    .sidebar-toggle-btn {
+        min-width: 28px !important;
+        width: 28px;
+        height: 28px;
+        padding: 0.2rem !important;
+    }
+
+    .sidebar-toggle-btn .pi {
+        font-size: 0.75rem;
+    }
+
     .navigation-buttons {
         gap: 0.2rem;
     }
@@ -1364,7 +1401,7 @@ defineExpose({
     }
 
     .file-content.grid-view {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 0.4rem;
     }
 
@@ -1446,7 +1483,7 @@ defineExpose({
 /* Landscape orientation on mobile */
 @media (max-width: 768px) and (orientation: landscape) {
     .file-content.grid-view {
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        grid-template-columns: repeat(6, 1fr);
     }
 
     .toolbar {
