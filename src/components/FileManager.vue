@@ -28,6 +28,7 @@ const searchQuery = ref('');
 const viewMode = ref('grid'); // 'grid' | 'list'
 const renamingItem = ref(null);
 const renameInputValue = ref('');
+const mobileMenuVisible = ref(false);
 
 // Estados para controle de componentes de apps
 const currentAppComponent = ref(null);
@@ -409,6 +410,14 @@ const hideContextMenu = () => {
     contextMenuVisible.value = false;
 };
 
+const showMobileMenu = () => {
+    mobileMenuVisible.value = true;
+};
+
+const hideMobileMenu = () => {
+    mobileMenuVisible.value = false;
+};
+
 // Formatação
 const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 B';
@@ -543,7 +552,7 @@ defineExpose({
             </div>
             
             <!-- Breadcrumbs -->
-            <div class="breadcrumbs">
+            <div class="breadcrumbs desktop-only">
                 <span 
                     v-for="(crumb, index) in breadcrumbs"
                     :key="crumb.path"
@@ -556,7 +565,7 @@ defineExpose({
             </div>
             
             <!-- Search -->
-            <div class="search">
+            <div class="search desktop-only">
                 <InputText 
                     v-model="searchQuery"
                     placeholder="Search files..."
@@ -571,6 +580,7 @@ defineExpose({
                     @click="showCreateDialog = true"
                     size="small"
                     outlined
+                    class="desktop-only"
                 />
                 <Button 
                     icon="pi pi-trash" 
@@ -579,6 +589,15 @@ defineExpose({
                     size="small"
                     severity="danger"
                     outlined
+                    class="desktop-only"
+                />
+                <!-- Mobile menu button -->
+                <Button 
+                    icon="pi pi-ellipsis-v" 
+                    @click="showMobileMenu"
+                    size="small"
+                    outlined
+                    class="mobile-only"
                 />
             </div>
             
@@ -692,11 +711,55 @@ defineExpose({
             </template>
         </ContextMenu>
         
+        <!-- Mobile Menu Dialog -->
+        <Dialog 
+            v-model:visible="mobileMenuVisible" 
+            header="Actions"
+            modal
+            :style="{ width: '90vw', maxWidth: '400px' }"
+            position="bottom"
+        >
+            <div class="mobile-menu">
+                <Button 
+                    label="New File/Folder" 
+                    icon="pi pi-plus" 
+                    @click="showCreateDialog = true; hideMobileMenu();"
+                    class="w-full"
+                    outlined
+                />
+                <Button 
+                    label="Delete Selected" 
+                    icon="pi pi-trash" 
+                    @click="deleteSelected(); hideMobileMenu();"
+                    :disabled="selectedItems.length === 0"
+                    class="w-full"
+                    severity="danger"
+                    outlined
+                />
+                <Button 
+                    label="Select All" 
+                    icon="pi pi-check-square" 
+                    @click="selectAll(); hideMobileMenu();"
+                    class="w-full"
+                    outlined
+                />
+                <Button 
+                    label="Clear Selection" 
+                    icon="pi pi-times" 
+                    @click="clearSelection(); hideMobileMenu();"
+                    :disabled="selectedItems.length === 0"
+                    class="w-full"
+                    outlined
+                />
+            </div>
+        </Dialog>
+
         <!-- Create Dialog -->
         <Dialog 
             v-model:visible="showCreateDialog" 
             header="Create New Item"
             modal
+            :breakpoints="{ '768px': '90vw' }"
             :style="{ width: '400px' }"
         >
             <div class="create-dialog">
@@ -1047,5 +1110,351 @@ defineExpose({
 
 .app-modal-container > * {
     pointer-events: auto;
+}
+
+/* Mobile/Desktop visibility helpers */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: flex;
+}
+
+.mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: flex;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .toolbar {
+        flex-wrap: nowrap;
+        gap: 0.35rem;
+        padding: 0.4rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .toolbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        gap: 0.25rem;
+        flex-shrink: 0;
+    }
+
+    .navigation-buttons button {
+        min-width: 32px !important;
+        width: 32px;
+        height: 32px;
+        padding: 0.25rem !important;
+    }
+
+    .navigation-buttons button .pi {
+        font-size: 0.875rem;
+    }
+
+    .breadcrumbs {
+        display: none;
+    }
+
+    .search {
+        display: none;
+    }
+
+    .actions {
+        display: flex;
+        gap: 0.25rem;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    .actions button {
+        min-width: 32px !important;
+        width: 32px;
+        height: 32px;
+        padding: 0.25rem !important;
+    }
+
+    .actions button .pi {
+        font-size: 0.875rem;
+    }
+
+    .view-mode {
+        display: flex;
+        gap: 0.25rem;
+        flex-shrink: 0;
+    }
+
+    .view-mode button {
+        min-width: 32px !important;
+        width: 32px;
+        height: 32px;
+        padding: 0.25rem !important;
+    }
+
+    .view-mode button .pi {
+        font-size: 0.875rem;
+    }
+
+    .file-content {
+        padding: 0.5rem;
+    }
+
+    .file-content.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .grid-view .file-item {
+        height: 100px;
+        padding: 8px 4px;
+    }
+
+    .grid-view .file-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .grid-view .file-icon-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .grid-view .file-name {
+        font-size: 0.75rem;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.2;
+    }
+
+    .list-view .file-item {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .list-view .file-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+    }
+
+    .list-view .file-icon-image {
+        width: 32px;
+        height: 32px;
+    }
+
+    .list-view .file-name {
+        font-size: 0.875rem;
+    }
+
+    .list-view .file-details {
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+    }
+
+    .status-bar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .status-bar span {
+        white-space: nowrap;
+    }
+
+    /* Context Menu Adjustments */
+    .context-menu {
+        min-width: 140px;
+        font-size: 0.875rem;
+    }
+
+    .context-menu-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    /* Dialog Adjustments */
+    .create-dialog {
+        margin: 10px;
+        gap: 15px;
+    }
+
+    .field {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .field label {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar {
+        gap: 0.25rem;
+        padding: 0.35rem;
+    }
+
+    .navigation-buttons {
+        gap: 0.2rem;
+    }
+
+    .navigation-buttons button {
+        min-width: 28px !important;
+        width: 28px;
+        height: 28px;
+        padding: 0.2rem !important;
+    }
+
+    .navigation-buttons button .pi {
+        font-size: 0.75rem;
+    }
+
+    .actions {
+        gap: 0.2rem;
+    }
+
+    .actions button {
+        min-width: 28px !important;
+        width: 28px;
+        height: 28px;
+        padding: 0.2rem !important;
+    }
+
+    .actions button .pi {
+        font-size: 0.75rem;
+    }
+
+    .view-mode {
+        gap: 0.2rem;
+    }
+
+    .view-mode button {
+        min-width: 28px !important;
+        width: 28px;
+        height: 28px;
+        padding: 0.2rem !important;
+    }
+
+    .view-mode button .pi {
+        font-size: 0.75rem;
+    }
+
+    .file-content.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 0.4rem;
+    }
+
+    .grid-view .file-item {
+        height: 85px;
+        padding: 6px 2px;
+    }
+
+    .grid-view .file-icon {
+        font-size: 1.25rem;
+    }
+
+    .grid-view .file-icon-image {
+        width: 32px;
+        height: 32px;
+    }
+
+    .grid-view .file-name {
+        font-size: 0.7rem;
+    }
+
+    .list-view .file-icon {
+        font-size: 1.25rem;
+    }
+
+    .list-view .file-icon-image {
+        width: 28px;
+        height: 28px;
+    }
+
+    .breadcrumb {
+        font-size: 0.75rem;
+    }
+
+    .empty-folder i {
+        font-size: 2rem !important;
+    }
+
+    .empty-folder p {
+        font-size: 0.875rem;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    .file-item {
+        min-height: 44px; /* Minimum touch target size */
+    }
+
+    .context-menu-item {
+        min-height: 44px;
+        align-items: center;
+    }
+
+    .toolbar button {
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    /* Disable hover effects on touch devices */
+    .file-item:hover:not(.selected) {
+        background-color: transparent;
+    }
+
+    .breadcrumb:hover {
+        background: transparent;
+    }
+
+    /* Add active states instead */
+    .file-item:active:not(.selected) {
+        background-color: #f5f5f5;
+    }
+
+    .breadcrumb:active {
+        background: #e9ecef;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .file-content.grid-view {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    .toolbar {
+        padding: 0.4rem;
+    }
+
+    .breadcrumbs {
+        font-size: 0.8rem;
+    }
 }
 </style>

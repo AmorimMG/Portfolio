@@ -1,4 +1,10 @@
 <script setup>
+const props = defineProps({
+  isMobile: {
+    type: Boolean,
+    default: false,
+  },
+});
 const emit = defineEmits(['close', 'maximize']);
 const closeModal = () => {
     emit('close');
@@ -14,7 +20,7 @@ const onMaximize = () => {
         <div class="window-controls">
             <span class="close" @click="closeModal"></span>
             <span class="minimize" @click="closeModal"></span>
-            <span class="maximize" @click="onMaximize"></span>
+            <span v-if="!props.isMobile" class="maximize" @click="onMaximize"></span>
         </div>
         <div class="header-content">
             <slot></slot>

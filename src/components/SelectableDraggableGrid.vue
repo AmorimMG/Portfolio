@@ -55,6 +55,7 @@ const emit = defineEmits([
 const gridContainer = ref(null);
 const selected = ref(new Set());
 const internalList = ref([...props.modelValue]);
+const isMobile = ref(false);
 
 // Estados de seleção
 const isSelecting = ref(false);
@@ -69,6 +70,8 @@ const dragOverIndex = ref(-1);
 const draggedItem = ref(null);
 const dragOffset = ref({ x: 0, y: 0 });
 const mousePos = ref({ x: 0, y: 0 });
+const showDragGhost = ref(false);
+const dragGhostPos = ref({ x: 0, y: 0 });
 
 // Estados para controlar quando iniciar o drag
 const dragTimeout = ref(null);
@@ -100,13 +103,23 @@ watch(
 );
 
 // 3. COMPUTED PROPERTIES
-const gridStyles = computed(() => ({
-  display: 'grid',
-  gridTemplateColumns: props.gridCols,
-  gridTemplateRows: props.gridRows,
-  gap: props.gap,
-  width: '100%',
-}));
+const gridStyles = computed(() => {
+  // Em modo mobile, os estilos são controlados principalmente pelo CSS.
+  if (isMobile.value) {
+    return {
+      display: 'grid',
+      width: '100%',
+    };
+  }
+  // Em modo desktop, usamos as props.
+  return {
+    display: 'grid',
+    gridTemplateColumns: props.gridCols,
+    gridTemplateRows: props.gridRows,
+    gap: props.gap,
+    width: 'fit-content', // Manter o comportamento do desktop
+  };
+});
 
 // Função para verificar se um slot está vazio (consistente com useAppsStore.isEmptySlot)
 // Esta função garante que usamos a mesma lógica da store para determinar slots vazios
@@ -217,12 +230,21 @@ function updateSelectionFromRect() {
 function startDrag() {
   if (!props.dragEnabled || isDragging.value) return;
   
+  console.log('Starting drag...', {
+    dragEnabled: props.dragEnabled,
+    dragStartIndex: dragStartIndex.value,
+    draggedItem: draggedItem.value
+  });
+  
   isDragging.value = true;
+  showDragGhost.value = isMobile.value; // Mostra ghost apenas no mobile
   draggedItems.value = new Set(selected.value);
   
   if (draggedItem.value && !draggedItems.value.has(draggedItem.value[props.itemKey])) {
     draggedItems.value.add(draggedItem.value[props.itemKey]);
   }
+  
+  console.log('Drag started with items:', Array.from(draggedItems.value));
   
   emit('drag-start', {
     items: Array.from(draggedItems.value).map(id => 
@@ -251,6 +273,7 @@ function completeDrag() {
   
   // Reset drag state
   isDragging.value = false;
+  showDragGhost.value = false;
   draggedItems.value.clear();
   dragOverIndex.value = -1;
   dragStartIndex.value = -1;
@@ -403,6 +426,9 @@ function moveItems(targetIndex) {
 function handleMouseDown(event) {
   if (props.disabled || event.button !== 0) return;
   
+  // No mobile, desabilita a seleção por área
+  if (isMobile.value) return;
+  
   const rect = gridContainer.value.getBoundingClientRect();
   selectionStart.value = {
     x: event.clientX - rect.left,
@@ -430,23 +456,42 @@ function handleDragStart(event) {
 }
 
 function handleMouseMove(event) {
-  mousePos.value = { x: event.clientX, y: event.clientY };
+  const isTouchEvent = event.type === 'touchmove';
+  const clientX = event.clientX || (event.touches && event.touches[0]?.clientX);
+  const clientY = event.clientY || (event.touches && event.touches[0]?.clientY);
+  
+  if (!clientX || !clientY) return;
+  
+  // Previne scroll no mobile durante drag
+  if (isTouchEvent && (isDragging.value || isDragReady.value)) {
+    event.preventDefault();
+  }
+  
+  mousePos.value = { x: clientX, y: clientY };
+  
+  // Atualiza posição do ghost no mobile
+  if (isMobile.value && isDragging.value) {
+    dragGhostPos.value = { x: clientX, y: clientY };
+  }
   
   // Se está preparado para drag, verifica se o usuário moveu o mouse o suficiente
   if (isDragReady.value && !isDragging.value && dragStartIndex.value >= 0) {
-    const deltaX = Math.abs(event.clientX - dragStartPos.value.x);
-    const deltaY = Math.abs(event.clientY - dragStartPos.value.y);
+    const deltaX = Math.abs(clientX - dragStartPos.value.x);
+    const deltaY = Math.abs(clientY - dragStartPos.value.y);
+    
+    console.log('Movement detected:', { deltaX, deltaY, threshold: DRAG_THRESHOLD });
     
     if (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) {
       startDrag();
     }
   }
   
-  if (isSelecting.value && !isDragging.value) {
+  // No mobile, não faz seleção por área
+  if (isSelecting.value && !isDragging.value && !isMobile.value) {
     const rect = gridContainer.value.getBoundingClientRect();
     selectionRect.value = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
+      x: clientX - rect.left,
+      y: clientY - rect.top
     };
     
     updateSelectionFromRect();
@@ -482,9 +527,12 @@ function handleMouseUp() {
 }
 
 function handleItemMouseDown(event, item, index) {
-  // Para slots vazios, permite que a seleção por área funcione
+  // Para slots vazios, permite que a seleção por área funcione (apenas desktop)
   if (props.disabled || isEmptySlot(item)) {
-    // NÃO impede propagação para slots vazios - permite seleção por área
+    // No mobile, impede propagação mesmo para slots vazios
+    if (isMobile.value) {
+      event.stopPropagation();
+    }
     return;
   }
   
@@ -493,11 +541,23 @@ function handleItemMouseDown(event, item, index) {
     event.preventDefault();
   }
   
-  if (props.dragEnabled && event.button === 0) {
+  const isTouchEvent = event.type === 'touchstart';
+  const clientX = isTouchEvent ? event.touches[0].clientX : event.clientX;
+  const clientY = isTouchEvent ? event.touches[0].clientY : event.clientY;
+  
+  console.log('Item mouse/touch down:', { 
+    isTouchEvent, 
+    item: item[props.itemKey], 
+    index,
+    isMobile: isMobile.value,
+    dragEnabled: props.dragEnabled
+  });
+  
+  if (props.dragEnabled && (event.button === 0 || isTouchEvent)) {
     const rect = event.currentTarget.getBoundingClientRect();
     dragOffset.value = {
-      x: event.clientX - (rect.left + rect.width / 2),
-      y: event.clientY - (rect.top + rect.height / 2)
+      x: clientX - (rect.left + rect.width / 2),
+      y: clientY - (rect.top + rect.height / 2)
     };
     
     dragStartIndex.value = index;
@@ -505,7 +565,7 @@ function handleItemMouseDown(event, item, index) {
     isDragReady.value = false;
     
     // Guarda posição inicial para detectar movimento
-    dragStartPos.value = { x: event.clientX, y: event.clientY };
+    dragStartPos.value = { x: clientX, y: clientY };
     
     // Limpa timeout anterior se existir
     if (dragTimeout.value) {
@@ -527,10 +587,13 @@ function handleItemMouseDown(event, item, index) {
       event.stopPropagation();
     }
     
+    // No mobile, reduz o delay para melhor responsividade
+    const delay = isMobile.value ? 100 : DRAG_DELAY;
+    
     // Prepara para possível drag, mas não inicia imediatamente
     dragTimeout.value = setTimeout(() => {
       isDragReady.value = true;
-    }, DRAG_DELAY);
+    }, delay);
   }
 }
 
@@ -579,31 +642,59 @@ function handleContextMenu(event, item) {
 }
 
 function updateDragOverIndex(event) {
-  const itemEl = event.target.closest('.grid-item');
-  if (itemEl) {
+  const isTouchEvent = event.type === 'touchmove';
+  const clientX = isTouchEvent ? event.touches[0].clientX : event.clientX;
+  const clientY = isTouchEvent ? event.touches[0].clientY : event.clientY;
+  
+  if (!gridContainer.value) return;
+  
+  // Para touch events, precisamos usar elementFromPoint pois o target não muda durante o movimento
+  let itemEl;
+  if (isTouchEvent) {
+    // Esconde temporariamente o elemento sendo arrastado para pegar o elemento abaixo
+    const draggedElements = gridContainer.value.querySelectorAll('.grid-item.dragging');
+    const originalPointerEvents = [];
+    draggedElements.forEach((el, idx) => {
+      originalPointerEvents[idx] = el.style.pointerEvents;
+      el.style.pointerEvents = 'none';
+    });
+    
+    const elementBelow = document.elementFromPoint(clientX, clientY);
+    itemEl = elementBelow?.closest('.grid-item');
+    
+    // Restaura pointer events
+    draggedElements.forEach((el, idx) => {
+      el.style.pointerEvents = originalPointerEvents[idx] || '';
+    });
+  } else {
+    itemEl = event.target.closest('.grid-item');
+  }
+  
+  if (itemEl && itemEl.dataset.index) {
     const index = parseInt(itemEl.dataset.index);
     // Sempre permite drop em qualquer item (incluindo slots vazios)
     dragOverIndex.value = index;
+    console.log('Drag over index:', index);
   } else {
     // Se não está sobre um item específico, tenta encontrar o slot mais próximo
     const rect = gridContainer.value.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     
     // Se está dentro da área do grid
     if (x >= 0 && y >= 0 && x <= rect.width && y <= rect.height) {
-      // Tenta encontrar o slot mais próximo baseado na posição do mouse
+      // Tenta encontrar o slot mais próximo baseado na posição do mouse/touch
       const gridItems = gridContainer.value.querySelectorAll('.grid-item');
       let closestIndex = -1;
       let closestDistance = Infinity;
       
       gridItems.forEach((item, index) => {
         const itemRect = item.getBoundingClientRect();
-        const itemCenterX = itemRect.left + itemRect.width / 2 - rect.left;
-        const itemCenterY = itemRect.top + itemRect.height / 2 - rect.top;
+        const itemCenterX = itemRect.left + itemRect.width / 2;
+        const itemCenterY = itemRect.top + itemRect.height / 2;
         
         const distance = Math.sqrt(
-          Math.pow(x - itemCenterX, 2) + Math.pow(y - itemCenterY, 2)
+          Math.pow(clientX - itemCenterX, 2) + Math.pow(clientY - itemCenterY, 2)
         );
         
         if (distance < closestDistance) {
@@ -613,8 +704,9 @@ function updateDragOverIndex(event) {
       });
       
       // Se encontrou um slot próximo (dentro de uma distância razoável), usa ele
-      if (closestIndex >= 0 && closestDistance < 100) {
+      if (closestIndex >= 0 && closestDistance < 150) {
         dragOverIndex.value = closestIndex;
+        console.log('Closest index:', closestIndex, 'distance:', closestDistance);
       } else {
         // Se não encontrou nenhum slot próximo, permite drop no final
         dragOverIndex.value = Math.min(internalList.value.length - 1, Math.max(0, internalList.value.length));
@@ -669,10 +761,21 @@ defineExpose({
   debugGridState
 });
 
+const updateMobileStatus = () => {
+  isMobile.value = window.innerWidth <= 991;
+};
+
 // 9. LIFECYCLE
 onMounted(() => {
+  window.addEventListener('resize', updateMobileStatus);
+  updateMobileStatus();
+
   document.addEventListener('mousemove', handleMouseMove);
   document.addEventListener('mouseup', handleMouseUp);
+  
+  // Adiciona suporte a touch events para mobile
+  document.addEventListener('touchmove', handleMouseMove, { passive: false });
+  document.addEventListener('touchend', handleMouseUp);
   
   // Adiciona listener para prevenir dragstart em todo o container
   if (gridContainer.value) {
@@ -681,8 +784,13 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  window.removeEventListener('resize', updateMobileStatus);
   document.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('mouseup', handleMouseUp);
+  
+  // Remove listeners de touch
+  document.removeEventListener('touchmove', handleMouseMove);
+  document.removeEventListener('touchend', handleMouseUp);
   
   // Limpa timeout se ainda estiver ativo
   if (dragTimeout.value) {
@@ -705,6 +813,7 @@ onUnmounted(() => {
   >
     <div 
       class="grid-content"
+      :class="{ 'mobile-grid': isMobile }"
       :style="gridStyles"
     >
       <div
@@ -722,6 +831,7 @@ onUnmounted(() => {
           [selectableClass]: !isEmptySlot(item)
         }"
         @mousedown="handleItemMouseDown($event, item, index)"
+        @touchstart="handleItemMouseDown($event, item, index)"
         @click="handleItemClick($event, item, index)"
         @contextmenu="!isEmptySlot(item) ? handleContextMenu($event, item) : null"
         @dragover.prevent
@@ -748,6 +858,31 @@ onUnmounted(() => {
       class="selection-rectangle"
       :style="selectionRectStyle"
     ></div>
+
+    <!-- Drag Ghost for Mobile -->
+    <div
+      v-if="showDragGhost && draggedItem && isMobile"
+      class="drag-ghost"
+      :style="{
+        left: `${dragGhostPos.x}px`,
+        top: `${dragGhostPos.y}px`,
+      }"
+    >
+      <slot 
+        name="item" 
+        :element="draggedItem" 
+        :index="dragStartIndex"
+        :selected="true"
+        :dragging="true"
+      >
+        <div class="default-item">
+          {{ draggedItem.title || draggedItem.name || `Item ${draggedItem[itemKey]}` }}
+        </div>
+      </slot>
+      <div v-if="draggedItems.size > 1" class="drag-count-badge">
+        {{ draggedItems.size }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -758,6 +893,8 @@ onUnmounted(() => {
   height: 100%;
   user-select: none;
   overflow: hidden;
+  /* Permite pan mas previne zoom no mobile */
+  touch-action: pan-x pan-y;
 }
 
 .selectable-draggable-grid * {
@@ -987,15 +1124,72 @@ onUnmounted(() => {
   z-index: 1000;
 }
 
+.drag-ghost {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+  opacity: 0.8;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+  transition: transform 0.1s ease-out;
+}
+
+.drag-count-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff5722;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+}
+
 /* Media queries para responsividade */
 @media (max-width: 991px) {
-  .grid-content {
+  .grid-content.mobile-grid {
     max-width: 100%;
     grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
     grid-template-columns: repeat(4, 1fr);
     grid-auto-flow: row;
     grid-gap: 1px;
     width: 100%;
+  }
+  
+  .grid-item {
+    /* Aumenta área de toque no mobile */
+    touch-action: manipulation;
+  }
+  
+  .grid-item.dragging {
+    /* Feedback visual mais forte no mobile */
+    opacity: 0.5;
+    transform: scale(1.1) rotate(5deg);
+    z-index: 9999;
+  }
+  
+  .grid-item.drag-over {
+    /* Feedback visual mais visível no mobile */
+    transform: scale(1.1);
+    outline-width: 4px;
+  }
+  
+  /* Desabilita seleção de texto no mobile */
+  .selectable-draggable-grid {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 }
 </style>

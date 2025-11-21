@@ -43,21 +43,21 @@ const closeModal = () => {
             <VueNeonLight size="15px" :flash="false" style="color: white"></VueNeonLight>
         </Button>
         <CustomDialog class="dialog-terminal" :visible="visible || openWallpaper" :maximized="false"
-            @update:visible="closeModal()" :style="{ overflowY: 'none', backgroundColor: 'transparent' }">
-            <div style="background-color: rgba(0, 0, 0, 0.2);">
-                <div class="flex justify-center items-center py-6">
-                    <h1 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight drop-shadow-md">
+            @update:visible="closeModal()" :style="{ overflowY: 'auto', backgroundColor: 'transparent' }">
+            <div class="bg-black/20 backdrop-blur-md h-full overflow-y-auto">
+                <div class="flex justify-center items-center py-4 sm:py-6">
+                    <h1 class="text-2xl sm:text-4xl font-semibold text-white tracking-tight drop-shadow-md">
                         Choose Your Background
                     </h1>
                 </div>
 
-                <div class="flex flex-col gap-6 px-4 py-6">
+                <div class="flex flex-col gap-4 sm:gap-6 px-4 py-4 sm:py-6">
                     <div class="flex justify-center">
                         <img loading="lazy" :src="wallpaperModalStore.getBackground()" alt="Selected Background"
-                            class="rounded-xl max-w-[700px] shadow-lg" width="450" height="200" />
+                            class="rounded-xl max-w-full sm:max-w-[700px] shadow-lg" width="450" height="200" />
                     </div>
                     <draggable v-model="backgroundImages" item-key="value"
-                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 pb-6">
+                        class="grid grid-cols-4 gap-4 px-4 pb-6">
                         <template #item="{ element }">
                             <div class="flex flex-col items-center text-white">
                                 <div
@@ -84,8 +84,22 @@ const closeModal = () => {
 
 <style scoped>
 .dialog-terminal {
-    width: 80rem;
-    height: 50rem;
-    overflow-y: none;
+    width: 90vw;
+    max-width: 80rem;
+    height: 90vh;
+    max-height: 50rem;
+    overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+    .dialog-terminal {
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        margin: 0;
+        top: 0;
+        left: 0;
+    }
 }
 </style>

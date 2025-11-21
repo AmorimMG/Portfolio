@@ -219,6 +219,9 @@ function downloadFile() {
 </script>
 
 <style scoped>
+.document-viewer{
+  color: black;
+}
 .file-modal-content {
   min-height: 200px;
 }
