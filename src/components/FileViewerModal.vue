@@ -102,21 +102,6 @@
         <div class="text-sm text-surface-500">
           {{ fileData?.path }}
         </div>
-        <div class="space-x-2">
-          <Button 
-            v-if="fileData?.url" 
-            label="Baixar" 
-            icon="pi pi-download" 
-            @click="downloadFile"
-            class="p-button-outlined"
-          />
-          <Button 
-            label="Fechar" 
-            icon="pi pi-times" 
-            @click="visible = false"
-            class="p-button-secondary"
-          />
-        </div>
       </div>
     </template>
   </Dialog>
@@ -124,7 +109,6 @@
 
 <script setup>
 import { useNotifications } from '@/composables/useNotifications';
-import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import { computed, ref, watch } from 'vue';
 
@@ -219,6 +203,16 @@ function downloadFile() {
 </script>
 
 <style scoped>
+:deep(.markdown-content) {
+  h1,
+  h2,
+  h3,
+  li,
+  p {
+    color: black !important;
+  }
+}
+
 .document-viewer{
   color: black;
 }

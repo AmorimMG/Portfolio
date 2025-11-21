@@ -12,12 +12,16 @@ import ContextMenu from "primevue/contextmenu";
 import { useI18n } from "vue-i18n";
 import { getUserCookie } from "../service/session.js";
 import LoginToast from "./LoginToast.vue";
+import ConfirmDialog from "./Modals/ConfirmDialog.vue";
+import PromptDialog from "./Modals/PromptDialog.vue";
 
 export default {
   components: {
     SelectableDraggableGrid,
     LoginToast,
     ContextMenu,
+    PromptDialog,
+    ConfirmDialog,
     ...componentMap,
   },
   emits: ["open-file-manager"],
@@ -189,6 +193,22 @@ export default {
       pendingLockedApp: null,
       selectedApps: [],
       contextItems: [],
+      // Estados das modais
+      showPromptDialog: false,
+      promptConfig: {
+        header: '',
+        message: '',
+        defaultValue: '',
+        placeholder: ''
+      },
+      promptCallback: null,
+      showConfirmDialog: false,
+      confirmConfig: {
+        header: 'Confirmação',
+        message: '',
+        severity: 'warn'
+      },
+      confirmCallback: null,
     };
   },
 
@@ -264,8 +284,24 @@ export default {
     },
     renameApp(app) {
       if (!app) return;
-      const newName = prompt("Novo nome:", app.title);
-      if (newName && newName !== app.title) {
+      
+      this.promptConfig = {
+        header: 'Renomear',
+        message: 'Digite o novo nome:',
+        defaultValue: app.title,
+        placeholder: 'Nome do item'
+      };
+      
+      this.promptCallback = (newName) => {
+        if (newName && newName !== app.title) {
+          this.performRename(app, newName);
+        }
+      };
+      
+      this.showPromptDialog = true;
+    },
+    
+    performRename(app, newName) {
         if (app.isDesktopFile) {
           if (app.isApp) {
             // Renomear arquivo .app do desktop
@@ -334,7 +370,6 @@ export default {
           // App tradicional da store
           app.title = newName;
         }
-      }
     },
     restoreApp(app) {
       if (!app) return;
@@ -457,11 +492,20 @@ export default {
       if (!apps || apps.length === 0) return;
 
       // Confirmar remoção múltipla
-      const confirmed = confirm(
-        `Tem certeza que deseja remover ${apps.length} ${apps.length === 1 ? "item" : "itens"}?`
-      );
-      if (!confirmed) return;
-
+      this.confirmConfig = {
+        header: 'Confirmar Remoção',
+        message: `Tem certeza que deseja remover ${apps.length} ${apps.length === 1 ? "item" : "itens"}?`,
+        severity: 'danger'
+      };
+      
+      this.confirmCallback = () => {
+        this.performMultipleRemoval(apps);
+      };
+      
+      this.showConfirmDialog = true;
+    },
+    
+    performMultipleRemoval(apps) {
       // Remover cada app
       apps.forEach((app) => {
         if (app.isDesktopFile) {
@@ -477,6 +521,18 @@ export default {
       // Limpar seleção após remoção
       if (this.$refs.selectableDraggableGrid) {
         this.$refs.selectableDraggableGrid.clearSelection();
+      }
+    },
+    
+    handlePromptConfirm(value) {
+      if (this.promptCallback) {
+        this.promptCallback(value);
+      }
+    },
+    
+    handleConfirmYes() {
+      if (this.confirmCallback) {
+        this.confirmCallback();
       }
     },
 
@@ -604,6 +660,26 @@ export default {
 
     <ContextMenu ref="contextMenuRef" :model="dynamicContextItems" />
     <LoginToast ref="loginToastRef" @login-success="onLoginSuccess" />
+    
+    <!-- Modais de Prompt e Confirmação -->
+    <PromptDialog
+      v-model:visible="showPromptDialog"
+      :header="promptConfig.header"
+      :message="promptConfig.message"
+      :default-value="promptConfig.defaultValue"
+      :placeholder="promptConfig.placeholder"
+      @confirm="handlePromptConfirm"
+    />
+    
+    <ConfirmDialog
+      v-model:visible="showConfirmDialog"
+      :header="confirmConfig.header"
+      :message="confirmConfig.message"
+      :severity="confirmConfig.severity"
+      confirm-label="Sim"
+      cancel-label="Não"
+      @confirm="handleConfirmYes"
+    />
   </div>
 </template>
 

@@ -1,10 +1,20 @@
 <script setup>
+import { useDialogService } from "@/composables/useDialogService";
 import { useAppsStore } from "@/stores/useAppsStore";
 import { useFileSystemStore } from "@/stores/useFileSystemStore";
 import { useTrashStore } from "@/stores/useTrashStore";
 
 const trashStore = useTrashStore();
 const appsStore = useAppsStore();
+const { showConfirm } = useDialogService();
+
+// Props para sidebar toggle
+const props = defineProps({
+  sidebarToggle: {
+    type: Function,
+    default: null
+  }
+});
 
 function restore(app) {
   // Verificar se é um arquivo do sistema de arquivos ou um app da store
@@ -66,21 +76,37 @@ function restore(app) {
   }
 }
 
-function permanentDelete(app) {
-  const confirmed = confirm(
-    `Tem certeza que deseja excluir permanentemente "${app.title || app.name}"? Esta ação não pode ser desfeita.`
-  );
-  if (confirmed) {
-    trashStore.removeFromTrash(app);
+async function permanentDelete(app) {
+  try {
+    const confirmed = await showConfirm({
+      header: 'Excluir Permanentemente',
+      message: `Tem certeza que deseja excluir permanentemente "${app.title || app.name}"? Esta ação não pode ser desfeita.`,
+      severity: 'danger'
+    });
+    
+    if (confirmed) {
+      trashStore.removeFromTrash(app);
+    }
+  } catch (error) {
+    // Usuário cancelou
+    console.log('Exclusão permanente cancelada');
   }
 }
 
-function clearAll() {
-  const confirmed = confirm(
-    `Tem certeza que deseja esvaziar a lixeira? Todos os ${trashStore.trash.length} itens serão excluídos permanentemente.`
-  );
-  if (confirmed) {
-    trashStore.trash = [];
+async function clearAll() {
+  try {
+    const confirmed = await showConfirm({
+      header: 'Esvaziar Lixeira',
+      message: `Tem certeza que deseja esvaziar a lixeira? Todos os ${trashStore.trash.length} itens serão excluídos permanentemente.`,
+      severity: 'danger'
+    });
+    
+    if (confirmed) {
+      trashStore.trash = [];
+    }
+  } catch (error) {
+    // Usuário cancelou
+    console.log('Ação de esvaziar lixeira cancelada');
   }
 }
 
@@ -163,6 +189,37 @@ function getPathDisplay(path) {
 
 <template>
   <div class="trash-container">
+    <!-- Toolbar with Sidebar Toggle -->
+    <div class="trash-toolbar">
+      <!-- Sidebar Toggle Button (Mobile only) -->
+      <Button 
+        v-if="sidebarToggle"
+        icon="pi pi-bars" 
+        @click="sidebarToggle"
+        class="sidebar-toggle-btn mobile-only"
+        size="small"
+        outlined
+      />
+      
+      <h2 class="trash-title">
+        <i class="pi pi-trash"></i>
+        Lixeira
+      </h2>
+      
+      <div class="toolbar-actions">
+        <Button 
+          v-if="trashStore.trash.length > 0"
+          label="Esvaziar"
+          icon="pi pi-trash" 
+          @click="clearAll"
+          size="small"
+          severity="danger"
+          outlined
+          class="desktop-only"
+        />
+      </div>
+    </div>
+
     <!-- Estado vazio -->
     <div class="empty-state" v-if="trashStore.trash.length === 0">
       <div class="empty-icon">🗑️</div>
@@ -239,11 +296,41 @@ function getPathDisplay(path) {
 
 <style scoped>
 .trash-container {
-  padding: 1.5rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* Toolbar */
+.trash-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.trash-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  flex: 1;
+}
+
+.trash-title i {
+  font-size: 1.125rem;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* Estado vazio */
@@ -255,6 +342,7 @@ function getPathDisplay(path) {
   height: 100%;
   text-align: center;
   opacity: 0.7;
+  padding: 1.5rem;
 }
 
 .empty-icon {
@@ -282,7 +370,8 @@ function getPathDisplay(path) {
   gap: 1rem;
   flex: 1;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding: 1.5rem;
+  padding-right: 2rem;
 }
 
 .trash-item {
@@ -413,9 +502,9 @@ function getPathDisplay(path) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
-  margin-top: 1rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid #e5e7eb;
+  background: white;
 }
 
 .items-count {
@@ -442,9 +531,51 @@ function getPathDisplay(path) {
   transform: translateY(-1px);
 }
 
+/* Mobile/Desktop visibility helpers */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
-  .trash-container {
+  .mobile-only {
+    display: flex;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .trash-toolbar {
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .sidebar-toggle-btn {
+    min-width: 32px !important;
+    width: 32px;
+    height: 32px;
+    padding: 0.25rem !important;
+    flex-shrink: 0;
+  }
+
+  .sidebar-toggle-btn .pi {
+    font-size: 0.875rem;
+  }
+
+  .trash-title {
+    font-size: 1.125rem;
+  }
+
+  .trash-title i {
+    font-size: 1rem;
+  }
+
+  .trash-grid {
     padding: 1rem;
   }
 
@@ -472,6 +603,49 @@ function getPathDisplay(path) {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+    padding: 1rem;
+  }
+
+  .clear-all-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .trash-toolbar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .sidebar-toggle-btn {
+    min-width: 28px !important;
+    width: 28px;
+    height: 28px;
+    padding: 0.2rem !important;
+  }
+
+  .sidebar-toggle-btn .pi {
+    font-size: 0.75rem;
+  }
+
+  .trash-title {
+    font-size: 1rem;
+  }
+
+  .trash-grid {
+    padding: 0.75rem;
+  }
+
+  .empty-state {
+    padding: 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
   }
 }
 

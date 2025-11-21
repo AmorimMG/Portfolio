@@ -1,4 +1,5 @@
 <script setup>
+import GlobalDialogs from '@/components/Modals/GlobalDialogs.vue';
 import { useLayout } from '@/layout/composables/layout';
 import { computed, ref, watch } from 'vue';
 import AppFooter from './AppFooter.vue';
@@ -68,4 +69,5 @@ function isOutsideClicked(event) {
         <div class="layout-mask animate-fadein"></div>
     </div>
     <Toast />
+    <GlobalDialogs />
 </template>
