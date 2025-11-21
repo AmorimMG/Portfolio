@@ -1,4 +1,5 @@
 <script setup>
+import { useDialogService } from '@/composables/useDialogService';
 import { useFileOpener } from '@/composables/useFileOpener';
 import { useNotifications } from '@/composables/useNotifications';
 import { componentMap } from '@/data/appsDock';
@@ -16,6 +17,7 @@ const fileSystemStore = useFileSystemStore();
 const trashStore = useTrashStore();
 const { isViewerOpen, currentFileData, openFile: openFileViewer, canOpen } = useFileOpener();
 const { notifySuccess, notifyError } = useNotifications();
+const { showConfirm } = useDialogService();
 
 // Estados locais
 const selectedItems = ref([]);
@@ -266,36 +268,47 @@ const createNewItem = () => {
     }
 };
 
-const deleteSelected = () => {
+const deleteSelected = async () => {
     if (selectedItems.value.length === 0) return;
     
     const itemCount = selectedItems.value.length;
     const confirmMessage = itemCount === 1 
         ? `Tem certeza que deseja excluir "${selectedItems.value[0].name}"?`
         : `Tem certeza que deseja excluir ${itemCount} itens?`;
-        
-    if (confirm(confirmMessage)) {
-        let successCount = 0;
-        
-        selectedItems.value.forEach(item => {
-            const pathParts = item.path.split('/');
-            const itemName = pathParts.pop();
-            const parentPath = pathParts.join('/') || '/';
-            
-            const result = fileSystemStore.removeItem(itemName, parentPath);
-            if (result.success) {
-                successCount++;
-            }
+    
+    try {
+        const confirmed = await showConfirm({
+            header: 'Confirmar Exclusão',
+            message: confirmMessage,
+            severity: 'danger'
         });
         
-        if (successCount > 0) {
-            notifySuccess(
-                'Itens excluídos',
-                `${successCount} ${successCount === 1 ? 'item foi excluído' : 'itens foram excluídos'}`
-            );
+        if (confirmed) {
+            let successCount = 0;
+            
+            selectedItems.value.forEach(item => {
+                const pathParts = item.path.split('/');
+                const itemName = pathParts.pop();
+                const parentPath = pathParts.join('/') || '/';
+                
+                const result = fileSystemStore.removeItem(itemName, parentPath);
+                if (result.success) {
+                    successCount++;
+                }
+            });
+            
+            if (successCount > 0) {
+                notifySuccess(
+                    'Itens excluídos',
+                    `${successCount} ${successCount === 1 ? 'item foi excluído' : 'itens foram excluídos'}`
+                );
+            }
+            
+            clearSelection();
         }
-        
-        clearSelection();
+    } catch (error) {
+        // Usuário cancelou
+        console.log('Exclusão cancelada');
     }
 };
 
@@ -1139,7 +1152,7 @@ defineExpose({
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 0.5rem 0;
+    padding: 1rem;
 }
 
 /* Responsive Styles for Mobile */

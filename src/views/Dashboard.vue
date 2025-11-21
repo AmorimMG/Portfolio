@@ -87,13 +87,15 @@ const onIntroComplete = () => {
           >
             Entrar em Tela Cheia
           </button>
+   <!--          
           <button
             v-if="isMobile"
             @click="systemState = 'intro'"
             class="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded transition-colors text-sm"
           >
             Continuar sem Tela Cheia
-          </button>
+          </button> 
+    -->
         </div>
       </div>
     </div>

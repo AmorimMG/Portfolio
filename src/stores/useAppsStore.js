@@ -1,3 +1,4 @@
+import { useDialogService } from "@/composables/useDialogService";
 import { apps as initialApps } from "@/data/appsDock";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -17,6 +18,7 @@ const getGameIcon = async (gameName) => {
 export const useAppsStore = defineStore("apps", () => {
   const { t } = useI18n();
   const trashStore = useTrashStore();
+  const { showPrompt } = useDialogService();
   let fileSystemStore = null; // Lazy loading para evitar problemas de dependência circular
 
   const EMPTY_SLOT = { id: null };
@@ -58,7 +60,7 @@ export const useAppsStore = defineStore("apps", () => {
   // Inicializa os slots
   updateSlots();
 
-  function addApp(newApp, forceAdd = false) {
+  async function addApp(newApp, forceAdd = false) {
     console.log("addApp called with:", newApp, "forceAdd:", forceAdd);
     const emptyIndex = apps.value.findIndex((slot) => slot.id === null);
     console.log("Empty slot index:", emptyIndex);
@@ -91,8 +93,17 @@ export const useAppsStore = defineStore("apps", () => {
 
     if (!newApp.title) {
       const newName = t("newName");
-      const appName = prompt(newName);
-      newApp.title = appName;
+      try {
+        const appName = await showPrompt({
+          header: 'Novo App',
+          message: newName,
+          placeholder: 'Digite o nome do app'
+        });
+        newApp.title = appName;
+      } catch (error) {
+        // Usuário cancelou
+        return null;
+      }
     }
 
     const appData = {
