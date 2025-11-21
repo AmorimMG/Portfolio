@@ -14,7 +14,6 @@ export default {
     <Toast />
     <router-view />
     <DynamicModal />
-    <FullscreenButton />
 </template>
 
 <style>

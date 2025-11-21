@@ -326,24 +326,10 @@ onUnmounted(() => {
 <template>
   <div class="intro-container" ref="containerRef">
     <canvas ref="canvas"></canvas>
-
-    <!-- Texto de boas-vindas -->
-    <div v-if="showWelcomeText" class="welcome-text">
-      <h1>Bem-vindos aos meu Portfolio</h1>
-    </div>
-
-    <!-- Seta apontando para fullscreen -->
-    <div v-if="showWelcomeText" class="fullscreen-recommendation">
-      <p class="recommendation-text">
-        Modo Tela cheia! Altamente recomendado para melhorar a experiência!
-      </p>
-      <div class="hand-drawn-arrow">⤴</div>
-    </div>
-
     <!-- Instrução de scroll -->
     <div v-if="showScrollInstruction" class="scroll-instruction">
       <div class="scroll-text">
-        <p>Role para adentrar e me conhecer</p>
+        <p>Role para entrar e me conhecer</p>
         <div class="scroll-icon">
           <div class="scroll-indicator"></div>
         </div>

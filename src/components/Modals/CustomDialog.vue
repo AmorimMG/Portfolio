@@ -62,9 +62,12 @@ export default {
   data() {
     return {
       isMobile: window.innerWidth <= 991,
+      isMaximized: false,
     };
   },
   mounted() {
+    // Inicializa maximizado se for mobile ou se a prop maximized for true
+    this.isMaximized = this.isMobile || this.maximized;
     window.addEventListener("resize", this.checkMobile);
     window.addEventListener("keydown", this.handleKeyDown);
   },
@@ -74,7 +77,7 @@ export default {
   },
   computed: {
     dialogClass() {
-      return this.maximized || this.isMobile
+      return this.isMaximized || this.isMobile
         ? `${this.class} p-dialog-maximized`
         : this.class;
     },
@@ -105,17 +108,23 @@ export default {
   },
   methods: {
     checkMobile() {
+      const wasMobile = this.isMobile;
       this.isMobile = window.innerWidth <= 991;
+      // Se mudou para mobile, maximiza automaticamente
+      if (!wasMobile && this.isMobile) {
+        this.isMaximized = true;
+      }
     },
     handleVisibilityChange(newVisibility) {
       this.$emit("update:visible", newVisibility);
     },
     onMaximize() {
+      this.isMaximized = !this.isMaximized;
       const dialogElement = document.querySelector(".dialog-terminal");
-      if (dialogElement.classList.contains("p-dialog-maximized")) {
-        dialogElement.classList.remove("p-dialog-maximized");
+      if (this.isMaximized) {
+        dialogElement?.classList.add("p-dialog-maximized");
       } else {
-        dialogElement.classList.add("p-dialog-maximized");
+        dialogElement?.classList.remove("p-dialog-maximized");
       }
     },
     closeModal() {
@@ -134,15 +143,23 @@ export default {
 <template>
   <Dialog
     v-if="visible"
-    v-bind="$props"
+    :visible="visible"
+    :modal="modal"
+    :closable="closable"
+    :showHeader="showHeader"
+    :header="header"
+    :footer="footer"
+    :maximized="isMaximized"
+    :breakpoints="breakpoints"
+    :unstyled="unstyled"
+    :class="dialogClass"
     :style="mergedStyle"
     :contentStyle="mergedContentStyle"
-    :visible="visible"
     @update:visible="handleVisibilityChange"
     @hide="closeModal"
   >
     <template #header>
-      <ModalHeader @maximize="onMaximize" @close="closeModal">
+      <ModalHeader :is-mobile="isMobile" @maximize="onMaximize" @close="closeModal">
         <slot name="header"></slot>
       </ModalHeader>
     </template>
