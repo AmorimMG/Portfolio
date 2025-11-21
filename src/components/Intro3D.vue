@@ -16,6 +16,7 @@ const showWelcomeText = ref(false);
 
 let scene, camera, renderer, model, scrollTriggerInstance, scrollTimeline;
 let textsHidden = false; // Controlar se os textos foram escondidos
+let animationCompleted = false; // Prevenir múltiplas chamadas
 
 function init() {
   scene = new THREE.Scene();
@@ -126,17 +127,43 @@ function createScrollTrigger() {
   // Reset do estado dos textos
   textsHidden = false;
 
+  // Detectar se é mobile para ajustar a distância de scroll
+  const isMobile = window.innerWidth <= 768;
+  const scrollDistance = isMobile ? window.innerHeight * 1.5 : window.innerHeight * 2;
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: containerRef.value,
       start: "top top",
-      end: () => `+=${window.innerHeight * 2}`, // Usar altura dinâmica
+      end: () => `+=${scrollDistance}`, // Ajustar altura baseado no dispositivo
       scrub: 1,
       pin: true,
       pinSpacing: true,
       refreshPriority: -1, // Prioridade para recalcular dimensões
+      anticipatePin: 1, // Melhorar comportamento do pin no mobile
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
-        /*                 console.log('ScrollTrigger progress:', self.progress); */
+        // Debug para mobile - pode remover depois
+        if (self.progress > 0.9) {
+          console.log('ScrollTrigger progress:', self.progress);
+        }
+        
+        // Verificar se chegou ao final (melhor detecção para mobile)
+        if (self.progress >= 0.98 && !animationCompleted) {
+          animationCompleted = true;
+          console.log('Animation completing at progress:', self.progress);
+          gsap.to(containerRef.value, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () => {
+              emit("animation-complete");
+              if (scrollTriggerInstance) {
+                scrollTriggerInstance.kill();
+              }
+            },
+          });
+        }
+        
         // Sistema bidirecional de animação dos textos
         if (self.progress > 0.02 && !textsHidden) {
           // Fazer fade-out quando scrollar para baixo
@@ -224,15 +251,18 @@ function createScrollTrigger() {
           });
         }
       },
-      onLeave: (self) => {
-        gsap.to(containerRef.value, {
-          opacity: 0,
-          duration: 0.5,
-          onComplete: () => {
-            emit("animation-complete");
-            self.kill();
-          },
-        });
+      onLeave: () => {
+        // Fallback caso onUpdate não pegue
+        completeAnimation();
+      },
+      onLeaveBack: () => {
+        // Garantir que está visível ao voltar
+        if (containerRef.value) {
+          gsap.to(containerRef.value, {
+            opacity: 1,
+            duration: 0.3,
+          });
+        }
       },
     },
   });
@@ -260,6 +290,42 @@ function createScrollTrigger() {
     },
     "<"
   );
+
+  // Adicionar callback no final da timeline para garantir conclusão
+  tl.eventCallback("onComplete", () => {
+    console.log('Timeline completed');
+    // Pequeno delay e então completar a animação
+    setTimeout(() => {
+      if (containerRef.value && !animationCompleted) {
+        animationCompleted = true;
+        gsap.to(containerRef.value, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            emit("animation-complete");
+          },
+        });
+      }
+    }, 500);
+  });
+}
+
+// Função auxiliar para completar animação (fallback)
+function completeAnimation() {
+  if (!animationCompleted && containerRef.value) {
+    console.log('Completing animation via fallback');
+    animationCompleted = true;
+    gsap.to(containerRef.value, {
+      opacity: 0,
+      duration: 0.5,
+      onComplete: () => {
+        emit("animation-complete");
+        if (scrollTriggerInstance) {
+          scrollTriggerInstance.kill();
+        }
+      },
+    });
+  }
 }
 
 function animate() {
@@ -287,12 +353,20 @@ function handleResize() {
 }
 
 onMounted(() => {
+  // Garantir que o body permita scroll
+  document.body.style.overflow = 'auto';
+  document.documentElement.style.overflow = 'auto';
+  
   init();
   window.addEventListener("resize", handleResize);
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
+  
+  // Restaurar overflow
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
   if (scrollTriggerInstance) {
     scrollTriggerInstance.kill();
   }
@@ -308,8 +382,9 @@ onUnmounted(() => {
     ".fullscreen-recommendation",
   ]);
 
-  // Reset do estado dos textos no cleanup
+  // Reset do estado dos textos e animação no cleanup
   textsHidden = false;
+  animationCompleted = false;
 
   if (renderer) {
     renderer.dispose();
@@ -344,6 +419,9 @@ onUnmounted(() => {
   height: 100vh;
   overflow: hidden;
   position: relative;
+  /* Melhorar scroll no mobile */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 canvas {
