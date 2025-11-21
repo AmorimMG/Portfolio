@@ -3,7 +3,7 @@ import FileIcon from '@/assets/images/dock/file.png';
 import FolderIcon from '@/assets/images/dock/Folder.svg';
 import { setLanguageCookie } from '@/service/session';
 import { useAppsStore } from '@/stores/useAppsStore';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DockBottomBar from './DockBottomBar.vue';
 import DockContent from './DockContent.vue';
@@ -12,6 +12,87 @@ import DockTopbar from './DockTopBar.vue';
 const appsStore = useAppsStore();
 
 const { locale } = useI18n();
+
+// Referência para o ContextMenu
+const contextMenu = ref(null);
+
+// Variáveis para controlar o long press
+let touchTimer = null;
+let touchStartX = 0;
+let touchStartY = 0;
+const LONG_PRESS_DURATION = 500; // 500ms para considerar long press
+const MOVE_THRESHOLD = 10; // pixels de movimento permitidos
+
+// Detecta se é mobile
+const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+};
+
+// Função para abrir o menu de contexto
+const openContextMenu = (event) => {
+    if (contextMenu.value) {
+        contextMenu.value.show(event);
+    }
+};
+
+// Handlers para long press
+const handleTouchStart = (event) => {
+    if (!isMobile()) return;
+    
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    
+    // Inicia o timer para long press
+    touchTimer = setTimeout(() => {
+        // Cria um evento sintético para o ContextMenu
+        const syntheticEvent = {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            preventDefault: () => {},
+            stopPropagation: () => {}
+        };
+        
+        // Vibração háptica (se disponível)
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+        
+        openContextMenu(syntheticEvent);
+    }, LONG_PRESS_DURATION);
+};
+
+const handleTouchMove = (event) => {
+    if (!touchTimer) return;
+    
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartX);
+    const deltaY = Math.abs(touch.clientY - touchStartY);
+    
+    // Se o usuário moveu o dedo muito, cancela o long press
+    if (deltaX > MOVE_THRESHOLD || deltaY > MOVE_THRESHOLD) {
+        clearTimeout(touchTimer);
+        touchTimer = null;
+    }
+};
+
+const handleTouchEnd = () => {
+    if (touchTimer) {
+        clearTimeout(touchTimer);
+        touchTimer = null;
+    }
+};
+
+onMounted(() => {
+    // Adiciona os event listeners no elemento raiz
+    const dockElement = document.querySelector('.dock-demo');
+    if (dockElement && isMobile()) {
+        dockElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+        dockElement.addEventListener('touchmove', handleTouchMove, { passive: true });
+        dockElement.addEventListener('touchend', handleTouchEnd, { passive: true });
+        dockElement.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    }
+});
 
 const items = ref([
     {
@@ -100,9 +181,24 @@ const items = ref([
 
 <template>
     <div class="dock-demo">
-        <ContextMenu global :model="items" />
+        <ContextMenu ref="contextMenu" global :model="items" />
         <DockTopbar />
         <DockContent />
         <DockBottomBar />
     </div>
 </template>
+
+<style scoped>
+/* Feedback visual para long press em mobile */
+@media (max-width: 768px) {
+    .dock-demo {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+    
+    .dock-demo:active {
+        opacity: 0.95;
+    }
+}
+</style>
