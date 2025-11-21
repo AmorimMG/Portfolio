@@ -10,6 +10,7 @@ const isLoggedIn = ref(false);
 const isFullscreen = ref(false);
 const showFullscreenOverlay = ref(false);
 const savedSystemState = ref(null);
+const isMobile = ref(false);
 
 const enterFullscreen = async () => {
   try {
@@ -45,6 +46,9 @@ const checkFullscreen = () => {
 };
 
 onMounted(() => {
+  // Detectar se é mobile
+  isMobile.value = window.innerWidth <= 768 || 'ontouchstart' in window;
+  
   document.addEventListener('fullscreenchange', checkFullscreen);
   checkFullscreen(); // Verificar estado inicial
 });
@@ -73,15 +77,24 @@ const onIntroComplete = () => {
       v-if="showFullscreenOverlay || systemState === 'fullscreen-prompt'"
       class="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center text-white z-50"
     >
-      <div class="text-center">
+      <div class="text-center px-4">
         <h2 class="text-2xl mb-4">Experiência em Tela Cheia</h2>
         <p class="mb-6">Para melhor experiência, entre em modo tela cheia</p>
-        <button
-          @click="enterFullscreen"
-          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors"
-        >
-          Entrar em Tela Cheia
-        </button>
+        <div class="flex flex-col gap-3">
+          <button
+            @click="enterFullscreen"
+            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+          >
+            Entrar em Tela Cheia
+          </button>
+          <button
+            v-if="isMobile"
+            @click="systemState = 'intro'"
+            class="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded transition-colors text-sm"
+          >
+            Continuar sem Tela Cheia
+          </button>
+        </div>
       </div>
     </div>
   </Transition>
