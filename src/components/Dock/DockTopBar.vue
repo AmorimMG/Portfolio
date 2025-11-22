@@ -34,15 +34,11 @@ let touchStartY = 0;
 
 const onTouchStart = (e) => {
   touchStartY = e.touches[0].clientY;
-
-  console.log("Touch start Y:", touchStartY);
 };
 
 const onTouchMove = (e) => {
   const touchY = e.touches[0].clientY;
   const deltaY = touchY - touchStartY;
-
-  console.log("Touch move deltaY:", deltaY);
 
   if (deltaY > 50) {
     notificationCenterStore.show();

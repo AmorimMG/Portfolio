@@ -151,7 +151,6 @@ function createScrollTrigger() {
         // Verificar se chegou ao final (melhor detecção para mobile)
         if (self.progress >= 0.98 && !animationCompleted) {
           animationCompleted = true;
-          console.log('Animation completing at progress:', self.progress);
           gsap.to(containerRef.value, {
             opacity: 0,
             duration: 0.5,

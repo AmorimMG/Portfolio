@@ -192,11 +192,9 @@ onMounted(() => {
   // Initialize position based on store visibility
   if (notificationCenter.value) {
     if (store.isVisible) {
-      console.log('Initializing as visible');
       notificationCenter.value.style.transform = 'translateY(0)';
       currentTranslateY = 0;
     } else {
-      console.log('Initializing as hidden');
       notificationCenter.value.style.transform = 'translateY(-100%)';
       currentTranslateY = -window.innerHeight;
     }

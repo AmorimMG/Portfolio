@@ -47,7 +47,6 @@ const checkFullscreen = () => {
 };
 
 onMounted(() => {
-  console.log('Dashboard mounted!');
   // Detectar se é mobile
   isMobile.value = window.innerWidth <= 768 || 'ontouchstart' in window;
   

@@ -545,13 +545,13 @@ function handleItemMouseDown(event, item, index) {
   const clientX = isTouchEvent ? event.touches[0].clientX : event.clientX;
   const clientY = isTouchEvent ? event.touches[0].clientY : event.clientY;
   
-  console.log('Item mouse/touch down:', { 
+  /* console.log('Item mouse/touch down:', { 
     isTouchEvent, 
     item: item[props.itemKey], 
     index,
     isMobile: isMobile.value,
     dragEnabled: props.dragEnabled
-  });
+  }); */
   
   if (props.dragEnabled && (event.button === 0 || isTouchEvent)) {
     const rect = event.currentTarget.getBoundingClientRect();
