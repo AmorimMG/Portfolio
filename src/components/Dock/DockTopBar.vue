@@ -1,5 +1,6 @@
 <script setup>
 import { useLayout } from "@/layout/composables/layout";
+import { useNotificationCenterStore } from "@/stores/useNotificationCenterStore";
 import { faSignal, faWifi } from "@fortawesome/free-solid-svg-icons";
 import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons/faBatteryThreeQuarters";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -27,6 +28,23 @@ const audio = ref(null);
 const isMobile = ref(window.innerWidth <= 768);
 const opWifi = ref();
 const opVolume = ref();
+const notificationCenterStore = useNotificationCenterStore();
+
+let touchStartY = 0;
+
+const onTouchStart = (e) => {
+  touchStartY = e.touches[0].clientY;
+};
+
+const onTouchMove = (e) => {
+  const touchY = e.touches[0].clientY;
+  const deltaY = touchY - touchStartY;
+
+  if (deltaY > 50) {
+    notificationCenterStore.show();
+  }
+};
+
 
 const toggleConfig = () => {
   wallpaperModalVisible.value = true;
@@ -255,6 +273,8 @@ onUnmounted(() => {
     v-if="isMobile"
     class="mobileMenubar"
     :model="[]"
+    @touchstart.passive="onTouchStart"
+    @touchmove.passive="onTouchMove"
     :pt="{
       // fixes https://github.com/primefaces/primevue/issues/6141
       action: {

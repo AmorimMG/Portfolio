@@ -145,13 +145,12 @@ function createScrollTrigger() {
       onUpdate: (self) => {
         // Debug para mobile - pode remover depois
         if (self.progress > 0.9) {
-          console.log('ScrollTrigger progress:', self.progress);
+       //   console.log('ScrollTrigger progress:', self.progress);
         }
         
         // Verificar se chegou ao final (melhor detecção para mobile)
         if (self.progress >= 0.98 && !animationCompleted) {
           animationCompleted = true;
-          console.log('Animation completing at progress:', self.progress);
           gsap.to(containerRef.value, {
             opacity: 0,
             duration: 0.5,

@@ -1,14 +1,16 @@
 <script setup>
+import MobileNotificationCenter from '@/components/MobileNotificationCenter.vue';
 import GlobalDialogs from '@/components/Modals/GlobalDialogs.vue';
 import { useLayout } from '@/layout/composables/layout';
+import { useNotificationCenterStore } from '@/stores/useNotificationCenterStore';
 import { computed, ref, watch } from 'vue';
 import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
-
 const outsideClickListener = ref(null);
+const notificationCenterStore = useNotificationCenterStore();
 
 watch(isSidebarActive, (newVal) => {
     if (newVal) {
@@ -70,4 +72,5 @@ function isOutsideClicked(event) {
     </div>
     <Toast />
     <GlobalDialogs />
+    <MobileNotificationCenter />
 </template>

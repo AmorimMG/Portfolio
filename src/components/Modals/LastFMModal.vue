@@ -66,6 +66,7 @@ export default {
                     this.lastFMUserData = response.data.user;
                 })
                 .catch((error) => {
+                    this.lastFMUserData = {}; // Fallback to an empty object
                     this.toast.add({
                         severity: 'error',
                         summary: error,
@@ -80,6 +81,8 @@ export default {
                     this.chartKey++;
                 })
                 .catch((error) => {
+                    this.lastFMData = []; // Fallback to an empty array
+                    this.chartKey++; // Increment key to force re-render of the chart
                     this.toast.add({
                         severity: 'error',
                         summary: error,
@@ -137,68 +140,57 @@ export default {
                     </TabList>
                     <TabPanels class="h-full">
                         <TabPanel value="0">
-                            <div class="flex flex-col p-3">
-                                <div class="col-span-12 md:col-span-4 flex flex-col items-center text-center">
+                            <div class="flex flex-col lg:flex-row p-4 gap-4">
+                                <!-- User Info -->
+                                <div class="lg:w-1/4 flex flex-col items-center text-center p-4 rounded-lg"
+                                    style="background: var(--surface-section)">
                                     <Skeleton v-if="!imageLoaded" class="mb-3 border-circle shadow-2"
                                         style="width: 150px; height: 150px" />
                                     <Image v-show="imageLoaded && lastFMUserData.image && lastFMUserData.image[3]" @load="handleImageLoad"
                                         :src="lastFMUserData.image && lastFMUserData.image[3] ? lastFMUserData.image[3]['#text'] : ''" alt="Avatar" width="150" preview
                                         class="mb-3 border-circle shadow-2" />
-                                    <h2 v-if="lastFMUserData.realname || lastFMUserData.name">{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
-                                    <a v-if="lastFMUserData.url && lastFMUserData.name" :href="lastFMUserData.url" target="_blank" class="text-primary hover:underline">
-                                        @{{ lastFMUserData.name }} </a>
+                                    <h2 v-if="lastFMUserData.realname || lastFMUserData.name"
+                                        class="text-xl font-bold">{{ lastFMUserData.realname || lastFMUserData.name }}</h2>
+                                    <a v-if="lastFMUserData.url && lastFMUserData.name" :href="lastFMUserData.url" target="_blank"
+                                        class="text-primary hover:underline"> @{{ lastFMUserData.name }} </a>
                                     <Tag v-if="lastFMUserData.country" severity="info" class="mt-2">{{ lastFMUserData.country }}</Tag>
                                 </div>
 
-                                <!-- Estatísticas -->
-                                <div class="col-span-12 md:col-span-8 mt-4">
-                                    <div class="flex justify-evenly">
-                                        <div class="col-span-6 md:col-span-4">
-                                            <Card>
-                                                <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
-                                                <template #content>
-                                                    <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.track_count || 0 }}</h3>
-                                                </template>
-                                            </Card>
-                                        </div>
-                                        <div class="col-span-6 md:col-span-4">
-                                            <Card>
-                                                <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
-                                                <template #content>
-                                                    <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.artist_count || 0 }}</h3>
-                                                </template>
-                                            </Card>
-                                        </div>
-                                        <div class="col-span-6 md:col-span-4">
-                                            <Card>
-                                                <template #title>💿 {{ $t('LastFM.Albums') }}</template>
-                                                <template #content>
-                                                    <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.album_count || 0 }}</h3>
-                                                </template>
-                                            </Card>
-                                        </div>
-                                        <div class="col-span-6 md:col-span-4">
-                                            <Card>
-                                                <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
-                                                <template #content>
-                                                    <h3 class="text-2xl font-bold text-primary">{{
-                                                        lastFMUserData.playcount || 0 }}</h3>
-                                                </template>
-                                            </Card>
-                                        </div>
-                                        <div class="col-span-6 md:col-span-4">
-                                            <Card>
-                                                <template #title>📅 {{ $t('LastFM.Registered') }}</template>
-                                                <template #content>
-                                                    <h3 class="text-lg">
-                                                        {{ lastFMUserData.registered ? formatDate(lastFMUserData.registered.unixtime) : '-' }}
-                                                    </h3>
-                                                </template>
-                                            </Card>
-                                        </div>
+                                <!-- Stats -->
+                                <div class="lg:w-3/4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                        <Card class="text-center">
+                                            <template #title>🎵 {{ $t('LastFM.Tracks') }}</template>
+                                            <template #content>
+                                                <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.track_count || 0 }}</h3>
+                                            </template>
+                                        </Card>
+                                        <Card class="text-center">
+                                            <template #title>🧑‍🎤 {{ $t('LastFM.Artists') }}</template>
+                                            <template #content>
+                                                <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.artist_count || 0 }}</h3>
+                                            </template>
+                                        </Card>
+                                        <Card class="text-center">
+                                            <template #title>💿 {{ $t('LastFM.Albums') }}</template>
+                                            <template #content>
+                                                <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.album_count || 0 }}</h3>
+                                            </template>
+                                        </Card>
+                                        <Card class="text-center">
+                                            <template #title>▶️ {{ $t('LastFM.Playcount') }}</template>
+                                            <template #content>
+                                                <h3 class="text-2xl font-bold text-primary">{{ lastFMUserData.playcount || 0 }}</h3>
+                                            </template>
+                                        </Card>
+                                        <Card class="text-center col-span-1 md:col-span-2 xl:col-span-1">
+                                            <template #title>📅 {{ $t('LastFM.Registered') }}</template>
+                                            <template #content>
+                                                <h3 class="text-lg">
+                                                    {{ lastFMUserData.registered ? formatDate(lastFMUserData.registered.unixtime) : '-' }}
+                                                </h3>
+                                            </template>
+                                        </Card>
                                     </div>
                                 </div>
                             </div>

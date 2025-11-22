@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import BootupScreen from "../components/BootupScreen.vue";
 import System from "../components/Dock/System.vue";
 import Intro3D from "../components/Intro3D.vue";
+import MobileNotificationCenter from "../components/MobileNotificationCenter.vue";
 import SystemLoginScreen from "./SystemLoginScreen.vue";
 
 const systemState = ref("fullscreen-prompt");
@@ -120,6 +121,9 @@ const onIntroComplete = () => {
 
     <System v-else-if="systemState === 'system' && isLoggedIn" key="system" />
   </Transition>
+
+  <!-- Mobile Notification Center - sempre montado -->
+  <MobileNotificationCenter />
 </template>
 
 <style>
