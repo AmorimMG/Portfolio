@@ -10,10 +10,13 @@ import MapboxMap from "../components/Mapbox.vue";
 import CVModal from "../components/Modals/CVModal.vue";
 /* import Actitivies from '../components/AmorimWebsite/Cards/Activities.vue'; */
 import FileItem from "../components/FileItem.vue";
+import CalculatorModal from "../components/Modals/CalculatorModal.vue";
 import CameraModal from "../components/Modals/CameraModal.vue";
 import DoomModal from "../components/Modals/DoomModal.vue";
 import EmailModal from "../components/Modals/EmailModal.vue";
 import LastFMModal from "../components/Modals/LastFMModal.vue";
+import MessagesModal from "../components/Modals/MessagesModal.vue";
+import MusicPlayerModal from '../components/Modals/MusicPlayerModal.vue';
 import PiModal from "../components/Modals/PIModal.vue";
 import PortfolioModal from "../components/Modals/PortfolioModal.vue";
 import ProjectsModal from "../components/Modals/ProjectsModal.vue";
@@ -22,9 +25,6 @@ import WallpaperModal from "../components/Modals/WallpaperModal.vue";
 import PointerlockModal from "../components/ThreeJSGame/PointerlockModal.vue";
 
 import CVIcon from "@/assets/images/dock/CV.svg";
-import FolderIcon from "@/assets/images/dock/Folder.svg";
-import WallpaperIcon from "@/assets/images/dock/Wallpaper.webp";
-import Camera from "@/assets/images/dock/camera.png";
 import LastFMIcon from "@/assets/images/dock/lastFm.svg";
 import Raspberry from "@/assets/images/dock/raspberry.png";
 import SeverenceIcon from "@/assets/images/dock/severence.png";
@@ -52,6 +52,9 @@ export const componentMap = {
   CameraModal,
   WallpaperModal,
   FileItem,
+  CalculatorModal,
+  MessagesModal,
+  MusicPlayerModal,
 };
 
 export const apps = [
@@ -71,7 +74,7 @@ export const apps = [
     colSpan: 1,
     rowSpan: 1,
     title: "Projects",
-    icon: FolderIcon,
+    icon: "pi pi-folder",
     locked: false,
   },
   {
@@ -98,7 +101,7 @@ export const apps = [
     colSpan: 1,
     rowSpan: 1,
     title: "Camera",
-    icon: Camera,
+    icon: "pi pi-camera",
     locked: false,
   },
   {
@@ -107,11 +110,11 @@ export const apps = [
     colSpan: 1,
     rowSpan: 1,
     title: "Wallpaper",
-    icon: WallpaperIcon,
+    icon: "pi pi-images",
     locked: false,
   },
   {
-    id: 16,
+    id: 17,
     name: "SeverenceModal",
     colSpan: 1,
     rowSpan: 1,
@@ -120,14 +123,41 @@ export const apps = [
     locked: false,
   },
   {
-    id: 17,
+    id: 18,
     name: "DoomModal",
     colSpan: 1,
     rowSpan: 1,
     title: "Doom",
-    icon: FolderIcon,
+    icon: "pi pi-folder",
     locked: false,
   },
+    {
+    id: 19,
+    name: "MessagesModal",
+    colSpan: 1,
+    rowSpan: 1,
+    title: "Messages",
+    icon: "pi pi-comments",
+    locked: false,
+  },
+  {
+    id: 20,
+    name: "CalculatorModal",
+    colSpan: 1,
+    rowSpan: 1,
+    title: "Calculator",
+    icon: "pi pi-calculator",
+    locked: false,
+  },
+  {
+    id: 21,
+    name: "MusicPlayerModal",
+    colSpan: 1,
+    rowSpan: 1,
+    title: "MusicPlayer",
+    icon: "pi pi-volume-up",
+    locked: false,
+  }
 ];
 
 export const widgets = [

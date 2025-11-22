@@ -84,7 +84,10 @@
       "Camera": "Camera",
       "Wallpaper": "Wallpaper",
       "Severence": "Severance",
-      "Doom": "Doom"
+      "Doom": "Doom",
+      "Calculator": "Calculator",
+      "Messages": "Messages",
+      "MusicPlayer": "Music Player"
     },
 
     "DockTopBar": {
@@ -211,7 +214,10 @@
       "Camera": "Cámara",
       "Wallpaper": "Fondo de pantalla",
       "Severence": "Severance",
-      "Doom": "Doom"
+      "Doom": "Doom",
+      "Calculator": "Calculadora",
+      "Messages": "Mensagens",
+      "MusicPlayer": "Reprodutor de Música"
     },
 
     "DockTopBar": {
@@ -337,7 +343,10 @@
       "Camera": "Câmera",
       "Wallpaper": "Papel de Parede",
       "Severence": "Severance",
-      "Doom": "Doom"
+      "Doom": "Doom",
+      "Calculator": "Calculadora",
+      "Messages": "Mensagens",
+      "MusicPlayer": "Reprodutor de Música"
     },
 
     "DockTopBar": {

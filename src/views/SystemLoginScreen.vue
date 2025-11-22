@@ -93,8 +93,8 @@ onUnmounted(() => {
 
 const notifications = ref([
   { id: 1, app: "Whatsapp", text: "Nova mensagem de Galinho", time: "agora" },
-  { id: 2, app: "Instagram", text: "José curtiu sua foto", time: "5m" },
-  { id: 3, app: "System", text: "Atualização disponível", time: "1h" },
+  { id: 2, app: "Instagram", text: "Ralf curtiu sua foto", time: "5m" },
+  { id: 3, app: "Tiktok", text: "Ceci compartilhou um video", time: "25m" }
 ]);
 </script>
 

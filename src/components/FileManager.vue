@@ -450,7 +450,7 @@ const formatDate = (date) => {
 };
 
 const getFileIcon = (item) => {
-    if (item.type === 'dir') return '📁';
+    if (item.type === 'dir') return 'pi pi-folder'; // Alterado para usar ícone do PrimeVue
     
     const ext = item.name.split('.').pop()?.toLowerCase();
     
@@ -662,6 +662,7 @@ defineExpose({
                          :alt="item.name"
                          class="file-icon-image"
                          loading="lazy" />
+                    <i v-else-if="getFileIcon(item).startsWith('pi ')" :style="{ fontSize: '50px' }" :class="getFileIcon(item)"></i>
                     <span v-else>{{ getFileIcon(item) }}</span>
                 </div>
                 <div class="file-info">
@@ -1007,11 +1008,20 @@ defineExpose({
 }
 
 .file-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem; /* Aumentado para ícones do PrimeVue */
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.list-view .file-icon {
+    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0;
 }
 
 .file-icon-image {

@@ -636,6 +636,12 @@ export default {
                 style="height: 50px"
                 draggable="false"
               />
+              <!-- Para ícones do PrimeVue -->
+              <i
+                v-else-if="element.icon && element.icon.startsWith('pi ')"
+                :class="element.icon"
+                style="font-size: 50px"
+              ></i>
               <!-- Para arquivos com ícone emoji/unicode -->
               <span v-else class="file-icon-emoji" style="font-size: 50px">{{
                 element.icon
