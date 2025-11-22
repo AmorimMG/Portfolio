@@ -1,8 +1,11 @@
 <script setup>
 import AmorimIcon from "@/assets/images/cards/login.jpg";
 import LoginBackground from "@/assets/images/wallpapers/login_background.png";
+import { useSwipeToDismiss } from '@/composables/useSwipeToDismiss';
+import { useNotificationStore } from '@/stores/useNotificationStore';
 import { faCamera, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { storeToRefs } from 'pinia';
 import { onMounted, onUnmounted, ref } from "vue";
 
 const showClock = ref(true);
@@ -20,6 +23,12 @@ const SWIPE_THRESHOLD = 150; // pixels necessários para desbloquear
 const MIN_SWIPE_DISTANCE = 10; // pixels mínimos para considerar como swipe
 
 const emit = defineEmits(["login"]);
+
+const notificationStore = useNotificationStore();
+const { notifications } = storeToRefs(notificationStore);
+const { removeNotification } = notificationStore;
+
+const { onTouchStart: onSwipeStart, onTouchMove: onSwipeMove, onTouchEnd: onSwipeEnd, setItemRef } = useSwipeToDismiss(removeNotification);
 
 const handleLogin = () => {
   emit("login");
@@ -91,11 +100,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", checkScreenSize);
 });
 
-const notifications = ref([
-  { id: 1, app: "Whatsapp", text: "Nova mensagem de Galinho", time: "agora" },
-  { id: 2, app: "Instagram", text: "Ralf curtiu sua foto", time: "5m" },
-  { id: 3, app: "Tiktok", text: "Ceci compartilhou um video", time: "25m" }
-]);
 </script>
 
 <template>
@@ -160,8 +164,13 @@ const notifications = ref([
         <div
           v-for="notification in notifications"
           :key="notification.id"
-          class="bg-black/30 backdrop-blur-md rounded-xl p-3 flex items-center text-left"
+          class="bg-black/30 backdrop-blur-md rounded-xl p-3 flex items-center text-left notification-item-swipeable"
+          :ref="el => setItemRef(el, notification.id)"
+          @touchstart="onSwipeStart($event, notification.id)"
+          @touchmove="onSwipeMove($event, notification.id)"
+          @touchend="onSwipeEnd(notification.id)"
         >
+          <i :class="[notification.icon, 'text-xl mr-3']" :style="{ color: notification.color }"></i>
           <div class="flex-grow">
             <p class="text-xs text-white/70">{{ notification.app }}</p>
             <p class="text-sm">{{ notification.text }}</p>
@@ -320,6 +329,11 @@ const notifications = ref([
 .fade-scale-leave-to {
   opacity: 0;
   transform: scale(0.95);
+}
+
+.notification-item-swipeable {
+  touch-action: pan-y; /* Allow vertical page scroll but capture horizontal swipe */
+  position: relative;
 }
 
 /* Animações custom extra */

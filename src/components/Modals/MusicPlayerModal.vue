@@ -155,11 +155,11 @@ onMounted(() => {
 </script>
 
 <template>
-            <Button v-if="!visible" text class="w-full h-full" @click="openMusicPlayer = true"
+<div class="portfolio-root" v-bind="$attrs">
+    <Button v-if="!visible" text class="w-full h-full" @click="openMusicPlayer = true"
             style="width: 100%; height: 100%; justify-content: center">
-            <!-- You might want a specific icon here -->
-        </Button>
-    <CustomDialog :visible="visible || openMusicPlayer" @update:visible="closeModal" :maximized="false" header="Music Player" :style="{ width: '380px' }">
+    </Button>
+    <CustomDialog :visible="visible || openMusicPlayer" @update:visible="closeModal" :maximized="false" header="Music Player">
         <div class="music-player">
             <div class="artwork-container">
                 <div v-if="currentTrack.artworkStatus === 'loading'" class="fallback-icon-container">
@@ -232,6 +232,7 @@ onMounted(() => {
             <audio ref="audioRef" :src="currentTrack.src" @timeupdate="updateTime" @ended="nextTrack" @loadedmetadata="updateTime"></audio>
         </div>
     </CustomDialog>
+    </div>
 </template>
 
 <style scoped>

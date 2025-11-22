@@ -145,7 +145,7 @@ function createScrollTrigger() {
       onUpdate: (self) => {
         // Debug para mobile - pode remover depois
         if (self.progress > 0.9) {
-          console.log('ScrollTrigger progress:', self.progress);
+       //   console.log('ScrollTrigger progress:', self.progress);
         }
         
         // Verificar se chegou ao final (melhor detecção para mobile)
