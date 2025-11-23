@@ -49,6 +49,13 @@ const items = ref([
     },
   },
   {
+    label: "Amorim",
+    icon: AmorimIcon,
+    command: () => {
+      portfolioModalOpen.value = true;
+    },
+  },
+  {
     label: "GitHub",
     icon: "https://primefaces.org/cdn/primevue//images/dock/github.svg",
     command: () => {
@@ -61,18 +68,11 @@ const items = ref([
     command: () => {
       TrashOpen.value = true;
     },
-  },
-  {
-    label: "Amorim",
-    icon: AmorimIcon,
-    command: () => {
-      portfolioModalOpen.value = true;
-    },
-  },
+  }
 ]);
 
 const filteredItems = computed(() => {
-  return isMobile.value ? items.value.slice(0, 4) : items.value;
+  return isMobile.value ? items.value.slice(0, 5) : items.value;
 });
 
 const updateScreenSize = () => {

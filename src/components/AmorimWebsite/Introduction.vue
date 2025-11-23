@@ -2,7 +2,6 @@
 import { useToast } from 'primevue/usetoast';
 import { onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
-import AppConfigurator from '../../layout/AppConfigurator.vue';
 import { RESTAPI } from '../../service/api.js';
 import { getLanguageCookie, setLanguageCookie } from '../../service/session';
 import CardEffect from '../CardEffect.vue';
@@ -126,55 +125,6 @@ const sendEmail = async () => {
 <template>
     <div class="page" :style="{ display: menuVisible ? 'flex' : 'none' }">
         <div class="flex flex-col justify-between m-3" style="text-align: start; position: relative">
-            <div class="settings">
-                <div class="flex gap-3">
-                    <!--                         <button class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
-                            <i class="pi pi-bars"></i>
-                        </button> -->
-                    <!--                     <button class="p-btn p-link layout-topbar-button" type="button" @click="appConfigRef.onConfigButtonClick()">
-                        <i class="pi pi-cog"></i>
-                    </button> -->
-                    <button
-                        v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                        type="button" class="layout-topbar-action layout-topbar-action-highlight">
-                        <i class="pi pi-cog px-2"></i>
-                    </button>
-                    <AppConfigurator />
-                    <router-link style="opacity: 1" to="/login" class="layout-topbar-logo center">
-                        <button class="p-btn p-link layout-topbar-button" type="button">
-                            <i class="pi pi-sign-in"></i>
-                        </button>
-                    </router-link>
-                </div>
-                <div class="flex gap-3">
-                    <Select v-model="dropdownValue" :options="dropdownValues" optionLabel="name"
-                        class="dropdown flex items-center">
-                        <template #value="slotProps">
-                            <div v-if="slotProps.value" class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.value.label"
-                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                    :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`"
-                                    style="width: 20px" />
-                            </div>
-                            <span v-else>
-                                {{ slotProps.placeholder }}
-                            </span>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex items-center">
-                                <img loading="lazy" :alt="slotProps.option.label"
-                                    src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png"
-                                    :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`"
-                                    style="width: 18px" />
-                                <div>{{ slotProps.option.name }}</div>
-                            </div>
-                        </template>
-                    </Select>
-                    <!--                          <button id="toggleMenuButton" class="p-btn p-link layout-topbar-button" type="button" @click="toggleMenu()">
-                            <FontAwesomeIcon style="font-size: '$scale'" :icon="faBars" />
-                        </button> -->
-                </div>
-            </div>
             <div class="upper">
                 <div class="flex flex-row justify-between m-3">
                     <div class="flex flex-row gap-2" style="color: white">

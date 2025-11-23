@@ -479,8 +479,6 @@ function handleMouseMove(event) {
     const deltaX = Math.abs(clientX - dragStartPos.value.x);
     const deltaY = Math.abs(clientY - dragStartPos.value.y);
     
-    console.log('Movement detected:', { deltaX, deltaY, threshold: DRAG_THRESHOLD });
-    
     if (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) {
       startDrag();
     }
@@ -1163,6 +1161,7 @@ onUnmounted(() => {
     grid-auto-flow: row;
     grid-gap: 1px;
     width: 100%;
+    margin: 10px 0;
   }
   
   .grid-item {
