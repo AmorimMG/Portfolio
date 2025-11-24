@@ -62,7 +62,7 @@ const closeModal = () => {
                             <div class="flex flex-col items-center text-white">
                                 <div
                                     class="relative w-full aspect-[6/5] rounded-xl overflow-hidden shadow-md cursor-pointer transition-transform duration-200 hover:scale-105">
-                                    <Skeleton v-if="!loadedImages.has(element.value)"
+                                    <Skeleton v-if="!loadedImages.has(element.value)" style="height: 100%;"
                                         class="absolute inset-0 rounded-xl" />
                                     <img v-show="loadedImages.has(element.value)" @load="handleImageLoad(element.value)"
                                         @click="() => {

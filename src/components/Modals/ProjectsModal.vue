@@ -18,7 +18,9 @@ export default {
     data() {
         return {
             projectsVisible: ref(false),
-            projects: ref('')
+            projects: ref(''),
+            loading: ref(false),
+            error: ref(null)
         };
     },
     methods: {
@@ -28,9 +30,18 @@ export default {
         }
     },
     created() {
-        RESTAPI.ProjetoObterTodos().then((response) => {
-            this.projects = response.data;
-        });
+        this.loading = true;
+        this.error = null;
+        RESTAPI.ProjetoObterTodos()
+            .then((response) => {
+                this.projects = response.data;
+                this.loading = false;
+            })
+            .catch((err) => {
+                this.error = this.$t('errorLoadingProjects') || 'Erro ao carregar projetos. Por favor, tente novamente.';
+                this.loading = false;
+                console.error('Error loading projects:', err);
+            });
     }
 };
 </script>
@@ -48,8 +59,38 @@ export default {
         </CardEffect>
 
         <CustomDialog :visible="projectsVisible" @update:visible="onHide()" :maximized="true" :modal="true" class="dialog-terminal p-dialog-maximized">
-            <div class="overflow-x-hidden" style="background: rgba(40, 33, 59, 0.9); backdrop-filter: blur(10px)">
-                <draggable class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-12" v-model="projects" item-key="id" group="projects" animation="200">
+            <div class="overflow-x-hidden" style=" height: 100%; background: rgba(40, 33, 59, 0.9); backdrop-filter: blur(10px)">
+                <!-- Loading State -->
+                <div v-if="loading" class="flex justify-center items-center h-full">
+                    <ProgressSpinner 
+                        style="width: 50px; height: 50px" 
+                        strokeWidth="4" 
+                        fill="transparent"
+                        animationDuration="1s"
+                    />
+                </div>
+
+                <!-- Error State -->
+                <div v-else-if="error" class="flex flex-col justify-center items-center h-full gap-4 p-6">
+                    <i class="pi pi-exclamation-triangle text-6xl text-red-400"></i>
+                    <p class="text-white text-xl text-center">{{ error }}</p>
+                    <Button 
+                        label="Tentar Novamente" 
+                        icon="pi pi-refresh" 
+                        @click="created()"
+                        class="p-button-outlined p-button-secondary"
+                    />
+                </div>
+
+                <!-- Projects Grid -->
+                <draggable 
+                    v-else
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-12" 
+                    v-model="projects" 
+                    item-key="id" 
+                    group="projects" 
+                    animation="200"
+                >
                     <template #item="{ element }">
                         <Projects class="flex justify-center items-center" :languages="element.languages" :img="element.img" :title="element.title" :subtitle="element.subtitle" :description="element.description" :link="element.link" />
                     </template>
