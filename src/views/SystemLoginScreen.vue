@@ -172,7 +172,7 @@ onUnmounted(() => {
         >
           <i :class="[notification.icon, 'text-xl mr-3']" :style="{ color: notification.color }"></i>
           <div class="flex-grow">
-            <p class="text-xs text-white/70">{{ notification.app }}</p>
+            <p class="m-0 text-xs text-white/70">{{ notification.app }}</p>
             <p class="text-sm">{{ notification.text }}</p>
           </div>
           <span class="text-xs text-white/50 ml-2">{{
